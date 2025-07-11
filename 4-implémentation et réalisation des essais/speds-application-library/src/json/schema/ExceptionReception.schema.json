@@ -1,0 +1,24 @@
+{
+  "$id": "https://griis.ca/SPEDS/ExceptionReception.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExceptionReception - 2025-01-13T13:11-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the reception of a completed task with an exception",
+  "properties": {
+    "task_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    }
+  },
+  "required": [
+    "task_ref"
+  ],
+  "additionalProperties": false
+}

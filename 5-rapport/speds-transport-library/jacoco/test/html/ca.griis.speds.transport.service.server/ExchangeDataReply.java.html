@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExchangeDataReply.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.service.server</a> &gt; <span class="el_source">ExchangeDataReply.java</span></div><h1>ExchangeDataReply.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ExchangeDataIndication.
+ * @brief @~english Implementation of the ExchangeDataIndication class.
+ */
+
+package ca.griis.speds.transport.service.server;
+
+import ca.griis.cryptography.hash.entity.Hash;
+import ca.griis.cryptography.hash.hashing.Sha512Hashing;
+import ca.griis.js2p.gen.speds.transport.api.dto.Context34Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.Context45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.Header45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit34Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
+import ca.griis.js2p.gen.speds.transport.api.dto.Speds45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.StampDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.transport.exception.ContentSealException;
+import ca.griis.speds.transport.exception.DeserializationException;
+import ca.griis.speds.transport.exception.HeaderSealException;
+import ca.griis.speds.transport.exception.SerializationException;
+import ca.griis.speds.transport.serializer.SharedObjectMapper;
+import ca.griis.speds.transport.service.server.datatype.DataReplyMessages;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Un processus qui reçoit une indication d'échange de données.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-11 [JM] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="nc" id="L66">public class ExchangeDataReply {</span>
+<span class="fc" id="L67">  private static final GriisLogger logger =</span>
+<span class="fc" id="L68">      GriisLoggerFactory.getLogger(ExchangeDataReply.class);</span>
+
+  public static DataReplyMessages dataReplyProcess(InterfaceDataUnit45Dto iduDto,
+      String spedsVersion, String spedsReference) {
+<span class="fc" id="L72">    logger.trace(Trace.ENTER_METHOD_3, &quot;iduDto&quot;, iduDto, &quot;spedsVersion&quot;, spedsVersion,</span>
+        &quot;spedsReference&quot;, spedsReference);
+
+    // Récupérer SDU
+    final ProtocolDataUnit4TraDto pdu;
+    try {
+<span class="fc" id="L78">      pdu = SharedObjectMapper.getInstance().getMapper().readValue(iduDto.getMessage(),</span>
+          ProtocolDataUnit4TraDto.class);
+<span class="nc" id="L80">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L81">      throw new DeserializationException(e.getMessage());</span>
+<span class="fc" id="L82">    }</span>
+
+    // Création du ICI du Idu3-4
+    // extraire le code des iri
+<span class="fc" id="L86">    final String sourceIri = iduDto.getContext().getSourceIri();</span>
+<span class="fc" id="L87">    final String destinationIri = iduDto.getContext().getDestinationIri();</span>
+<span class="fc" id="L88">    final String sourceCode = pdu.getHeader().getSourceCode();</span>
+<span class="fc" id="L89">    final String destinationCode = pdu.getHeader().getDestinationCode();</span>
+
+<span class="fc" id="L91">    final Sha512Hashing sha512Hashing = new Sha512Hashing();</span>
+<span class="fc" id="L92">    verifyStamps(pdu, sha512Hashing);</span>
+
+    // Création du message ACK à envoyé à la couche inférieure
+<span class="fc" id="L95">    final String msgId = pdu.getHeader().getId().toString();</span>
+<span class="fc" id="L96">    final Header45Dto headerTraDto =</span>
+        new Header45Dto(Header45Dto.Msgtype.TRA_MSG_REC, msgId, sourceCode, destinationCode,
+            new Speds45Dto(spedsVersion, spedsReference));
+<span class="fc" id="L99">    final String contentResponse = &quot;ACK&quot;;</span>
+
+    // Créer le sceau de l'entête et du contenu
+    final String headerString;
+    try {
+<span class="fc" id="L104">      headerString = SharedObjectMapper.getInstance().getMapper().writeValueAsString(headerTraDto);</span>
+<span class="nc" id="L105">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L106">      throw new SerializationException(e.getMessage());</span>
+<span class="fc" id="L107">    }</span>
+<span class="fc" id="L108">    final Hash hashHeader = sha512Hashing.hash(headerString.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L109">    final Hash hashContent = sha512Hashing.hash(contentResponse.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L110">    final String sealHeaderSdu = hashHeader.asBase64();</span>
+<span class="fc" id="L111">    final String sealContentSdu = hashContent.asBase64();</span>
+
+<span class="fc" id="L113">    final StampDto stampTra = new StampDto(sealHeaderSdu, sealContentSdu);</span>
+
+<span class="fc" id="L115">    final ProtocolDataUnit4TraDto pduTraResponse =</span>
+        new ProtocolDataUnit4TraDto(headerTraDto, stampTra, contentResponse);
+
+    // Sérialiser le message protocole de Transport
+<span class="fc" id="L119">    final Context45Dto iduContext45 = new Context45Dto(destinationIri, sourceIri,</span>
+<span class="fc" id="L120">        iduDto.getContext().getTrackingNumber(), iduDto.getContext().getOptions());</span>
+    final String serializedTraMessage;
+    final String idu45Response;
+    try {
+      serializedTraMessage =
+<span class="fc" id="L125">          SharedObjectMapper.getInstance().getMapper().writeValueAsString(pduTraResponse);</span>
+<span class="fc" id="L126">      final InterfaceDataUnit45Dto idu45 =</span>
+          new InterfaceDataUnit45Dto(iduContext45, serializedTraMessage);
+<span class="fc" id="L128">      idu45Response = SharedObjectMapper.getInstance().getMapper().writeValueAsString(idu45);</span>
+<span class="nc" id="L129">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L130">      throw new SerializationException(e.getMessage());</span>
+<span class="fc" id="L131">    }</span>
+
+    // Création du tracking number en utilisant le msgId de Transport
+<span class="fc" id="L134">    final UUID trackingNumber = UUID.fromString(msgId);</span>
+
+<span class="fc" id="L136">    final Context34Dto context34Dto = new Context34Dto(</span>
+        sourceCode,
+        destinationCode,
+        sourceIri,
+        trackingNumber,
+        destinationIri,
+        Boolean.FALSE);
+
+    // Création du message à envoyer à la couche supérieur
+<span class="fc" id="L145">    final InterfaceDataUnit34Dto idu34 = new InterfaceDataUnit34Dto(context34Dto, pdu.getContent());</span>
+
+    final String idu34Indication;
+    try {
+<span class="fc" id="L149">      idu34Indication = SharedObjectMapper.getInstance().getMapper().writeValueAsString(idu34);</span>
+<span class="nc" id="L150">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L151">      throw new SerializationException(e.getMessage());</span>
+<span class="fc" id="L152">    }</span>
+
+<span class="fc" id="L154">    final DataReplyMessages dataReplyMessages = new DataReplyMessages(idu34Indication,</span>
+        idu45Response);
+
+<span class="fc" id="L157">    logger.trace(Trace.EXIT_METHOD_1, &quot;dataReplyMessages&quot;, dataReplyMessages);</span>
+<span class="fc" id="L158">    return dataReplyMessages;</span>
+  }
+
+  private static void verifyStamps(ProtocolDataUnit4TraDto sdu, Sha512Hashing sha512Hashing) {
+<span class="fc" id="L162">    logger.trace(Trace.ENTER_METHOD_2, &quot;sdu&quot;, sdu, &quot;sha512Hashing&quot;, sha512Hashing);</span>
+
+    // Vérification de l'intégrité de l'entête et du contenu
+    final String sduHeader;
+    try {
+<span class="fc" id="L167">      sduHeader = SharedObjectMapper.getInstance().getMapper().writeValueAsString(sdu.getHeader());</span>
+<span class="nc" id="L168">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L169">      throw new SerializationException(e.getMessage());</span>
+<span class="fc" id="L170">    }</span>
+
+    // Hasher l'entête et le contenu
+<span class="fc" id="L173">    final Hash headerEncrypt = sha512Hashing.hash(sduHeader.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L174">    final Hash contentEncrypt =</span>
+<span class="fc" id="L175">        sha512Hashing.hash(sdu.getContent().getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L176">    final String sealHeaderSduGenerated = headerEncrypt.asBase64();</span>
+<span class="fc" id="L177">    final String sealContentSduGenerated = contentEncrypt.asBase64();</span>
+
+    // Vérifier l'intégrité de l'entête et du contenu
+<span class="fc bfc" id="L180" title="All 2 branches covered.">    if (!sdu.getStamp().getHeaderSeal().equals(sealHeaderSduGenerated)) {</span>
+<span class="fc" id="L181">      throw new HeaderSealException(&quot;Header seal are not the same&quot;);</span>
+    }
+
+<span class="fc bfc" id="L184" title="All 2 branches covered.">    if (!sdu.getStamp().getContentSeal().equals(sealContentSduGenerated)) {</span>
+<span class="fc" id="L185">      throw new ContentSealException(&quot;Content seal are not the same&quot;);</span>
+    }
+
+<span class="fc" id="L188">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L189">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

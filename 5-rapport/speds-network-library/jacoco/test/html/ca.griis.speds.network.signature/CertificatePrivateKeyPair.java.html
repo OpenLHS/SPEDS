@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CertificatePrivateKeyPair.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.signature</a> &gt; <span class="el_source">CertificatePrivateKeyPair.java</span></div><h1>CertificatePrivateKeyPair.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe CertificatePrivateKeyPair.
+ * @brief @~english CertificatePrivateKeyPair class implementation.
+ */
+
+package ca.griis.speds.network.signature;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.service.exception.ParameterException;
+import ca.griis.speds.network.service.exception.SerializationException;
+import java.io.ByteArrayInputStream;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Représente une clé privée cryptographique et son certificat associé.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-04 [CB] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class CertificatePrivateKeyPair {
+<span class="fc" id="L62">  private static final GriisLogger logger = getLogger(CertificatePrivateKeyPair.class);</span>
+
+  public static final String CERTIFICATE_ALGORITHM = &quot;X.509&quot;;
+  public static final String PRIVATE_KEY_ALGORITHM = &quot;RSA&quot;;
+
+  private final Certificate certificate;
+  private final PrivateKey privateKey;
+
+<span class="fc" id="L70">  public CertificatePrivateKeyPair(Certificate certificate, PrivateKey privateKey) {</span>
+<span class="fc" id="L71">    logger.trace(Trace.ENTER_METHOD_2, &quot;certificate&quot;, certificate, &quot;privateKey&quot;, privateKey);</span>
+<span class="fc" id="L72">    this.certificate = certificate;</span>
+<span class="fc" id="L73">    this.privateKey = privateKey;</span>
+<span class="fc" id="L74">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param certificatePem «Parameter description»
+   * @param privateKeyPem «Parameter description»
+   * @exception ParameterException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Importe un certificat d'identité cryptographique et sa clé privée associée à
+   *        partir d'un format sérialisé.
+   * @param certificatePem Le certificat à importer en chaîne de caractères de format PEM.
+   * @param privateKeyPem La clé privée à importer en chaîne de caractères de format PEM.
+   * @exception ParameterException Erreur soulevée lors de problèmes durant l'importation
+   *            des éléments cryptographiques de la couche Réseau.
+   * @return Le certificat de la couche Réseau et sa clé privée associée.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public static CertificatePrivateKeyPair importFromPem(String certificatePem,
+      String privateKeyPem) throws ParameterException {
+<span class="fc" id="L96">    logger.trace(Trace.ENTER_METHOD_2, &quot;certificatePem&quot;, certificatePem, &quot;privateKeyPem&quot;,</span>
+        privateKeyPem);
+
+    final Certificate certificate;
+    final PrivateKey privateKey;
+    try {
+<span class="fc" id="L102">      final CertificateFactory cf = CertificateFactory.getInstance(CERTIFICATE_ALGORITHM);</span>
+<span class="fc" id="L103">      certificate =</span>
+<span class="fc" id="L104">          cf.generateCertificate(</span>
+<span class="fc" id="L105">              new ByteArrayInputStream(Base64.getDecoder().decode(certificatePem)));</span>
+
+<span class="fc" id="L107">      final byte[] encoded = Base64.getDecoder().decode(privateKeyPem);</span>
+<span class="fc" id="L108">      final KeyFactory keyFactory = KeyFactory.getInstance(PRIVATE_KEY_ALGORITHM);</span>
+<span class="fc" id="L109">      final PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);</span>
+<span class="fc" id="L110">      privateKey = keyFactory.generatePrivate(keySpec);</span>
+<span class="fc" id="L111">    } catch (CertificateException | IllegalArgumentException | InvalidKeySpecException</span>
+        | NoSuchAlgorithmException e) {
+<span class="fc" id="L113">      final String exception =</span>
+          &quot;Problems encountered while importing Network certificate and private key: &quot;
+<span class="fc" id="L115">              + e.getMessage();</span>
+<span class="fc" id="L116">      logger.error(exception);</span>
+<span class="fc" id="L117">      throw new ParameterException(exception);</span>
+<span class="fc" id="L118">    }</span>
+
+<span class="fc" id="L120">    final CertificatePrivateKeyPair certificatePrivateKeyPair =</span>
+        new CertificatePrivateKeyPair(certificate, privateKey);
+<span class="fc" id="L122">    logger.trace(Trace.EXIT_METHOD_1, &quot;certificatePrivateKeyPair&quot;, certificatePrivateKeyPair);</span>
+<span class="fc" id="L123">    return certificatePrivateKeyPair;</span>
+  }
+
+  public PrivateKey privateKey() {
+<span class="fc" id="L127">    return privateKey;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @exception SerializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère le certificat cryptographique d'identité sérialisé en chaîne de
+   *        caractères au format Base64.
+   * @exception SerializationException Erreur survenue lors de la sérialisation du certificat.
+   * @return Le certificat cryptographique d'identité sérialisé.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public String getAuthentification() throws SerializationException {
+<span class="fc" id="L144">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+    final String authentification;
+    try {
+<span class="fc" id="L148">      authentification = Base64.getEncoder().encodeToString(this.certificate.getEncoded());</span>
+<span class="fc" id="L149">    } catch (CertificateEncodingException e) {</span>
+<span class="fc" id="L150">      final String exception =</span>
+<span class="fc" id="L151">          &quot;Cannot serialize Network layer certificate: &quot; + e.getMessage();</span>
+<span class="fc" id="L152">      logger.error(exception);</span>
+<span class="fc" id="L153">      throw new SerializationException(exception);</span>
+<span class="fc" id="L154">    }</span>
+<span class="fc" id="L155">    logger.trace(Trace.EXIT_METHOD_1, &quot;authentification&quot;, authentification);</span>
+<span class="fc" id="L156">    return authentification;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

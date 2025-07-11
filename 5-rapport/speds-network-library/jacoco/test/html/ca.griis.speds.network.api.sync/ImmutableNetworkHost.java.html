@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableNetworkHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.api.sync</a> &gt; <span class="el_source">ImmutableNetworkHost.java</span></div><h1>ImmutableNetworkHost.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ImmutableNetworkHost.
+ * @brief @~english ImmutableNetworkHost class implementation.
+ */
+
+package ca.griis.speds.network.api.sync;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Info;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.link.api.DataLinkHost;
+import ca.griis.speds.network.api.NetworkHost;
+import ca.griis.speds.network.serialization.NetworkMarshaller;
+import ca.griis.speds.network.service.host.ExchangeDataConfirm;
+import ca.griis.speds.network.service.host.ExchangeDataIndication;
+import ca.griis.speds.network.service.host.ExchangeDataRequest;
+import ca.griis.speds.network.service.host.SentMessageIdSet;
+import ca.griis.speds.network.service.identification.IdentifierGenerator;
+import ca.griis.speds.network.signature.CertificatePrivateKeyPair;
+import ca.griis.speds.network.signature.SealManager;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un hôte immutable de la couche réseau.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-03 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutableNetworkHost implements NetworkHost {
+<span class="fc" id="L61">  private static final GriisLogger logger = getLogger(ImmutableNetworkHost.class);</span>
+
+  private final DataLinkHost dataLinkHost;
+  private final SentMessageIdSet sentMessagesIds;
+  private final ExchangeDataRequest exchangeRequest;
+  private final ExchangeDataConfirm exchangeConfirm;
+  private final ExchangeDataIndication exchangeIndication;
+
+  public ImmutableNetworkHost(DataLinkHost dataLinkHost, String spedsVersion, String spedsReference,
+      CertificatePrivateKeyPair certificatePrivateKeyPair, IdentifierGenerator identifierGenerator,
+<span class="fc" id="L71">      NetworkMarshaller networkMarshaller, SealManager sealManager, SentMessageIdSet sentMessages) {</span>
+<span class="fc" id="L72">    logger.trace(Trace.ENTER_METHOD_7, &quot;dataLinkHost&quot;, dataLinkHost, &quot;spedsVersion&quot;, spedsVersion,</span>
+        &quot;spedsReference&quot;, spedsReference, &quot;certificatePrivateKeyPair&quot;, certificatePrivateKeyPair,
+        &quot;identifierGenerator&quot;, identifierGenerator, &quot;networkMarshaller&quot;, networkMarshaller,
+        &quot;sealManager&quot;, sealManager, &quot;sentMessages&quot;, sentMessages);
+<span class="fc" id="L76">    this.dataLinkHost = dataLinkHost;</span>
+<span class="fc" id="L77">    this.sentMessagesIds = sentMessages;</span>
+
+<span class="fc" id="L79">    this.exchangeRequest = new ExchangeDataRequest(identifierGenerator, networkMarshaller,</span>
+        sentMessagesIds, spedsVersion, spedsReference, certificatePrivateKeyPair, sealManager);
+
+<span class="fc" id="L82">    this.exchangeConfirm = new ExchangeDataConfirm(networkMarshaller, sealManager, sentMessagesIds);</span>
+
+<span class="fc" id="L84">    this.exchangeIndication = new ExchangeDataIndication(networkMarshaller, sealManager,</span>
+        spedsVersion, spedsReference, certificatePrivateKeyPair);
+<span class="fc" id="L86">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L90">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L92">    dataLinkHost.close();</span>
+<span class="fc" id="L93">    sentMessagesIds.clearMessageIds();</span>
+
+<span class="fc" id="L95">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L96">  }</span>
+
+  @Override
+  public void request(String idu) {
+<span class="fc" id="L100">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    try {
+<span class="fc" id="L103">      String idu56 = exchangeRequest.dataRequestProcess(idu);</span>
+<span class="fc" id="L104">      dataLinkHost.request(idu56);</span>
+<span class="fc" id="L105">    } catch (Exception e) {</span>
+<span class="fc" id="L106">      logger.error(Error.GENERIC_ERROR, e.getMessage());</span>
+<span class="fc" id="L107">    }</span>
+
+<span class="fc" id="L109">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L110">  }</span>
+
+  @Override
+  public void response(String idu) {
+<span class="fc" id="L114">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    try {
+<span class="fc" id="L117">      String idu56 = exchangeRequest.dataRequestProcess(idu);</span>
+<span class="fc" id="L118">      dataLinkHost.request(idu56);</span>
+<span class="fc" id="L119">    } catch (Exception e) {</span>
+<span class="fc" id="L120">      logger.error(Error.GENERIC_ERROR, e.getMessage());</span>
+<span class="fc" id="L121">    }</span>
+
+<span class="fc" id="L123">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L124">  }</span>
+
+  @Override
+  public void confirm() {
+<span class="fc" id="L128">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L130">    final String idu56 = dataLinkHost.confirm();</span>
+<span class="fc" id="L131">    logger.info(Info.VARIABLE_LOGGING_1, &quot;idu56&quot;, idu56);</span>
+
+    try {
+<span class="fc" id="L134">      exchangeConfirm.dataConfirmProcess(idu56);</span>
+<span class="fc" id="L135">    } catch (Exception e) {</span>
+<span class="fc" id="L136">      logger.error(Error.GENERIC_ERROR, e.getMessage());</span>
+<span class="fc" id="L137">    }</span>
+
+<span class="fc" id="L139">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L140">  }</span>
+
+  @Override
+  public String indication() {
+<span class="fc" id="L144">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L146">    String msgUp = &quot;&quot;;</span>
+<span class="fc" id="L147">    final String receivedIdu56 = dataLinkHost.indication();</span>
+
+    try {
+      // Validation du message reçu de la couche inférieure
+<span class="fc" id="L151">      exchangeIndication.validateReceivedMessage(receivedIdu56);</span>
+
+      // Création du message d'accusé de réception
+<span class="fc" id="L154">      final String idu56 = exchangeIndication.dataReplyProcess(receivedIdu56);</span>
+
+      // Préparation du message pour la couche supérieure
+<span class="fc" id="L157">      final String idu45 = exchangeIndication.dataIndicationProcess(receivedIdu56);</span>
+<span class="fc" id="L158">      logger.trace(Trace.EXIT_METHOD_1, &quot;idu45&quot;, idu45);</span>
+
+      // Transmettre les IDU
+<span class="fc" id="L161">      dataLinkHost.response(idu56);</span>
+<span class="fc" id="L162">      msgUp = idu45;</span>
+<span class="fc" id="L163">    } catch (Exception e) {</span>
+<span class="fc" id="L164">      logger.error(Error.GENERIC_ERROR, e.getMessage());</span>
+<span class="fc" id="L165">      msgUp = &quot;&quot;;</span>
+<span class="fc" id="L166">    }</span>
+
+<span class="fc" id="L168">    logger.trace(Trace.EXIT_METHOD_1, &quot;msgUp&quot;, msgUp);</span>
+<span class="fc" id="L169">    return msgUp;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

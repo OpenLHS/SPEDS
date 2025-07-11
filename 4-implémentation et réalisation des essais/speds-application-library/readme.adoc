@@ -1,0 +1,209 @@
+// Settings
+:idprefix:
+:idseparator: -
+:component-name: speds-application-library
+:component: SPEDS
+
+= {component-name}
+
+[#summary]
+== Sommaire
+
+La *{component-name}* implémente la couche application du protocole d'échange *{component}* utilisé pour les
+communications entre les différents sous-systèmes utilisant DadaGem.
+
+[#overview]
+== Présentation
+
+Le rôle de *{component-name}* est d’offrir l’interface utilisateur pour échanger sur un réseau aux services et applications.
+
+Un service d'API est offert aux services et applications.
+
+*{component-name}* permet d'effectuer les tâches suivantes :
+
+* Effectuer une demande d’échanger des données sous une requête.
+
+* Confirmer la réponse reçue par l’initiateur de la requête (contient les données que l’entité qui a reçu la demande veut échanger).
+
+* Recevoir la demande d’une requête avec les données échangées par l’initiateur de requête.
+
+* Répondre à un initiateur de requête sous une réponse avec des données à échanger.
+
+* Efface les mémorisations en lien avec le protocole application.
+
+
+
+[#techno]
+== Technologies utilisées
+
+* Languages utilisés :
+** Java
+
+* Les API utilisés :
+** speds-presentation-library
+
+* les applications tièces :
+** S.O
+
+
+[#prerequisite]
+== Préalable
+
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* logiciels prérequis :
+** S.O.
+
+* composants GRIIS prérequis
+** `logger-library`
+** `speds-presentation-library`
+
+* systèmes
+** Multi-plateforme
+
+* matériels prérequis :
+** S.O.
+
+* Autres :
+** `jsonschema2pojo`
+
+
+[#build]
+== Construction
+
+Pour construire la *{component-name}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la *{component-name}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-application-library:${version}"
+}
+----
+
+La *{component-name}* peut être déclarée en utilisant
+ `ca.griis:speds-application-library`.
+
+Pour développer directement sur la *{component-name}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+ Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+=== Interface de programmation
+
+==== Module api
+
+*ApplicationClient*
+
+|===
+| Id du processus | Signature impl.           | Comportement
+| S.O.            | void close()              | Efface les mémorisation en lien avec le protocole application.
+| PRO-1.2         | void request(InterfaceDataUnit01Dto idu)  | Processus où idu est l’entrée et demande une requète.
+| PRO-1.3         | InterfaceDataUnit01Dto confirm()          | Attente de la sortie de la primitive confirm de la couche presentation.
+|===
+
+*ApplicationServer*
+
+|===
+| Id du processus | Signature impl.           | Comportement
+| S.O             | void close()              | Efface les mémorisation en lien avec le protocole application.
+| PRO-3           | InterfaceDataUnit01Dto indication()       | Attente de la sortie de la primitive indication de la couche presentation.
+| PRO-4           | void response(InterfaceDataUnit01Dto idu) | Processus où idu est l’entrée et demande une requète.
+|===
+
+Étant donné que *{component}* fonctionne de façon _sync_, il est important d'appeler la fonctione _request_ pour envoyer le message et
+par la suite la fonction _confirm_ pour recevoir la réponse. Ce processus sera bloquant.
+
+Dû côté serveur, il faudra appeler la fonction _indication_ pour recevoir un message et par la suite la fonction _response_ pour
+envoyer la réponse.
+
+*Package factory*
+
+Définit la fabrique des hôtes du protocole de *{component}*.  Un hôte peut être un client et un serveur sur le protocole *{component}*.
+
+. La fabrique permet:
+.. d'initialiser le service d'entité.
+.. d'initialiser la création d'un hôte respectant des options de configuration:
+... un dictionnaire d'options de configuration en Java.
+... un dictionnaire d'options de configuration sous une chaîne de caractères respectant le format JSON.
+
+*Exemple d'options de configuration*
+
+[source, bash]
+----
+speds.app.version   - Version du protocole de la couche application.
+speds.app.reference - Référence du protocole de la couche application.
+----
+
+
+[#launch]
+== Démarrage
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{component-name}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+include::copyright.adoc[]
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
+

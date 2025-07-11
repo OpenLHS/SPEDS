@@ -1,0 +1,219 @@
+// Settings
+:idprefix:
+:idseparator: -
+:page-component-title: speds-link-library
+:page-component: SPEDS
+
+= {page-component-title}
+
+[#summary]
+== Sommaire
+
+La *{page-component-title}* implémente la couche  liaison du protocole d'échange *{page-component}* utilisé pour les
+communications entre les différents sous-systèmes utilisant DadaGem.
+
+[#overview]
+== Présentation
+Le rôle de *{page-component-title}* est d'échanger des messages liaison entre les sous-systèmes à partir des interfaces établies avec les couches supérieures et inférieures.
+Dans le cadre de *{page-component}*, la couche liaison est la dernière couche avant la couche physique. Comme *{page-component}* se place en surcouche de protocole de communication existant, la couche physique en question est le protocole sous-jacent.
+
+
+Un service d'API est offert pour la couche supérieure.
+
+*{page-component-title}* permet d'effectuer les tâches suivantes :
+
+* Effectuer une demande d’échanger des données sous une requête.
+* Confirmer l’échange de données sous une réponse (contient les données que l’entité qui a reçu la demande veut échanger).
+* Recevoir la demande d’une requête avec les données échangées par l’initiateur de requête.
+* Répondre à un initiateur de requête sous une réponse avec des données à échanger.
+* Libérer les ressources utilisées en lien avec le protocole liaison lors de l’arrêt des échanges.
+
+[#techno]
+== Technologies utilisées
+
+* Languages utilisés :
+** Java
+
+* Les API utilisés :
+* S.O.
+
+* Les applications tierces :
+** cryptography-library
+
+[#prerequisite]
+== Préalable
+
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* Logiciels prérequis :
+** S.O.
+
+* Composants GRIIS prérequis :
+** `cryptography-library`
+** `logger-library`
+
+* Systèmes d'exploitation prérequis :
+** multi-plateforme
+* Matériels prérequis :
+** S.O.
+
+* Autres :
+** `jsonschema2pojo`
+** `reactor-netty`
+
+[#build]
+== Construction
+
+Pour construire la *{page-component-title}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la *{page-component-title}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-link-library:${version}"
+}
+----
+
+La *{page-component-title}* peut être déclarée en utilisant
+ `ca.griis:speds-link-library`.
+
+Pour développer directement sur la *{page-component-title}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+ Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+=== Interface de programmation
+
+==== Module dto
+
+
+Définit l'unité d'interface de données du protcole de *{page-component}* comprenant le type de message.
+
+==== Module api
+*Factory*
+
+Définit la fabrique des hôtes du protocole de *{page-component}* au niveau de la couche liaison.  Un hôte agit permet d'être un client et un serveur sur le protocole *{page-component}*.
+
+. La fabrique permet:
+.. d'initialiser la création d'un hôte respectant des options de configuration:
+... un dictionnaire d'options de configuration en Java.
+... un dictionnaire d'options de configuration sous une chaîne de caractères respectant le format JSON.
+.. d'initialiser les contextes SSL et le HttpHost
+
+*Exemple des options de configuration de la couche*
+
+[, bash]
+----
+speds.dl.protocol  - Protocole de communication. Actuellement, seulement le protocole `https` a être offert.
+speds.dl.https.server.host - Adresse rejoignable du serveur.
+speds.dl.https.server.port - Port du socket du serveur.
+speds.dl.https.server.cert - Certificat sous le format X.509 du serveur.
+speds.dl.https.server.private.key - Clé privée associée au certificat sous le format PKCS #8.
+speds.dl.https.client.cert.trustmanager.mode - Mode de vérification de l'autorité du certificat est signé par une autorité connue.
+----
+
+*DatLinkClient*
+|===
+| Id du processus | Signature impl.           | Comportement
+| S.O.            | void close()              | Efface les mémorisation en lien avec le protocole liaison.
+| PRO-2           | void request(String idu)  | Processus où idu est l’entrée et demande une requète.
+| PRO-3           | String confirm()          | Confirme l’échange de données sous une réponse.
+|===
+
+*DataLinkServer*
+
+|===
+| Id du processus | Signature impl.           | Comportement
+| Non existant    | void close()              | Efface les mémorisation en lien avec le protocole liaison.
+| PRO-4           | String indication()       | Processus où idu est l’entrée et demande une requète.
+| PRO-5           | void response(String idu) | Répond à un initiateur de requête sous une réponse avec des données à échanger.
+|===
+
+Étant donné que *{page-component}* fonctionne de façon _sync_, il est important d'appeler la fonctione _request_ pour envoyer le message et
+par la suite la fonction _confirm_ pour recevoir la réponse. Ce processus sera bloquant.
+
+Du côté serveur, il faudra appeler la fonction _indication_ pour recevoir un message et par la suite la fonction _response_ pour
+envoyer la réponse.
+
+==== Module protocol
+
+Définition des protocoles de communication.  Seul HTTPS est offert et utilise Reactor Netty.
+
+
+[#launch]
+== Démarrage
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{page-component-title}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
+

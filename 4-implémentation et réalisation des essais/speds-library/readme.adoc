@@ -1,0 +1,200 @@
+// Settings
+:idprefix:
+:idseparator: -
+:page-component-title: Bibliothèque - SPEDS
+
+= {page-component-title}
+
+[#summary]
+== Sommaire
+
+La *{page-component-title}* implémente le protocole d'échange SPEDS utilisé pour les
+communications entre les différents sous-systèmes utilisant DadaGem.
+
+[#overview]
+== Présentation
+
+La {page-component-title} implémente les différentes couches protocolaires de la
+suite de protocoles d’échange de données sensibles (SPEDS) permettant de transmettre les messages
+de DadaGem entre ses couches (applicative, présentation, session, transport, réseau et liaison).
+
+[#techno]
+== Technologies utilisées
+
+La bibliothèque {page-component-title} est développée en Java. Tout comme les autres bibliothèques
+, {page-component-title} utilise Gradle comme moteur de production
+(« build automation tools »).
+
+[#prerequisite]
+== Préalable
+
+Avant de débuter, il est important de s’assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* Logiciels prérequis :
+** Java;
+** Gradle.
+
+* Composants GRIIS prérequis :
+** la bibliothèque logger-library;
+** la bibliothèque speds-application-library;
+** la bibliothèque speds-presentation-library;
+** la bibliothèque speds-session-library;
+** la bibliothèque speds-transport-library;
+** la bibliothèque speds-network-library;
+** la bibliothèque speds-link-library;
+
+* Systèmes d'exploitation prérequis :
+** multi-plateforme.
+
+* Matériels prérequis :
+** S.O.
+
+[#build]
+== Construction
+
+=== Gradle
+
+Pour construire la *{page-component-title}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+=== Dépendance
+
+Pour inclure la *{page-component-title}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-library:${version}"
+}
+----
+
+La *{page-component-title}* peut être déclarée en utilisant
+ `ca.griis:speds-library`.
+
+Pour développer directement sur la *{page-component-title}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+ Pour plus de renseignements, consulter la section « <<Construction>> ».
+ 
+=== Interface de programmation - Java
+
+*Package dto*
+
+Définit l'unité d'interface de données du protcole de SPEDS comprenant le type de message.
+
+*Package converter*
+
+Définit les convertisseur d'unité d'interface de données du protcole de SPEDS en unité de protocole de données (message) et vice versa. Les convertisseurs permettent à l'utilisateur de SPEDS la simplification des opérations de conversion.
+
+*Package factory*
+
+Définit la fabrique des hôtes du protocole de SPEDS au niveau de la couche applicative.  Un hôte agit permet d'être un client et un serveur sur le protocole SPEDS. 
+
+. La fabrique permet:
+.. d'initialiser le service d'entité.
+.. d'initialiser la création d'un hôte respectant des options de configuration:
+... un dictionnaire d'options de configuration en Java.
+... un dictionnaire d'options de configuration sous une chaîne de caractères respectant le format JSON.
+
+*Exemple des options de configuration*
+
+[source, bash]
+----
+speds.app.version   - Version du protocole de la couche application.
+speds.app.reference - Référence du protocole de la couche application.
+speds.pre.version   - Version du protocole de la couche présentation.
+speds.pre.reference - Référence du protocole de la couche présentation.
+speds.ses.version   - Version du protocole de la couche session.
+speds.ses.reference - Référence du protocole de la couche session.
+speds.ses.cert - Certificat sous le format X.509.
+speds.ses.private.key - Clé privée associée au certificat sous le format PKCS #8.
+speds.tra.version   - Version du protocole de la couche transport.
+speds.tra.reference - Référence du protocole de la couche transport.
+speds.net.version   - Version du protocole de la couche réseau.
+speds.net.reference - Référence du protocole de la couche réseau.
+speds.net.cert - Certificat sous le format X.509.
+speds.net.private.key - Clé privée associée au certificat sous le format PKCS #8.
+speds.dl.protocol  - Protocole de communication. Actuellement, seulement le protocole `https` a être offert.
+speds.dl.https.server.host - Adresse rejoignable du serveur.
+speds.dl.https.server.port - Port du socket du serveur.
+speds.dl.https.server.cert - Certificat sous le format X.509 du serveur.
+speds.dl.https.server.private.key - Clé privée associée au certificat sous le format PKCS #8.
+speds.dl.https.client.cert.trustmanager.mode - Mode de vérification de l'autorité du certificat est signé par une autorité connue.
+----
+
+[#launch]
+== Démarrage
+
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{page-component-title}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
+

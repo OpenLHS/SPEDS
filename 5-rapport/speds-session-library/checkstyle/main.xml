@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.3">
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/SessionFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/SessionClient.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/SessionServer.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/contract/IdentifierGenerator.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/sync/ImmutableSessionServer.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/sync/ImmutableSessionClient.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/sync/ImmutableSessionFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/sync/SyncSessionFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/sync/ImmutableSessionHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/PgaService.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/InvalidTrackingNumberException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/GetPublicKeyException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/InvalidTokenException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/NoResponseRequestException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/KeyAgreementException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/SessionTerminaisonFailedException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/GetIriException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/CipherException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/DeserializationException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/ParameterException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/VerifyException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/SessionHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/processing/Poller.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/processing/MessageDispatcher.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/processing/SilentIgnoreException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/domain/HostStartupContext.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/domain/ExpandedSidu.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/domain/PiduAndSession.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/domain/SkakWithPubKey.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/domain/SessionId.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/util/KeyMapping.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/util/KeyAlgorithm.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/MessageHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/HandlerRegistry.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/PeerHandlerRegistry.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/SesCleEnvHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/SesFinEnvHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/SesPubEnvHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/SesMsgEnvHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/SesSakEnvHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/SesFinRecHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/InitiatorHandlerRegistry.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/SesSakRecHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/SesCleRecHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/SesPubRecHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/SesMsgRecHandler.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/seal/SealCreator.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/seal/SealVerifier.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/crypto/KeyAgreement.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/serializer/SharedObjectMapper.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/ServerSession.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/ClientSession.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/model/SessionInformation.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/model/PendingConfirmation.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/model/PendingIndication.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/Sidu.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/Spdu.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/PiduContext.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/Options.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/SiduContext.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/SpduHeader.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/MsgType.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/Pidu.java">
+</file>
+<file name="/builds/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/SesPubEnvDto.java">
+</file>
+</checkstyle>

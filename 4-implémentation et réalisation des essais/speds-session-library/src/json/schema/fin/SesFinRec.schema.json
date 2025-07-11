@@ -1,0 +1,34 @@
+{
+  "$id": "https://griis.ca/speds/json/schema/layer/ses/SesFinRec.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SesFinRec - 2025-04-11T11:31:20-0400",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "type": "object",
+  "examples": [
+    {
+      "session": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+      "token": "b2f23f9d-dc93-4460-9fef-88b5ab7b2874"
+    }
+  ],
+  "properties": {
+    "token": {
+      "description": "Session token",
+      "$ref": "#/$defs/uuid"
+    },
+    "session": {
+      "description": "Session identifier",
+      "$ref": "#/$defs/uuid"
+    }
+  },
+  "required": [
+    "token",
+    "session"
+  ],
+  "additionalProperties": false
+}

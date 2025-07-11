@@ -1,0 +1,39 @@
+{
+  "$id": "https://griis.ca/SPEDS/TacheReception.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tâche Reception - 2025-01-16T09:45-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    },
+    "timestamp": {
+      "description": "A valid timestamp.",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the reception of a task",
+  "properties": {
+    "task_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "task_def": {
+      "description": "The identifier of the task definition",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "startTime": {
+      "description": "The time at which the task was started",
+      "$ref": "#/$defs/timestamp"
+    }
+  },
+  "required": [
+    "task_ref",
+    "task_def",
+    "startTime"
+  ],
+  "additionalProperties": false
+}

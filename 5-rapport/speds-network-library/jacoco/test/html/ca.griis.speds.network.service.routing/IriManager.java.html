@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IriManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.service.routing</a> &gt; <span class="el_source">IriManager.java</span></div><h1>IriManager.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe IriManager.
+ * @brief @~english IriManager class implementation.
+ */
+
+package ca.griis.speds.network.service.routing;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.service.exception.DeserializationException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Permet de gérer les IRI à manipuler par la couche Réseau.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-18 [CB] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L65">public class IriManager {</span>
+<span class="fc" id="L66">  private static final GriisLogger logger = getLogger(IriManager.class);</span>
+
+  private static final String ENTITY_CODE_KEY = &quot;code&quot;;
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param serializedIri «Parameter description»
+   * @exception DeserializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère le code d'entité dans l'IRI fourni.
+   * @param serializedIri L'IRI dont le code d'entité est à récupérer.
+   * @exception DeserializationException Erreur survenue lors de la désérialisation de l'IRI.
+   * @return Le code d'entité se trouvant dans l'IRI fourni.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public static String retrieveCode(String serializedIri) throws DeserializationException {
+<span class="fc" id="L85">    logger.trace(Trace.ENTER_METHOD_1, &quot;serializedIri&quot;, serializedIri);</span>
+
+    final String code;
+    try {
+<span class="fc" id="L89">      final URI objectIri = new URI(serializedIri);</span>
+<span class="fc" id="L90">      List&lt;String&gt; codes = splitQuery(objectIri).get(ENTITY_CODE_KEY);</span>
+
+<span class="fc" id="L92">      code = sanitizeCode(codes, serializedIri);</span>
+<span class="fc" id="L93">    } catch (URISyntaxException e) {</span>
+<span class="fc" id="L94">      final String exception =</span>
+<span class="fc" id="L95">          &quot;IRI is not well structured: &quot; + e.getMessage();</span>
+<span class="fc" id="L96">      logger.error(exception);</span>
+<span class="fc" id="L97">      throw new DeserializationException(exception);</span>
+<span class="fc" id="L98">    }</span>
+
+<span class="fc" id="L100">    logger.trace(Trace.EXIT_METHOD_1, &quot;code&quot;, code);</span>
+<span class="fc" id="L101">    return code;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param serializedIri «Parameter description»
+   * @param code «Parameter description»
+   * @exception DeserializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Remplace le code d'entité dans l'IRI par un nouveau code d'entité.
+   * @param serializedIri L'IRI dont le code d'entité est à remplacer.
+   * @param code Le nouveau code d'entité qui figurera dans l'IRI.
+   * @exception DeserializationException Erreur survenue lors de la désérialisation de l'IRI.
+   * @return l'IRI avec le nouveau code d'entité.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public static String replaceCodeWith(String serializedIri, String code)
+      throws DeserializationException {
+    final String uriWithNewCode;
+    try {
+<span class="fc" id="L124">      final URI objectIri = new URI(serializedIri);</span>
+<span class="fc" id="L125">      Map&lt;String, List&lt;String&gt;&gt; queries = splitQuery(objectIri);</span>
+<span class="fc" id="L126">      queries.put(ENTITY_CODE_KEY, List.of(code));</span>
+
+<span class="fc" id="L128">      uriWithNewCode =</span>
+<span class="fc" id="L129">          new URI(objectIri.getScheme(), objectIri.getUserInfo(), objectIri.getHost(),</span>
+<span class="fc" id="L130">              objectIri.getPort(), objectIri.getPath(), joinQuery(queries),</span>
+<span class="fc" id="L131">              objectIri.getFragment()).toString();</span>
+<span class="fc" id="L132">    } catch (URISyntaxException e) {</span>
+<span class="fc" id="L133">      final String exception =</span>
+<span class="fc" id="L134">          &quot;IRI is not well structured: &quot; + e.getMessage();</span>
+<span class="fc" id="L135">      logger.error(exception);</span>
+<span class="fc" id="L136">      throw new DeserializationException(exception);</span>
+<span class="fc" id="L137">    }</span>
+
+<span class="fc" id="L139">    logger.trace(Trace.EXIT_METHOD_1, &quot;uriWithNewCode&quot;, uriWithNewCode);</span>
+<span class="fc" id="L140">    return uriWithNewCode;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param serializedIri «Parameter description»
+   * @param codes «Parameter description»
+   * @exception DeserializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère le code d'entité et effectue des validations sur ce dernier.
+   * @param serializedIri L'IRI contenant le code d'entité.
+   * @param codes La séquence dans laquelle se trouve le code d'entité.
+   * @exception DeserializationException Erreur survenue lors de validation du code d'entité.
+   * @return Le code d'entité.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  private static String sanitizeCode(List&lt;String&gt; codes, String serializedIri)
+      throws DeserializationException {
+<span class="fc" id="L161">    logger.trace(Trace.ENTER_METHOD_2, &quot;codes&quot;, codes, &quot;serializedIri&quot;, serializedIri);</span>
+<span class="fc bfc" id="L162" title="All 4 branches covered.">    if (Objects.isNull(codes) || codes.isEmpty()) {</span>
+<span class="fc" id="L163">      final String exception =</span>
+          &quot;No entity code found in the following IRI: &quot; + serializedIri;
+<span class="fc" id="L165">      logger.error(exception);</span>
+<span class="fc" id="L166">      throw new DeserializationException(exception);</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">    } else if (codes.size() &gt; 1) {</span>
+<span class="fc" id="L168">      final String exception =</span>
+          &quot;Several entity code found in the IRI: &quot; + codes + &quot;. Only one code is allowed.&quot;;
+<span class="fc" id="L170">      logger.error(exception);</span>
+<span class="fc" id="L171">      throw new DeserializationException(exception);</span>
+    }
+
+<span class="fc" id="L174">    final String result = codes.get(0);</span>
+
+<span class="fc" id="L176">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L177">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param uri «Parameter description»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère la portion requête de l'URI et la divise en ensemble de clé-valeur.
+   * @param uri L'URI contenant la portion requête à diviser.
+   * @return L'entrée de clé-valeur résultante.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  private static Map&lt;String, List&lt;String&gt;&gt; splitQuery(URI uri) {
+<span class="fc" id="L193">    logger.trace(Trace.ENTER_METHOD_1, &quot;uri&quot;, uri);</span>
+
+    final Map&lt;String, List&lt;String&gt;&gt; result;
+<span class="fc bfc" id="L196" title="All 4 branches covered.">    if (Objects.isNull(uri.getQuery()) || uri.getQuery().isEmpty()) {</span>
+<span class="fc" id="L197">      result = new ConcurrentHashMap&lt;&gt;();</span>
+    } else {
+<span class="fc" id="L199">      result = Arrays.stream(uri.getQuery().split(&quot;&amp;&quot;))</span>
+<span class="fc" id="L200">          .map(IriManager::splitQueryParameter)</span>
+<span class="fc" id="L201">          .collect(groupingBy(SimpleImmutableEntry::getKey, LinkedHashMap::new,</span>
+<span class="fc" id="L202">              mapping(Map.Entry::getValue, toList())));</span>
+<span class="fc" id="L203">      result.entrySet().forEach(entry -&gt; entry.getValue().removeIf(Objects::isNull));</span>
+    }
+
+<span class="fc" id="L206">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L207">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param keyValue «Parameter description»
+   * @return «Return description»
+   *
+   * @brief @~french Divise une entrée de requête en constituants clé-valeur.
+   * @param keyValue L'entrée de requête à diviser.
+   * @return L'entrée de clé-valeur résultante.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  private static SimpleImmutableEntry&lt;String, String&gt; splitQueryParameter(String keyValue) {
+<span class="fc" id="L223">    logger.trace(Trace.ENTER_METHOD_1, &quot;keyValue&quot;, keyValue);</span>
+
+<span class="fc" id="L225">    final int index = keyValue.indexOf('=');</span>
+
+<span class="fc" id="L227">    String key = keyValue;</span>
+<span class="fc" id="L228">    Optional&lt;String&gt; value = Optional.empty();</span>
+
+<span class="fc bfc" id="L230" title="All 2 branches covered.">    if (index &gt; -1) {</span>
+<span class="fc" id="L231">      key = keyValue.substring(0, index);</span>
+      value =
+<span class="fc bfc" id="L233" title="All 2 branches covered.">          Optional.ofNullable(keyValue.length() &gt; index + 1 ? keyValue.substring(index + 1) : null);</span>
+    }
+
+<span class="fc" id="L236">    final SimpleImmutableEntry&lt;String, String&gt; result = new SimpleImmutableEntry&lt;&gt;(</span>
+<span class="fc" id="L237">        URLDecoder.decode(key, StandardCharsets.UTF_8),</span>
+<span class="fc" id="L238">        value.map(s -&gt; URLDecoder.decode(s, StandardCharsets.UTF_8)).orElse(null));</span>
+
+<span class="fc" id="L240">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L241">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param queries «Parameter description»
+   * @return «Return description»
+   *
+   * @brief @~french Forme une chaîne de caractères représentant la portion requête de l'URI.
+   * @param queries Les requêtes sous forme d'ensemble de clé-valeur.
+   * @return La chaîne de caractères représentant la portion requête de l'IRI.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  private static String joinQuery(Map&lt;String, List&lt;String&gt;&gt; queries) {
+<span class="fc" id="L257">    logger.trace(Trace.ENTER_METHOD_1, &quot;queries&quot;, queries);</span>
+
+<span class="fc" id="L259">    final String result = queries.entrySet().stream()</span>
+<span class="fc" id="L260">        .map(IriManager::joinQueryParameter)</span>
+<span class="fc" id="L261">        .collect(joining(&quot;&amp;&quot;));</span>
+
+<span class="fc" id="L263">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L264">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param queryEntry «Parameter description»
+   * @return «Return description»
+   *
+   * @brief @~french Forme une entrée de requête en chaîne de caractères.
+   * @param queryEntry L'entrée de requête à former.
+   * @return La chaîne de caractères représentant l'entrée de requête.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  private static String joinQueryParameter(Map.Entry&lt;String, List&lt;String&gt;&gt; queryEntry) {
+<span class="fc" id="L280">    logger.trace(Trace.ENTER_METHOD_1, &quot;queryEntry&quot;, queryEntry);</span>
+
+<span class="fc" id="L282">    final String result = queryEntry.getValue().stream()</span>
+<span class="fc" id="L283">        .map(value -&gt; queryEntry.getKey() + &quot;=&quot; + value)</span>
+<span class="fc" id="L284">        .collect(joining(&quot;&amp;&quot;));</span>
+
+<span class="fc" id="L286">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L287">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InterfaceDataUnit-0_1 - 2025-01-30T11:15:00-0500",
+  "description": "An agreed way of communication to SPEDS layers Application (1).",
+  "type": "object",
+  "properties": {
+    "context": {
+      "javaType": "Context",
+      "$ref": "./InterfaceDataUnit-1_2.schema.json#properties/context"
+    },
+    "message": {
+      "description": "The message shared between SPEDS Application layer and the entity. This is the SDU (Service Data Unit) of the Application layer (1).",
+      "type": "string"
+    }
+  },
+  "required": [
+    "context",
+    "message"
+  ],
+  "additionalProperties": false
+}

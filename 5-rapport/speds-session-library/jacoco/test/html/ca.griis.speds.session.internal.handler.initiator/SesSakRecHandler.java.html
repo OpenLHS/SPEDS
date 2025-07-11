@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SesSakRecHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.handler.initiator</a> &gt; <span class="el_source">SesSakRecHandler.java</span></div><h1>SesSakRecHandler.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SesSakRecHandler.
+ * @brief @~english Implementation of the SesSakRecHandler class.
+ */
+
+package ca.griis.speds.session.internal.handler.initiator;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.session.api.dto.sak.SesSakRecDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.PgaService;
+import ca.griis.speds.session.internal.contract.MsgType;
+import ca.griis.speds.session.internal.domain.ExpandedSidu;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.handler.MessageHandler;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.processing.SilentIgnoreException;
+import ca.griis.speds.session.internal.service.seal.SealVerifier;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation du gestionnaire de message SES.SAK.REC
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-29 [MD] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SesSakRecHandler implements MessageHandler {
+<span class="fc" id="L62">  private static final GriisLogger logger = getLogger(SesSakRecHandler.class);</span>
+
+  private final SealVerifier sealVerifier;
+  private final ObjectMapper sharedMapper;
+  private final PgaService pgaService;
+  private final Map&lt;SessionId, SessionInformation&gt; sessionInfo;
+  private final BlockingQueue&lt;ExpandedSidu&gt; queue;
+
+  public SesSakRecHandler(ObjectMapper sharedMapper, PgaService pgaService,
+<span class="fc" id="L71">      BlockingQueue&lt;ExpandedSidu&gt; queue, Map&lt;SessionId, SessionInformation&gt; sessionInformations) {</span>
+<span class="fc" id="L72">    logger.trace(Trace.ENTER_METHOD_4, &quot;sharedMapper&quot;, sharedMapper, &quot;pgaService&quot;, pgaService,</span>
+        &quot;queue&quot;, queue, &quot;sessionInformations&quot;, sessionInformations);
+<span class="fc" id="L74">    this.sharedMapper = sharedMapper;</span>
+<span class="fc" id="L75">    this.pgaService = pgaService;</span>
+<span class="fc" id="L76">    this.queue = queue;</span>
+<span class="fc" id="L77">    this.sessionInfo = sessionInformations;</span>
+<span class="fc" id="L78">    this.sealVerifier = new SealVerifier();</span>
+<span class="fc" id="L79">  }</span>
+
+  @Override
+  public MsgType getHandledType() {
+<span class="fc" id="L83">    return MsgType.SES_SAK_REC;</span>
+  }
+
+  @Override
+  public void handle(ExpandedSidu message) throws SilentIgnoreException {
+<span class="fc" id="L88">    logger.trace(Trace.ENTER_METHOD_1, &quot;message&quot;, message);</span>
+
+    // Authentifier la source de l’envoi
+    // Session
+<span class="fc" id="L92">    SesSakRecDto sesPubEnvDto = null;</span>
+    try {
+<span class="fc" id="L94">      sesPubEnvDto =</span>
+<span class="fc" id="L95">          sharedMapper.readValue((String) message.spdu().getContent(), SesSakRecDto.class);</span>
+<span class="nc" id="L96">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L97">      throw new SilentIgnoreException(&quot;Session required&quot;);</span>
+<span class="fc" id="L98">    }</span>
+<span class="fc" id="L99">    SessionId sessionId = new SessionId(sesPubEnvDto.getSession());</span>
+<span class="fc" id="L100">    SessionInformation sessionInformation = sessionInfo.get(sessionId);</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">    if (sessionInformation == null) {</span>
+<span class="nc" id="L102">      throw new SilentIgnoreException(&quot;Session required&quot;);</span>
+    }
+
+    // Stamp
+    // stamp a été chiffrer avec la clef publique de notre partenaire (source_code)
+    // FO : Devrait être stocker dans la session.
+<span class="fc" id="L108">    String serialKey = pgaService.getPublicKey(sessionInformation.pgaId,</span>
+<span class="fc" id="L109">        message.sidu().getContext().getSourceCode());</span>
+<span class="fc" id="L110">    boolean verifyStamp = sealVerifier.verifySeal(sharedMapper,</span>
+        sesPubEnvDto,
+        serialKey,
+<span class="fc" id="L113">        message.spdu().getStamp());</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">    if (!verifyStamp) {</span>
+<span class="fc" id="L115">      throw new SilentIgnoreException(&quot;Stamp is invalid&quot;);</span>
+    }
+
+<span class="fc" id="L118">    dispatch(message);</span>
+
+<span class="fc" id="L120">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L121">  }</span>
+
+  private void dispatch(ExpandedSidu expandedSidu) {
+<span class="fc" id="L124">    logger.trace(Trace.ENTER_METHOD_1, &quot;expandedSidu&quot;, expandedSidu);</span>
+
+    try {
+<span class="fc" id="L127">      queue.put(expandedSidu);</span>
+<span class="nc" id="L128">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L129">      throw new RuntimeException(e);</span>
+<span class="fc" id="L130">    }</span>
+<span class="fc" id="L131">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L132">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

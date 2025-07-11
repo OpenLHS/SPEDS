@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>SharedObjectMapper.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @file</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @copyright @@GRIIS_COPYRIGHT@@</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @licence @@GRIIS_LICENCE@@</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @version @@GRIIS_VERSION@@</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @brief @~french Impl&#233;mentation de la classe SharedObjectMapper.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @brief @~english Implementation of the class SharedObjectMapper.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package ca.griis.speds.network.serialization;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.fasterxml.jackson.databind.DeserializationFeature;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.fasterxml.jackson.databind.ObjectMapper;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @brief @~english &#171;Brief component description (class, interface, ...)&#187;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Details</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      &#171;Detailed description of the component (optional)&#187;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Model</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      &#171;Model (Abstract, automation, etc.) (optional)&#187;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Conception</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      &#171;Conception description (criteria and constraints) (optional)&#187;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Limits</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      &#171;Limits description (optional)&#187;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @brief @~french Partage une instance de l&#39;objet pour la s&#233;rialisation et d&#233;s&#233;rialisation JSON.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par D&#233;tails</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      S.O.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Mod&#232;le</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      S.O.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Conception</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      S.O.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Limites</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      S.O.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Historique</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      2020-01-07 [MBJ] - Premi&#232;re &#233;bauche.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @note 2020-01-07 [FO] - Un seul objet est partag&#233; pour l&#39;ensemble du projet, ce que recommande la</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *       documentation officielle de la biblioth&#232;que Jackson. Voir</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *       https://fasterxml.github.io/jackson-databind/javadoc/2.6/com/fasterxml/jackson/databind/ObjectMapper.html.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *       Cet objet est toutefois partag&#233; pour tous les fils d&#39;ex&#233;cution, ce qui semble provoquer</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *       des probl&#232;mes de performance pour certains de ces fils. Dans le cas o&#249; ce probl&#232;me se</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *       produit, la solution serait de d&#233;finir une instance d&#39;objet par fil d&#39;ex&#233;cution et non une</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *       instance pour tous les fils d&#39;ex&#233;cution.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par T&#226;ches</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      S.O.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class SharedObjectMapper {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_55'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final ObjectMapper mapper;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>  protected SharedObjectMapper() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    mapper = new ObjectMapper();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_62'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>  private static class LazyHolder {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_63'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    static final SharedObjectMapper instance = new SharedObjectMapper();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_65'/>
+65
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_65'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_66'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public static SharedObjectMapper getInstance() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_67'/>
+67
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_67'>1</a>
+<span>
+1. getInstance : replaced return value with null for ca/griis/speds/network/serialization/SharedObjectMapper::getInstance &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return LazyHolder.instance;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_68'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_69'/>
+69
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_69'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_70'/>
+70
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_70'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public ObjectMapper getMapper() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_71'/>
+71
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_71'>1</a>
+<span>
+1. getMapper : replaced return value with null for ca/griis/speds/network/serialization/SharedObjectMapper::getMapper &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return mapper;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_72'/>
+72
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_72'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5c09d180_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_73'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5c09d180_67'>67</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_67'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getInstance<br/><b>Killed by : </b>ca.griis.speds.network.unit.serialization.SharedObjectMapperTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.SharedObjectMapperTest]/[method:mapperTest()]</span></span> replaced return value with null for ca/griis/speds/network/serialization/SharedObjectMapper::getInstance &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5c09d180_71'>71</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5c09d180_71'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getMapper<br/><b>Killed by : </b>ca.griis.speds.network.unit.serialization.SharedObjectMapperTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.SharedObjectMapperTest]/[method:mapperTest()]</span></span> replaced return value with null for ca/griis/speds/network/serialization/SharedObjectMapper::getMapper &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>ca.griis.speds.network.unit.serialization.SharedObjectMapperTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.SharedObjectMapperTest]/[method:mapperTest()] (0 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:marshallToTransportSuccess()] (0 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:unmarshallFromDataLinkSuccess()] (1 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:unmarshallFromTransportSuccess()] (1 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:marshallNetworkPduSuccess()] (1 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:marshallToDataLinkSuccess()] (2 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:unmarshallFromDataLinkException()] (2 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:unmarshallFromTransportException()] (2 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:marshallNetworkPduException()] (2 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:marshallToDataLinkException()] (2 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest]/[method:confirm_WrongMessageTypeException()] (1 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:unmarshallNetworkPduException()] (4 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest]/[method:confirm_PduIdException()] (1 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest]/[method:confirm_MissingAuthException()] (1 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest]/[method:testValidateReceivedMessage_WrongMessageTypeException()] (1 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataRequestTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataRequestTest]/[method:requestSerializationException()] (1 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest]/[method:testDataIndicationProcess()] (1 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest]/[method:testValidateReceivedMessage_MissingAughExceptionNull()] (1 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest]/[method:confirm_MissingAuthExceptionNull()] (1 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:unmarshallNetworkPduSuccess()] (7 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest]/[method:testValidateReceivedMessage_MissingAughException()] (1 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:closeSuccess()] (3 ms)</li><li>ca.griis.speds.network.unit.signature.SealManagerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.signature.SealManagerTest]/[method:createSeal2Exception()] (1 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:responseDeserializationException()] (2 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:requestDeserializationException()] (5 ms)</li><li>ca.griis.speds.network.unit.api.sync.SyncNetworkFactoryTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.SyncNetworkFactoryTest]/[method:initHostBadJsonParameters()] (10 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:indicationInvalidMessageType()] (4 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:confirmInvalidPduId()] (4 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:indicationMissingAuthentification()] (4 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest]/[method:testDataReplyProcess()] (5 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:indicationInvalidContentSignature()] (5 ms)</li><li>ca.griis.speds.network.unit.signature.SealManagerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.signature.SealManagerTest]/[method:sealTestStringSuccess()] (12 ms)</li><li>ca.griis.speds.network.unit.signature.SealManagerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.signature.SealManagerTest]/[method:sealTestObjectSuccess()] (13 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest]/[method:confirm_SignatureException()] (12 ms)</li><li>ca.griis.speds.network.unit.api.sync.SyncNetworkFactoryTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.SyncNetworkFactoryTest]/[method:testInitSessionHostCalled()] (25 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest]/[method:testValidateReceivedMessage_ContentSealExceptionNull()] (15 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataConfirmTest]/[method:confirmSuccess()] (17 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataRequestTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataRequestTest]/[method:requestSuccess()] (23 ms)</li><li>ca.griis.speds.network.unit.signature.SealManagerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.signature.SealManagerTest]/[method:createSealException()] (38 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:requestSuccess()] (28 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest]/[method:testValidateReceivedMessage_ContentSealException()] (26 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest]/[method:testValidateReceivedMessageSuccess()] (26 ms)</li><li>ca.griis.speds.network.unit.api.sync.SyncNetworkFactoryTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.SyncNetworkFactoryTest]/[method:initHostSuccess()] (41 ms)</li><li>ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.service.host.ExchangeDataIndicationTest]/[method:testValidateReceivedMessage_HeaderSealException()] (27 ms)</li><li>ca.griis.speds.network.unit.api.sync.SyncNetworkFactoryTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.SyncNetworkFactoryTest]/[method:initHostRandomUUID()] (34 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:confirmInvalidSignature()] (34 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:confirmInvalidMessageType()] (43 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:confirmMissingAuthentification()] (44 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:confirmSuccess()] (47 ms)</li><li>ca.griis.speds.network.unit.api.sync.SyncNetworkFactoryTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.SyncNetworkFactoryTest]/[method:noArgConstructorTest()] (103 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:indicationSuccess()] (70 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:responseSuccess()] (208 ms)</li><li>ca.griis.speds.network.unit.serialization.NetworkMarshallerTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.serialization.NetworkMarshallerTest]/[method:marshallToTransportException()] (428 ms)</li><li>ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest.[engine:junit-jupiter]/[class:ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest]/[method:indicationInvalidHeaderSignature()] (1270 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.16.1
+
+</body>
+</html>

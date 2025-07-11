@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolDataUnit-1-APP - 2024-12-04T15:00:00-0500",
+  "description": "For the Application Layer of SPEDS (Layer 1) : a unit of data which is transferred from one end of a connection to the other with no loss of identity or meaning.",
+  "type": "object",
+  "properties": {
+    "header": {
+      "description": "The header of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "properties": {
+        "msgtype": {
+          "description": "The type of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "enum": [
+            "TACHE.ENVOI",
+            "TACHE.RECEPTION",
+            "FIN.ENVOI",
+            "FIN.RECEPTION",
+            "EXCEPTION.ENVOI",
+            "EXCEPTION.RECEPTION",
+            "DATA.ENVOI",
+            "DATA.RECEPTION",
+            "STATUT.ENVOI",
+            "STATUT.RECEPTION",
+            "COMMANDE.ENVOI",
+            "COMMANDE.RECEPTION",
+            "PGA.FIN",
+            "PGA.CONFIRMATION"
+          ]
+        },
+        "id": {
+          "description": "The identifier of a SPEDS message. Mandatory in all layers.",
+              "type": "string",
+              "format": "uuid"
+        },
+        "parameters": {
+          "description": "The parameters of the Application layer.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        },
+        "SPEDS" : {
+          "type": "object",
+          "properties": {
+            "version": {
+              "description": "The version of the SPEDS protocol used for this SDU.",
+              "type": "string",
+              "pattern": "^[0-9]+(\\.[0-9]+)(\\.[0-9]+[a-z]?)$"
+            },
+            "reference": {
+              "description": "The reference of the SPEDS protocol version used for this SDU.",
+              "type": "string",
+              "format": "iri"
+            }
+          },
+          "required": [
+              "version",
+              "reference"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "msgtype",
+        "id",
+        "parameters",
+        "SPEDS"
+      ]
+    },
+    "content": {
+      "description": "The content of a SPEDS message. Mandatory in all layers.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "header",
+    "content"
+  ],
+  "additionalProperties": false
+}

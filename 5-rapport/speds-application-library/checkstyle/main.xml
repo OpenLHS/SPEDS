@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.3">
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/api/ApplicationHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/api/ApplicationServer.java">
+</file>
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/api/ApplicationFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/api/ApplicationClient.java">
+</file>
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/api/sync/SyncApplicationFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/api/sync/ImmutableApplicationHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/api/exception/SerializationException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/api/exception/InvalidPduIdException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/api/exception/DeserializationException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/api/exception/ParameterException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-application-library/src/main/java/ca/griis/speds/application/serializer/SharedObjectMapper.java">
+</file>
+</checkstyle>

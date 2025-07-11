@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SealCreator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.service.seal</a> &gt; <span class="el_source">SealCreator.java</span></div><h1>SealCreator.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe SealCreator.
+ * @brief @~english Contains description of SealCreator class.
+ */
+
+package ca.griis.speds.session.internal.service.seal;
+
+import ca.griis.cryptography.asymmetric.signature.entity.DigitalSignature;
+import ca.griis.cryptography.asymmetric.signature.signing.RsaSigning;
+import ca.griis.cryptography.encryption.Encryptor;
+import ca.griis.cryptography.hash.entity.Hash;
+import ca.griis.cryptography.hash.hashing.Hashing;
+import ca.griis.cryptography.hash.hashing.Sha512Hashing;
+import ca.griis.cryptography.symmetric.encryption.AesGcmEncryptor;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.exception.CipherException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.security.PrivateKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.util.Base64;
+import javax.crypto.SecretKey;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Permet de gérer des estampilles au sein des messages session.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-17 [SSC] - Implémentation initiale&lt;br&gt;
+ *      2025-06-29 [MD] - Split SealManager &amp;&amp; parameter ObjectMapper&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L62">public class SealCreator {</span>
+<span class="fc" id="L63">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(SealCreator.class);</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Création d'un sceau: une signature avec un algorithme de signature
+   * @param value L'object à partir duquel le sceau est créé
+   * @param privateKey la clé privée
+   * @param sharedMapper l'objet de serialisation
+   * @exception CipherException Erreur dans la création du sceau
+   * @return la signature du sceau
+   */
+  public String createSeal(Object value, PrivateKey privateKey, ObjectMapper sharedMapper) {
+<span class="fc" id="L79">    logger.trace(Trace.ENTER_METHOD_2, &quot;value&quot;, value, &quot;privateKey&quot;, privateKey);</span>
+
+    final Hash stamp;
+    try {
+<span class="fc" id="L83">      stamp = createStampHash(value, sharedMapper);</span>
+<span class="fc" id="L84">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L85">      throw new CipherException(e.getMessage());</span>
+<span class="fc" id="L86">    }</span>
+    // Signature
+<span class="fc" id="L88">    final RsaSigning rsaSign = new RsaSigning((RSAPrivateKey) privateKey);</span>
+<span class="fc" id="L89">    final DigitalSignature ds = rsaSign.sign(stamp.getBytes());</span>
+<span class="fc" id="L90">    final String signedSeal = Base64.getEncoder().encodeToString(ds.getBytes());</span>
+
+<span class="fc" id="L92">    logger.trace(Trace.EXIT_METHOD_1, &quot;signedSeal&quot;, signedSeal);</span>
+<span class="fc" id="L93">    return signedSeal;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Création d'un sceau à partir de l'algorithme de chiffrement symétrique
+   * @param value L'object à partir duquel le sceau est créé
+   * @param skak la clé secrète
+   * @param sharedMapper l'objet de serialisation
+   * @exception CipherException Erreur dans la création du sceau
+   * @return le sceau chiffré
+   */
+  public String createSymmetricalSeal(Object value, SecretKey skak, ObjectMapper sharedMapper) {
+<span class="fc" id="L110">    logger.trace(Trace.ENTER_METHOD_2, &quot;value&quot;, value, &quot;skak&quot;, skak);</span>
+<span class="fc" id="L111">    Hash stamp = null;</span>
+    try {
+<span class="fc" id="L113">      stamp = createStampHash(value, sharedMapper);</span>
+<span class="fc" id="L114">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L115">      throw new CipherException(e.getMessage());</span>
+<span class="fc" id="L116">    }</span>
+
+<span class="fc" id="L118">    Encryptor encryptor = new AesGcmEncryptor(skak);</span>
+<span class="fc" id="L119">    byte[] encryptedSealB = encryptor.encrypt(stamp.getBytes());</span>
+<span class="fc" id="L120">    String encryptedSeal = Base64.getEncoder().encodeToString(encryptedSealB);</span>
+
+<span class="fc" id="L122">    logger.trace(Trace.EXIT_METHOD_1, &quot;encryptedSeal&quot;, encryptedSeal);</span>
+<span class="fc" id="L123">    return encryptedSeal;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Création de l'empreinte numérique
+   * @param value L'object à hasher
+   * @param sharedMapper l'objet de serialisation
+   * @exception JsonProcessingException Erreur de sérialisation
+   * @return le hash de l'empreinte
+   */
+  private Hash createStampHash(Object value, ObjectMapper sharedMapper)
+      throws JsonProcessingException {
+<span class="fc" id="L140">    logger.trace(Trace.ENTER_METHOD_1, &quot;value&quot;, value);</span>
+    // création de l'empreinte numérique
+<span class="fc" id="L142">    byte[] bytes = sharedMapper.writeValueAsBytes(value);</span>
+<span class="fc" id="L143">    Hashing sha512 = new Sha512Hashing();</span>
+<span class="fc" id="L144">    final Hash stamp = sha512.hash(bytes);</span>
+
+<span class="fc" id="L146">    logger.trace(Trace.EXIT_METHOD_1, &quot;stamp&quot;, stamp);</span>
+<span class="fc" id="L147">    return stamp;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

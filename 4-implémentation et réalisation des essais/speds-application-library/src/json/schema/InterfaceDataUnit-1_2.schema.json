@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InterfaceDataUnit-1_2 - 2025-02-13T11:02-0500",
+  "description": "An agreed way of communication among SPEDS layers Application (1) and Presentation (2).",
+  "type": "object",
+  "properties": {
+    "context": {
+      "description": "The context shared between these two SPEDS layers. This is the ICI (Interface Control Information), i.e. an information passed across an interface to coordinate interactions between two adjacent layers.",
+      "type": "object",
+      "javaType": "Context",
+      "properties": {
+        "PGA": {
+          "description": "The PGA identifier (a Lodad GUID).",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "source_code": {
+          "description": "The source entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "destination_code": {
+          "description": "The destination entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "tracking_number": {
+          "description": "The number used to track the SDU. If the SDU is a response (resp. a confirmation), it should be the tracking number of the corresponding original indication (resp. request).",
+          "type": "string",
+          "format": "uuid"
+        },
+        "options": {
+          "description": "The options shared between the layers.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "PGA",
+        "source_code",
+        "destination_code",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "message": {
+      "description": "The message shared between these two SPEDS layers. This is the SDU (Service Data Unit) of the Application layer (1).",
+      "type": "string"
+    }
+  },
+  "required": [
+    "context",
+    "message"
+  ],
+  "additionalProperties": false
+}

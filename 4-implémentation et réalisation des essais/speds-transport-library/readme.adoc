@@ -1,0 +1,205 @@
+// Settings
+:idprefix:
+:idseparator: -
+:component-name: speds-transport-library
+:component: SPEDS
+
+= {component-name}
+
+[#summary]
+== Sommaire
+
+La *{component-name}* implémente la couche transport du protocole d'échange *{component}* utilisé pour les
+communications entre les différents sous-systèmes utilisant DadaGem.
+
+[#overview]
+== Présentation
+
+Le rôle de *{component-name}* est d'échanger des messages transport entre les sous-systèmes à partir des interfaces établies avec les couches supérieures et inférieures.
+Ceci implique la création de messages transport et les réponses à ces messages.
+
+Un service d'API est offert pour la couche supérieure.
+
+*{component-name}* permet d'effectuer les tâches suivantes :
+
+* Effectuer une demande d’échanger des données sous des messages requêtes.
+
+* Confirmer la réponse reçue par l’initiateur de la requête (contient les données que l’initiateur de la requête veut échanger).
+
+* Recevoir la demande d’une requête avec les données échangées par l’initiateur de requête.
+
+* Répondre à un initiateur de requête sous une réponse avec des données à échanger.
+
+* Libérer les ressources utilisées en lien avec le protocole transport lors de l’arrêt des échanges.
+
+[#techno]
+== Technologies utilisées
+
+* Languages utilisés :
+** Java
+
+* Les API utilisés :
+** speds-network-library
+
+* Les applications tierces :
+** cryptography-library
+
+[#prerequisite]
+== Préalable
+
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* Logiciels prérequis :
+** S.O.
+
+* Composants GRIIS prérequis :
+** `cryptography-library`
+** `logger-library`
+** `speds-network-library`
+
+
+* Systèmes
+** Multi-plateforme
+
+* Matériels prérequis :
+** S.O.
+
+* Autres :
+** `jsonschema2pojo`
+
+[#build]
+== Construction
+
+Pour construire *{component-name}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure *{component-name}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-transport-library:${version}"
+}
+----
+
+*{component-name}* peut être déclarée en utilisant
+`ca.griis:speds-transport-library`.
+
+Pour développer directement sur *{component-name}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+=== Interface de programmation
+
+==== Module api
+
+*TransportClient*
+
+|===
+| Id du processus | Signature impl.               | Comportement
+| S.O.            | void close()                  | Libère les ressources en lien avec le protocole transport.
+| PRO-04          | void dataRequest(String idu)  | Requête d’échange de données
+| PRO-05          | void dataConfirm()            | Confirmer la réception d’une réponse à une requête d’échange de données
+|===
+
+*TransportServer*
+
+|===
+| Id du processus | Signature impl.               | Comportement
+| S.O.            | void close()                  | Libère les ressources en lien avec le protocole transport.
+| PRO-11          | String dataReply()            | Recevoir une requête d’échange de donnée
+|===
+
+Étant donné que *{component}* fonctionne de façon synchrone, il est important d'appeler la fonctionne _dataRequest_ pour envoyer le message et
+par la suite la fonction _dataConfirm_ pour recevoir la réponse. Ce processus sera bloquant.
+
+Du côté serveur, il faudra appeler la fonction _dataReply_ pour recevoir et envoyer la réponse.
+
+*Package factory*
+
+Définit la fabrique des hôtes du protocole de *{component}*.  Un hôte permet d’être un client et un serveur sur le protocole *{component}*. La fabrique permet donc la création d’un hôte respectant des options de configuration nécessaires au bon déroulement du protocole de la couche transport.
+
+*Exemple des options de configuration*
+
+[source, bash]
+----
+speds.tra.version   - Version du protocole de la couche transport.
+speds.tra.reference - Référence du protocole de la couche transport.
+----
+
+[#launch]
+== Démarrage
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{component-name}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
+

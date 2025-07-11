@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableSessionServer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.api.sync</a> &gt; <span class="el_source">ImmutableSessionServer.java</span></div><h1>ImmutableSessionServer.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ImmutableSessionServer.
+ * @brief @~english Implementation of the ImmutableSessionServer class.
+ */
+
+package ca.griis.speds.session.api.sync;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.link.api.exception.ProtocolException;
+import ca.griis.speds.session.api.SessionServer;
+import ca.griis.speds.session.api.exception.DeserializationException;
+import ca.griis.speds.session.internal.contract.Pidu;
+import ca.griis.speds.session.internal.domain.HostStartupContext;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.processing.Poller;
+import ca.griis.speds.session.internal.service.ServerSession;
+import ca.griis.speds.session.internal.service.seal.SealCreator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un server immutable de la couche session.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-03 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutableSessionServer implements SessionServer {
+<span class="fc" id="L62">  private static final GriisLogger logger = getLogger(ImmutableSessionServer.class);</span>
+
+  private final ObjectMapper sharedMapper;
+  private final ServerSession serverSession;
+
+<span class="fc" id="L67">  public ImmutableSessionServer(HostStartupContext hostStartupContext, Poller poller) {</span>
+<span class="fc" id="L68">    this.sharedMapper = hostStartupContext.sharedMapper();</span>
+<span class="fc" id="L69">    this.serverSession = new ServerSession(hostStartupContext, poller, new SealCreator());</span>
+<span class="fc" id="L70">  }</span>
+
+  @Override
+  public String indicateDataExchange() {
+<span class="nc" id="L74">    return indication();</span>
+  }
+
+  @Override
+  public String indication() {
+<span class="fc" id="L79">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L80">    Pidu pidu = this.serverSession.getPendingMessage();</span>
+    String serialPidu;
+    try {
+<span class="fc" id="L83">      serialPidu = sharedMapper.writeValueAsString(pidu);</span>
+<span class="nc" id="L84">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L85">      throw new RuntimeException(e);</span>
+<span class="fc" id="L86">    }</span>
+<span class="fc" id="L87">    return serialPidu;</span>
+  }
+
+  @Override
+  public void response(String idu) throws ProtocolException {
+<span class="fc" id="L92">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    Pidu pidu;
+    try {
+<span class="fc" id="L96">      pidu = sharedMapper.readValue(idu, Pidu.class);</span>
+<span class="nc" id="L97">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L98">      throw new DeserializationException(&quot;Unable to read IDU&quot;, e);</span>
+<span class="fc" id="L99">    }</span>
+
+<span class="fc" id="L101">    serverSession.sendReply(pidu);</span>
+<span class="fc" id="L102">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L103">  }</span>
+
+  @Override
+  public void close() {
+<span class="nc" id="L107">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="nc" id="L109">    serverSession.close();</span>
+
+<span class="nc" id="L111">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="nc" id="L112">  }</span>
+
+  @Override
+  public void closePreservingSessionStates() {
+<span class="fc" id="L116">    serverSession.closePreservingSessionStates();</span>
+<span class="fc" id="L117">  }</span>
+
+  @Override
+  public void clearSessionStates() {
+<span class="fc" id="L121">    serverSession.clearSessionStates();</span>
+<span class="fc" id="L122">  }</span>
+
+  public Map&lt;SessionId, SessionInformation&gt; getServerInfo() {
+<span class="fc" id="L125">    return this.serverSession.getSessionInfo();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

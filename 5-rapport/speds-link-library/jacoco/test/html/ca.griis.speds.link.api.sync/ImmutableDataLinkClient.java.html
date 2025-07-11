@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableDataLinkClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.link.api.sync</a> &gt; <span class="el_source">ImmutableDataLinkClient.java</span></div><h1>ImmutableDataLinkClient.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ImmutableDataLinkClient.
+ * @brief @~english Implementation of the ImmutableDataLinkClient class.
+ */
+
+package ca.griis.speds.link.api.sync;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.link.api.dto.Context56Dto;
+import ca.griis.js2p.gen.speds.link.api.dto.InterfaceDataUnit56Dto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.communication.protocol.ProtocolIdu;
+import ca.griis.speds.link.api.exception.ProtocolException;
+import ca.griis.speds.link.api.exception.SerializationException;
+import ca.griis.speds.link.api.exception.VerificationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un client de la couche liaison.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-06 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutableDataLinkClient {
+<span class="fc" id="L59">  private static final GriisLogger logger = getLogger(ImmutableDataLinkClient.class);</span>
+
+  private final ObjectMapper objectMapper;
+  private final ConcurrentHashMap&lt;UUID, UUID&gt; trackingNumbers;
+
+<span class="fc" id="L64">  ImmutableDataLinkClient(ObjectMapper objectMapper) {</span>
+<span class="fc" id="L65">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L66">    this.trackingNumbers = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L67">  }</span>
+
+  public void close() {
+<span class="fc" id="L70">    trackingNumbers.clear();</span>
+<span class="fc" id="L71">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Demande d’échanger des données.
+   * @param idu L’interface d’unité de données de la couche supérieure et la couche liaison sous le
+   *        format JSON.
+   * @return Les données à échanger au protocole.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public ProtocolIdu request(String idu) {
+<span class="fc" id="L88">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L90">    InterfaceDataUnit56Dto interfaceDataUnit56Dto = null;</span>
+    try {
+<span class="fc" id="L92">      interfaceDataUnit56Dto =</span>
+<span class="fc" id="L93">          objectMapper.readValue(idu, InterfaceDataUnit56Dto.class);</span>
+<span class="fc" id="L94">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L95">      throw new SerializationException(&quot;Invalid idu format !&quot;, e);</span>
+<span class="fc" id="L96">    }</span>
+
+<span class="fc" id="L98">    Context56Dto ici = interfaceDataUnit56Dto.getContext();</span>
+<span class="fc bfc" id="L99" title="All 4 branches covered.">    if (ici == null || !new IriVerification().isValidIri(ici.getDestinationIri())) {</span>
+<span class="fc" id="L100">      throw new VerificationException(&quot;Invalid ici or IRI value !&quot;);</span>
+    }
+
+    // keep tracking number
+<span class="fc" id="L104">    UUID messageId = UUID.randomUUID();</span>
+<span class="fc" id="L105">    trackingNumbers.put(messageId, ici.getTrackingNumber());</span>
+
+<span class="fc" id="L107">    String sdu = interfaceDataUnit56Dto.getMessage();</span>
+<span class="fc bfc" id="L108" title="All 4 branches covered.">    if (sdu == null || sdu.trim().isEmpty()) {</span>
+<span class="fc" id="L109">      throw new VerificationException(&quot;Invalid sdu value !&quot;);</span>
+    }
+
+<span class="fc" id="L112">    ProtocolIdu protocolIdu = new ProtocolIdu(ici.getDestinationIri(), messageId, sdu);</span>
+<span class="fc" id="L113">    logger.trace(Trace.EXIT_METHOD_1, &quot;protocolIdu&quot;, protocolIdu);</span>
+<span class="fc" id="L114">    return protocolIdu;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Confirme l’échange de données.
+   * @param protocolIdu Les données reçues du protocole.
+   * @return L’interface d’unité de données de la couche supérieure et la couche liaison sous le
+   *         format JSON.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public String confirm(ProtocolIdu protocolIdu) {
+<span class="fc" id="L132">    logger.trace(Trace.ENTER_METHOD_1, &quot;protocolIdu&quot;, protocolIdu);</span>
+
+<span class="fc bfc" id="L134" title="All 2 branches covered.">    if (!trackingNumbers.containsKey(protocolIdu.messageIdentifier())) {</span>
+<span class="fc" id="L135">      throw new ProtocolException(&quot;Unable to find tracking number&quot;);</span>
+    }
+<span class="fc" id="L137">    UUID trackingNumber = trackingNumbers.remove(protocolIdu.messageIdentifier());</span>
+<span class="fc" id="L138">    Context56Dto ici = new Context56Dto(protocolIdu.destinationUri(), trackingNumber, false);</span>
+<span class="fc" id="L139">    String sdu = protocolIdu.sdu();</span>
+
+<span class="fc" id="L141">    InterfaceDataUnit56Dto idu = new InterfaceDataUnit56Dto(ici, sdu);</span>
+
+<span class="fc" id="L143">    String iduJson = null;</span>
+    try {
+<span class="fc" id="L145">      iduJson = objectMapper.writeValueAsString(idu);</span>
+<span class="fc" id="L146">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L147">      throw new SerializationException(&quot;serialization failed !&quot;, e);</span>
+<span class="fc" id="L148">    }</span>
+
+<span class="fc" id="L150">    logger.trace(Trace.EXIT_METHOD_1, &quot;iduJson&quot;, iduJson);</span>
+<span class="fc" id="L151">    return iduJson;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

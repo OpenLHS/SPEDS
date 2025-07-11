@@ -1,0 +1,24 @@
+{
+  "$id": "https://griis.ca/SPEDS/StatutEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "StatutEnvoi - 2024-01-16T13:48-0500",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to send the status of a given task",
+  "properties": {
+    "status": {
+      "description": "A status (a partial execution trace) represented as a Lodad expression of a UWi (Unit of Work instance)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status"
+  ],
+  "additionalProperties": false
+}

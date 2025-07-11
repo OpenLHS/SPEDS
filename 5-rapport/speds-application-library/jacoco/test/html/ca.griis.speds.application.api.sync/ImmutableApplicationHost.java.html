@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableApplicationHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-application-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.application.api.sync</a> &gt; <span class="el_source">ImmutableApplicationHost.java</span></div><h1>ImmutableApplicationHost.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe ImmutableApplicationHost.
+ * @brief @~english Contains description of ImmutableApplicationHost class.
+ */
+
+package ca.griis.speds.application.api.sync;
+
+import ca.griis.js2p.gen.speds.application.api.dto.ContextDto;
+import ca.griis.js2p.gen.speds.application.api.dto.HeaderDto;
+import ca.griis.js2p.gen.speds.application.api.dto.InterfaceDataUnit01Dto;
+import ca.griis.js2p.gen.speds.application.api.dto.InterfaceDataUnit12Dto;
+import ca.griis.js2p.gen.speds.application.api.dto.ProtocolDataUnit1APPDto;
+import ca.griis.js2p.gen.speds.application.api.dto.SPEDSDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.application.api.ApplicationHost;
+import ca.griis.speds.application.api.exception.DeserializationException;
+import ca.griis.speds.application.api.exception.InvalidPduIdException;
+import ca.griis.speds.application.api.exception.SerializationException;
+import ca.griis.speds.presentation.api.PresentationHost;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation synchrone de l'interface du service ApplicationHost
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-01-28 [SSC] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutableApplicationHost implements ApplicationHost {
+<span class="fc" id="L65">  private static final GriisLogger logger =</span>
+<span class="fc" id="L66">      GriisLoggerFactory.getLogger(ImmutableApplicationHost.class);</span>
+
+  private final ObjectMapper sharedObject;
+  private final Set&lt;UUID&gt; threadSafeUniqueMessageId;
+  private final ConcurrentMap&lt;UUID, UUID&gt; threadSafeTrackingNumber;
+  private final PresentationHost presentationHost;
+  private final String spedsVersion;
+  private final String spedsReference;
+
+  ImmutableApplicationHost(PresentationHost host, ObjectMapper shareObject, String spedsVersion,
+<span class="fc" id="L76">      String spedsReference) {</span>
+<span class="fc" id="L77">    this.presentationHost = host;</span>
+<span class="fc" id="L78">    this.sharedObject = shareObject;</span>
+<span class="fc" id="L79">    this.threadSafeUniqueMessageId = ConcurrentHashMap.newKeySet();</span>
+<span class="fc" id="L80">    this.threadSafeTrackingNumber = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L81">    this.spedsVersion = spedsVersion;</span>
+<span class="fc" id="L82">    this.spedsReference = spedsReference;</span>
+<span class="fc" id="L83">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L87">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L89">    threadSafeUniqueMessageId.clear();</span>
+<span class="fc" id="L90">    threadSafeTrackingNumber.clear();</span>
+<span class="fc" id="L91">    presentationHost.close();</span>
+
+<span class="fc" id="L93">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L94">  }</span>
+
+  @Override
+  public void request(InterfaceDataUnit01Dto iduDto) {
+<span class="fc" id="L98">    logger.trace(Trace.ENTER_METHOD_1, &quot;iduDto&quot;, iduDto);</span>
+
+    // ajout de l'identifiant du message à notre liste d'envoi pour validation future
+    try {
+<span class="fc" id="L102">      commitMessageToMemory(iduDto.getMessage());</span>
+
+<span class="fc" id="L104">      ContextDto context =</span>
+<span class="fc" id="L105">          new ContextDto(iduDto.getContext().getPga(), iduDto.getContext().getSourceCode(),</span>
+<span class="fc" id="L106">              iduDto.getContext().getDestinationCode(), null, Boolean.FALSE);</span>
+<span class="fc" id="L107">      InterfaceDataUnit12Dto exit = new InterfaceDataUnit12Dto(context, iduDto.getMessage());</span>
+
+      // sérialisation du message
+<span class="fc" id="L110">      String idu = sharedObject.writeValueAsString(exit);</span>
+      // call underline layer with idu
+<span class="fc" id="L112">      presentationHost.request(idu);</span>
+<span class="fc" id="L113">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L114">      throw new DeserializationException(e);</span>
+<span class="fc" id="L115">    }</span>
+<span class="fc" id="L116">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L117">  }</span>
+
+  @Override
+  public InterfaceDataUnit01Dto confirm() {
+<span class="fc" id="L121">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L122">    String idu = presentationHost.confirm();</span>
+    InterfaceDataUnit12Dto iduIn;
+    try {
+<span class="fc" id="L125">      iduIn = sharedObject.readValue(idu, InterfaceDataUnit12Dto.class);</span>
+
+      // Vérifier et valider la confirmation reçue
+<span class="fc" id="L128">      ProtocolDataUnit1APPDto receivedSdu = validatePdu(iduIn.getMessage());</span>
+
+      // Construction du Protocol Data Unit de la couche application à partir de celui reçu
+<span class="fc" id="L131">      HeaderDto newHeader =</span>
+<span class="fc" id="L132">          new HeaderDto(receivedSdu.getHeader().getMsgtype(), receivedSdu.getHeader().getId(),</span>
+              Boolean.FALSE, new SPEDSDto(spedsVersion, spedsReference));
+<span class="fc" id="L134">      ProtocolDataUnit1APPDto newPdu =</span>
+<span class="fc" id="L135">          new ProtocolDataUnit1APPDto(newHeader, receivedSdu.getContent());</span>
+<span class="fc" id="L136">      String newSdu = sharedObject.writeValueAsString(newPdu);</span>
+
+<span class="fc" id="L138">      ContextDto context =</span>
+<span class="fc" id="L139">          new ContextDto(iduIn.getContext().getPga(), iduIn.getContext().getSourceCode(),</span>
+<span class="fc" id="L140">              iduIn.getContext().getDestinationCode(), Boolean.FALSE);</span>
+<span class="fc" id="L141">      InterfaceDataUnit01Dto iduOut = new InterfaceDataUnit01Dto(context, newSdu);</span>
+
+<span class="fc" id="L143">      logger.trace(Trace.EXIT_METHOD_1, &quot;iduOut&quot;, iduOut);</span>
+<span class="fc" id="L144">      return iduOut;</span>
+<span class="fc" id="L145">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L146">      throw new DeserializationException(&quot;Received IDU is invalid.&quot;, e);</span>
+    }
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto indication() {
+<span class="fc" id="L152">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L153">    String idu12 = presentationHost.indication();</span>
+
+    InterfaceDataUnit12Dto iduIn;
+    try {
+<span class="fc" id="L157">      iduIn = sharedObject.readValue(idu12, InterfaceDataUnit12Dto.class);</span>
+
+<span class="fc" id="L159">      String sdu = iduIn.getMessage();</span>
+<span class="fc" id="L160">      ProtocolDataUnit1APPDto receivedPdu = retrievePdu(sdu);</span>
+
+      // Sauvegarde du trackingNumber pour référence future dans response
+<span class="fc" id="L163">      threadSafeTrackingNumber.put(receivedPdu.getHeader().getId(),</span>
+<span class="fc" id="L164">          iduIn.getContext().getTrackingNumber());</span>
+
+      // Construction du Protocol Data Unit de la couche application à partir de celui reçu
+<span class="fc" id="L167">      HeaderDto newHeader =</span>
+<span class="fc" id="L168">          new HeaderDto(receivedPdu.getHeader().getMsgtype(), receivedPdu.getHeader().getId(),</span>
+              Boolean.FALSE, new SPEDSDto(spedsVersion, spedsReference));
+<span class="fc" id="L170">      ProtocolDataUnit1APPDto newPdu =</span>
+<span class="fc" id="L171">          new ProtocolDataUnit1APPDto(newHeader, receivedPdu.getContent());</span>
+<span class="fc" id="L172">      String newSdu = sharedObject.writeValueAsString(newPdu);</span>
+
+<span class="fc" id="L174">      ContextDto context =</span>
+<span class="fc" id="L175">          new ContextDto(iduIn.getContext().getPga(), iduIn.getContext().getSourceCode(),</span>
+<span class="fc" id="L176">              iduIn.getContext().getDestinationCode(), Boolean.FALSE);</span>
+<span class="fc" id="L177">      InterfaceDataUnit01Dto iduOut = new InterfaceDataUnit01Dto(context, newSdu);</span>
+
+<span class="fc" id="L179">      logger.trace(Trace.EXIT_METHOD_1, &quot;iduOut&quot;, iduOut);</span>
+<span class="fc" id="L180">      return iduOut;</span>
+<span class="fc" id="L181">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L182">      throw new DeserializationException(&quot;Received IDU/SDU is invalid.&quot;, e);</span>
+    }
+  }
+
+  @Override
+  public void response(InterfaceDataUnit01Dto iduDto) {
+<span class="fc" id="L188">    logger.trace(Trace.ENTER_METHOD_1, &quot;iduDto&quot;, iduDto);</span>
+
+    try {
+<span class="fc" id="L191">      ProtocolDataUnit1APPDto pdu = this.retrievePdu(iduDto.getMessage());</span>
+
+<span class="fc bfc" id="L193" title="All 2 branches covered.">      if (threadSafeTrackingNumber.containsKey(pdu.getHeader().getId())) {</span>
+        // Construction de l'IDU
+<span class="fc" id="L195">        ContextDto context =</span>
+<span class="fc" id="L196">            new ContextDto(iduDto.getContext().getPga(), iduDto.getContext().getSourceCode(),</span>
+<span class="fc" id="L197">                iduDto.getContext().getDestinationCode(),</span>
+<span class="fc" id="L198">                threadSafeTrackingNumber.get(pdu.getHeader().getId()), Boolean.FALSE);</span>
+
+        // retirer le message id-trackingNumber de la map
+<span class="fc" id="L201">        threadSafeTrackingNumber.remove(pdu.getHeader().getId());</span>
+
+        // On ne sérialise pas le message reçu en entré, car on prend pour acquis qu'il l'est déjà
+<span class="fc" id="L204">        InterfaceDataUnit12Dto exit = new InterfaceDataUnit12Dto(context, iduDto.getMessage());</span>
+
+        // sérialisation de l'idu pour l'envoi
+<span class="fc" id="L207">        String iduStr = sharedObject.writeValueAsString(exit);</span>
+
+        // appel de la couche d'en dessous avec le idu
+<span class="fc" id="L210">        presentationHost.response(iduStr);</span>
+<span class="fc" id="L211">      } else {</span>
+<span class="fc" id="L212">        throw new InvalidPduIdException(</span>
+            &quot;This response does not correspond to a preceding indication.&quot;);
+      }
+<span class="fc" id="L215">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L216">      throw new SerializationException(e);</span>
+<span class="fc" id="L217">    }</span>
+
+<span class="fc" id="L219">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L220">  }</span>
+
+  /**
+   * @brief @~french Obtenir le ProtocolDataUnit à partir du JSON
+   * @param pdu la chaîne de caractères JSON
+   * @exception JsonProcessingException La chaîne de caractères ne correspond pas à un PDU
+   * @return Le PDU
+   */
+  private ProtocolDataUnit1APPDto retrievePdu(String pdu) throws JsonProcessingException {
+<span class="fc" id="L229">    logger.trace(Trace.ENTER_METHOD_1, &quot;pdu&quot;, pdu);</span>
+<span class="fc" id="L230">    ProtocolDataUnit1APPDto pduApp = sharedObject.readValue(pdu, ProtocolDataUnit1APPDto.class);</span>
+<span class="fc" id="L231">    logger.trace(Trace.EXIT_METHOD_1, &quot;pduApp&quot;, pduApp);</span>
+<span class="fc" id="L232">    return pduApp;</span>
+  }
+
+  /**
+   * @brief @~french Valider que la chaîne de caractère est un PDU et que l'identifiant du message
+   *        est reconnu
+   * @param message le message à valider et vérifier
+   * @return Le PDU reçu
+   * @exception DeserializationException Le message n'est pas un pdu valide.
+   * @exception InvalidPduIdException L'identifiant du message ne correspond pas à un envoi
+   *            précédent.
+   */
+  private ProtocolDataUnit1APPDto validatePdu(String message)
+      throws DeserializationException, InvalidPduIdException {
+<span class="fc" id="L246">    logger.trace(Trace.ENTER_METHOD_1, &quot;message&quot;, message);</span>
+    try {
+<span class="fc" id="L248">      ProtocolDataUnit1APPDto pdu = retrievePdu(message);</span>
+<span class="fc" id="L249">      verifyMessageId(pdu.getHeader().getId());</span>
+<span class="fc" id="L250">      logger.trace(Trace.EXIT_METHOD_1, &quot;pdu&quot;, pdu);</span>
+<span class="fc" id="L251">      return pdu;</span>
+<span class="fc" id="L252">    } catch (JsonProcessingException ex) {</span>
+<span class="fc" id="L253">      throw new DeserializationException(&quot;Pdu is not as expected.&quot;, ex);</span>
+    }
+  }
+
+  /**
+   * @brief @~french Ajout de l'identifiant d'un message à la liste d'envoi
+   * @param messageStr Le message
+   * @return le numéro du message
+   */
+  private UUID commitMessageToMemory(String messageStr) throws JsonProcessingException {
+<span class="fc" id="L263">    logger.trace(Trace.ENTER_METHOD_1, &quot;messageStr&quot;, messageStr);</span>
+<span class="fc" id="L264">    ProtocolDataUnit1APPDto pdu = retrievePdu(messageStr);</span>
+<span class="fc" id="L265">    UUID msgId = pdu.getHeader().getId();</span>
+<span class="fc" id="L266">    threadSafeUniqueMessageId.add(msgId);</span>
+
+<span class="fc" id="L268">    logger.trace(Trace.EXIT_METHOD_1, &quot;messageId&quot;, msgId);</span>
+<span class="fc" id="L269">    return msgId;</span>
+  }
+
+  /**
+   * @brief @~french Vérifier que l'identifiant de message est la confirmation d'un message
+   *        précédemment envoyé
+   * @param messageId l'identifiant du message
+   * @exception InvalidPduIdException confirmation d'aucun envoi
+   */
+  private void verifyMessageId(UUID messageId) throws InvalidPduIdException {
+<span class="fc" id="L279">    logger.trace(Trace.ENTER_METHOD_1, &quot;messageId&quot;, messageId);</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">    if (threadSafeUniqueMessageId.contains(messageId)) {</span>
+<span class="fc" id="L281">      threadSafeUniqueMessageId.remove(messageId);</span>
+    } else {
+<span class="fc" id="L283">      throw new InvalidPduIdException(&quot;Le message est la confirmation d'aucun des envois.&quot;);</span>
+    }
+<span class="fc" id="L285">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L286">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

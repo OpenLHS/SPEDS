@@ -1,0 +1,39 @@
+{
+  "$id": "https://griis.ca/speds/json/schema/layer/ses/SesCleEnv.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SesCleEnv - 2025-04-11T11:01:22-0400",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "bytestring": {
+      "description": "A base-64 encoded bytestring",
+      "type": "string",
+      "contentEncoding": "base64"
+    }
+  },
+  "type": "object",
+  "examples": [
+    {
+      "content": "RkI5OTMwM0UxMkI4RTBBOTAzNDYwNjVBOURGODY3RDFDMkFERUU0MzVCMjhCQTkyMUJEQjA5OTVDOUI2OTA0Qw==",
+      "session": "b2f23f9d-dc93-4460-9fef-88b5ab7b2874"
+    }
+  ],
+  "properties": {
+    "content": {
+      "description": "The encrypted 'key transfer' JSON object by the SKAK key, encoded into Base64.",
+      "$ref": "#/$defs/bytestring"
+    },
+    "session": {
+      "description": "The session token",
+      "$ref": "#/$defs/uuid"
+    }
+  },
+  "required": [
+    "content",
+    "session"
+  ],
+  "additionalProperties": false
+}

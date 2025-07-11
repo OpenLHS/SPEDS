@@ -1,0 +1,1 @@
+resources : dossier contenant les fichiers resources

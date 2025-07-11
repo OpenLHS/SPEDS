@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SealVerifier.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.service.seal</a> &gt; <span class="el_source">SealVerifier.java</span></div><h1>SealVerifier.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe SealVerifier.
+ * @brief @~english Contains description of SealVerifier class.
+ */
+
+package ca.griis.speds.session.internal.service.seal;
+
+import ca.griis.cryptography.asymmetric.signature.entity.DigitalSignature;
+import ca.griis.cryptography.asymmetric.signature.verification.RsaVerifySigning;
+import ca.griis.cryptography.encryption.Decryptor;
+import ca.griis.cryptography.hash.entity.Hash;
+import ca.griis.cryptography.hash.hashing.Hashing;
+import ca.griis.cryptography.hash.hashing.Sha512Hashing;
+import ca.griis.cryptography.symmetric.encryption.AesGcmDecryptor;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.exception.CipherException;
+import ca.griis.speds.session.internal.util.KeyAlgorithm;
+import ca.griis.speds.session.internal.util.KeyMapping;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.BufferUnderflowException;
+import java.nio.charset.StandardCharsets;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
+import java.util.Base64;
+import javax.crypto.SecretKey;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Permet de gérer des estampilles au sein des messages session.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-17 [SSC] - Implémentation initiale&lt;br&gt;
+ *      2025-06-29 [MD] - Split SealManager &amp;&amp; parameter ObjectMapper&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L66">public class SealVerifier {</span>
+<span class="fc" id="L67">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(SealVerifier.class);</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Vérification du sceau signé
+   * @param value l'object à partir duquel on compare la signature
+   * @param publicKey la clé publique
+   * @param seal le sceau à vérifier
+   * @exception CipherException Le seau n'a pu être vérifié
+   * @return Vrai si le sceau est vérifié avec succès
+   */
+  public Boolean verifySeal(ObjectMapper sharedMapper, Object value, String publicKey,
+      String seal) {
+<span class="fc" id="L84">    logger.trace(Trace.ENTER_METHOD_3, &quot;value&quot;, value, &quot;publicKey&quot;, publicKey, &quot;seal&quot;, seal);</span>
+
+<span class="fc" id="L86">    Boolean result = false;</span>
+    try {
+<span class="fc" id="L88">      final Hash stamp = createStampHash(value, sharedMapper);</span>
+
+<span class="fc" id="L90">      final RsaVerifySigning verifySigning =</span>
+          new RsaVerifySigning(
+<span class="fc" id="L92">              (RSAPublicKey) KeyMapping.getPublicKeyFromString(publicKey, KeyAlgorithm.RSA));</span>
+<span class="fc" id="L93">      final DigitalSignature ds =</span>
+<span class="fc" id="L94">          new DigitalSignature(Base64.getDecoder().decode(seal.getBytes(StandardCharsets.UTF_8)));</span>
+<span class="fc" id="L95">      result = verifySigning.verify(stamp.getBytes(), ds);</span>
+<span class="fc" id="L96">    } catch (CipherException | SecurityException | JsonProcessingException</span>
+        | IllegalArgumentException e) {
+<span class="fc" id="L98">      logger.debug(&quot;Failed to verify seal: {}&quot;, e.toString());</span>
+<span class="fc" id="L99">    }</span>
+
+<span class="fc" id="L101">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L102">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Vérification du sceau chiffré avec un algorithme de chiffrement symétrique
+   * @param value L'object à partir duquel on compare
+   * @param secretKey la clé secrète skak
+   * @param seal le sceau à vérifier
+   * @param sharedMapper l'objet de serialisation
+   * @return Vrai si le sceau est vérifié avec succès
+   */
+  public Boolean verifySymmetricalSeal(Object value, SecretKey secretKey, String seal,
+      ObjectMapper sharedMapper) {
+<span class="fc" id="L120">    logger.trace(Trace.ENTER_METHOD_4, &quot;value&quot;, value, &quot;secretKey&quot;, secretKey, &quot;seal&quot;, seal,</span>
+        &quot;sharedMapper&quot;, sharedMapper);
+<span class="fc" id="L122">    Boolean result = false;</span>
+    try {
+<span class="fc" id="L124">      Hash stamp = createStampHash(value, sharedMapper);</span>
+
+<span class="fc" id="L126">      Decryptor decryptor = new AesGcmDecryptor(secretKey);</span>
+<span class="fc" id="L127">      byte[] valueByte = Base64.getDecoder().decode(seal);</span>
+<span class="fc" id="L128">      byte[] decryptedContent = decryptor.decrypt(valueByte);</span>
+<span class="fc" id="L129">      result = Arrays.equals(decryptedContent, stamp.getBytes());</span>
+<span class="fc" id="L130">    } catch (BufferUnderflowException | SecurityException | JsonProcessingException</span>
+        | IllegalArgumentException e) {
+<span class="fc" id="L132">      logger.debug(&quot;Failed to verify seal: {}&quot;, e.toString());</span>
+<span class="fc" id="L133">    }</span>
+
+<span class="fc" id="L135">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L136">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Création de l'empreinte numérique
+   * @param value L'object à hasher
+   * @param sharedMapper l'objet de serialisation
+   * @exception JsonProcessingException Erreur de sérialisation
+   * @return le hash de l'empreinte
+   */
+  private Hash createStampHash(Object value, ObjectMapper sharedMapper)
+      throws JsonProcessingException {
+<span class="fc" id="L153">    logger.trace(Trace.ENTER_METHOD_1, &quot;value&quot;, value);</span>
+    // création de l'empreinte numérique
+<span class="fc" id="L155">    byte[] bytes = sharedMapper.writeValueAsBytes(value);</span>
+<span class="fc" id="L156">    Hashing sha512 = new Sha512Hashing();</span>
+<span class="fc" id="L157">    final Hash stamp = sha512.hash(bytes);</span>
+
+<span class="fc" id="L159">    logger.trace(Trace.EXIT_METHOD_1, &quot;stamp&quot;, stamp);</span>
+<span class="fc" id="L160">    return stamp;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

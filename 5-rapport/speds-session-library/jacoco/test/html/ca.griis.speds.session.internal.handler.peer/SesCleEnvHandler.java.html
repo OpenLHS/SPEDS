@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SesCleEnvHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.handler.peer</a> &gt; <span class="el_source">SesCleEnvHandler.java</span></div><h1>SesCleEnvHandler.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SesCleEnvHandler.
+ * @brief @~english Implementation of the SesCleEnvHandler class.
+ */
+
+package ca.griis.speds.session.internal.handler.peer;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.cryptography.encryption.Encryptor;
+import ca.griis.cryptography.symmetric.encryption.AesGcmDecryptor;
+import ca.griis.cryptography.symmetric.encryption.AesGcmEncryptor;
+import ca.griis.js2p.gen.speds.session.api.dto.HeaderDto;
+import ca.griis.js2p.gen.speds.session.api.dto.SPEDSDto;
+import ca.griis.js2p.gen.speds.session.api.dto.cle.KeyTransferDto;
+import ca.griis.js2p.gen.speds.session.api.dto.cle.SesCleEnvDto;
+import ca.griis.js2p.gen.speds.session.api.dto.cle.SesCleRecDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.PgaService;
+import ca.griis.speds.session.api.exception.VerifyException;
+import ca.griis.speds.session.internal.contract.MsgType;
+import ca.griis.speds.session.internal.contract.Sidu;
+import ca.griis.speds.session.internal.contract.SiduContext;
+import ca.griis.speds.session.internal.contract.Spdu;
+import ca.griis.speds.session.internal.contract.SpduHeader;
+import ca.griis.speds.session.internal.domain.ExpandedSidu;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.handler.MessageHandler;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.processing.SilentIgnoreException;
+import ca.griis.speds.session.internal.service.seal.SealCreator;
+import ca.griis.speds.session.internal.service.seal.SealVerifier;
+import ca.griis.speds.transport.api.TransportHost;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Map;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation du gestionnaire de message SES.CLE.ENV
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-29 [MD] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SesCleEnvHandler implements MessageHandler {
+<span class="fc" id="L80">  private static final GriisLogger logger = getLogger(SesCleEnvHandler.class);</span>
+
+  private final SPEDSDto speds;
+  private final ObjectMapper sharedMapper;
+  private final SealVerifier sealVerifier;
+  private final PgaService pgaService;
+  private final SealCreator sealCreator;
+  private final TransportHost transportHost;
+  private final Map&lt;SessionId, SessionInformation&gt; sessionInfo;
+
+  public SesCleEnvHandler(SPEDSDto speds, ObjectMapper sharedObject, PgaService pgaService,
+<span class="fc" id="L91">      TransportHost transportHost, Map&lt;SessionId, SessionInformation&gt; sessionInfo) {</span>
+<span class="fc" id="L92">    logger.trace(Trace.ENTER_METHOD_5, &quot;speds&quot;, speds, &quot;sharedObject&quot;, sharedObject, &quot;pgaService&quot;,</span>
+        pgaService, &quot;transportHost&quot;, transportHost, &quot;sessionInfo&quot;, sessionInfo);
+<span class="fc" id="L94">    this.sharedMapper = sharedObject;</span>
+<span class="fc" id="L95">    this.pgaService = pgaService;</span>
+<span class="fc" id="L96">    this.sealCreator = new SealCreator();</span>
+<span class="fc" id="L97">    this.sealVerifier = new SealVerifier();</span>
+<span class="fc" id="L98">    this.speds = speds;</span>
+<span class="fc" id="L99">    this.transportHost = transportHost;</span>
+<span class="fc" id="L100">    this.sessionInfo = sessionInfo;</span>
+<span class="fc" id="L101">  }</span>
+
+  @Override
+  public MsgType getHandledType() {
+<span class="fc" id="L105">    return MsgType.SES_CLE_ENV;</span>
+  }
+
+  @Override
+  public void handle(ExpandedSidu message) throws SilentIgnoreException {
+<span class="fc" id="L110">    logger.trace(Trace.ENTER_METHOD_1, &quot;message&quot;, message);</span>
+
+    // Récupérer les informations de la session.
+<span class="fc" id="L113">    SesCleEnvDto sesCleEnvDto = null;</span>
+    try {
+<span class="fc" id="L115">      sesCleEnvDto =</span>
+<span class="fc" id="L116">          sharedMapper.readValue((String) message.spdu().getContent(), SesCleEnvDto.class);</span>
+<span class="nc" id="L117">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L118">      throw new SilentIgnoreException(&quot;Session required&quot;);</span>
+<span class="fc" id="L119">    }</span>
+
+<span class="fc" id="L121">    SessionId sessionId = new SessionId(sesCleEnvDto.getSession());</span>
+<span class="fc" id="L122">    SessionInformation sessionInformation = sessionInfo.get(sessionId);</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">    if (sessionInformation == null) {</span>
+<span class="nc" id="L124">      throw new SilentIgnoreException(&quot;Session required&quot;);</span>
+    }
+
+    // Authentifier la source de l’envoi.
+    // Stamp
+<span class="fc" id="L129">    verifyStamp(message, sessionInformation, sesCleEnvDto, sessionId);</span>
+
+    // Traiter le contenu
+<span class="fc" id="L132">    AesGcmDecryptor aesGcmDecryptor = new AesGcmDecryptor(sessionInformation.skak);</span>
+<span class="fc" id="L133">    byte[] encryptedBytes = Base64.getDecoder().decode(sesCleEnvDto.getContent());</span>
+<span class="fc" id="L134">    byte[] decryptedBytes = aesGcmDecryptor.decrypt(encryptedBytes);</span>
+    KeyTransferDto keyTransferDto;
+    try {
+<span class="fc" id="L137">      keyTransferDto = sharedMapper.readValue(decryptedBytes, KeyTransferDto.class);</span>
+<span class="nc" id="L138">    } catch (IOException e) {</span>
+<span class="nc" id="L139">      throw new RuntimeException(e);</span>
+<span class="fc" id="L140">    }</span>
+
+<span class="fc" id="L142">    byte[] keyBytes = Base64.getDecoder().decode(keyTransferDto.getSdek());</span>
+<span class="fc" id="L143">    SecretKey sdek = new SecretKeySpec(keyBytes, 0, keyBytes.length, &quot;AES&quot;);</span>
+
+<span class="fc" id="L145">    SessionInformation updatedInfo = SessionInformation.builder()</span>
+<span class="fc" id="L146">        .of(sessionInformation)</span>
+<span class="fc" id="L147">        .pgaId(keyTransferDto.getPgaNumber())</span>
+<span class="fc" id="L148">        .sdek(sdek)</span>
+<span class="fc" id="L149">        .build();</span>
+<span class="fc" id="L150">    sessionInfo.put(sessionId, updatedInfo);</span>
+
+    // Vérifier légitimité
+<span class="fc" id="L153">    verifyLegit(updatedInfo, sessionId);</span>
+
+    // Transmettre la réponse
+<span class="fc" id="L156">    Sidu sidu = buildSidu(message, sdek, keyTransferDto, sessionId, sessionInformation);</span>
+
+    // dispatch
+<span class="fc" id="L159">    dispatch(sidu);</span>
+
+<span class="fc" id="L161">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L162">  }</span>
+
+  private Sidu buildSidu(ExpandedSidu message, SecretKey sdek, KeyTransferDto keyTransferDto,
+      SessionId sessionId, SessionInformation sessionInformation) {
+    // SDU
+<span class="fc" id="L167">    Encryptor encryptor = new AesGcmEncryptor(sdek);</span>
+<span class="fc" id="L168">    byte[] encryptedToken =</span>
+<span class="fc" id="L169">        encryptor.encrypt(keyTransferDto.getToken().toString().getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L170">    String encryptedTokenStr = Base64.getEncoder().encodeToString(encryptedToken);</span>
+<span class="fc" id="L171">    SesCleRecDto sesCleRecDto = new SesCleRecDto(encryptedTokenStr, sessionId.id());</span>
+    String serialSesClef;
+    try {
+<span class="fc" id="L174">      serialSesClef = sharedMapper.writeValueAsString(sesCleRecDto);</span>
+<span class="nc" id="L175">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L176">      throw new RuntimeException(e);</span>
+<span class="fc" id="L177">    }</span>
+
+    // SPDU
+<span class="fc" id="L180">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_CLE_REC,</span>
+<span class="fc" id="L181">        message.spdu().getHeader().getId(),</span>
+<span class="fc" id="L182">        false,</span>
+        this.speds);
+<span class="fc" id="L184">    String stamp = sealCreator.createSymmetricalSeal(serialSesClef, sessionInformation.skak,</span>
+        sharedMapper);
+<span class="fc" id="L186">    Spdu spdu = null;</span>
+<span class="fc" id="L187">    spdu = new Spdu(spduHeader, stamp, serialSesClef);</span>
+
+    // SIDU
+<span class="fc" id="L190">    SiduContext siduContext = new SiduContext(</span>
+<span class="fc" id="L191">        message.sidu().getContext().getDestinationCode(),</span>
+<span class="fc" id="L192">        message.sidu().getContext().getSourceCode(),</span>
+<span class="fc" id="L193">        message.sidu().getContext().getDestinationIri(),</span>
+<span class="fc" id="L194">        message.sidu().getContext().getTrackingNumber(),</span>
+<span class="fc" id="L195">        message.sidu().getContext().getSourceIri(),</span>
+<span class="fc" id="L196">        false);</span>
+
+    Sidu sidu;
+    try {
+<span class="fc" id="L200">      sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
+<span class="nc" id="L201">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L202">      throw new RuntimeException(e);</span>
+<span class="fc" id="L203">    }</span>
+<span class="fc" id="L204">    return sidu;</span>
+  }
+
+  private void verifyStamp(ExpandedSidu message, SessionInformation sessionInformation,
+      SesCleEnvDto sesCleEnvDto, SessionId sessionId) throws SilentIgnoreException {
+<span class="fc" id="L209">    boolean verifyStamp = sealVerifier.verifySymmetricalSeal(sesCleEnvDto,</span>
+        sessionInformation.skak,
+<span class="fc" id="L211">        message.spdu().getStamp(),</span>
+        sharedMapper);
+<span class="fc bfc" id="L213" title="All 2 branches covered.">    if (!verifyStamp) {</span>
+<span class="fc" id="L214">      sessionInfo.remove(sessionId);</span>
+<span class="fc" id="L215">      throw new SilentIgnoreException(&quot;Stamp is invalid&quot;);</span>
+    }
+<span class="fc" id="L217">  }</span>
+
+  private void verifyLegit(SessionInformation updatedInfo, SessionId sessionId) {
+<span class="fc" id="L220">    boolean isLegit = pgaService.verifyLegitimacy(updatedInfo.pgaId, updatedInfo.initiatorId,</span>
+        updatedInfo.initiatorPubKey);
+
+<span class="fc bfc" id="L223" title="All 2 branches covered.">    if (!isLegit) {</span>
+<span class="fc" id="L224">      sessionInfo.remove(sessionId);</span>
+<span class="fc" id="L225">      throw new VerifyException(&quot;Untrusted source: rejected by the PGA.&quot;);</span>
+    }
+<span class="fc" id="L227">  }</span>
+
+  private void dispatch(Sidu sidu) {
+<span class="fc" id="L230">    logger.trace(Trace.ENTER_METHOD_1, &quot;sidu&quot;, sidu);</span>
+
+    String serialSidu;
+
+    try {
+<span class="fc" id="L235">      serialSidu = sharedMapper.writeValueAsString(sidu);</span>
+<span class="nc" id="L236">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L237">      throw new RuntimeException(e);</span>
+<span class="fc" id="L238">    }</span>
+
+<span class="fc" id="L240">    transportHost.dataRequest(serialSidu);</span>
+<span class="fc" id="L241">    transportHost.dataConfirm();</span>
+
+<span class="fc" id="L243">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L244">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

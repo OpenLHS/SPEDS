@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.3">
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/communication/protocol/ProtocolServer.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/communication/protocol/ProtocolHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/communication/protocol/https/HttpPdu.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/communication/protocol/https/HttpsHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/communication/protocol/ProtocolClient.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/communication/protocol/ProtocolIdu.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/DataLinkServer.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/DataLinkHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/DataLinkFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/DataLinkClient.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/dto/InitInParamsDto.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/sync/IriVerification.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/sync/ImmutableDataLinkHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/sync/ImmutableDataLinkServer.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/sync/ImmutableDataLinkClient.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/sync/ImmutableDataLinkFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/exception/ProtocolException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/exception/SerializationException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/exception/ParameterException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/api/exception/VerificationException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-link-library/src/main/java/ca/griis/speds/link/serializer/SharedObjectMapper.java">
+</file>
+</checkstyle>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExchangeDataConfirmation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.service.client</a> &gt; <span class="el_source">ExchangeDataConfirmation.java</span></div><h1>ExchangeDataConfirmation.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ExchangeDataConfirmation.
+ * @brief @~english Implementation of the ExchangeDataConfirmation class.
+ */
+
+package ca.griis.speds.transport.service.client;
+
+import ca.griis.cryptography.hash.entity.Hash;
+import ca.griis.cryptography.hash.hashing.Sha512Hashing;
+import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.transport.exception.ContentSealException;
+import ca.griis.speds.transport.exception.DeserializationException;
+import ca.griis.speds.transport.exception.HeaderSealException;
+import ca.griis.speds.transport.exception.SerializationException;
+import ca.griis.speds.transport.serializer.SharedObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Set;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Un processus de confirmation d'échange de données.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-04 [JM] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="nc" id="L59">public class ExchangeDataConfirmation {</span>
+<span class="fc" id="L60">  private static final GriisLogger logger =</span>
+<span class="fc" id="L61">      GriisLoggerFactory.getLogger(ExchangeDataConfirmation.class);</span>
+
+  public static void dataConfirmationProcess(InterfaceDataUnit45Dto iduDto,
+      Set&lt;String&gt; sentMessagesId) {
+<span class="fc" id="L65">    logger.trace(Trace.ENTER_METHOD_1, &quot;iduDto&quot;, iduDto);</span>
+
+    // Vérifier le sceau de l'entête du message
+    // Prendre l'entête du message
+    final ProtocolDataUnit4TraDto sdu;
+    try {
+<span class="fc" id="L71">      sdu = SharedObjectMapper.getInstance().getMapper().readValue(iduDto.getMessage(),</span>
+          ProtocolDataUnit4TraDto.class);
+<span class="nc" id="L73">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L74">      throw new DeserializationException(e.getMessage());</span>
+<span class="fc" id="L75">    }</span>
+
+<span class="fc bfc" id="L77" title="All 2 branches covered.">    if (sentMessagesId.remove(sdu.getHeader().getId().toString())) {</span>
+<span class="fc" id="L78">      verifyStamps(sdu);</span>
+    }
+<span class="fc" id="L80">  }</span>
+
+  private static void verifyStamps(ProtocolDataUnit4TraDto sdu) {
+    final String sduHeader;
+    try {
+      sduHeader =
+<span class="fc" id="L86">          SharedObjectMapper.getInstance().getMapper().writeValueAsString(sdu.getHeader());</span>
+<span class="nc" id="L87">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L88">      throw new SerializationException(e.getMessage());</span>
+<span class="fc" id="L89">    }</span>
+
+    // Hasher l'entête et le contenu
+<span class="fc" id="L92">    final Sha512Hashing sha512Hashing = new Sha512Hashing();</span>
+<span class="fc" id="L93">    final Hash headerEncrypt = sha512Hashing.hash(sduHeader.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L94">    final Hash contentEncrypt =</span>
+<span class="fc" id="L95">        sha512Hashing.hash(sdu.getContent().getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L96">    final String sealHeaderSduGenerated = headerEncrypt.asBase64();</span>
+<span class="fc" id="L97">    final String sealContentSduGenerated = contentEncrypt.asBase64();</span>
+
+    // Vérifier l'intégrité de l'entête et du contenu
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    if (!sdu.getStamp().getHeaderSeal().equals(sealHeaderSduGenerated)) {</span>
+<span class="fc" id="L101">      throw new HeaderSealException(&quot;Header seal are not the same&quot;);</span>
+    }
+
+<span class="fc bfc" id="L104" title="All 2 branches covered.">    if (!sdu.getStamp().getContentSeal().equals(sealContentSduGenerated)) {</span>
+<span class="fc" id="L105">      throw new ContentSealException(&quot;Content seal are not the same&quot;);</span>
+    }
+<span class="fc" id="L107">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

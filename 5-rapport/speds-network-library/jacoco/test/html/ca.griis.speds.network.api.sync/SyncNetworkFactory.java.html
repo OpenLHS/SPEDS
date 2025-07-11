@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SyncNetworkFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.api.sync</a> &gt; <span class="el_source">SyncNetworkFactory.java</span></div><h1>SyncNetworkFactory.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SyncNetworkFactory.
+ * @brief @~english SyncNetworkFactory class implementation.
+ */
+
+package ca.griis.speds.network.api.sync;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+import static ca.griis.speds.network.signature.CertificatePrivateKeyPair.importFromPem;
+
+import ca.griis.js2p.gen.speds.network.api.dto.InitInParamsDto;
+import ca.griis.js2p.gen.speds.network.api.dto.OptionsDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.link.api.DataLinkHost;
+import ca.griis.speds.link.api.sync.ImmutableDataLinkFactory;
+import ca.griis.speds.network.api.NetworkFactory;
+import ca.griis.speds.network.api.NetworkHost;
+import ca.griis.speds.network.serialization.NetworkMarshaller;
+import ca.griis.speds.network.serialization.SharedObjectMapper;
+import ca.griis.speds.network.service.exception.ParameterException;
+import ca.griis.speds.network.service.host.SentMessageIdSet;
+import ca.griis.speds.network.service.identification.IdentifierGenerator;
+import ca.griis.speds.network.signature.SealManager;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.UUID;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre une fabrique pour construire les entités de la couche réseau.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-10 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SyncNetworkFactory implements NetworkFactory {
+<span class="fc" id="L66">  private static final GriisLogger logger = getLogger(SyncNetworkFactory.class);</span>
+
+  private final IdentifierGenerator identifierGenerator;
+<span class="fc" id="L69">  private final ObjectMapper mapper = SharedObjectMapper.getInstance().getMapper();</span>
+  private final ImmutableDataLinkFactory factory;
+
+  public SyncNetworkFactory() {
+<span class="fc" id="L73">    this(() -&gt; UUID.randomUUID().toString());</span>
+<span class="fc" id="L74">  }</span>
+
+<span class="fc" id="L76">  public SyncNetworkFactory(IdentifierGenerator identifierGenerator) {</span>
+<span class="fc" id="L77">    logger.trace(Trace.ENTER_METHOD_1, &quot;identifierGenerator&quot;, identifierGenerator);</span>
+<span class="fc" id="L78">    this.identifierGenerator = identifierGenerator;</span>
+<span class="fc" id="L79">    this.factory = new ImmutableDataLinkFactory();</span>
+<span class="fc" id="L80">  }</span>
+
+  @Override
+  public NetworkHost initHost(String parameters) {
+<span class="fc" id="L84">    logger.trace(Trace.ENTER_METHOD_1, &quot;parameters&quot;, parameters);</span>
+
+<span class="fc" id="L86">    final OptionsDto params = getInitParams(parameters);</span>
+<span class="fc" id="L87">    final String spedsVersion = params.getSpedsVersion();</span>
+<span class="fc" id="L88">    final String spedsReference = params.getSpedsReference();</span>
+<span class="fc" id="L89">    final String certificatePem = params.getCertificate();</span>
+<span class="fc" id="L90">    final String privateKeyPem = params.getPrivateKey();</span>
+
+<span class="fc" id="L92">    final NetworkHost netHost =</span>
+<span class="fc" id="L93">        new ImmutableNetworkHost(initDataLinkHost(parameters), spedsVersion, spedsReference,</span>
+<span class="fc" id="L94">            importFromPem(certificatePem, privateKeyPem), identifierGenerator,</span>
+            new NetworkMarshaller(mapper), new SealManager(mapper), new SentMessageIdSet());
+<span class="fc" id="L96">    logger.trace(Trace.EXIT_METHOD_1, &quot;netHost&quot;, netHost);</span>
+<span class="fc" id="L97">    return netHost;</span>
+  }
+
+  @Override
+  public DataLinkHost initDataLinkHost(String parameters) {
+<span class="fc" id="L102">    return this.factory.init(parameters);</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param parameters «Parameter description»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère les valeurs sérialisées pour initialiser la couche Réseau.
+   * @param parameters Les paramètres sous la forme d'une chaîne de caractères.
+   * @return Les valeurs d'initialisation associées à la couche Réseau.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  private OptionsDto getInitParams(String parameters) {
+    final OptionsDto optionsDto;
+    try {
+<span class="fc" id="L120">      InitInParamsDto params = mapper.readValue(parameters, new TypeReference&lt;&gt;() {});</span>
+<span class="fc" id="L121">      optionsDto = mapper.convertValue(params.getOptions(), OptionsDto.class);</span>
+<span class="fc" id="L122">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L123">      final String exception = &quot;Cannot read initialization parameters: &quot; + e.getMessage();</span>
+<span class="fc" id="L124">      logger.error(exception);</span>
+<span class="fc" id="L125">      throw new ParameterException(exception);</span>
+<span class="fc" id="L126">    }</span>
+
+<span class="fc" id="L128">    logger.trace(Trace.EXIT_METHOD_1, &quot;optionsDto&quot;, optionsDto);</span>
+<span class="fc" id="L129">    return optionsDto;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

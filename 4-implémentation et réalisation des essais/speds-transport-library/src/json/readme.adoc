@@ -1,0 +1,37 @@
+= Les schemas json de la couche transport
+
+
+== Historique
+[options="header",cols="3,7,2"]
+|===
+| Nom | Modification        | Date
+| JM  | Mise à jour de l'IDU 3_4 et 4_5  | 2025-03-03
+|===
+
+== Information
+Utilisation de la bibliothèque _jsonschema2pojo_ pour fin de génération des classes de transfert (pojo) à partir des différents schéma json fournit avec la spécification des exigences et la conception.
+
+=== Json Schema Composition: OneOf
+Le keyword oneOf utilisé afin de combiner des schemas n’est pas reconnu par la bibliothèque jsonschema2pojo.
+Voir https://github.com/joelittlejohn/jsonschema2pojo/issues/831
+
+==== Modifcation aux fichiers d'origine
+
+. Le champ "id" de ProtocolDataUnit-4-TRA.schema.json a été modifié afin de retirer le oneOf et le remplacer par un type "string" comme dans les autres couches.
+
+. Le champ "parameter" de ProtocolDataUnit-4-TRA.schema.json a été modifié afin de retirer le oneOf et le remplacer par un simple "boolean". Dans cette itération,
+la fenestration n'est pas implémenté.
+
+. Le champs _"javaType": "Header45"_ à été rajouté au fichier InterfaceDataUnit-4_5.schema.json, car ils y a deux types de `header` avec SGS et TRA.
+
+. Le champs _"javaType": "Header34"_ à été rajouté au fichier InterfaceDataUnit-3_4.schema.json, car ils y a deux types de `header` avec SGS et TRA.
+
+. Le champs _"javaType": "Speds45"_ à été rajouté au fichier InterfaceDataUnit-4_5.schema.json, car ils y a deux types de `speds` avec SGS et TRA.
+
+. Le champs _"javaType": "Speds34"_ à été rajouté au fichier InterfaceDataUnit-3_4.schema.json, car ils y a deux types de `speds` avec SGS et TRA.
+
+. Le champs _"javaType": "Context45"_ à été rajouté au fichier InterfaceDataUnit-4_5.schema.json, car ils y a deux types de context avec SGS et TRA.
+
+. Le champs _"javaType": "Context34"_ à été rajouté au fichier InterfaceDataUnit-3_4.schema.json, car ils y a deux types de context avec SGS et TRA.
+
+. Le champ "id" ProtocolDataUnit-4-TRA.schema.json a été modifié afin de retirer le format uuid pour que ça sois une chaine de caractère

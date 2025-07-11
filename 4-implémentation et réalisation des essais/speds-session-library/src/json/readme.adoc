@@ -1,0 +1,28 @@
+= Les schemas json de la couche session
+
+== Historique
+[options="header",cols="3,7,2"]
+|===
+| Nom | Modification        | Date
+| SSC | Migration des schémas à partir de product-asciidoc-documentation | 2025-03-17
+|===
+
+== Information
+Utilisation de la bibliothèque _jsonschema2pojo_ pour fin de génération des classes de transfert (pojo) à partir des différents schéma json fournit avec la spécification des exigences et la conception.
+
+
+=== Json Schema Composition: OneOf
+Le keyword oneOf utilisé afin de combiner des schemas n'est pas reconnu par la bibliothèque _jsonschema2pojo_.
+Voir https://github.com/joelittlejohn/jsonschema2pojo/issues/831
+
+
+==== Modification aux fichiers d'origine
+1- Le champ "content" de ProtocolDataUnit-1-APP.schema.json a été modifié afin de retirer le oneOf et le remplacer par un type "string" comme dans les autres couches.
+
+NOTE: La validation du contenu sera effectuée à travers un autre processus.
+
+
+2- Parce que Context se retrouve dans plus d'un fichier et sans le javaType, deux classes pojos étaient générées:
+
+- Le champ _"javaType": "Context23"_ a été rajouté au fichier InterfaceDataUnit-2_3.schema.json
+- Le champ _"javaType": "Context34"_ a été rajouté au fichier InterfaceDataUnit-3_4.schema.json

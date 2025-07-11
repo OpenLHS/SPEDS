@@ -1,0 +1,17 @@
+= Les schemas json de la couche liaison
+
+== Historique
+[options="header",cols="3,7,2"]
+|===
+| Nom | Modification        | Date
+| BD  | Migration des schémas à partir de product-asciidoc-documentation | 2025-02-14
+| SSC | Migration des schémas à partir de product-asciidoc-documentation | 2025-05-21
+|===
+
+== Information
+Utilisation de la bibliothèque _jsonschema2pojo_ pour fin de génération des classes de transfert (pojo) à partir des différents schéma json fournit avec la spécification des exigences et la conception.
+
+=== Json Schema Composition: OneOf
+Le keyword oneOf utilisé afin de combiner des schemas n'est pas reconnu par la bibliothèque _jsonschema2pojo_.
+Voir https://github.com/joelittlejohn/jsonschema2pojo/issues/831
+

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IriVerification.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.link.api.sync</a> &gt; <span class="el_source">IriVerification.java</span></div><h1>IriVerification.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe IriVerification.
+ * @brief @~english Implementation of the IriVerification class.
+ */
+
+package ca.griis.speds.link.api.sync;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre un service de vérification d'IRI.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-06 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L50">public final class IriVerification {</span>
+<span class="fc" id="L51">  private static final GriisLogger logger = getLogger(IriVerification.class);</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Verifier la validité du format IRI.
+   * @param iri La chaine iri
+   * @return l'état de validité de l'iri.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public Boolean isValidIri(String iri) {
+<span class="fc" id="L67">    logger.trace(Trace.ENTER_METHOD_1, &quot;iri&quot;, iri);</span>
+
+<span class="fc" id="L69">    boolean isValid = true;</span>
+
+<span class="fc bfc" id="L71" title="All 4 branches covered.">    if (iri == null || iri.trim().isEmpty()) {</span>
+<span class="fc" id="L72">      isValid = false;</span>
+    } else {
+      try {
+<span class="fc" id="L75">        new URI(iri);</span>
+<span class="fc" id="L76">      } catch (URISyntaxException e) {</span>
+<span class="fc" id="L77">        isValid = false;</span>
+<span class="fc" id="L78">      }</span>
+    }
+
+<span class="fc" id="L81">    logger.trace(Trace.EXIT_METHOD_1, &quot;isValid&quot;, isValid);</span>
+<span class="fc" id="L82">    return isValid;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

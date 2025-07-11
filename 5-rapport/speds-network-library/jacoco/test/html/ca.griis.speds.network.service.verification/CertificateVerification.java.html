@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CertificateVerification.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.service.verification</a> &gt; <span class="el_source">CertificateVerification.java</span></div><h1>CertificateVerification.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe CertificateVerification.java
+ * @brief @~english Contains description of CertificateVerification.java class.
+ */
+
+package ca.griis.speds.network.service.verification;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.speds.network.signature.CertificatePrivateKeyPair;
+import java.io.ByteArrayInputStream;
+import java.net.MalformedURLException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
+import javax.security.auth.x500.X500Principal;
+import org.apache.commons.text.StringEscapeUtils;
+import org.apache.jena.iri.IRI;
+import org.apache.jena.iri.IRIException;
+import org.apache.jena.iri.IRIFactory;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french «Description brève du composant (classe, interface, ...)»
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-07-01 [SSC] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="nc" id="L63">public class CertificateVerification {</span>
+<span class="fc" id="L64">  private static final GriisLogger logger =</span>
+<span class="fc" id="L65">      GriisLoggerFactory.getLogger(CertificateVerification.class);</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french «Description de la fonction»
+   * @param certificatePem
+   * @return
+   * @exception «nom de l'exception» «Description de l'exception»
+   * @return «Description du retour»
+   */
+  public static boolean verifyCertificate(String certificatePem, String iri) {
+<span class="fc" id="L80">    boolean verify = true;</span>
+    try {
+<span class="fc" id="L82">      final CertificateFactory cf =</span>
+<span class="fc" id="L83">          CertificateFactory.getInstance(CertificatePrivateKeyPair.CERTIFICATE_ALGORITHM);</span>
+
+<span class="fc" id="L85">      X509Certificate certificate = (X509Certificate) cf.generateCertificate(</span>
+<span class="fc" id="L86">          new ByteArrayInputStream(Base64.getDecoder().decode(certificatePem)));</span>
+
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">      if (certificate.getSubjectX500Principal().equals(certificate.getIssuerX500Principal())) {</span>
+<span class="fc" id="L89">        certificate.verify(certificate.getPublicKey());</span>
+<span class="fc" id="L90">        IRIFactory iriFactory = IRIFactory.iriImplementation();</span>
+
+        try {
+<span class="fc" id="L93">          IRI currentIri = iriFactory.construct(iri);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">          if (!getCommonName(certificate).equals(currentIri.getASCIIHost())) {</span>
+<span class="fc" id="L95">            verify = false;</span>
+          }
+<span class="nc" id="L97">        } catch (IRIException | MalformedURLException e) {</span>
+<span class="nc" id="L98">          logger.error(Error.GENERIC_ERROR, &quot;IRI problem.&quot;);</span>
+<span class="fc" id="L99">        }</span>
+<span class="fc" id="L100">      } else {</span>
+<span class="nc" id="L101">        verify = false;</span>
+      }
+<span class="fc" id="L103">    } catch (CertificateException | InvalidKeyException | NoSuchAlgorithmException</span>
+        | NoSuchProviderException | SignatureException e) {
+<span class="fc" id="L105">      logger.error(Error.GENERIC_ERROR, &quot;Host certificate is missing.&quot;);</span>
+<span class="fc" id="L106">      verify = false;</span>
+<span class="fc" id="L107">    }</span>
+<span class="fc" id="L108">    return verify;</span>
+  }
+
+  private static String getCommonName(X509Certificate certificate) {
+<span class="fc" id="L112">    X500Principal subjectX500Principal = certificate.getSubjectX500Principal();</span>
+<span class="fc" id="L113">    String dn = subjectX500Principal.getName();</span>
+
+    // Parse the DN string to find the CN
+<span class="fc" id="L116">    String commonName = null;</span>
+<span class="fc" id="L117">    String[] dnComponents = dn.split(&quot;,&quot;);</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">    for (String component : dnComponents) {</span>
+<span class="fc" id="L119">      component = component.trim();</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">      if (component.startsWith(&quot;CN=&quot;)) {</span>
+<span class="fc" id="L121">        commonName = component.substring(3).trim(); // Remove &quot;CN=&quot; prefix</span>
+<span class="fc" id="L122">        break;</span>
+      }
+    }
+
+<span class="fc" id="L126">    String unescapedCommonName = StringEscapeUtils.unescapeJava(commonName);</span>
+<span class="fc" id="L127">    return unescapedCommonName;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

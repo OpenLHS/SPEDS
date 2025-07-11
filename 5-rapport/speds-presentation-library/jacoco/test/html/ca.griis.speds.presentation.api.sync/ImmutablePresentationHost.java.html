@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutablePresentationHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-presentation-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.presentation.api.sync</a> &gt; <span class="el_source">ImmutablePresentationHost.java</span></div><h1>ImmutablePresentationHost.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ * @copyright @@GRIIS_COPYRIGHT@@
+ * @licence @@GRIIS_LICENCE@@
+ * @version @@GRIIS_VERSION@@
+ * @brief @~french Implémentation de la classe PresentationHost.
+ * @brief @~english Implementation of the PresentationHost class.
+ */
+
+package ca.griis.speds.presentation.api.sync;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.cryptography.algorithm.SecretKeyGeneratorAlgorithm;
+import ca.griis.cryptography.symmetric.encryption.AesGcmDecryptor;
+import ca.griis.cryptography.symmetric.encryption.AesGcmEncryptor;
+import ca.griis.cryptography.symmetric.generator.SecretKeyGenerator;
+import ca.griis.js2p.gen.speds.presentation.api.dto.ContextDto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.ContextDto__1;
+import ca.griis.js2p.gen.speds.presentation.api.dto.HeaderDto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.InterfaceDataUnit12Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.InterfaceDataUnit23Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.ProtocolDataUnit2PREDto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.SPEDSDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.presentation.api.PresentationHost;
+import ca.griis.speds.presentation.api.exception.CipherException;
+import ca.griis.speds.presentation.api.exception.DeserializationException;
+import ca.griis.speds.presentation.api.exception.InvalidPduId;
+import ca.griis.speds.presentation.entity.PresentationTracking;
+import ca.griis.speds.presentation.entity.TrackingInformation;
+import ca.griis.speds.session.api.SessionHost;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un hôte immutable de la couche présentation.
+ * @par Détails
+ *      - Un choix volontaire a été fait afin de ne pas envelopper (wrap) les classes générées,
+ *      dans l'optique de ne pas inutilement alourdir la gestion de la mémoire.
+ *      - Ce choix repose sur l'heuristique selon laquelle l'ajout d'un wrapper ne procure pas
+ *      de bénéfices suffisants en regard du coût engendré :
+ *      - Les objets générés sont directement compatibles avec nos besoins, rendant
+ *      l'encapsulation superflue.
+ *      - Une couche supplémentaire de wrappers augmenterait l'empreinte mémoire et
+ *      la complexité sans justification suffisante.
+ *      - La stabilité de la structure des objets générés permet de minimiser
+ *      l'impact des évolutions futures sur le code client.
+ *
+ * @par Modèle
+ *      ConcurrentHashMap&lt;PresentationTracking, TrackingInformation&gt; curator : &lt;/br&gt;
+ *      Contient les informations de suivi contextuelle de la couche pour les deux couches &lt;/br&gt;
+ *      intéragisseant avec la couche actuelle.
+ *      Set&lt;UUID&gt; messageSent = new HashSet&lt;&gt;(); :
+ *      Garde en mémoire les identifiants des messages envoyé pour faire la corercpondance &lt;/br&gt;
+ *      avec les messages de réponses reçu ultérieurement.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-18 [MD] - Implémentation des interfaces &lt;/br&gt;
+ *      2025-02-03 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutablePresentationHost implements PresentationHost {
+<span class="fc" id="L88">  private static final GriisLogger logger = getLogger(ImmutablePresentationHost.class);</span>
+  private final SessionHost host;
+
+  private final ConcurrentHashMap&lt;PresentationTracking, TrackingInformation&gt; serverTracking;
+  private final Set&lt;UUID&gt; clientMsgTracking;
+
+  private final String spedsVersion;
+  private final String spedsReference;
+
+  private final ObjectMapper objectMapper;
+
+  public ImmutablePresentationHost(SessionHost host, String spedsVersion, String spedsReference,
+<span class="fc" id="L100">      ObjectMapper mapper) {</span>
+<span class="fc" id="L101">    logger.trace(Trace.ENTER_METHOD_4, &quot;host&quot;, host, &quot;spedsVersion&quot;, spedsVersion, &quot;spedsReference&quot;,</span>
+        spedsReference, &quot;mapper&quot;, mapper);
+<span class="fc" id="L103">    this.host = host;</span>
+<span class="fc" id="L104">    this.spedsVersion = spedsVersion;</span>
+<span class="fc" id="L105">    this.spedsReference = spedsReference;</span>
+<span class="fc" id="L106">    this.serverTracking = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L107">    this.clientMsgTracking = ConcurrentHashMap.newKeySet();</span>
+<span class="fc" id="L108">    this.objectMapper = mapper;</span>
+<span class="fc" id="L109">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L113">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L114">    serverTracking.clear();</span>
+<span class="fc" id="L115">    clientMsgTracking.clear();</span>
+<span class="fc" id="L116">    host.close();</span>
+<span class="fc" id="L117">  }</span>
+
+  @Override
+  public void request(String idu) {
+<span class="fc" id="L121">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    // [PRO-1.1] Retrieve the upper IDU's ICI and SDU
+    InterfaceDataUnit12Dto upperIdu;
+    try {
+<span class="fc" id="L126">      upperIdu = objectMapper.readValue(idu, InterfaceDataUnit12Dto.class);</span>
+<span class="fc" id="L127">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L128">      throw new IllegalArgumentException(&quot;Presentation unable to deserialize IDU=&quot; + idu);</span>
+<span class="fc" id="L129">    }</span>
+<span class="fc" id="L130">    ContextDto ici = upperIdu.getContext();</span>
+<span class="fc" id="L131">    String sdu = upperIdu.getMessage();</span>
+
+    // [PRO-1.2] Cipher the SDU
+    // [PRO-1.2.1]
+<span class="fc" id="L135">    SecretKey secretKey =</span>
+<span class="fc" id="L136">        SecretKeyGenerator.generateSymmetricKey(SecretKeyGeneratorAlgorithm.AES, 256);</span>
+    // [PRO-1.2.2]
+<span class="fc" id="L138">    AesGcmEncryptor encryptor = new AesGcmEncryptor(secretKey);</span>
+<span class="fc" id="L139">    byte[] encryptedMessageBytes = encryptor.encrypt(sdu.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L140">    String cipheredSdu = Base64.getEncoder().encodeToString(encryptedMessageBytes);</span>
+
+    // [PRO-1.3] PRE.MSG.ENV Message
+    // [PRO-1.3.1]
+<span class="fc" id="L144">    UUID presentationId = UUID.randomUUID();</span>
+<span class="fc" id="L145">    HeaderDto.Msgtype msgtype = HeaderDto.Msgtype.PRE_MSG_ENV;</span>
+<span class="fc" id="L146">    Boolean options = Boolean.FALSE;</span>
+<span class="fc" id="L147">    SPEDSDto spedsDto = new SPEDSDto(spedsVersion, spedsReference);</span>
+<span class="fc" id="L148">    HeaderDto preMessageHeader = new HeaderDto(msgtype, presentationId, options, spedsDto);</span>
+<span class="fc" id="L149">    ProtocolDataUnit2PREDto preMsgEnv = new ProtocolDataUnit2PREDto(preMessageHeader, cipheredSdu);</span>
+    // [PRO-1.3.2]
+    String serialPreMessage;
+    try {
+<span class="fc" id="L153">      serialPreMessage = objectMapper.writeValueAsString(preMsgEnv);</span>
+<span class="fc" id="L154">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L155">      throw new IllegalStateException(&quot;Serialization of preMsgEnv failed unexpectedly. &quot;</span>
+          + &quot;Check if the ObjectMapper is misconfigured or if the object has missing annotations.&quot;,
+          e);
+<span class="fc" id="L158">    }</span>
+
+    // [PRO-1.4] Create the lowerIdu
+    // [PRO-1.4.1] - Create the ICI for the SDU
+<span class="fc" id="L162">    byte[] keyBytes = secretKey.getEncoded();</span>
+<span class="fc" id="L163">    String serialKey = Base64.getEncoder().encodeToString(keyBytes);</span>
+
+<span class="fc" id="L165">    ContextDto__1 context = new ContextDto__1(</span>
+<span class="fc" id="L166">        ici.getPga(),</span>
+<span class="fc" id="L167">        ici.getSourceCode(),</span>
+<span class="fc" id="L168">        ici.getDestinationCode(),</span>
+        serialKey,
+        null,
+<span class="fc" id="L171">        ici.getOptions());</span>
+
+    // [PRO-1.4.2] &quot;Create&quot; the SDU for the IDU
+<span class="fc" id="L174">    String outboudSdu = serialPreMessage;</span>
+<span class="fc" id="L175">    InterfaceDataUnit23Dto lowerIdu = new InterfaceDataUnit23Dto(context, outboudSdu);</span>
+
+    // [PRO-1.5]
+<span class="fc" id="L178">    String outgoingSerial = serialiseOutboundMsg(lowerIdu);</span>
+
+    // NOTE - MD - At the end so we know everything went well before tracking it.
+<span class="fc" id="L181">    clientMsgTracking.add(preMsgEnv.getHeader().getId());</span>
+
+    // send it below
+<span class="fc" id="L184">    logger.trace(Trace.ALGORITHM_1, &quot;outgoingSerial&quot;, outgoingSerial);</span>
+<span class="fc" id="L185">    host.request(outgoingSerial);</span>
+<span class="fc" id="L186">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L187">  }</span>
+
+  @Override
+  public String confirm() {
+<span class="fc" id="L191">    logger.trace(Trace.ENTER_METHOD_0);</span>
+    // Convertir l'IDU dans le format de l'implémentation.
+    // Appeler la méthode host.confirm.
+
+    // Await incoming messages
+<span class="fc" id="L196">    String inboundSerialIdu = host.confirm();</span>
+
+    // Message PRE.MSG.REC. [PRO-2.1]
+    InterfaceDataUnit23Dto lowerIdu;
+    try {
+<span class="fc" id="L201">      lowerIdu = objectMapper.readValue(inboundSerialIdu, InterfaceDataUnit23Dto.class);</span>
+<span class="fc" id="L202">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L203">      throw new IllegalArgumentException(</span>
+          &quot;Presentation unable to deserialize IDU=&quot; + inboundSerialIdu);
+<span class="fc" id="L205">    }</span>
+
+    // [PRO-2.1.1]
+<span class="fc" id="L208">    String sdu = lowerIdu.getMessage();</span>
+
+    // [PRO-2.1.2]
+    ProtocolDataUnit2PREDto inboundSdu;
+    try {
+<span class="fc" id="L213">      inboundSdu = objectMapper.readValue(sdu, ProtocolDataUnit2PREDto.class);</span>
+<span class="fc" id="L214">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L215">      throw new DeserializationException(&quot;Deserialization error. Unable to deserialize&quot;, e);</span>
+<span class="fc" id="L216">    }</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">    if (!inboundSdu.getHeader().getMsgtype().equals(HeaderDto.Msgtype.PRE_MSG_REC)) {</span>
+<span class="fc" id="L218">      throw new DeserializationException(</span>
+          &quot;Deserialization error. Type of SDU must be PRE_MSG_REC, is:&quot;
+<span class="fc" id="L220">              + inboundSdu.getHeader().getMsgtype());</span>
+    }
+
+    // [PRO-2.1.3]
+<span class="fc" id="L224">    UUID presentationMsgId = inboundSdu.getHeader().getId();</span>
+<span class="fc" id="L225">    validateMessageExist(presentationMsgId);</span>
+
+    // [PRO-2.1.4]
+    // Récupérer la clef
+    String decipheredSdu;
+    try {
+<span class="fc" id="L231">      String sdekSerial = lowerIdu.getContext().getSdek();</span>
+<span class="fc" id="L232">      byte[] keyByte = Base64.getDecoder().decode(sdekSerial);</span>
+<span class="fc" id="L233">      SecretKey key = new SecretKeySpec(keyByte, 0, keyByte.length, &quot;AES&quot;);</span>
+<span class="fc" id="L234">      AesGcmDecryptor decryptor = new AesGcmDecryptor(key);</span>
+<span class="fc" id="L235">      byte[] decryptedBytes =</span>
+<span class="fc" id="L236">          decryptor.decrypt(Base64.getDecoder().decode(inboundSdu.getContent()));</span>
+<span class="fc" id="L237">      decipheredSdu = new String(decryptedBytes, StandardCharsets.UTF_8);</span>
+<span class="fc" id="L238">    } catch (SecurityException | IllegalArgumentException e) {</span>
+<span class="fc" id="L239">      throw new CipherException(&quot;Unable to decipher the SDU&quot;, e);</span>
+<span class="fc" id="L240">    }</span>
+
+    // Create the upper outbound IDU [PRO-2.2]
+    // [PRO-2.2.1] Create the ICI for the IDU
+    // Note MD : we get the ICI at step 2.2.1 instead of PRO-2.1.1 to comply to code
+    // analysis tools
+<span class="fc" id="L246">    ContextDto__1 ici = lowerIdu.getContext();</span>
+<span class="fc" id="L247">    ContextDto upperContext = new ContextDto(</span>
+<span class="fc" id="L248">        ici.getPga(),</span>
+<span class="fc" id="L249">        ici.getSourceCode(),</span>
+<span class="fc" id="L250">        ici.getDestinationCode(),</span>
+        presentationMsgId,
+<span class="fc" id="L252">        ici.getOptions());</span>
+
+    // [PRO-2.2.2] &quot;Create&quot; the SDU for the IDU
+<span class="fc" id="L255">    InterfaceDataUnit12Dto outboundIdu =</span>
+        new InterfaceDataUnit12Dto(upperContext, decipheredSdu);
+
+    // [PRO-2.3]
+    String outboundSerial;
+<span class="fc" id="L260">    outboundSerial = serialiseOutboundMsg(outboundIdu);</span>
+<span class="fc" id="L261">    logger.trace(Trace.EXIT_METHOD_1, &quot;outboundSerial&quot;, outboundSerial);</span>
+<span class="fc" id="L262">    return outboundSerial;</span>
+  }
+
+  @Override
+  public String indication() {
+<span class="fc" id="L267">    logger.trace(Trace.EXIT_METHOD_0);</span>
+
+<span class="fc" id="L269">    String inboundSerialIdu = host.indicateDataExchange();</span>
+
+    // [PRO-3.1] Message PRE.MSG.ENV. [PRO-2.1]
+    InterfaceDataUnit23Dto lowerIdu;
+    try {
+<span class="fc" id="L274">      lowerIdu = objectMapper.readValue(inboundSerialIdu, InterfaceDataUnit23Dto.class);</span>
+<span class="fc" id="L275">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L276">      throw new IllegalArgumentException(</span>
+          &quot;Presentation unable to deserialize IDU=&quot; + inboundSerialIdu);
+<span class="fc" id="L278">    }</span>
+
+    // [PRO-3.1.1]
+<span class="fc" id="L281">    String sdu = lowerIdu.getMessage();</span>
+
+    // [PRO-3.1.2]
+    ProtocolDataUnit2PREDto inboundSdu;
+    try {
+<span class="fc" id="L286">      inboundSdu = objectMapper.readValue(sdu, ProtocolDataUnit2PREDto.class);</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">      if (!inboundSdu.getHeader().getMsgtype().equals(HeaderDto.Msgtype.PRE_MSG_ENV)) {</span>
+<span class="fc" id="L288">        throw new DeserializationException(&quot;Deserialization error.&quot;</span>
+            + &quot;Type of outboundSdu must be: &quot; + HeaderDto.Msgtype.PRE_MSG_ENV + &quot;, &quot;
+<span class="fc" id="L290">            + &quot;is: &quot; + inboundSdu.getHeader().getMsgtype());</span>
+      }
+<span class="fc" id="L292">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L293">      throw new DeserializationException(&quot;Deserialization error. Unable to deserialize&quot;, e);</span>
+<span class="fc" id="L294">    }</span>
+
+    // [PRO-3.1.3]
+    // Récupérer la clef
+    String decipheredSdu;
+    SecretKey key;
+    try {
+<span class="fc" id="L301">      String sdekSerial = lowerIdu.getContext().getSdek();</span>
+<span class="fc" id="L302">      byte[] keyByte = Base64.getDecoder().decode(sdekSerial);</span>
+<span class="fc" id="L303">      key = new SecretKeySpec(keyByte, 0, keyByte.length, &quot;AES&quot;);</span>
+<span class="fc" id="L304">      AesGcmDecryptor decryptor = new AesGcmDecryptor(key);</span>
+<span class="fc" id="L305">      byte[] decryptedBytes =</span>
+<span class="fc" id="L306">          decryptor.decrypt(Base64.getDecoder().decode(inboundSdu.getContent()));</span>
+<span class="fc" id="L307">      decipheredSdu = new String(decryptedBytes, StandardCharsets.UTF_8);</span>
+<span class="fc" id="L308">    } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L309">      throw new CipherException(&quot;Unable to cipher the SDU&quot;, e);</span>
+<span class="fc" id="L310">    }</span>
+
+<span class="fc" id="L312">    serverTracking.put(new PresentationTracking(inboundSdu.getHeader().getId()),</span>
+<span class="fc" id="L313">        new TrackingInformation(lowerIdu.getContext().getTrackingNumber(), key));</span>
+
+    // [PRO-3.2] Create the upper outbound IDU
+    // [PRO-3.2.1] - Create the ICI for IDU
+<span class="fc" id="L317">    ContextDto__1 ici = lowerIdu.getContext();</span>
+<span class="fc" id="L318">    UUID presentationMsgId = inboundSdu.getHeader().getId();</span>
+<span class="fc" id="L319">    ContextDto upperContext = new ContextDto(</span>
+<span class="fc" id="L320">        ici.getPga(),</span>
+<span class="fc" id="L321">        ici.getSourceCode(),</span>
+<span class="fc" id="L322">        ici.getDestinationCode(),</span>
+        presentationMsgId,
+<span class="fc" id="L324">        ici.getOptions());</span>
+
+    // [PRO-3.2.2] - &quot;Create&quot; SDU for IDU
+<span class="fc" id="L327">    InterfaceDataUnit12Dto outboundIdu =</span>
+        new InterfaceDataUnit12Dto(upperContext, decipheredSdu);
+
+    // [PRO-2.3]
+<span class="fc" id="L331">    String outboundSerial = serialiseOutboundMsg(outboundIdu);</span>
+<span class="fc" id="L332">    logger.trace(Trace.EXIT_METHOD_1, &quot;outboundSerial&quot;, outboundSerial);</span>
+<span class="fc" id="L333">    return outboundSerial;</span>
+  }
+
+  @Override
+  public void response(String idu) {
+<span class="fc" id="L338">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    // [PRO-4.1] Retrieve the upper IDU's ICI and SDU
+    InterfaceDataUnit12Dto upperIdu;
+    try {
+<span class="fc" id="L343">      upperIdu = objectMapper.readValue(idu, InterfaceDataUnit12Dto.class);</span>
+<span class="fc" id="L344">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L345">      throw new IllegalArgumentException(&quot;Presentation unable to deserialize IDU=&quot; + idu);</span>
+<span class="fc" id="L346">    }</span>
+<span class="fc" id="L347">    ContextDto ici = upperIdu.getContext();</span>
+<span class="fc" id="L348">    String sdu = upperIdu.getMessage();</span>
+
+    // [PRO-4.2] Cipher the SDU
+    // Get the key and purge
+    String cipheredSdu;
+    SecretKey secretKey;
+    UUID sessionTracking;
+    try {
+<span class="fc" id="L356">      PresentationTracking presentationTracking =</span>
+<span class="fc" id="L357">          new PresentationTracking(upperIdu.getContext().getTrackingNumber());</span>
+<span class="fc" id="L358">      TrackingInformation trackingInfo = serverTracking.get(presentationTracking);</span>
+<span class="fc" id="L359">      sessionTracking = trackingInfo.sessionTracking();</span>
+<span class="fc" id="L360">      secretKey = trackingInfo.sdek();</span>
+<span class="fc" id="L361">      serverTracking.remove(presentationTracking);</span>
+      // cipher
+<span class="fc" id="L363">      AesGcmEncryptor encryptor = new AesGcmEncryptor(secretKey);</span>
+<span class="fc" id="L364">      byte[] encryptedMessageBytes = encryptor.encrypt(sdu.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L365">      cipheredSdu = Base64.getEncoder().encodeToString(encryptedMessageBytes);</span>
+<span class="fc" id="L366">    } catch (SecurityException e) {</span>
+<span class="fc" id="L367">      throw new CipherException(&quot;Unable to cipher the SDU&quot;, e);</span>
+<span class="fc" id="L368">    }</span>
+
+    // [PRO-4.3] PRE.MSG.REC Message
+    // [PRO-4.3.1]
+    // [PRO-4.3.1.1]
+<span class="fc" id="L373">    UUID presentationId = upperIdu.getContext().getTrackingNumber();</span>
+<span class="fc" id="L374">    HeaderDto.Msgtype msgtype = HeaderDto.Msgtype.PRE_MSG_REC;</span>
+<span class="fc" id="L375">    Boolean options = Boolean.FALSE;</span>
+<span class="fc" id="L376">    SPEDSDto spedsDto = new SPEDSDto(spedsVersion, spedsReference);</span>
+<span class="fc" id="L377">    HeaderDto preMessageHeader = new HeaderDto(msgtype, presentationId, options, spedsDto);</span>
+<span class="fc" id="L378">    ProtocolDataUnit2PREDto preMsgEnv = new ProtocolDataUnit2PREDto(preMessageHeader, cipheredSdu);</span>
+
+    // [PRO-4.3.2]
+    String serialPreMessage;
+    try {
+<span class="fc" id="L383">      serialPreMessage = objectMapper.writeValueAsString(preMsgEnv);</span>
+<span class="fc" id="L384">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L385">      throw new IllegalStateException(&quot;Serialization of preMsgEnv failed unexpectedly. &quot;</span>
+          + &quot;Check if the ObjectMapper is misconfigured or if the object has missing annotations.&quot;,
+          e);
+<span class="fc" id="L388">    }</span>
+
+    // [PRO-4.4] Create the lowerIdu
+    // [PRO-4.4.1] - Create ICI for IDU
+<span class="fc" id="L392">    byte[] keyBytes = secretKey.getEncoded();</span>
+<span class="fc" id="L393">    String serialKey = Base64.getEncoder().encodeToString(keyBytes);</span>
+
+<span class="fc" id="L395">    ContextDto__1 context = new ContextDto__1(</span>
+<span class="fc" id="L396">        ici.getPga(),</span>
+<span class="fc" id="L397">        ici.getSourceCode(),</span>
+<span class="fc" id="L398">        ici.getDestinationCode(),</span>
+        serialKey,
+        sessionTracking,
+<span class="fc" id="L401">        ici.getOptions());</span>
+
+    // [PRO-4.4.2] - &quot;Create&quot; SDU for IDU
+<span class="fc" id="L404">    String outboudSdu = serialPreMessage;</span>
+<span class="fc" id="L405">    InterfaceDataUnit23Dto lowerIdu = new InterfaceDataUnit23Dto(context, outboudSdu);</span>
+
+    // [PRO-4.5]
+<span class="fc" id="L408">    String outboundSerial = serialiseOutboundMsg(lowerIdu);</span>
+
+    // send it below
+<span class="fc" id="L411">    logger.trace(Trace.ALGORITHM_1, &quot;outboundSerial&quot;, outboundSerial);</span>
+<span class="fc" id="L412">    host.response(outboundSerial);</span>
+<span class="fc" id="L413">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L414">  }</span>
+
+  private String serialiseOutboundMsg(Object outboundIdu) {
+<span class="fc" id="L417">    logger.trace(Trace.ENTER_METHOD_1, outboundIdu, outboundIdu);</span>
+    String outboundSerial;
+    try {
+<span class="fc" id="L420">      outboundSerial = objectMapper.writeValueAsString(outboundIdu);</span>
+<span class="fc" id="L421">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L422">      throw new IllegalStateException(</span>
+<span class="fc" id="L423">          &quot;Unexpected JSON serialization failure for &quot; + outboundIdu.getClass().getSimpleName()</span>
+              + &quot;. &quot;
+              + &quot;Ensure all fields have proper annotations and check ObjectMapper configuration.&quot;,
+          e);
+<span class="fc" id="L427">    }</span>
+<span class="fc" id="L428">    logger.trace(Trace.EXIT_METHOD_1, &quot;outboundIdu&quot;, outboundIdu);</span>
+<span class="fc" id="L429">    return outboundSerial;</span>
+  }
+
+  private void validateMessageExist(UUID presentationMsgId) throws InvalidPduId {
+<span class="fc" id="L433">    logger.trace(Trace.ENTER_METHOD_1, &quot;presentationMsgId&quot;, presentationMsgId);</span>
+
+<span class="fc bfc" id="L435" title="All 2 branches covered.">    if (clientMsgTracking.contains(presentationMsgId)) {</span>
+<span class="fc" id="L436">      clientMsgTracking.remove(presentationMsgId);</span>
+    } else {
+<span class="fc" id="L438">      throw new InvalidPduId(&quot;The response SDU identifier has no match&quot;</span>
+          + &quot;in the list of sent messages: idReceived=&quot; + presentationMsgId
+          + &quot; List of messages waiting for response: &quot; + clientMsgTracking);
+    }
+<span class="fc" id="L442">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L443">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

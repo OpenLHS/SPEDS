@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableSessionHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.api.sync</a> &gt; <span class="el_source">ImmutableSessionHost.java</span></div><h1>ImmutableSessionHost.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ImmutableSessionHost.
+ * @brief @~english Implementation of the ImmutableSessionHost class.
+ */
+
+package ca.griis.speds.session.api.sync;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.SessionHost;
+import ca.griis.speds.session.internal.domain.HostStartupContext;
+import ca.griis.speds.session.internal.processing.MessageDispatcher;
+import ca.griis.speds.session.internal.processing.Poller;
+import java.util.concurrent.CompletableFuture;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un hôte immutable de la couche session.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-03 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutableSessionHost implements SessionHost {
+<span class="fc" id="L54">  private static final GriisLogger logger = getLogger(ImmutableSessionHost.class);</span>
+
+  private final ImmutableSessionClient client;
+  private final ImmutableSessionServer server;
+  private final Poller poller;
+
+  ImmutableSessionHost(HostStartupContext clientContext,
+<span class="fc" id="L61">      HostStartupContext serverContext) {</span>
+<span class="fc" id="L62">    logger.trace(Trace.ENTER_METHOD_1, &quot;clientContext&quot;, clientContext);</span>
+<span class="fc" id="L63">    MessageDispatcher messageDispatcher = new MessageDispatcher(clientContext.sharedMapper());</span>
+<span class="fc" id="L64">    poller = new Poller(clientContext.transportHost(), messageDispatcher,</span>
+<span class="fc" id="L65">        clientContext.serverPollingInterval());</span>
+    // todo - mettre dans le start quand il y en aura un vrai
+<span class="fc" id="L67">    poller.start();</span>
+<span class="fc" id="L68">    this.client = new ImmutableSessionClient(clientContext, poller);</span>
+<span class="fc" id="L69">    this.server = new ImmutableSessionServer(serverContext, poller);</span>
+<span class="fc" id="L70">  }</span>
+
+  @Override
+  public void close() {
+<span class="nc" id="L74">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="nc" id="L76">    client.close();</span>
+<span class="nc" id="L77">    server.close();</span>
+<span class="nc" id="L78">    poller.stop();</span>
+
+<span class="nc" id="L80">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="nc" id="L81">  }</span>
+
+  @Override
+  public void closePreservingSessionStates() {
+<span class="fc" id="L85">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L87">    client.closePreservingSessionStates();</span>
+<span class="fc" id="L88">    server.closePreservingSessionStates();</span>
+<span class="fc" id="L89">    poller.stop();</span>
+
+<span class="fc" id="L91">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L92">  }</span>
+
+  @Override
+  public void clearSessionStates() {
+<span class="fc" id="L96">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L98">    client.clearSessionStates();</span>
+<span class="fc" id="L99">    server.clearSessionStates();</span>
+
+<span class="fc" id="L101">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L102">  }</span>
+
+  @Override
+  public void request(String idu) {
+<span class="nc" id="L106">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="nc" id="L108">    client.request(idu);</span>
+<span class="nc" id="L109">  }</span>
+
+  @Override
+  public CompletableFuture&lt;Void&gt; requestFuture(String idu) {
+<span class="fc" id="L113">    return client.requestFuture(idu);</span>
+  }
+
+  @Override
+  public String confirm() {
+<span class="fc" id="L118">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L119">    final String result = client.confirm();</span>
+
+<span class="fc" id="L121">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L122">    return result;</span>
+  }
+
+  @Override
+  public String indicateDataExchange() {
+<span class="nc" id="L127">    final String result = indication();</span>
+<span class="nc" id="L128">    return result;</span>
+  }
+
+  @Override
+  public String indication() {
+<span class="fc" id="L133">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L134">    final String result = server.indication();</span>
+
+<span class="fc" id="L136">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L137">    return result;</span>
+  }
+
+  @Override
+  public void response(String idu) {
+<span class="fc" id="L142">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L144">    server.response(idu);</span>
+
+<span class="fc" id="L146">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L147">  }</span>
+
+  public Exception getException() {
+<span class="fc" id="L150">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+    Exception lastThrown;
+
+    try {
+<span class="fc" id="L155">      lastThrown = poller.getException();</span>
+<span class="nc" id="L156">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L157">      Thread.currentThread().interrupt();</span>
+
+<span class="nc" id="L159">      throw new RuntimeException(e);</span>
+<span class="fc" id="L160">    }</span>
+
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">    if (lastThrown != null) {</span>
+<span class="fc" id="L163">      poller.clearExceptions();</span>
+    }
+
+<span class="fc" id="L166">    logger.trace(Trace.EXIT_METHOD_1, &quot;lastThrown&quot;, lastThrown);</span>
+<span class="fc" id="L167">    return lastThrown;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

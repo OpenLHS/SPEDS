@@ -1,0 +1,453 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta charset="UTF-8"/>
+      <title>SpotBugs Report</title>
+      <style type="text/css">
+		.tablerow0 {
+			background: #EEEEEE;
+		}
+
+		.tablerow1 {
+			background: white;
+		}
+
+		.detailrow0 {
+			background: #EEEEEE;
+		}
+
+		.detailrow1 {
+			background: white;
+		}
+
+		.tableheader {
+			background: #b9b9fe;
+			font-size: larger;
+		}
+
+		.tablerow0:hover, .tablerow1:hover {
+			background: #aaffaa;
+		}
+
+		.priority-1 {
+				color: red;
+				font-weight: bold;
+		}
+		.priority-2 {
+				color: orange;
+				font-weight: bold;
+		}
+		.priority-3 {
+				color: green;
+				font-weight: bold;
+		}
+		.priority-4 {
+				color: blue;
+				font-weight: bold;
+		}
+		</style>
+      <script type="text/javascript">
+			function toggleRow(elid) {
+				if (document.getElementById) {
+					element = document.getElementById(elid);
+					if (element) {
+						if (element.style.display == 'none') {
+							element.style.display = 'block';
+							//window.status = 'Toggle on!';
+						} else {
+							element.style.display = 'none';
+							//window.status = 'Toggle off!';
+						}
+					}
+				}
+			}
+		</script>
+   </head>
+   <body>
+      <h1>
+         <a href="https://spotbugs.github.io/">SpotBugs</a> Report</h1>
+      <h2>Project Information</h2>
+      <p>Project: 
+		speds-network-library (spotbugsTest)</p>
+      <p>SpotBugs version: 4.8.3</p>
+      <p>Code analyzed:</p>
+      <ul>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/integration/TestCryptoUtils.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/integration/Environment.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/integration/Suites.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/integration/TestInputs.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/integration/Cases.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/util/KeyVar.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/signature/SealManagerTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/signature/SignatureProvider.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/signature/CertificatePrivateKeyPairTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/identification/DestinationNodeFinderTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/host/ExchangeDataConfirmTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/host/ExchangeDataIndicationTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/host/SentMessageIdSetTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/host/ExchangeDataRequestTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/exception/InvalidPduIdExceptionTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/exception/MissingAuthentificationExceptionTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/exception/SerializationExceptionTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/exception/DeserializationExceptionTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/exception/InvalidSignatureExceptionTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/exception/ParameterExceptionTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/service/routing/IriManagerTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/api/sync/SyncNetworkFactoryTest$2.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/api/sync/SyncNetworkFactoryTest$3.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/api/sync/SyncNetworkFactoryTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/api/sync/SyncNetworkFactoryTest$4.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/api/sync/SyncNetworkFactoryTest$1.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/api/sync/ImmutableNetworkHostTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/serialization/NetworkMarshallerTest.class</li>
+         <li>/builds/produits/speds-line/speds-network-library/build/classes/java/test/ca/griis/speds/network/unit/serialization/SharedObjectMapperTest.class</li>
+      </ul>
+      <p>
+         <br/>
+         <br/>
+      </p>
+      <h2>Metrics</h2>
+      <p>1410 lines of code analyzed,
+	in 29 classes, 
+	in 9 packages.</p>
+      <table width="500" cellpadding="5" cellspacing="2">
+         <tr class="tableheader">
+            <th align="left">Metric</th>
+            <th align="right">Total</th>
+            <th align="right">Density*</th>
+         </tr>
+         <tr class="tablerow0">
+            <td>High Priority Warnings</td>
+            <td align="right">4</td>
+            <td align="right">2.84</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>Medium Priority Warnings</td>
+            <td align="right">5</td>
+            <td align="right">3.55</td>
+         </tr>
+         <tr class="$totalClass">
+            <td>
+               <b>Total Warnings</b>
+            </td>
+            <td align="right">
+               <b>9</b>
+            </td>
+            <td align="right">
+               <b>6.38</b>
+            </td>
+         </tr>
+      </table>
+      <p>
+         <i>(* Defects per Thousand lines of non-commenting source statements)</i>
+      </p>
+      <p>
+         <br/>
+         <br/>
+      </p>
+      <h2>Contents</h2>
+      <ul>
+         <li>
+            <a href="#Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+         </li>
+         <li>
+            <a href="#Warnings_CORRECTNESS">Correctness Warnings</a>
+         </li>
+         <li>
+            <a href="#Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+         </li>
+         <li>
+            <a href="#Warnings_PERFORMANCE">Performance Warnings</a>
+         </li>
+         <li>
+            <a href="#Warnings_STYLE">Dodgy code Warnings</a>
+         </li>
+         <li>
+            <a href="#Details">Details</a>
+         </li>
+      </ul>
+      <h1>Summary</h1>
+      <table width="500" cellpadding="5" cellspacing="2">
+         <tr class="tableheader">
+            <th align="left">Warning Type</th>
+            <th align="right">Number</th>
+         </tr>
+         <tr class="tablerow0">
+            <td>
+               <a href="#Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+            </td>
+            <td align="right">1</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>
+               <a href="#Warnings_CORRECTNESS">Correctness Warnings</a>
+            </td>
+            <td align="right">2</td>
+         </tr>
+         <tr class="tablerow0">
+            <td>
+               <a href="#Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+            </td>
+            <td align="right">4</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>
+               <a href="#Warnings_PERFORMANCE">Performance Warnings</a>
+            </td>
+            <td align="right">1</td>
+         </tr>
+         <tr class="tablerow0">
+            <td>
+               <a href="#Warnings_STYLE">Dodgy code Warnings</a>
+            </td>
+            <td align="right">1</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>
+               <b>Total</b>
+            </td>
+            <td align="right">
+               <b>9</b>
+            </td>
+         </tr>
+      </table>
+      <h1>Warnings</h1>
+      <p>Click on a warning row to see full context information.</p>
+      <h2>
+         <a name="Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e98');">
+            <td>
+               <span class="priority-2">CT</span>
+            </td>
+            <td>Exception thrown in class ca.griis.speds.network.integration.Environment at new ca.griis.speds.network.integration.Environment() will leave the constructor. The object under construction remains partially initialized and may be vulnerable to Finalizer attacks.</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e98" style="display: none;">
+                  <a href="#CT_CONSTRUCTOR_THROW">Bug type CT_CONSTRUCTOR_THROW (click for details)</a>
+                  <br/>In class ca.griis.speds.network.integration.Environment<br/>In method new ca.griis.speds.network.integration.Environment()<br/>At Environment.java:[line 51]<br/>At Environment.java:[line 51]</p>
+            </td>
+         </tr>
+      </table>
+      <h2>
+         <a name="Warnings_CORRECTNESS">Correctness Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e112');">
+            <td>
+               <span class="priority-2">UR</span>
+            </td>
+            <td>Uninitialized read of dataLinkClient in new ca.griis.speds.network.integration.Environment()</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e112" style="display: none;">
+                  <a href="#UR_UNINIT_READ">Bug type UR_UNINIT_READ (click for details)</a>
+                  <br/>In class ca.griis.speds.network.integration.Environment<br/>In method new ca.griis.speds.network.integration.Environment()<br/>Field ca.griis.speds.network.integration.Environment.dataLinkClient<br/>At Environment.java:[line 50]</p>
+            </td>
+         </tr>
+         <tr class="tablerow0" onclick="toggleRow('d1e128');">
+            <td>
+               <span class="priority-2">UR</span>
+            </td>
+            <td>Uninitialized read of dataLinkServer in new ca.griis.speds.network.integration.Environment()</td>
+         </tr>
+         <tr class="detailrow0">
+            <td/>
+            <td>
+               <p id="d1e128" style="display: none;">
+                  <a href="#UR_UNINIT_READ">Bug type UR_UNINIT_READ (click for details)</a>
+                  <br/>In class ca.griis.speds.network.integration.Environment<br/>In method new ca.griis.speds.network.integration.Environment()<br/>Field ca.griis.speds.network.integration.Environment.dataLinkServer<br/>At Environment.java:[line 61]</p>
+            </td>
+         </tr>
+      </table>
+      <h2>
+         <a name="Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e186');">
+            <td>
+               <span class="priority-1">MS</span>
+            </td>
+            <td>ca.griis.speds.network.util.KeyVar.griisCertRsa isn't final but should be</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e186" style="display: none;">
+                  <a href="#MS_SHOULD_BE_FINAL">Bug type MS_SHOULD_BE_FINAL (click for details)</a>
+                  <br/>In class ca.griis.speds.network.util.KeyVar<br/>Field ca.griis.speds.network.util.KeyVar.griisCertRsa<br/>At KeyVar.java:[line 212]</p>
+            </td>
+         </tr>
+         <tr class="tablerow0" onclick="toggleRow('d1e199');">
+            <td>
+               <span class="priority-1">MS</span>
+            </td>
+            <td>ca.griis.speds.network.util.KeyVar.griisPrikeyRsa isn't final but should be</td>
+         </tr>
+         <tr class="detailrow0">
+            <td/>
+            <td>
+               <p id="d1e199" style="display: none;">
+                  <a href="#MS_SHOULD_BE_FINAL">Bug type MS_SHOULD_BE_FINAL (click for details)</a>
+                  <br/>In class ca.griis.speds.network.util.KeyVar<br/>Field ca.griis.speds.network.util.KeyVar.griisPrikeyRsa<br/>At KeyVar.java:[line 175]</p>
+            </td>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e212');">
+            <td>
+               <span class="priority-1">MS</span>
+            </td>
+            <td>ca.griis.speds.network.util.KeyVar.host1CertRsa isn't final but should be</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e212" style="display: none;">
+                  <a href="#MS_SHOULD_BE_FINAL">Bug type MS_SHOULD_BE_FINAL (click for details)</a>
+                  <br/>In class ca.griis.speds.network.util.KeyVar<br/>Field ca.griis.speds.network.util.KeyVar.host1CertRsa<br/>At KeyVar.java:[line 95]</p>
+            </td>
+         </tr>
+         <tr class="tablerow0" onclick="toggleRow('d1e225');">
+            <td>
+               <span class="priority-1">MS</span>
+            </td>
+            <td>ca.griis.speds.network.util.KeyVar.host1PrikeyRsa isn't final but should be</td>
+         </tr>
+         <tr class="detailrow0">
+            <td/>
+            <td>
+               <p id="d1e225" style="display: none;">
+                  <a href="#MS_SHOULD_BE_FINAL">Bug type MS_SHOULD_BE_FINAL (click for details)</a>
+                  <br/>In class ca.griis.speds.network.util.KeyVar<br/>Field ca.griis.speds.network.util.KeyVar.host1PrikeyRsa<br/>At KeyVar.java:[line 58]</p>
+            </td>
+         </tr>
+      </table>
+      <h2>
+         <a name="Warnings_PERFORMANCE">Performance Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e161');">
+            <td>
+               <span class="priority-2">HSC</span>
+            </td>
+            <td>ca.griis.speds.network.unit.signature.SignatureProvider.CERTIFICATE_PEM is initialized to a string constant 2056 characters long that is duplicated in 3 other class files</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e161" style="display: none;">
+                  <a href="#HSC_HUGE_SHARED_STRING_CONSTANT">Bug type HSC_HUGE_SHARED_STRING_CONSTANT (click for details)</a>
+                  <br/>In class ca.griis.speds.network.unit.signature.SignatureProvider<br/>Field ca.griis.speds.network.unit.signature.SignatureProvider.CERTIFICATE_PEM<br/>Value 2056<br/>Occurs 3 times<br/>In class ca.griis.speds.network.unit.api.sync.ImmutableNetworkHostTest<br/>In class ca.griis.speds.network.unit.service.host.ExchangeDataRequestTest<br/>In SignatureProvider.java</p>
+            </td>
+         </tr>
+      </table>
+      <h2>
+         <a name="Warnings_STYLE">Dodgy code Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e144');">
+            <td>
+               <span class="priority-2">DLS</span>
+            </td>
+            <td>Dead store to privateKey in ca.griis.speds.network.integration.TestInputs.make_ct_pro_04_05_e2(String, ObjectMapper)</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e144" style="display: none;">
+                  <a href="#DLS_DEAD_LOCAL_STORE">Bug type DLS_DEAD_LOCAL_STORE (click for details)</a>
+                  <br/>In class ca.griis.speds.network.integration.TestInputs<br/>In method ca.griis.speds.network.integration.TestInputs.make_ct_pro_04_05_e2(String, ObjectMapper)<br/>Local variable named privateKey<br/>At TestInputs.java:[line 163]</p>
+            </td>
+         </tr>
+      </table>
+      <h1>
+         <a name="Details">Details</a>
+      </h1>
+      <h2>
+         <a name="CT_CONSTRUCTOR_THROW">CT_CONSTRUCTOR_THROW: Be wary of letting constructors throw exceptions.</a>
+      </h2>
+      
+            <p>Classes that throw exceptions in their constructors are vulnerable to Finalizer attacks</p>
+
+            <p>A finalizer attack can be prevented, by declaring the class final, using an empty finalizer declared as final, or by a clever use of a private constructor.</p>
+
+            <p>See <a href="https://wiki.sei.cmu.edu/confluence/display/java/OBJ11-J.+Be+wary+of+letting+constructors+throw+exceptions"><code>SEI CERT Rule OBJ-11</code></a>
+            for more information.
+            </p>
+            
+    <h2>
+         <a name="DLS_DEAD_LOCAL_STORE">DLS_DEAD_LOCAL_STORE: Dead store to local variable</a>
+      </h2>
+
+<p>
+This instruction assigns a value to a local variable,
+but the value is not read or used in any subsequent instruction.
+Often, this indicates an error, because the value computed is never
+used.
+</p>
+<p>
+Note that Sun's javac compiler often generates dead stores for
+final local variables. Because SpotBugs is a bytecode-based tool,
+there is no easy way to eliminate these false positives.
+</p>
+
+    <h2>
+         <a name="HSC_HUGE_SHARED_STRING_CONSTANT">HSC_HUGE_SHARED_STRING_CONSTANT: Huge string constants is duplicated across multiple class files</a>
+      </h2>
+      
+      <p>
+    A large String constant is duplicated across multiple class files.
+    This is likely because a final field is initialized to a String constant, and the Java language
+    mandates that all references to a final field from other classes be inlined into
+that classfile. See <a href="http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6447475">JDK bug 6447475</a>
+    for a description of an occurrence of this bug in the JDK and how resolving it reduced
+    the size of the JDK by 1 megabyte.
+</p>
+      
+   <h2>
+         <a name="MS_SHOULD_BE_FINAL">MS_SHOULD_BE_FINAL: Field isn't final but should be</a>
+      </h2>
+
+   <p>
+This <code>public static</code> or <code>protected static</code> field is not final, and
+could be changed by malicious code or
+        by accident from another package.
+        The field could be made final to avoid
+        this vulnerability.</p>
+
+    <h2>
+         <a name="UR_UNINIT_READ">UR_UNINIT_READ: Uninitialized read of field in constructor</a>
+      </h2>
+
+  <p> This constructor reads a field which has not yet been assigned a value.&nbsp;
+  This is often caused when the programmer mistakenly uses the field instead
+  of one of the constructor's parameters.</p>
+
+    </body>
+</html>

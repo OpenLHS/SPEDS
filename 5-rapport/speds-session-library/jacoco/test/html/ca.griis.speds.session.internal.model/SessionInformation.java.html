@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SessionInformation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.model</a> &gt; <span class="el_source">SessionInformation.java</span></div><h1>SessionInformation.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SessionInformation.
+ * @brief @~english Implementation of the SessionInformation class.
+ */
+
+package ca.griis.speds.session.internal.model;
+
+import ca.griis.speds.session.internal.domain.SessionId;
+import java.security.KeyPair;
+import java.util.UUID;
+import javax.crypto.SecretKey;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation du modèle des informations de sessions
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-29 [MD] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SessionInformation {
+  public SessionId sessionId;
+  public String initiatorId;
+  public String initiatorPubKey;
+  public String initiatorIri;
+
+  public String peerId;
+  public String peerIri;
+
+  public SecretKey skak;
+  public String pgaId;
+  public SecretKey sdek;
+  public UUID trackingNumber;
+<span class="fc" id="L61">  public Integer numberOfMessage = 0;</span>
+
+  public String piduMessage;
+  public KeyPair firstChoice;
+
+  public UUID token;
+
+<span class="fc" id="L68">  public SessionInformation() {}</span>
+
+  public static Builder builder() {
+<span class="fc" id="L71">    return new Builder();</span>
+  }
+
+<span class="fc" id="L74">  public static class Builder {</span>
+<span class="fc" id="L75">    private final SessionInformation instance = new SessionInformation();</span>
+
+    public Builder sessionId(SessionId sessionId) {
+<span class="fc" id="L78">      instance.sessionId = sessionId;</span>
+<span class="fc" id="L79">      return this;</span>
+    }
+
+    public Builder initiatorId(String initiatorId) {
+<span class="fc" id="L83">      instance.initiatorId = initiatorId;</span>
+<span class="fc" id="L84">      return this;</span>
+    }
+
+    public Builder initiatorPubKey(String initiatorPubKey) {
+<span class="fc" id="L88">      instance.initiatorPubKey = initiatorPubKey;</span>
+<span class="fc" id="L89">      return this;</span>
+    }
+
+    public Builder initiatorIri(String initiatorIri) {
+<span class="fc" id="L93">      instance.initiatorIri = initiatorIri;</span>
+<span class="fc" id="L94">      return this;</span>
+    }
+
+    public Builder peerId(String peerId) {
+<span class="fc" id="L98">      instance.peerId = peerId;</span>
+<span class="fc" id="L99">      return this;</span>
+    }
+
+    public Builder peerIri(String peerIri) {
+<span class="fc" id="L103">      instance.peerIri = peerIri;</span>
+<span class="fc" id="L104">      return this;</span>
+    }
+
+    public Builder skak(SecretKey skak) {
+<span class="fc" id="L108">      instance.skak = skak;</span>
+<span class="fc" id="L109">      return this;</span>
+    }
+
+    public Builder pgaId(String pgaId) {
+<span class="fc" id="L113">      instance.pgaId = pgaId;</span>
+<span class="fc" id="L114">      return this;</span>
+    }
+
+    public Builder sdek(SecretKey sdek) {
+<span class="fc" id="L118">      instance.sdek = sdek;</span>
+<span class="fc" id="L119">      return this;</span>
+    }
+
+    public Builder trackingNumber(UUID trackingNumber) {
+<span class="fc" id="L123">      instance.trackingNumber = trackingNumber;</span>
+<span class="fc" id="L124">      return this;</span>
+    }
+
+    public Builder numberOfMessage(Integer numberOfMessage) {
+<span class="fc" id="L128">      instance.numberOfMessage = numberOfMessage;</span>
+<span class="fc" id="L129">      return this;</span>
+    }
+
+    public Builder piduMessage(String piduMessage) {
+<span class="fc" id="L133">      instance.piduMessage = piduMessage;</span>
+<span class="fc" id="L134">      return this;</span>
+    }
+
+    public Builder firstChoice(KeyPair firstChoice) {
+<span class="fc" id="L138">      instance.firstChoice = firstChoice;</span>
+<span class="fc" id="L139">      return this;</span>
+    }
+
+    public Builder token(UUID token) {
+<span class="fc" id="L143">      instance.token = token;</span>
+<span class="fc" id="L144">      return this;</span>
+    }
+
+    public SessionInformation build() {
+<span class="fc" id="L148">      return instance;</span>
+    }
+
+    public Builder of(SessionInformation sessionInformation) {
+<span class="fc" id="L152">      instance.sessionId = sessionInformation.sessionId;</span>
+<span class="fc" id="L153">      instance.initiatorId = sessionInformation.initiatorId;</span>
+<span class="fc" id="L154">      instance.initiatorPubKey = sessionInformation.initiatorPubKey;</span>
+<span class="fc" id="L155">      instance.initiatorIri = sessionInformation.initiatorIri;</span>
+
+<span class="fc" id="L157">      instance.peerId = sessionInformation.peerId;</span>
+<span class="fc" id="L158">      instance.peerIri = sessionInformation.peerIri;</span>
+
+<span class="fc" id="L160">      instance.skak = sessionInformation.skak;</span>
+<span class="fc" id="L161">      instance.pgaId = sessionInformation.pgaId;</span>
+<span class="fc" id="L162">      instance.sdek = sessionInformation.sdek;</span>
+<span class="fc" id="L163">      instance.trackingNumber = sessionInformation.trackingNumber;</span>
+<span class="fc" id="L164">      instance.numberOfMessage = sessionInformation.numberOfMessage;</span>
+
+<span class="fc" id="L166">      instance.piduMessage = sessionInformation.piduMessage;</span>
+<span class="fc" id="L167">      instance.firstChoice = sessionInformation.firstChoice;</span>
+<span class="fc" id="L168">      instance.token = sessionInformation.token;</span>
+<span class="fc" id="L169">      return this;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

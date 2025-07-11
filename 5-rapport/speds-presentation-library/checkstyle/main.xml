@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.3">
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/entity/TrackingInformation.java">
+</file>
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/entity/PresentationTracking.java">
+</file>
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/PresentationHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/PresentationFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/PresentationServer.java">
+</file>
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/sync/ImmutablePresentationHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/sync/MutablePresentationFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/PresentationClient.java">
+</file>
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/exception/InvalidPduId.java">
+</file>
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/exception/CipherException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/exception/DeserializationException.java">
+</file>
+</checkstyle>

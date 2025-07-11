@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HttpsHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.communication.protocol.https</a> &gt; <span class="el_source">HttpsHost.java</span></div><h1>HttpsHost.java</h1><pre class="source lang-java linenums">
+package ca.griis.speds.communication.protocol.https;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.communication.protocol.ProtocolHost;
+import ca.griis.speds.communication.protocol.ProtocolIdu;
+import ca.griis.speds.communication.protocol.https.HttpPdu.Type;
+import ca.griis.speds.link.api.exception.ProtocolException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.netty.handler.ssl.SslContext;
+import java.util.concurrent.LinkedBlockingDeque;
+import reactor.core.publisher.Mono;
+import reactor.netty.ByteBufFlux;
+import reactor.netty.DisposableServer;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.http.server.HttpServer;
+
+public final class HttpsHost implements ProtocolHost {
+<span class="fc" id="L23">  private static final GriisLogger logger = getLogger(HttpsHost.class);</span>
+
+  private final HttpClient client;
+  private final HttpServer server;
+  private final DisposableServer disposableServer;
+  private final LinkedBlockingDeque&lt;HttpPdu&gt; requests;
+  private final LinkedBlockingDeque&lt;HttpPdu&gt; responses;
+
+  private final ObjectMapper objectMapper;
+
+  public HttpsHost(ObjectMapper objectMapper, String address, Integer port, SslContext sslClient,
+<span class="fc" id="L34">      SslContext sslServer) {</span>
+<span class="fc" id="L35">    this.server = HttpServer.create();</span>
+<span class="fc" id="L36">    this.client = HttpClient.create()</span>
+<span class="fc" id="L37">        .secure(spec -&gt; spec.sslContext(sslClient));</span>
+<span class="fc" id="L38">    this.disposableServer = server</span>
+<span class="fc" id="L39">        .host(address)</span>
+<span class="fc" id="L40">        .port(port)</span>
+<span class="fc" id="L41">        .secure(spec -&gt; spec.sslContext(sslServer), true)</span>
+<span class="fc" id="L42">        .handle(</span>
+<span class="fc" id="L43">            (request, response) -&gt; request.receive().aggregate().asString().doOnNext(this::receive)</span>
+<span class="fc" id="L44">                .then())</span>
+<span class="fc" id="L45">        .bindNow();</span>
+
+<span class="fc" id="L47">    this.requests = new LinkedBlockingDeque&lt;&gt;();</span>
+<span class="fc" id="L48">    this.responses = new LinkedBlockingDeque&lt;&gt;();</span>
+<span class="fc" id="L49">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L50">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L54">    disposableServer.disposeNow();</span>
+<span class="fc" id="L55">    requests.clear();</span>
+<span class="fc" id="L56">    responses.clear();</span>
+<span class="fc" id="L57">  }</span>
+
+  @Override
+  public void request(ProtocolIdu idu) {
+<span class="fc" id="L61">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+<span class="fc" id="L62">    HttpPdu pdu =</span>
+<span class="fc" id="L63">        new HttpPdu(idu.destinationUri(), Type.request, idu.messageIdentifier(), idu.sdu());</span>
+
+<span class="fc" id="L65">    String content = null;</span>
+    try {
+<span class="fc" id="L67">      content = objectMapper.writeValueAsString(pdu);</span>
+<span class="fc" id="L68">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L69">      throw new ProtocolException(&quot;Json processing error&quot;, e);</span>
+<span class="fc" id="L70">    }</span>
+
+<span class="fc" id="L72">    client</span>
+<span class="fc" id="L73">        .post()</span>
+<span class="fc" id="L74">        .uri(idu.destinationUri())</span>
+<span class="fc" id="L75">        .send(ByteBufFlux.fromString(Mono.just(content)))</span>
+<span class="fc" id="L76">        .response()</span>
+<span class="fc" id="L77">        .block();</span>
+<span class="fc" id="L78">  }</span>
+
+  @Override
+  public ProtocolIdu confirm() {
+
+<span class="fc" id="L83">    HttpPdu pdu = null;</span>
+    try {
+<span class="fc" id="L85">      pdu = responses.take();</span>
+<span class="fc" id="L86">    } catch (InterruptedException e) {</span>
+<span class="fc" id="L87">      throw new ProtocolException(&quot;Interrupted thread error&quot;, e);</span>
+<span class="fc" id="L88">    }</span>
+
+<span class="fc" id="L90">    ProtocolIdu idu = new ProtocolIdu(pdu.remoteAddr(), pdu.id(), pdu.sdu());</span>
+
+<span class="fc" id="L92">    logger.trace(Trace.EXIT_METHOD_1, &quot;idu&quot;, idu);</span>
+<span class="fc" id="L93">    return idu;</span>
+  }
+
+  @Override
+  public void response(ProtocolIdu idu) {
+<span class="fc" id="L98">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L100">    HttpPdu pdu =</span>
+<span class="fc" id="L101">        new HttpPdu(idu.destinationUri(), Type.response, idu.messageIdentifier(), idu.sdu());</span>
+
+<span class="fc" id="L103">    String content = null;</span>
+    try {
+<span class="fc" id="L105">      content = objectMapper.writeValueAsString(pdu);</span>
+<span class="fc" id="L106">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L107">      throw new ProtocolException(&quot;Json processing error&quot;, e);</span>
+<span class="fc" id="L108">    }</span>
+
+<span class="fc" id="L110">    client</span>
+<span class="fc" id="L111">        .post()</span>
+<span class="fc" id="L112">        .uri(idu.destinationUri())</span>
+<span class="fc" id="L113">        .send(ByteBufFlux.fromString(Mono.just(content)))</span>
+<span class="fc" id="L114">        .response()</span>
+<span class="fc" id="L115">        .block();</span>
+<span class="fc" id="L116">  }</span>
+
+  @Override
+  public ProtocolIdu indicate() {
+
+<span class="fc" id="L121">    HttpPdu pdu = null;</span>
+    try {
+<span class="fc" id="L123">      pdu = requests.take();</span>
+<span class="fc" id="L124">    } catch (InterruptedException e) {</span>
+<span class="fc" id="L125">      throw new ProtocolException(&quot;Interrupted thread error&quot;, e);</span>
+<span class="fc" id="L126">    }</span>
+
+<span class="fc" id="L128">    ProtocolIdu idu = new ProtocolIdu(pdu.remoteAddr(), pdu.id(), pdu.sdu());</span>
+
+<span class="fc" id="L130">    logger.trace(Trace.EXIT_METHOD_1, &quot;idu&quot;, idu);</span>
+<span class="fc" id="L131">    return idu;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Recevoir le message de reponse HTTPS.
+   * @param content Le message de reponse HTTPS
+   *
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  private void receive(String content) {
+<span class="fc" id="L148">    logger.trace(Trace.ENTER_METHOD_1, &quot;content&quot;, content);</span>
+
+    HttpPdu pdu;
+    try {
+<span class="fc" id="L152">      pdu = objectMapper.readValue(content, HttpPdu.class);</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">      if (pdu.type() == HttpPdu.Type.request) {</span>
+<span class="fc" id="L154">        requests.add(pdu);</span>
+      } else {
+<span class="fc" id="L156">        responses.add(pdu);</span>
+      }
+<span class="nc" id="L158">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L159">      throw new RuntimeException(e);</span>
+<span class="fc" id="L160">    }</span>
+<span class="fc" id="L161">  }</span>
+
+  public DisposableServer getDisposableServer() {
+<span class="fc" id="L164">    return disposableServer;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

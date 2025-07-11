@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KeyMapping.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.util</a> &gt; <span class="el_source">KeyMapping.java</span></div><h1>KeyMapping.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe KeyMapping.java
+ * @brief @~english Contains description of KeyMapping.java class.
+ */
+
+package ca.griis.speds.session.internal.util;
+
+import ca.griis.cryptography.algorithm.SecretKeyGeneratorAlgorithm;
+import ca.griis.cryptography.asymmetric.keypair.CertificatePrivateKeysEntry;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.exception.CipherException;
+import ca.griis.speds.session.api.exception.ParameterException;
+import java.io.ByteArrayInputStream;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Transformation d'une clé exprimée en chaîne de caratères à un object java
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-18 [SSC] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="nc" id="L65">public final class KeyMapping {</span>
+<span class="fc" id="L66">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(KeyMapping.class);</span>
+  public static final String CERTIFICATE_ALGORITHM = &quot;X.509&quot;;
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Obtenir un objet PublicKey à partir d'une chaîne de caratères
+   * @param publicK une chaîne de caractères au format Base64 représentant une clé publique
+   *        respectant la norme X.509
+   * @param keyAlgorithm Algorithme de clé constituant la clé publique à récupérer
+   * @exception CipherException Erreur soulevée lors de la récupération de la clé publique
+   * @return Une clé publique
+   */
+  public static PublicKey getPublicKeyFromString(String publicK, KeyAlgorithm keyAlgorithm) {
+<span class="fc" id="L83">    logger.trace(Trace.ENTER_METHOD_2, &quot;publicK&quot;, publicK, &quot;keyAlgorithm&quot;, keyAlgorithm);</span>
+    final PublicKey pubKey;
+    try {
+<span class="fc" id="L86">      final byte[] publicBytes = Base64.getDecoder().decode(publicK);</span>
+<span class="fc" id="L87">      final X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicBytes);</span>
+<span class="fc" id="L88">      final KeyFactory keyFactory = KeyFactory.getInstance(keyAlgorithm.name());</span>
+<span class="fc" id="L89">      pubKey = keyFactory.generatePublic(keySpec);</span>
+<span class="fc" id="L90">    } catch (Exception ex) {</span>
+<span class="fc" id="L91">      throw new CipherException(&quot;Public Key is of the wrong format&quot;, ex);</span>
+<span class="fc" id="L92">    }</span>
+
+<span class="fc" id="L94">    logger.trace(Trace.EXIT_METHOD_1, &quot;pubKey&quot;, pubKey);</span>
+<span class="fc" id="L95">    return pubKey;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param secretKey «Parameter description»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère la clé secrète à partir d'un tableau d'octet
+   * @param secretKey la clé secrète sous forme de tableau d'octet
+   * @return La clé secrète en objet java
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public static SecretKey getAesSecretKeyFromByte(byte[] secretKey) {
+<span class="fc" id="L111">    logger.trace(Trace.ENTER_METHOD_1, &quot;secretKey&quot;, secretKey);</span>
+
+<span class="fc" id="L113">    final SecretKey sk = new SecretKeySpec(secretKey, 0, secretKey.length,</span>
+<span class="fc" id="L114">        SecretKeyGeneratorAlgorithm.AES.getAlgorithm());</span>
+
+<span class="fc" id="L116">    logger.trace(Trace.EXIT_METHOD_1, &quot;sk&quot;, sk);</span>
+<span class="fc" id="L117">    return sk;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param certificatePem «Parameter description»
+   * @param privateKeyPem «Parameter description»
+   * @exception ParameterException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Importe le certificat et la clé privée associée permettant de gérer
+   *        les signatures des messages Session.
+   * @param certificatePem Le certificat à importer en chaîne de caractères de format PEM.
+   * @param privateKeyPem La clé privée à importer en chaîne de caractères de format PEM.
+   * @exception ParameterException Erreur soulevée lors de l'importation des éléments
+   *            cryptographiques de la couche Session.
+   * @return Le certificat de la couche Session et sa clé privée associée.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public static CertificatePrivateKeysEntry getCertificatePrivateKey(String certificatePem,
+      String privateKeyPem) {
+<span class="fc" id="L140">    logger.trace(Trace.ENTER_METHOD_3, &quot;certificatePem&quot;, certificatePem, &quot;privateKeyPem&quot;,</span>
+        privateKeyPem);
+
+    final Certificate certificate;
+    final PrivateKey privateKey;
+    try {
+<span class="fc" id="L146">      final CertificateFactory cf = CertificateFactory.getInstance(CERTIFICATE_ALGORITHM);</span>
+<span class="fc" id="L147">      certificate = cf.generateCertificate(</span>
+<span class="fc" id="L148">          new ByteArrayInputStream(Base64.getDecoder().decode(certificatePem)));</span>
+
+<span class="fc" id="L150">      final byte[] encoded = Base64.getDecoder().decode(privateKeyPem);</span>
+<span class="fc" id="L151">      final KeyFactory keyFactory = KeyFactory.getInstance(KeyAlgorithm.RSA.name());</span>
+<span class="fc" id="L152">      final PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);</span>
+<span class="fc" id="L153">      privateKey = keyFactory.generatePrivate(keySpec);</span>
+<span class="fc" id="L154">    } catch (CertificateException | InvalidKeySpecException | NoSuchAlgorithmException e) {</span>
+<span class="fc" id="L155">      final String exception =</span>
+          &quot;Problems encountered while importing Session certificate and private key: &quot;
+<span class="fc" id="L157">              + e.getMessage();</span>
+<span class="fc" id="L158">      logger.error(exception);</span>
+<span class="fc" id="L159">      throw new ParameterException(exception);</span>
+<span class="fc" id="L160">    }</span>
+
+<span class="fc" id="L162">    final CertificatePrivateKeysEntry certificatePrivateKeyEntry =</span>
+        new CertificatePrivateKeysEntry(certificate, privateKey, null);
+<span class="fc" id="L164">    logger.trace(Trace.EXIT_METHOD_1, &quot;certificatePrivateKeyEntry&quot;, certificatePrivateKeyEntry);</span>
+<span class="fc" id="L165">    return certificatePrivateKeyEntry;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

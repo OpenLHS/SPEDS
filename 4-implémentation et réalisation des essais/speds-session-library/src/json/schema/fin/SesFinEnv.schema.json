@@ -1,0 +1,50 @@
+{
+  "$id": "https://griis.ca/speds/json/schema/layer/ses/SesFinEnv.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SesFinEnv - 2025-04-11T11:31:20-0400",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "number": {
+      "description": "A valid number. Cannot start with 0 if not only one 0.",
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9])*$"
+    }
+  },
+  "type": "object",
+  "examples": [
+    {
+      "token": "b2f23f9d-dc93-4460-9fef-88b5ab7b2874",
+      "quantity": "0",
+      "session": "ba62cebf-e9fa-4472-b776-49cbf04ab32a"
+    },
+    {
+      "session": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+      "quantity": "1",
+      "token": "b2f23f9d-dc93-4460-9fef-88b5ab7b2874"
+    }
+  ],
+  "properties": {
+    "token": {
+      "description": "A random token",
+      "$ref": "#/$defs/uuid"
+    },
+    "quantity": {
+      "description": "Number of messages transmitted",
+      "$ref": "#/$defs/number"
+    },
+    "session": {
+      "description": "Session identifier",
+      "$ref": "#/$defs/uuid"
+    }
+  },
+  "required": [
+    "token",
+    "quantity",
+    "session"
+  ],
+  "additionalProperties": false
+}

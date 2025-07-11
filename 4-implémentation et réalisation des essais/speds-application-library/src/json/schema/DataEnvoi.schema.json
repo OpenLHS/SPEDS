@@ -1,0 +1,29 @@
+{
+  "$id": "https://griis.ca/SPEDS/DataEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DataEnvoi - 2025-01-16T13:14-0500",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to to transfer data",
+  "properties": {
+    "transferId": {
+      "description": "Identifier of the transfer (UUID)",
+      "$ref": "#/$defs/uuid"
+    },
+    "data": {
+      "description": "Transferred data",
+      "type": "string"
+    }
+  },
+  "required": [
+    "transferId",
+    "data"
+  ],
+  "additionalProperties": false
+}

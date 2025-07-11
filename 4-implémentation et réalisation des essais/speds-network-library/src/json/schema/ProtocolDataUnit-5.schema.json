@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolDataUnit-5-NET - 2024-12-04T15:00:00-0500",
+  "description": "For the Network Layer of SPEDS (Layer 5) : a unit of data which is transferred from one end of a connection to the other with no loss of identity or meaning.",
+  "type": "object",
+  "properties": {
+    "header": {
+      "description": "The header of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "properties": {
+        "msgtype": {
+          "description": "The type of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "enum": [
+            "RES.ENV",
+            "RES.REC"
+          ]
+        },
+        "id": {
+          "description": "The identifier of a SPEDS message. Mandatory in all layers.",
+          "type": "string"
+        },
+        "source_iri": {
+          "description": "The source entity IRI (according to RFC3987).",
+          "type": "string",
+          "format": "iri"
+        },
+        "destination_iri": {
+          "description": "The destination entity IRI (according to RFC3987).",
+          "type": "string",
+          "format": "iri"
+        },
+        "authentification": {
+          "description": "The authentification method used",
+          "oneOf": [
+            {
+              "description": "A valid authentification certificate",
+              "type": "string"
+            },
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "type": "string"
+                },
+                "parameters": {
+                  "type": "object",
+                  "minProperties": 1
+                }
+              },
+              "required": [
+                "method"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "parameters": {
+          "description": "The parameters of the Network layer.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        },
+        "SPEDS" : {
+          "type": "object",
+          "properties": {
+            "version": {
+              "description": "The version of the SPEDS protocol used for this SDU.",
+              "type": "string",
+              "pattern": "^[0-9]+(\\.[0-9]+)(\\.[0-9]+[a-z]?)$"
+            },
+            "reference": {
+              "description": "The reference of the SPEDS protocol version used for this SDU.",
+              "type": "string",
+              "format": "iri"
+            }
+          },
+          "required": ["version","reference"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "msgtype",
+        "id",
+        "source_iri",
+        "destination_iri",
+        "authentification",
+        "parameters",
+        "SPEDS"
+      ],
+      "additionalProperties": false
+    },
+    "stamp": {
+      "type": "object",
+      "properties": {
+        "header_seal": {
+          "type": "string"
+        },
+        "content_seal": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "header_seal",
+        "content_seal"
+      ],
+      "additionalProperties": false
+    },
+    "content": {
+      "description": "The content of a SPEDS message. Mandatory in all layers.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "header",
+    "stamp",
+    "content"
+  ],
+  "additionalProperties": false
+}

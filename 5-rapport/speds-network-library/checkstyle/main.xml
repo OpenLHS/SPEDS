@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.3">
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/signature/CertificatePrivateKeyPair.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/signature/SealManager.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/signature/Seal.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/api/NetworkHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/api/NetworkFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/api/sync/SyncNetworkFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/api/sync/ImmutableNetworkHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/verification/CertificateVerification.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/host/ExchangeDataIndication.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/host/ExchangeDataConfirm.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/host/SentMessageIdSet.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/host/ExchangeDataRequest.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/routing/IriManager.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/identification/IdentifierGenerator.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/identification/DestinationNodeFinder.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/exception/MissingAuthenticationException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/exception/SerializationException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/exception/InvalidPduIdException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/exception/DeserializationException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/exception/ParameterException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/service/exception/InvalidSignatureException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/serialization/NetworkMarshaller.java">
+</file>
+<file name="/builds/produits/speds-line/speds-network-library/src/main/java/ca/griis/speds/network/serialization/SharedObjectMapper.java">
+</file>
+</checkstyle>

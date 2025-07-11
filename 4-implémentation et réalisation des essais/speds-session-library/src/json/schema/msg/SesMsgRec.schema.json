@@ -1,0 +1,39 @@
+{
+  "$id": "https://griis.ca/speds/json/schema/layer/ses/SesMsgRec.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SesMsgRec - 2025-04-11T11:38:24-0400",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "bytestring": {
+      "description": "A base-64 encoded bytestring",
+      "type": "string",
+      "contentEncoding": "base64"
+    }
+  },
+  "type": "object",
+  "examples": [
+    {
+      "session": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+      "content": "Rm9yIHRoZSBsb3ZlIG9mIHRoZSBMaWJlcnR5LCBjb21lIGFuZCBkZWZlbmQgdGhlIG1hbmFnZWQgZGVtb2NyYXR5IGFnYWluc3QgaXRzIGZvZSAh"
+    }
+  ],
+  "properties": {
+    "content": {
+      "description": "The content to be sent as a response, encoded into base64",
+      "$ref": "#/$defs/bytestring"
+    },
+    "session": {
+      "description": "The session identifier",
+      "$ref": "#/$defs/uuid"
+    }
+  },
+  "required": [
+    "content",
+    "session"
+  ],
+  "additionalProperties": false
+}

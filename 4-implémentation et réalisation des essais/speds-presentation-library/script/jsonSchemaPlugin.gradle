@@ -1,0 +1,46 @@
+
+jsonSchema2Pojo {
+  // Location of the JSON Schema file(s). This may refer to a single file or a directory of files.
+  source = files("src/json/schema")
+
+  // Target directory for generated Java source files. The plugin will add this directory to the
+  // java source set so the compiler will find and compile the newly generated source files.
+  targetDirectory = file("src/gen/js2p")
+
+  targetPackage = "ca.griis.js2p.gen.speds.presentation.api.dto"
+
+  // Whether to allow 'additional' properties to be supported in classes by adding a map to
+  // hold these. This is true by default, meaning that the schema rule 'additionalProperties'
+  // controls whether the map is added. Set this to false to globally disable additional properties.
+  includeAdditionalProperties = false
+  // Whether to use the java type BigDecimal when representing the JSON Schema type 'number'. Note
+  // that this configuration overrides useDoubleNumbers
+  useBigDecimals = true
+  // Whether to include hashCode and equals methods in generated Java types.
+  includeHashcodeAndEquals = true
+  // Whether to include a toString method in generated Java types.
+  includeToString = true
+
+  annotationStyle = "jackson"
+  includeJsr303Annotations = true
+  // includeJsr305Annotations = true
+  removeOldOutput = true
+  sourceType = "jsonschema"
+  outputEncoding = "UTF-8"
+
+  classNameSuffix = "Dto"
+  fileExtensions = [".schema.json"]
+
+  includeConstructors = true
+  includeRequiredPropertiesConstructor  = true
+  includeAllPropertiesConstructor = true
+  includeSetters = false
+  serializable = true
+  dateType = "java.time.OffsetDateTime"
+  targetVersion = "17"
+  useJakartaValidation = true
+}
+
+tasks.named("generateJsonSchema2Pojo") {
+  group = "other"
+}

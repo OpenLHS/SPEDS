@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableSessionClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.api.sync</a> &gt; <span class="el_source">ImmutableSessionClient.java</span></div><h1>ImmutableSessionClient.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ImmutableSessionClient.
+ * @brief @~english Implementation of the ImmutableSessionClient class.
+ */
+
+package ca.griis.speds.session.api.sync;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.session.api.dto.InterfaceDataUnit23Dto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.SessionClient;
+import ca.griis.speds.session.api.exception.DeserializationException;
+import ca.griis.speds.session.internal.contract.Pidu;
+import ca.griis.speds.session.internal.domain.HostStartupContext;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.processing.Poller;
+import ca.griis.speds.session.internal.service.ClientSession;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un client immutable de la couche session.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-03 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutableSessionClient implements SessionClient {
+<span class="fc" id="L66">  private static final GriisLogger logger = getLogger(ImmutableSessionClient.class);</span>
+
+<span class="fc" id="L68">  private static final InterfaceDataUnit23Dto poisonPill = new InterfaceDataUnit23Dto(null, null);</span>
+
+  private final ObjectMapper sharedMapper;
+  private final LinkedBlockingQueue&lt;InterfaceDataUnit23Dto&gt; pids;
+  private final ClientSession clientSession;
+  private final ExecutorService executor;
+
+<span class="fc" id="L75">  public ImmutableSessionClient(HostStartupContext hostStartupContext, Poller poller) {</span>
+<span class="fc" id="L76">    this.sharedMapper = hostStartupContext.sharedMapper();</span>
+<span class="fc" id="L77">    this.pids = new LinkedBlockingQueue&lt;&gt;();</span>
+<span class="fc" id="L78">    this.clientSession = new ClientSession(hostStartupContext, poller, pids);</span>
+<span class="fc" id="L79">    this.executor = Executors.newFixedThreadPool(10);</span>
+<span class="fc" id="L80">  }</span>
+
+  @Override
+  public void request(String idu) {
+<span class="nc" id="L84">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="nc" id="L86">    requestFuture(idu);</span>
+
+<span class="nc" id="L88">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="nc" id="L89">  }</span>
+
+  @Override
+  public CompletableFuture&lt;Void&gt; requestFuture(String idu) {
+<span class="fc" id="L93">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+    Pidu pidu;
+
+    try {
+<span class="fc" id="L97">      pidu = sharedMapper.readValue(idu, Pidu.class);</span>
+<span class="nc" id="L98">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L99">      throw new DeserializationException(&quot;Message is not a PIDU&quot;, e);</span>
+<span class="fc" id="L100">    }</span>
+
+<span class="fc" id="L102">    CompletableFuture&lt;Void&gt; future = CompletableFuture.runAsync(() -&gt; {</span>
+      try {
+<span class="fc" id="L104">        clientSession.sendMessageWithManagedSession(pidu);</span>
+<span class="nc" id="L105">      } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L106">        throw new RuntimeException(e);</span>
+<span class="fc" id="L107">      }</span>
+<span class="fc" id="L108">    }, executor);</span>
+
+<span class="fc" id="L110">    logger.trace(Trace.EXIT_METHOD_1, &quot;future&quot;, future);</span>
+<span class="fc" id="L111">    return future;</span>
+  }
+
+  @Override
+  public String confirm() {
+<span class="fc" id="L116">    logger.trace(Trace.ENTER_METHOD_0);</span>
+    String pidu;
+
+    try {
+<span class="fc" id="L120">      InterfaceDataUnit23Dto pendingConfirmation = take();</span>
+<span class="fc" id="L121">      pidu = sharedMapper.writeValueAsString(pendingConfirmation);</span>
+<span class="nc" id="L122">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L123">      throw new RuntimeException(e);</span>
+<span class="fc" id="L124">    }</span>
+
+<span class="fc" id="L126">    return pidu;</span>
+  }
+
+  @Override
+  public void close() {
+<span class="nc" id="L131">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+    try {
+<span class="nc bnc" id="L134" title="All 2 branches missed.">      if (pids.isEmpty()) {</span>
+<span class="nc" id="L135">        pids.put(poisonPill);</span>
+      }
+<span class="nc" id="L137">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L138">      Thread.currentThread().interrupt();</span>
+<span class="nc" id="L139">    }</span>
+
+<span class="nc" id="L141">    clientSession.close();</span>
+
+<span class="nc" id="L143">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="nc" id="L144">  }</span>
+
+  @Override
+  public void closePreservingSessionStates() {
+<span class="fc" id="L148">    clientSession.closePreservingSessionStates();</span>
+<span class="fc" id="L149">  }</span>
+
+  @Override
+  public void clearSessionStates() {
+<span class="fc" id="L153">    clientSession.clearSessionStates();</span>
+<span class="fc" id="L154">  }</span>
+
+  public void open() {
+<span class="nc" id="L157">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+    // TODO
+    // this.clientSession.loadSessionState();
+
+<span class="nc" id="L162">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="nc" id="L163">  }</span>
+
+  public Map&lt;SessionId, SessionInformation&gt; getClientInfo() {
+<span class="fc" id="L166">    return this.clientSession.getSessionInfo();</span>
+  }
+
+  protected InterfaceDataUnit23Dto take() {
+<span class="fc" id="L170">    InterfaceDataUnit23Dto idu = poisonPill;</span>
+    try {
+<span class="fc" id="L172">      idu = pids.take();</span>
+
+      /**
+       * @todo 2025-07-04 [FO] - Il est possible un scénario que la pilule soit reçue avant une
+       *       réponse valide. On laisse une seconde chance seulement.
+       * 
+       *       Envisager une meilleure approche.
+       */
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">      if (idu.equals(poisonPill)) {</span>
+<span class="nc" id="L181">        idu = pids.poll(500, TimeUnit.MILLISECONDS);</span>
+      }
+<span class="fc" id="L183">    } catch (InterruptedException e) {</span>
+<span class="fc" id="L184">      Thread.currentThread().interrupt();</span>
+<span class="fc" id="L185">    }</span>
+
+<span class="fc bfc" id="L187" title="All 2 branches covered.">    if (idu.equals(poisonPill)) {</span>
+<span class="fc" id="L188">      throw new RuntimeException(&quot;Poison pill !!&quot;);</span>
+    }
+
+<span class="fc" id="L191">    return idu;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

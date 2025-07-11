@@ -1,0 +1,78 @@
+{
+  "$id": "https://griis.ca/SPEDS/TacheEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TacheEnvoi - 2025-01-13T12:49-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to dispatch a task",
+  "properties": {
+    "task_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "task_def": {
+      "description": "The identifier of the task definition",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "inArgs": {
+      "description": "The input arguments of the task",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Name",
+          "Value"
+        ]
+      }
+    },
+    "params": {
+      "description": "The interface parameters of the task",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Name",
+          "Value"
+        ]
+      }
+    },
+    "command": {
+      "description": "The command associated with the task dispatch",
+      "type": "string",
+      "enum": [
+        "ABORT",
+        "START"
+      ]
+    }
+  },
+  "required": [
+    "task_ref",
+    "task_def",
+    "inArgs",
+    "params",
+    "command"
+  ],
+  "additionalProperties": false
+}

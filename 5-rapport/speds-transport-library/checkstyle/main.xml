@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.3">
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportClient.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/sync/SyncTransportFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/sync/ImmutableTransportHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportServer.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportHost.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/serializer/SharedObjectMapper.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/client/ExchangeDataConfirmation.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/client/ExchangeDataRequest.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/server/datatype/DataReplyMessages.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/server/ExchangeDataReply.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/message/PollingManager.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/identification/IdentifierGenerator.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/SerializationException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/HeaderSealException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/DeserializationException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/ParameterException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/ContentSealException.java">
+</file>
+</checkstyle>

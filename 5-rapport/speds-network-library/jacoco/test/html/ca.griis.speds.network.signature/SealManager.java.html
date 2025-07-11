@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SealManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.signature</a> &gt; <span class="el_source">SealManager.java</span></div><h1>SealManager.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SealManager.
+ * @brief @~english SealManager class implementation.
+ */
+
+package ca.griis.speds.network.signature;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.cryptography.asymmetric.signature.entity.DigitalSignature;
+import ca.griis.cryptography.asymmetric.signature.signing.RsaSigning;
+import ca.griis.cryptography.asymmetric.signature.verification.RsaVerifySigning;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.service.exception.InvalidSignatureException;
+import ca.griis.speds.network.service.exception.SerializationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Base64;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Permet de gérer des estampilles au sein des messages Réseau.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-03 [CB] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SealManager {
+<span class="fc" id="L65">  private static final GriisLogger logger = getLogger(SealManager.class);</span>
+
+  private static final String CERTIFICATE_ALGORITHM = &quot;X.509&quot;;
+
+  private final ObjectMapper objectMapper;
+
+<span class="fc" id="L71">  public SealManager(ObjectMapper objectMapper) {</span>
+<span class="fc" id="L72">    logger.trace(Trace.ENTER_METHOD_1, &quot;objectMapper&quot;, objectMapper);</span>
+<span class="fc" id="L73">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L74">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param value «Parameter description»
+   * @param seal «Parameter description»
+   * @param privateKey «Parameter description»
+   * @exception SerializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Crée un sceau à partir d'une valeur donnée.
+   * @param value La valeur servant à la création du sceau.
+   * @param seal Le type de sceau créé.
+   * @param privateKey la clé privée utilisée pour créer le sceau.
+   * @exception SerializationException Erreur survenue lors de la création du sceau.
+   * @return Le sceau créé à partir de la valeur.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public String createSeal(Object value, Seal seal, PrivateKey privateKey) {
+<span class="fc" id="L95">    logger.trace(Trace.ENTER_METHOD_3, &quot;value&quot;, value, &quot;seal&quot;, seal, &quot;privateKey&quot;, privateKey);</span>
+
+    final String result;
+    try {
+      final String message =
+<span class="fc bfc" id="L100" title="All 2 branches covered.">          value instanceof String ? (String) value : objectMapper.writeValueAsString(value);</span>
+<span class="fc" id="L101">      result = Base64.getEncoder()</span>
+<span class="fc" id="L102">          .encodeToString(new RsaSigning((RSAPrivateKey) privateKey).sign(message.getBytes(</span>
+<span class="fc" id="L103">              StandardCharsets.UTF_8)).getBytes());</span>
+<span class="fc" id="L104">    } catch (JsonProcessingException | SecurityException e) {</span>
+<span class="fc" id="L105">      final String exception =</span>
+<span class="fc" id="L106">          &quot;Cannot serialize &quot; + seal.name() + &quot; seal: &quot; + e.getMessage();</span>
+<span class="fc" id="L107">      logger.error(exception);</span>
+<span class="fc" id="L108">      throw new SerializationException(exception);</span>
+<span class="fc" id="L109">    }</span>
+
+<span class="fc" id="L111">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L112">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param value «Parameter description»
+   * @param seal «Parameter description»
+   * @param certificatePem «Parameter description»
+   * @param signature «Parameter description»
+   * @exception InvalidSignatureException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Vérifie l'intégrité d'un objet en validant sa signature associée à l'aide d'un
+   *        certificat cryptographique.
+   * @param value La valeur dont on veut vérifier l'intégrité.
+   * @param seal Le type de sceau fourni.
+   * @param certificatePem le certificat associé à la clé privée ayant servi à la création de la
+   *        signature.
+   * @param signature la signature fournie pour valider l'intégrité de la valeur en Base64.
+   * @exception InvalidSignatureException Erreur qui survient lorsqu'il est impossible de vérifier
+   *            l'intégrité de la valeur.
+   * @return Valeur booléenne vraie si la valeur est intègre, et fausse sinon.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public Boolean verifySeal(Object value, Seal seal, String certificatePem,
+      String signature) {
+<span class="fc" id="L140">    logger.trace(Trace.ENTER_METHOD_4, &quot;value&quot;, value, &quot;seal&quot;, seal, &quot;certificatePem&quot;,</span>
+        certificatePem, &quot;signature&quot;, signature);
+
+    Boolean result;
+    try {
+<span class="fc" id="L145">      final CertificateFactory cf = CertificateFactory.getInstance(CERTIFICATE_ALGORITHM);</span>
+<span class="fc" id="L146">      final Certificate certificate =</span>
+<span class="fc" id="L147">          cf.generateCertificate(</span>
+<span class="fc" id="L148">              new ByteArrayInputStream(Base64.getDecoder().decode(certificatePem)));</span>
+
+      final byte[] message =
+<span class="fc bfc" id="L151" title="All 2 branches covered.">          value instanceof String ? ((String) value).getBytes(StandardCharsets.UTF_8)</span>
+<span class="fc" id="L152">              : objectMapper.writeValueAsString(value).getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L153">      result = new RsaVerifySigning((RSAPublicKey) certificate.getPublicKey()).verify(message,</span>
+          new DigitalSignature(
+<span class="fc" id="L155">              Base64.getDecoder().decode(signature.getBytes(StandardCharsets.UTF_8))));</span>
+<span class="fc" id="L156">    } catch (SecurityException | JsonProcessingException | CertificateException e) {</span>
+<span class="fc" id="L157">      final String exception =</span>
+<span class="fc" id="L158">          &quot;Cannot verify &quot; + seal.name() + &quot; seal: &quot; + e.getMessage();</span>
+<span class="fc" id="L159">      logger.error(exception);</span>
+<span class="fc" id="L160">      result = Boolean.FALSE;</span>
+<span class="fc" id="L161">    }</span>
+
+<span class="fc" id="L163">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L164">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

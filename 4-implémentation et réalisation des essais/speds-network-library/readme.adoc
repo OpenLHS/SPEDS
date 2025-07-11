@@ -1,0 +1,249 @@
+// Settings
+:idprefix:
+:idseparator: -
+:component-name: Speds-network-library
+
+= {component-name}
+
+[#summary]
+== Sommaire
+
+`{component-name}` implémente la couche réseau du protocole d'échange SPEDS utilisé pour les
+communications entre les différents sous-systèmes utilisant DadaGem.
+
+[#overview]
+== Présentation
+
+Le rôle de `{component-name}` est de recevoir des messages de la couche inférieure et supérieure, de valider et respecter le format attendu et d'envoyer les messages conformément au format attendu.
+
+Un service d'API est offert pour la couche supérieure.
+
+`{component-name}` permet d'effectuer les tâches suivantes :
+
+* Acheminer une requête d'échange de données ;
+
+* Confirmer la réception d'une réponse à une requête d'échange de données ;
+
+* Recevoir, traiter et répondre à une requête d'échange de données ;
+
+//* En tant que service mandataire, récévoir et acheminer une demande de requête de données à sa prochaine destination ;
+
+//* En tant que service mandataire, Confirmer la réception d'une réponse à une requête d'échange de données ;
+
+* Libérer les ressources utilisées en lien avec le protocole réseau lors de l'arrêt des échanges
+
+
+[#techno]
+== Technologies utilisées
+
+* Language(s) utilisé(s) :
+** Java
+
+* API utilisé(s) :
+** speds-link-library
+
+* Bibliothèque(s) tierce(s) :
+** cryptography-library
+// ** speds-common-library
+
+[#prerequisite]
+== Préalable
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient remplies :
+
+* logiciels prérequis :
+** S.O.
+
+* composants GRIIS prérequis
+** S.O.
+
+* systèmes
+** linux
+
+* matériels prérequis :
+** S.O.
+
+
+[#build]
+== Construction
+
+Pour construire `{component-name}`, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+[#compile]
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+[#install]
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la `{component-name}` dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-network-library:${version}"
+}
+----
+
+`{component-name}` peut être déclarée en utilisant
+`ca.griis:speds-network-library`.
+
+Pour développer directement sur `{component-name}`, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA. Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+=== Interface de programmation
+
+==== Module api
+
+*NetworkHost*
+
+[%header, cols="3*"]
+|===
+| Id du processus | Signature impl.               | Comportement
+| S.O.
+a|
+----
+void close()
+----
+| Efface les mémorisations en lien avec le protocole réseau.
+| PRO-3
+a|
+----
+void request(String idu)
+void response(String idu)
+----
+| Demande d'échange de données - Requête de la couche supérieure qui démarre un envoi de données (idu)
+
+| PRO-4           
+a|
+----
+void confirm()
+----
+| Confirme l'échange de données - Attente de recevoir l'accusé de réception (confirmation d'une requête d'échange de données) en provenance de la couche inférieure.
+| PRO-5
+a| 
+----
+String indication()
+----
+| Traite une demande d'échange de données de la couche inférieure qui produira un accusé de réception ainsi que l'acheminement du contenu de l'échange vers la couche supérieure.
+|===
+
+// *NetworkProxy*
+
+// |===
+// | Id du processus | Signature impl.               | Comportement
+// | S.O.            | void close()                  | Efface les mémorisations en lien avec le protocole réseau.
+// | PRO-8           | void indication()             | Achemine une demande de requête de données - Achemine le message reçu à la prochaine destination.
+// | PRO-9           | void confirm()                | Attente de la sortie de la primitive confirm de la couche liaison.
+// |===
+
+// Étant donné que speds fonctionne de façon _sync_, du côté client, il est important d'appeler la fonction _request_ pour envoyer le message et
+// par la suite la fonction _confirm_ pour recevoir la réponse. Ce processus sera bloquant.
+
+// Du côté serveur, il faudra appeler la fonction _indication_ pour recevoir et envoyer la réponse (l'accusé de reception).
+
+// Du côté du proxy, il faudra appeler la fonction _forward_ pour achéminer un message reçu vers le prochain nœud et
+// par la suite la fonction _confirm_ pour recevoir la réponse. Ce processus sera également bloquant.
+
+*Classe SyncNetworkFactory*
+
+Définit la fabrique de l'hôte du protocole de SPEDS. Un hôte permet d'être un client et un serveur sur le protocole SPEDS.
+
+. La fabrique permet:
+.. d'initialiser le service d'entité
+.. d'initialiser la création d'un hôte respectant des options de configuration :
+... un dictionnaire d'options de configuration en Java
+... un dictionnaire d'options de configuration sous une chaîne de caractères respectant le format JSON
+.. d'initialiser la liste des messsages en attente
+
+Les options de configuration::
+
+[source, bash]
+----
+speds.net.version     - Version du protocole de la couche réseau.
+speds.net.reference   - Référence du protocole de la couche réseau.
+speds.net.cert        - Certificat sous le format X.509.
+speds.net.private.key - Clé privée associée au certificat sous le format PKCS #8.
+----
+
+// À remettre ci-haut lorsque Proxy sera impl.
+// speds.net.entities    - Table de correspondance de proxy sous le format { "code1": "iri1", "code2": "iri2" }. Chaque code représente un code d’une entité et chaque IRI représente un IRI rejoignable.
+
+[%header, cols="3*"]
+|===
+| Signature impl.
+| Comportement
+| Instructions supplémentaires
+
+| NetworkHost initHost(String parameters)
+| Initialise un hôte de la couche réseau et enclenche l'initialisation de l'hôte liaison avec la méthode `initDataLinkHost` de _SyncNetworkFactory_
+| Utilise les paramètres ou options de configuration suivantes : `_speds.net.version_`, `_speds.net.reference_`, `_speds.net.cert_` et `_speds.net.private.key_`.
+
+// | NetworkProxy initProxy(String parameters)            | Initialise un proxy de la couche réseau et enclenche l'initialisation de l'hôte liaison avec la méthode initDataLinkHost de SyncNetworkFactory  | Utilise les paramètres ou options de configuration suivantes : speds.net.version, speds.net.reference, speds.net.cert, speds.net.private.key et speds.net.entities.
+| DataLinkHost initDataLinkHost(String parameters)
+| Initialise un service hôte de la couche liaison.
+| Utilise les paramètres nécessaires pour un hôte de la couche liaison (voir projet de la couche liaison). Pour les besoins de tests de la couche réseau, cette méthode peut être mockée.
+|===
+
+*Classe SentMessageIdSet*
+
+Définit la table des identifiants de messages en attente afin de faire le lien entre l'envoi et l'accusé de réception. La table est représentée sous forme de Set et prend en considération la concurrence et le multithreading.
+
+[#launch]
+== Démarrage
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant `{component-name}`, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le dossier `build\doc-fr-doxygen\html`.
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+include::copyright.adoc[]
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].

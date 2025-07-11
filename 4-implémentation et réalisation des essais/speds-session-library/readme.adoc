@@ -1,0 +1,202 @@
+
+// Settings
+:idprefix:
+:idseparator: -
+:component-name: speds-session-library
+
+= {component-name}
+
+[#summary]
+== Sommaire
+
+La librairie {component-name} implémente la couche session du protocole de communication SPEDS pour les échanges entre les différents sous-systèmes utilisant DadaGem.
+
+[#overview]
+== Présentation
+
+Le rôle de {component-name} est de recevoir des messages des couches inférieures et supérieures, de valider et respecter le format attendu et d'assurer l'envoi et la réception des messages.
+
+Un service d'API est offert pour la couche supérieure.
+
+{component-name} permet d'effectuer les tâches suivantes :
+
+* Effectuer une requête d'échange de données;
+
+* Confirmer la réception d'une réponse à une requête d'échange de données;
+
+* Recevoir une requête d'échange de données;
+
+* Répondre à un initiateur de requête avec des données à échanger.
+
+* Libérer les ressources utilisées en lien avec le protocole session lors de l'arrêt des échanges
+
+[#techno]
+== Technologies utilisées
+
+* Languages utilisés :
+** Java
+
+* Les API utilisés :
+** speds-transport-library
+
+* les applications tierces :
+** cryptography-library
+** speds-common-library
+
+[#prerequisite]
+== Préalable
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* logiciels prérequis :
+** S.O.
+
+* composants GRIIS prérequis
+** S.O.
+
+* systèmes
+** linux
+
+* matériels prérequis :
+** S.O.
+
+[#build]
+== Construction
+
+Pour construire la librairie *{component-name}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+[#compile]
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+[#install]
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la librairie *{component-name}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-session-library:${version}"
+}
+----
+
+La librairie *{component-name}* peut être déclarée en utilisant
+`ca.griis:speds-session-library`.
+
+Pour développer directement sur la librairie *{component-name}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+=== Interface de programmation
+
+==== Module api
+
+*SessionClient*
+
+|===
+| Id du processus | Signature impl.           | Comportement
+| S.O.            | void close()              | Libérer les ressources en lien avec le protocole session.
+| PRO-02          | void request(String idu)  | Requête d'échange de données
+| PRO-11          | String confirm()          | Confirmer la réception d'une réponse à une requête d'échange de données
+|===
+
+*SessionServer*
+
+|===
+| Id du processus | Signature impl.           | Comportement
+| S.O.            | void close()              | Libérer les ressources en lien avec le protocole session.
+| PRO-07          | String indication()       | Recevoir une requête d'échange de donnée
+| PRO-08          | void response(String idu) | Répondre à un initiateur de requête avec des données à échanger
+|===
+
+Étant donné que speds fonctionne de façon synchrone, il est important d'appeler la fonction _request_ pour envoyer le message et par la suite la fonction _confirm_ pour recevoir la réponse. Ce processus sera bloquant.
+
+Dû côté serveur, il faudra appeler la fonction _indication_, qui sera bloquante, afin de recevoir un message et par la suite la fonction _response_ pour envoyer une réponse.
+
+*Package factory*
+
+Définit la fabrique des hôtes du protocole de SPEDS.  Un hôte permet d'être un client et un serveur sur le protocole SPEDS. La fabrique permet donc la création d'un hôte respectant des options de configuration nécessaires au bon déroulement du protocole de la couche session.
+
+*Exemple des options de configuration*
+
+[source, bash]
+----
+speds.ses.version     - Version du protocole de la couche session.
+speds.ses.reference   - Référence du protocole de la couche session.
+speds.ses.cert        - Certificat contenant la clé publique de l'entité utilisant la couche session
+speds.ses.private.key - Clé privée associée au certificat de l'entité utilisant la couche session
+----
+
+[#launch]
+== Démarrage
+
+S.O.
+
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{component-name}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].

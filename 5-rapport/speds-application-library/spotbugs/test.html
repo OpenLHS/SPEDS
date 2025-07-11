@@ -1,0 +1,219 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta charset="UTF-8"/>
+      <title>SpotBugs Report</title>
+      <style type="text/css">
+		.tablerow0 {
+			background: #EEEEEE;
+		}
+
+		.tablerow1 {
+			background: white;
+		}
+
+		.detailrow0 {
+			background: #EEEEEE;
+		}
+
+		.detailrow1 {
+			background: white;
+		}
+
+		.tableheader {
+			background: #b9b9fe;
+			font-size: larger;
+		}
+
+		.tablerow0:hover, .tablerow1:hover {
+			background: #aaffaa;
+		}
+
+		.priority-1 {
+				color: red;
+				font-weight: bold;
+		}
+		.priority-2 {
+				color: orange;
+				font-weight: bold;
+		}
+		.priority-3 {
+				color: green;
+				font-weight: bold;
+		}
+		.priority-4 {
+				color: blue;
+				font-weight: bold;
+		}
+		</style>
+      <script type="text/javascript">
+			function toggleRow(elid) {
+				if (document.getElementById) {
+					element = document.getElementById(elid);
+					if (element) {
+						if (element.style.display == 'none') {
+							element.style.display = 'block';
+							//window.status = 'Toggle on!';
+						} else {
+							element.style.display = 'none';
+							//window.status = 'Toggle off!';
+						}
+					}
+				}
+			}
+		</script>
+   </head>
+   <body>
+      <h1>
+         <a href="https://spotbugs.github.io/">SpotBugs</a> Report</h1>
+      <h2>Project Information</h2>
+      <p>Project: 
+		speds-application-library (spotbugsTest)</p>
+      <p>SpotBugs version: 4.8.3</p>
+      <p>Code analyzed:</p>
+      <ul>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/integration/conception/TestSuite.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/integration/conception/ServerCases.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/integration/conception/ClientCases$1.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/integration/conception/ServerCases$1.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/integration/conception/ClientCases.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/testdata/ExpectedInterfaceDataUnit.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/unit/api/exception/InvalidPduIdExceptionTest.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/unit/api/exception/SerializationExceptionTest.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/unit/api/exception/DeserializationExceptionTest.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/unit/api/exception/ParameterExceptionTest.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/unit/api/sync/SyncApplicationFactoryTest.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/unit/api/sync/SyncApplicationFactoryTest$1.class</li>
+         <li>/builds/produits/speds-line/speds-application-library/build/classes/java/test/ca/griis/speds/application/unit/api/sync/ImmutableApplicationHostTest.class</li>
+      </ul>
+      <p>
+         <br/>
+         <br/>
+      </p>
+      <h2>Metrics</h2>
+      <p>548 lines of code analyzed,
+	in 13 classes, 
+	in 4 packages.</p>
+      <table width="500" cellpadding="5" cellspacing="2">
+         <tr class="tableheader">
+            <th align="left">Metric</th>
+            <th align="right">Total</th>
+            <th align="right">Density*</th>
+         </tr>
+         <tr class="tablerow0">
+            <td>High Priority Warnings</td>
+            <td align="right"/>
+            <td align="right">0.00</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>Medium Priority Warnings</td>
+            <td align="right">2</td>
+            <td align="right">3.65</td>
+         </tr>
+         <tr class="$totalClass">
+            <td>
+               <b>Total Warnings</b>
+            </td>
+            <td align="right">
+               <b>2</b>
+            </td>
+            <td align="right">
+               <b>3.65</b>
+            </td>
+         </tr>
+      </table>
+      <p>
+         <i>(* Defects per Thousand lines of non-commenting source statements)</i>
+      </p>
+      <p>
+         <br/>
+         <br/>
+      </p>
+      <h2>Contents</h2>
+      <ul>
+         <li>
+            <a href="#Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+         </li>
+         <li>
+            <a href="#Details">Details</a>
+         </li>
+      </ul>
+      <h1>Summary</h1>
+      <table width="500" cellpadding="5" cellspacing="2">
+         <tr class="tableheader">
+            <th align="left">Warning Type</th>
+            <th align="right">Number</th>
+         </tr>
+         <tr class="tablerow0">
+            <td>
+               <a href="#Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+            </td>
+            <td align="right">2</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>
+               <b>Total</b>
+            </td>
+            <td align="right">
+               <b>2</b>
+            </td>
+         </tr>
+      </table>
+      <h1>Warnings</h1>
+      <p>Click on a warning row to see full context information.</p>
+      <h2>
+         <a name="Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e89');">
+            <td>
+               <span class="priority-2">CT</span>
+            </td>
+            <td>Exception thrown in class ca.griis.speds.application.integration.conception.ClientCases at new ca.griis.speds.application.integration.conception.ClientCases() will leave the constructor. The object under construction remains partially initialized and may be vulnerable to Finalizer attacks.</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e89" style="display: none;">
+                  <a href="#CT_CONSTRUCTOR_THROW">Bug type CT_CONSTRUCTOR_THROW (click for details)</a>
+                  <br/>In class ca.griis.speds.application.integration.conception.ClientCases<br/>In method new ca.griis.speds.application.integration.conception.ClientCases()<br/>At ClientCases.java:[line 58]<br/>At ClientCases.java:[line 58]</p>
+            </td>
+         </tr>
+         <tr class="tablerow0" onclick="toggleRow('d1e103');">
+            <td>
+               <span class="priority-2">CT</span>
+            </td>
+            <td>Exception thrown in class ca.griis.speds.application.integration.conception.ServerCases at new ca.griis.speds.application.integration.conception.ServerCases() will leave the constructor. The object under construction remains partially initialized and may be vulnerable to Finalizer attacks.</td>
+         </tr>
+         <tr class="detailrow0">
+            <td/>
+            <td>
+               <p id="d1e103" style="display: none;">
+                  <a href="#CT_CONSTRUCTOR_THROW">Bug type CT_CONSTRUCTOR_THROW (click for details)</a>
+                  <br/>In class ca.griis.speds.application.integration.conception.ServerCases<br/>In method new ca.griis.speds.application.integration.conception.ServerCases()<br/>At ServerCases.java:[line 57]<br/>At ServerCases.java:[line 57]</p>
+            </td>
+         </tr>
+      </table>
+      <h1>
+         <a name="Details">Details</a>
+      </h1>
+      <h2>
+         <a name="CT_CONSTRUCTOR_THROW">CT_CONSTRUCTOR_THROW: Be wary of letting constructors throw exceptions.</a>
+      </h2>
+      
+            <p>Classes that throw exceptions in their constructors are vulnerable to Finalizer attacks</p>
+
+            <p>A finalizer attack can be prevented, by declaring the class final, using an empty finalizer declared as final, or by a clever use of a private constructor.</p>
+
+            <p>See <a href="https://wiki.sei.cmu.edu/confluence/display/java/OBJ11-J.+Be+wary+of+letting+constructors+throw+exceptions"><code>SEI CERT Rule OBJ-11</code></a>
+            for more information.
+            </p>
+            
+    </body>
+</html>

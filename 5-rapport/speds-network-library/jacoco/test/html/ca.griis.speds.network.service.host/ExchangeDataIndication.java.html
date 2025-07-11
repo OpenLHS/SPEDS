@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExchangeDataIndication.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.service.host</a> &gt; <span class="el_source">ExchangeDataIndication.java</span></div><h1>ExchangeDataIndication.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe ExchangeDataIndication.
+ * @brief @~english Contains description of ExchangeDataIndication class.
+ */
+
+package ca.griis.speds.network.service.host;
+
+import ca.griis.js2p.gen.speds.network.api.dto.Context45Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.Context56Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.HeaderDto;
+import ca.griis.js2p.gen.speds.network.api.dto.InterfaceDataUnit56Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.ProtocolDataUnit5Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.SPEDSDto;
+import ca.griis.js2p.gen.speds.network.api.dto.StampDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.serialization.NetworkMarshaller;
+import ca.griis.speds.network.service.exception.DeserializationException;
+import ca.griis.speds.network.service.exception.InvalidSignatureException;
+import ca.griis.speds.network.service.exception.MissingAuthenticationException;
+import ca.griis.speds.network.service.identification.DestinationNodeFinder;
+import ca.griis.speds.network.service.verification.CertificateVerification;
+import ca.griis.speds.network.signature.CertificatePrivateKeyPair;
+import ca.griis.speds.network.signature.Seal;
+import ca.griis.speds.network.signature.SealManager;
+import java.util.Objects;
+import java.util.UUID;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Un processus qui traite l'échange de données.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-26 [SSC] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ExchangeDataIndication {
+<span class="fc" id="L66">  private static final GriisLogger logger =</span>
+<span class="fc" id="L67">      GriisLoggerFactory.getLogger(ExchangeDataIndication.class);</span>
+
+  private final NetworkMarshaller networkMarshaller;
+  private final SealManager sealManager;
+  private final SPEDSDto spedsDto;
+  private final CertificatePrivateKeyPair certificatePrivateKeyPair;
+
+  public ExchangeDataIndication(NetworkMarshaller networkMarshaller, SealManager sealManager,
+      String spedsVersion, String spedsReference,
+<span class="fc" id="L76">      CertificatePrivateKeyPair certificatePrivateKeyPair) {</span>
+<span class="fc" id="L77">    this.networkMarshaller = networkMarshaller;</span>
+<span class="fc" id="L78">    this.sealManager = sealManager;</span>
+<span class="fc" id="L79">    this.spedsDto = new SPEDSDto(spedsVersion, spedsReference);</span>
+<span class="fc" id="L80">    this.certificatePrivateKeyPair = certificatePrivateKeyPair;</span>
+<span class="fc" id="L81">  }</span>
+
+  /**
+   * @brief @~french Vérification du message reçu
+   * @param receivedIdu56 le message
+   * @exception DeserializationException si le message ne correspond pas à celui attendu ou n'est
+   *            pas du bon type
+   * @exception MissingAuthenticationException le champ authentification est invalide ou manquant
+   * @exception InvalidSignatureException L'empreinte de l'entête ou du contenu est invalide.
+   */
+  public void validateReceivedMessage(String receivedIdu56) {
+<span class="fc" id="L92">    logger.trace(Trace.ENTER_METHOD_1, &quot;receivedIdu56&quot;, receivedIdu56);</span>
+
+<span class="fc" id="L94">    final InterfaceDataUnit56Dto receivedIdu56Dto =</span>
+<span class="fc" id="L95">        networkMarshaller.unmarshallFromDataLink(receivedIdu56);</span>
+<span class="fc" id="L96">    final ProtocolDataUnit5Dto receivedSdu =</span>
+<span class="fc" id="L97">        networkMarshaller.unmarshallNetworkPdu(receivedIdu56Dto.getMessage());</span>
+
+<span class="fc" id="L99">    final HeaderDto.Msgtype msgType = receivedSdu.getHeader().getMsgtype();</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    if (msgType != HeaderDto.Msgtype.RES_ENV) {</span>
+<span class="fc" id="L101">      final String exception =</span>
+<span class="fc" id="L102">          &quot;Wrong message type for Network PDU. Expected RES.ENV but got: &quot; + msgType.value();</span>
+<span class="fc" id="L103">      throw new DeserializationException(exception);</span>
+    }
+
+<span class="fc" id="L106">    String auth = String.valueOf(receivedSdu.getHeader().getAuthentification());</span>
+<span class="pc bpc" id="L107" title="1 of 4 branches missed.">    boolean verifyAuth = Objects.isNull(auth) || &quot;&quot;.equals(auth) || !CertificateVerification</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        .verifyCertificate(auth, receivedSdu.getHeader().getSourceIri());</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">    if (verifyAuth) {</span>
+<span class="fc" id="L110">      throw new MissingAuthenticationException(&quot;Host certificate is missing or invalid.&quot;);</span>
+    }
+
+<span class="fc bfc" id="L113" title="All 2 branches covered.">    if (!sealManager.verifySeal(receivedSdu.getHeader(), Seal.header,</span>
+<span class="fc" id="L114">        (String) receivedSdu.getHeader().getAuthentification(),</span>
+<span class="fc" id="L115">        receivedSdu.getStamp().getHeaderSeal())) {</span>
+<span class="fc" id="L116">      throw new InvalidSignatureException(&quot;The network header signature is invalid.&quot;);</span>
+    }
+
+<span class="fc bfc" id="L119" title="All 2 branches covered.">    if (!sealManager.verifySeal(receivedSdu.getContent(), Seal.content,</span>
+<span class="fc" id="L120">        (String) receivedSdu.getHeader().getAuthentification(),</span>
+<span class="fc" id="L121">        receivedSdu.getStamp().getContentSeal())) {</span>
+<span class="fc" id="L122">      throw new InvalidSignatureException(&quot;The network content signature is invalid.&quot;);</span>
+    }
+
+<span class="fc" id="L125">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L126">  }</span>
+
+  /**
+   * @brief @~french Construit le message réponse à faire suivre à la couche inférieure
+   * @param receivedIdu56 message reçu de la couche inférieure
+   * @return le message construit
+   */
+  public String dataReplyProcess(String receivedIdu56) {
+<span class="fc" id="L134">    logger.trace(Trace.ENTER_METHOD_1, &quot;receivedIdu56&quot;, receivedIdu56);</span>
+<span class="fc" id="L135">    final InterfaceDataUnit56Dto receivedIdu56Dto =</span>
+<span class="fc" id="L136">        networkMarshaller.unmarshallFromDataLink(receivedIdu56);</span>
+<span class="fc" id="L137">    final ProtocolDataUnit5Dto receivedSdu =</span>
+<span class="fc" id="L138">        networkMarshaller.unmarshallNetworkPdu(receivedIdu56Dto.getMessage());</span>
+
+<span class="fc" id="L140">    final String id = receivedSdu.getHeader().getId();</span>
+<span class="fc" id="L141">    final String sourceIri = receivedSdu.getHeader().getSourceIri();</span>
+<span class="fc" id="L142">    final String destinationIri = receivedSdu.getHeader().getDestinationIri();</span>
+<span class="fc" id="L143">    final UUID dataLinkTrackingNumber = receivedIdu56Dto.getContext().getTrackingNumber();</span>
+
+<span class="fc" id="L145">    final HeaderDto headerDto = new HeaderDto(HeaderDto.Msgtype.RES_REC, id, sourceIri,</span>
+<span class="fc" id="L146">        destinationIri, certificatePrivateKeyPair.getAuthentification(), false, spedsDto);</span>
+
+<span class="fc" id="L148">    final String headerSeal =</span>
+<span class="fc" id="L149">        sealManager.createSeal(headerDto, Seal.header, certificatePrivateKeyPair.privateKey());</span>
+
+<span class="fc" id="L151">    final String pdu5NetJson = networkMarshaller</span>
+<span class="fc" id="L152">        .marshallNetworkPdu(new ProtocolDataUnit5Dto(headerDto, new StampDto(headerSeal, &quot;&quot;), &quot;&quot;));</span>
+
+<span class="fc" id="L154">    String linkIri =</span>
+<span class="fc" id="L155">        DestinationNodeFinder.nextNode(HeaderDto.Msgtype.RES_REC, sourceIri, destinationIri);</span>
+<span class="fc" id="L156">    final String idu56 = networkMarshaller</span>
+<span class="fc" id="L157">        .marshallToDataLink(new Context56Dto(linkIri, dataLinkTrackingNumber, false), pdu5NetJson);</span>
+
+<span class="fc" id="L159">    logger.trace(Trace.EXIT_METHOD_1, &quot;idu56&quot;, idu56);</span>
+<span class="fc" id="L160">    return idu56;</span>
+  }
+
+  /**
+   * @brief @~french Construit le message à envoyer à la couche supérieure
+   * @param receivedIdu56 le message reçu
+   * @return le message construit
+   */
+  public String dataIndicationProcess(String receivedIdu56) {
+<span class="fc" id="L169">    logger.trace(Trace.ENTER_METHOD_1, &quot;receivedIdu56&quot;, receivedIdu56);</span>
+<span class="fc" id="L170">    final InterfaceDataUnit56Dto receivedIdu56Dto =</span>
+<span class="fc" id="L171">        networkMarshaller.unmarshallFromDataLink(receivedIdu56);</span>
+<span class="fc" id="L172">    final ProtocolDataUnit5Dto receivedSdu =</span>
+<span class="fc" id="L173">        networkMarshaller.unmarshallNetworkPdu(receivedIdu56Dto.getMessage());</span>
+
+<span class="fc" id="L175">    final String id = receivedSdu.getHeader().getId();</span>
+<span class="fc" id="L176">    final String sourceIri = receivedSdu.getHeader().getSourceIri();</span>
+<span class="fc" id="L177">    final String destinationIri = receivedSdu.getHeader().getDestinationIri();</span>
+
+<span class="fc" id="L179">    final String idu45 = networkMarshaller.marshallToTransport(</span>
+<span class="fc" id="L180">        new Context45Dto(sourceIri, destinationIri, UUID.fromString(id), false),</span>
+<span class="fc" id="L181">        receivedSdu.getContent());</span>
+
+<span class="fc" id="L183">    logger.trace(Trace.EXIT_METHOD_1, &quot;idu45&quot;, idu45);</span>
+<span class="fc" id="L184">    return idu45;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

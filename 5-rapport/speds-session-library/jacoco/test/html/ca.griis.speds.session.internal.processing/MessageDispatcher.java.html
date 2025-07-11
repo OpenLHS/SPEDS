@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MessageDispatcher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.processing</a> &gt; <span class="el_source">MessageDispatcher.java</span></div><h1>MessageDispatcher.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe MessageDispatcher.
+ * @brief @~english Implementation of the MessageDispatcher class.
+ */
+
+package ca.griis.speds.session.internal.processing;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.exception.DeserializationException;
+import ca.griis.speds.session.internal.contract.MsgType;
+import ca.griis.speds.session.internal.contract.Sidu;
+import ca.griis.speds.session.internal.contract.Spdu;
+import ca.griis.speds.session.internal.domain.ExpandedSidu;
+import ca.griis.speds.session.internal.handler.HandlerRegistry;
+import ca.griis.speds.session.internal.handler.MessageHandler;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.EnumMap;
+import java.util.Map;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation d’un répartiteur interne de messages
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-29 [MD] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class MessageDispatcher {
+<span class="fc" id="L60">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(MessageDispatcher.class);</span>
+
+  private final ObjectMapper sharedMapper;
+<span class="fc" id="L63">  private final Map&lt;MsgType, MessageHandler&gt; handlerMap = new EnumMap&lt;&gt;(MsgType.class);</span>
+
+<span class="fc" id="L65">  public MessageDispatcher(ObjectMapper sharedMapper) {</span>
+<span class="fc" id="L66">    logger.trace(Trace.ENTER_METHOD_1, &quot;sharedMapper&quot;, sharedMapper);</span>
+<span class="fc" id="L67">    this.sharedMapper = sharedMapper;</span>
+<span class="fc" id="L68">  }</span>
+
+  public void dispatch(String msg) throws DeserializationException {
+<span class="fc" id="L71">    logger.trace(Trace.ENTER_METHOD_1, &quot;msg&quot;, msg);</span>
+
+    ExpandedSidu expandedSidu;
+
+    try {
+<span class="fc" id="L76">      Sidu sidu = sharedMapper.readValue(msg, Sidu.class);</span>
+<span class="fc" id="L77">      Spdu spdu = sharedMapper.readValue(sidu.getMessage(), Spdu.class);</span>
+<span class="fc" id="L78">      expandedSidu = new ExpandedSidu(sidu, spdu, MsgType.from(spdu.getHeader().getMsgtype()));</span>
+<span class="fc" id="L79">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L80">      throw new DeserializationException(&quot;Message non-désérialisable&quot;, e);</span>
+<span class="fc" id="L81">    }</span>
+
+<span class="fc" id="L83">    MessageHandler handler = handlerMap.get(expandedSidu.msgType());</span>
+
+    try {
+<span class="fc" id="L86">      handler.handle(expandedSidu);</span>
+<span class="fc" id="L87">    } catch (SilentIgnoreException e) {</span>
+<span class="fc" id="L88">      logger.warn(Error.IGNORED_ERROR, e.getMessage());</span>
+<span class="fc" id="L89">    }</span>
+<span class="fc" id="L90">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L91">  }</span>
+
+  public void registerHandlers(HandlerRegistry handlerRegistry) {
+<span class="fc" id="L94">    handlerRegistry.getHandlers().forEach(x -&gt; this.handlerMap.put(x.getHandledType(), x));</span>
+<span class="fc" id="L95">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

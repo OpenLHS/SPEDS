@@ -1,0 +1,19 @@
+{
+  "$id": "https://griis.ca/SPEDS/CommandeEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CommandeEnvoi - 2025-01-16T13:53-0500",
+  "$defs": {
+  },
+  "type": "object",
+  "description": "The content of an applicative message to end a PGA task (plan)",
+  "properties": {
+    "planStatus": {
+      "description": "The complete execution trace of the PGA Plan as a Lodad expression (a Unit of Work instance)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "planStatus"
+  ],
+  "additionalProperties": false
+}

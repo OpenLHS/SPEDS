@@ -1,0 +1,44 @@
+{
+  "$id": "https://griis.ca/SPEDS/ExceptionEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExceptionEnvoi - 2025-01-16T13:09-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    },
+    "timestamp": {
+      "description": "A valid timestamp.",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to complete a task in error",
+  "properties": {
+    "task_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "task_def": {
+      "description": "The identifier of the task definition",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "raisedException": {
+      "description": "The raised exception",
+      "type": "string"
+    },
+    "finishTime": {
+      "description": "The time at which the task was finished",
+      "$ref": "#/$defs/timestamp"
+    }
+  },
+  "required": [
+    "task_ref",
+    "task_def",
+    "raisedException",
+    "finishTime"
+  ],
+  "additionalProperties": false
+}

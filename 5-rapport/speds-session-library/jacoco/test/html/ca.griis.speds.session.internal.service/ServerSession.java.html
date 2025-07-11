@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServerSession.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.service</a> &gt; <span class="el_source">ServerSession.java</span></div><h1>ServerSession.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ServerSession.
+ * @brief @~english Implementation of the ServerSession class.
+ */
+
+package ca.griis.speds.session.internal.service;
+
+import ca.griis.js2p.gen.speds.session.api.dto.HeaderDto;
+import ca.griis.js2p.gen.speds.session.api.dto.SPEDSDto;
+import ca.griis.js2p.gen.speds.session.api.dto.msg.SesMsgRecDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.exception.InvalidTrackingNumberException;
+import ca.griis.speds.session.api.exception.NoResponseRequestException;
+import ca.griis.speds.session.internal.contract.Pidu;
+import ca.griis.speds.session.internal.contract.Sidu;
+import ca.griis.speds.session.internal.contract.SiduContext;
+import ca.griis.speds.session.internal.contract.Spdu;
+import ca.griis.speds.session.internal.contract.SpduHeader;
+import ca.griis.speds.session.internal.domain.HostStartupContext;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.handler.HandlerRegistry;
+import ca.griis.speds.session.internal.handler.peer.PeerHandlerRegistry;
+import ca.griis.speds.session.internal.model.PendingIndication;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.processing.Poller;
+import ca.griis.speds.session.internal.service.seal.SealCreator;
+import ca.griis.speds.transport.api.TransportHost;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Duration;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémente la logique métier d’un serveur gérant la couche session
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-27 [SSC] - Implémentation initiale&lt;br&gt;
+ *      2025-05-14 [CB] - Refact - itération 2&lt;br&gt;
+ *      2025-06-29 [MD] - Refact - itération 4&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ServerSession {
+<span class="fc" id="L78">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(ServerSession.class);</span>
+
+<span class="fc" id="L80">  private static final Pidu poisonPill = new Pidu(null, null);</span>
+
+  private final SPEDSDto speds;
+  private final SealCreator sealCreator;
+  private final ObjectMapper sharedMapper;
+  private final TransportHost transportHost;
+  private final ConcurrentLinkedQueue&lt;PendingIndication&gt; indicationTracking;
+  private final BlockingQueue&lt;Pidu&gt; messageWeHandle;
+  private final Map&lt;SessionId, SessionInformation&gt; sessionInformations;
+  private final Duration serverTimeout;
+  private final Poller poller;
+
+  public ServerSession(HostStartupContext hostStartupContext, Poller poller,
+<span class="fc" id="L93">      SealCreator sealCreator) {</span>
+<span class="fc" id="L94">    logger.trace(Trace.ENTER_METHOD_3, &quot;hostStartupContext&quot;, hostStartupContext, &quot;poller&quot;, poller,</span>
+        &quot;sealCreator&quot;, sealCreator);
+<span class="fc" id="L96">    this.indicationTracking = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L97">    this.messageWeHandle = new LinkedBlockingDeque&lt;&gt;();</span>
+<span class="fc" id="L98">    this.sessionInformations = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L99">    this.speds = hostStartupContext.spedsDto();</span>
+<span class="fc" id="L100">    this.sharedMapper = hostStartupContext.sharedMapper();</span>
+<span class="fc" id="L101">    this.transportHost = hostStartupContext.transportHost();</span>
+<span class="fc" id="L102">    this.serverTimeout = hostStartupContext.responseTimeout();</span>
+<span class="fc" id="L103">    this.sealCreator = sealCreator;</span>
+<span class="fc" id="L104">    this.poller = poller;</span>
+<span class="fc" id="L105">    HandlerRegistry handlerRegistry = new PeerHandlerRegistry(hostStartupContext, messageWeHandle,</span>
+        sessionInformations, indicationTracking);
+<span class="fc" id="L107">    poller.registerHandlers(handlerRegistry);</span>
+<span class="fc" id="L108">  }</span>
+
+  public void close() {
+<span class="nc" id="L111">    closePreservingSessionStates();</span>
+<span class="nc" id="L112">    sessionInformations.clear();</span>
+<span class="nc" id="L113">  }</span>
+
+  public void closePreservingSessionStates() {
+<span class="fc" id="L116">    poller.stop();</span>
+
+<span class="fc" id="L118">    transportHost.close();</span>
+<span class="fc" id="L119">    indicationTracking.clear();</span>
+<span class="fc" id="L120">    messageWeHandle.clear();</span>
+<span class="fc" id="L121">    transportHost.close();</span>
+
+    try {
+<span class="fc" id="L124">      messageWeHandle.put(poisonPill);</span>
+<span class="nc" id="L125">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L126">      Thread.currentThread().interrupt();</span>
+<span class="fc" id="L127">    }</span>
+<span class="fc" id="L128">  }</span>
+
+  public void clearSessionStates() {
+<span class="fc" id="L131">    sessionInformations.clear();</span>
+<span class="fc" id="L132">  }</span>
+
+  public Pidu getPendingMessage() {
+<span class="fc" id="L135">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+    Pidu pidu;
+    try {
+<span class="fc" id="L139">      pidu = messageWeHandle.poll(serverTimeout.getSeconds(), TimeUnit.SECONDS);</span>
+<span class="fc" id="L140">    } catch (InterruptedException e) {</span>
+<span class="fc" id="L141">      throw new RuntimeException(e);</span>
+<span class="fc" id="L142">    }</span>
+
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">    if (poisonPill.equals(pidu)) {</span>
+<span class="nc" id="L145">      throw new RuntimeException(&quot;Invalid IDU&quot;);</span>
+    }
+
+<span class="fc" id="L148">    logger.trace(Trace.EXIT_METHOD_1, &quot;pidu&quot;, pidu);</span>
+<span class="fc" id="L149">    return pidu;</span>
+  }
+
+  public void saveState() {
+    // TODO
+    // indicationTracking;
+    // messageWeHandle;
+    // sessionInformations;
+<span class="nc" id="L157">  }</span>
+
+  void loadState() {
+    // TODO
+    // indicationTracking
+    // messageWeHandle
+    // sessionInformations
+<span class="nc" id="L164">  }</span>
+
+  public void sendReply(Pidu pidu) {
+<span class="fc" id="L167">    logger.trace(Trace.ENTER_METHOD_1, &quot;pidu&quot;, pidu);</span>
+    // Récupérer les informations de la session
+<span class="fc" id="L169">    PendingIndication pendingIndication = indicationTracking.stream()</span>
+<span class="fc" id="L170">        .filter(x -&gt; x.piduTracking().equals(pidu.getContext().getTrackingNumber()))</span>
+<span class="fc" id="L171">        .findFirst()</span>
+<span class="fc" id="L172">        .orElseThrow(() -&gt; new NoResponseRequestException(&quot;PIDU tracking number invalid - &quot;</span>
+            + &quot;needs to be same we sent previously; value=&quot;
+<span class="fc" id="L174">            + pidu.getContext().getTrackingNumber()));</span>
+<span class="fc" id="L175">    indicationTracking.remove(pendingIndication);</span>
+<span class="fc" id="L176">    SessionInformation sessionInformation = sessionInformations.get(pendingIndication.sessionId());</span>
+
+<span class="fc bfc" id="L178" title="All 2 branches covered.">    if (sessionInformation == null) {</span>
+<span class="fc" id="L179">      throw new InvalidTrackingNumberException(&quot;The trackingNumber wasn't associated to a session&quot;);</span>
+    }
+
+    // Transmettre la réponse
+    // Créer une SDU
+<span class="fc" id="L184">    SesMsgRecDto msgRecDto = new SesMsgRecDto(pidu.getMessage(), sessionInformation.sessionId.id());</span>
+
+    // Créer la SPDU
+<span class="fc" id="L187">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_MSG_REC,</span>
+        sessionInformation.trackingNumber,
+<span class="fc" id="L189">        false,</span>
+        speds);
+<span class="fc" id="L191">    String stamp = sealCreator.createSymmetricalSeal(msgRecDto, sessionInformation.skak,</span>
+        sharedMapper);
+<span class="fc" id="L193">    Spdu spdu = null;</span>
+    try {
+<span class="fc" id="L195">      spdu = new Spdu(spduHeader, stamp, sharedMapper.writeValueAsString(msgRecDto));</span>
+<span class="nc" id="L196">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L197">      throw new RuntimeException(e);</span>
+<span class="fc" id="L198">    }</span>
+
+    // Créer la SIDU
+<span class="fc" id="L201">    SiduContext siduContext = new SiduContext(</span>
+        sessionInformation.peerId,
+        sessionInformation.initiatorId,
+        sessionInformation.peerIri,
+<span class="fc" id="L205">        pendingIndication.siduTracking(),</span>
+        sessionInformation.initiatorIri,
+<span class="fc" id="L207">        false);</span>
+
+    try {
+<span class="fc" id="L210">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
+<span class="fc" id="L211">      String serialSidu = sharedMapper.writeValueAsString(sidu);</span>
+<span class="fc" id="L212">      logger.trace(Trace.ALGORITHM_1, serialSidu, serialSidu);</span>
+
+<span class="fc" id="L214">      transportHost.dataRequest(serialSidu);</span>
+<span class="fc" id="L215">      transportHost.dataConfirm();</span>
+<span class="nc" id="L216">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L217">      throw new RuntimeException(e);</span>
+<span class="fc" id="L218">    }</span>
+
+<span class="fc" id="L220">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L221">  }</span>
+
+  public Map&lt;SessionId, SessionInformation&gt; getSessionInfo() {
+<span class="fc" id="L224">    return Map.copyOf(this.sessionInformations);</span>
+  }
+
+  public ConcurrentLinkedQueue&lt;PendingIndication&gt; getIndicationTracking() {
+<span class="nc" id="L228">    return this.indicationTracking;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

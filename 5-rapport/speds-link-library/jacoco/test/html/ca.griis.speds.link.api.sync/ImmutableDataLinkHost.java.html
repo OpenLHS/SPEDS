@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableDataLinkHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.link.api.sync</a> &gt; <span class="el_source">ImmutableDataLinkHost.java</span></div><h1>ImmutableDataLinkHost.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ImmutableDataLinkHost.
+ * @brief @~english Implementation of the ImmutableDataLinkHost class.
+ */
+
+package ca.griis.speds.link.api.sync;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.communication.protocol.ProtocolIdu;
+import ca.griis.speds.communication.protocol.https.HttpsHost;
+import ca.griis.speds.link.api.DataLinkHost;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un hôte de la couche liaison.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-03 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutableDataLinkHost implements DataLinkHost {
+<span class="fc" id="L53">  private static final GriisLogger logger = getLogger(ImmutableDataLinkHost.class);</span>
+
+  private final HttpsHost host;
+  private final ImmutableDataLinkClient client;
+  private final ImmutableDataLinkServer server;
+
+<span class="fc" id="L59">  public ImmutableDataLinkHost(ObjectMapper objectMapper, HttpsHost host) {</span>
+<span class="fc" id="L60">    this.host = host;</span>
+<span class="fc" id="L61">    this.client = new ImmutableDataLinkClient(objectMapper);</span>
+<span class="fc" id="L62">    this.server = new ImmutableDataLinkServer(objectMapper);</span>
+<span class="fc" id="L63">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L67">    client.close();</span>
+<span class="fc" id="L68">    server.close();</span>
+<span class="fc" id="L69">    host.close();</span>
+<span class="fc" id="L70">  }</span>
+
+  @Override
+  public String request(String idu) {
+<span class="fc" id="L74">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L76">    ProtocolIdu protocolIdu = client.request(idu);</span>
+<span class="fc" id="L77">    host.request(protocolIdu);</span>
+<span class="fc" id="L78">    String sdu = protocolIdu.sdu();</span>
+
+<span class="fc" id="L80">    logger.trace(Trace.EXIT_METHOD_1, &quot;sdu&quot;, sdu);</span>
+<span class="fc" id="L81">    return sdu;</span>
+  }
+
+  @Override
+  public String confirm() {
+<span class="fc" id="L86">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L88">    ProtocolIdu protocolIdu = host.confirm();</span>
+<span class="fc" id="L89">    String iduJson = client.confirm(protocolIdu);</span>
+
+<span class="fc" id="L91">    logger.trace(Trace.EXIT_METHOD_1, &quot;iduJson&quot;, iduJson);</span>
+<span class="fc" id="L92">    return iduJson;</span>
+  }
+
+  @Override
+  public String indication() {
+<span class="fc" id="L97">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L99">    ProtocolIdu protocolIdu = host.indicate();</span>
+<span class="fc" id="L100">    String iduJson = server.indication(protocolIdu);</span>
+
+<span class="fc" id="L102">    logger.trace(Trace.EXIT_METHOD_1, &quot;iduJson&quot;, iduJson);</span>
+<span class="fc" id="L103">    return iduJson;</span>
+  }
+
+  @Override
+  public String response(String idu) {
+<span class="fc" id="L108">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L110">    ProtocolIdu protocolIdu = server.response(idu);</span>
+<span class="fc" id="L111">    host.response(protocolIdu);</span>
+<span class="fc" id="L112">    String sdu = protocolIdu.sdu();</span>
+
+<span class="fc" id="L114">    logger.trace(Trace.EXIT_METHOD_1, &quot;sdu&quot;, sdu);</span>
+<span class="fc" id="L115">    return sdu;</span>
+  }
+
+  public HttpsHost getHost() {
+<span class="fc" id="L119">    return host;</span>
+  }
+
+  public ImmutableDataLinkClient getClient() {
+<span class="fc" id="L123">    return client;</span>
+  }
+
+  public ImmutableDataLinkServer getServer() {
+<span class="fc" id="L127">    return server;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

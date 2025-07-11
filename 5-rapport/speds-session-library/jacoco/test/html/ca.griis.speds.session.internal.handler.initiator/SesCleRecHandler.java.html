@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SesCleRecHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.handler.initiator</a> &gt; <span class="el_source">SesCleRecHandler.java</span></div><h1>SesCleRecHandler.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SesCleRecHandler.
+ * @brief @~english Implementation of the SesCleRecHandler class.
+ */
+
+package ca.griis.speds.session.internal.handler.initiator;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.session.api.dto.cle.SesCleRecDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.internal.contract.MsgType;
+import ca.griis.speds.session.internal.domain.ExpandedSidu;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.handler.MessageHandler;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.processing.SilentIgnoreException;
+import ca.griis.speds.session.internal.service.seal.SealVerifier;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import javax.crypto.SecretKey;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation du gestionnaire de message Ses.Cle.Rec
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-29 [MD] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SesCleRecHandler implements MessageHandler {
+<span class="fc" id="L62">  private static final GriisLogger logger = getLogger(SesCleRecHandler.class);</span>
+
+  private final SealVerifier sealVerifier;
+  private final ObjectMapper sharedMapper;
+  private final Map&lt;SessionId, SessionInformation&gt; sessionInfo;
+  private final BlockingQueue&lt;ExpandedSidu&gt; queue;
+
+  public SesCleRecHandler(ObjectMapper sharedMapper, BlockingQueue&lt;ExpandedSidu&gt; queue,
+<span class="fc" id="L70">      Map&lt;SessionId, SessionInformation&gt; sessionInformations, SealVerifier sealVerifier) {</span>
+<span class="fc" id="L71">    logger.trace(Trace.ENTER_METHOD_3, &quot;sharedMapper&quot;, sharedMapper, &quot;queue&quot;, queue,</span>
+        &quot;sessionInformations&quot;, sessionInformations);
+<span class="fc" id="L73">    this.sharedMapper = sharedMapper;</span>
+<span class="fc" id="L74">    this.queue = queue;</span>
+<span class="fc" id="L75">    this.sessionInfo = sessionInformations;</span>
+<span class="fc" id="L76">    this.sealVerifier = sealVerifier;</span>
+<span class="fc" id="L77">  }</span>
+
+  @Override
+  public MsgType getHandledType() {
+<span class="fc" id="L81">    return MsgType.SES_CLE_REC;</span>
+  }
+
+  @Override
+  public void handle(ExpandedSidu message) throws SilentIgnoreException {
+<span class="fc" id="L86">    logger.trace(Trace.ENTER_METHOD_1, &quot;message&quot;, message);</span>
+
+    // Récupérer les informations de la session.
+<span class="fc" id="L89">    SesCleRecDto sesCleRecDto = null;</span>
+    try {
+<span class="fc" id="L91">      sesCleRecDto =</span>
+<span class="fc" id="L92">          sharedMapper.readValue((String) message.spdu().getContent(), SesCleRecDto.class);</span>
+<span class="nc" id="L93">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L94">      throw new SilentIgnoreException(&quot;Session required - Unable to read SDU&quot;);</span>
+<span class="fc" id="L95">    }</span>
+
+<span class="fc" id="L97">    SessionId sessionId = new SessionId(sesCleRecDto.getSession());</span>
+<span class="fc" id="L98">    SessionInformation sessionInformation = sessionInfo.get(sessionId);</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">    if (sessionInformation == null) {</span>
+<span class="fc" id="L100">      throw new SilentIgnoreException(&quot;Session required&quot;);</span>
+    }
+
+    // Authentifier la source de l’envoi.
+<span class="fc" id="L104">    verifySource(message.spdu().getStamp(), sessionInformation.skak, message.spdu().getContent());</span>
+
+<span class="fc" id="L106">    dispatch(message);</span>
+<span class="fc" id="L107">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L108">  }</span>
+
+  private void verifySource(String seal,
+      SecretKey skak,
+      Object sdu) throws SilentIgnoreException {
+<span class="fc" id="L113">    boolean verifyStamp = sealVerifier.verifySymmetricalSeal(</span>
+        sdu,
+        skak,
+        seal,
+        sharedMapper);
+<span class="fc bfc" id="L118" title="All 2 branches covered.">    if (!verifyStamp) {</span>
+<span class="fc" id="L119">      throw new SilentIgnoreException(&quot;Stamp is invalid&quot;);</span>
+    }
+<span class="fc" id="L121">  }</span>
+
+  protected void dispatch(ExpandedSidu expandedSidu) {
+<span class="fc" id="L124">    logger.trace(Trace.ENTER_METHOD_1, &quot;expandedSidu&quot;, expandedSidu);</span>
+
+    try {
+<span class="fc" id="L127">      queue.put(expandedSidu);</span>
+<span class="nc" id="L128">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L129">      throw new RuntimeException(e);</span>
+<span class="fc" id="L130">    }</span>
+
+<span class="fc" id="L132">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L133">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

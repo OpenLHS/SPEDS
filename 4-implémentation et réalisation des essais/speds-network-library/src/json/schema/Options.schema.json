@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "speds.net.version": {
+      "javaName": "spedsVersion",
+      "description": "The version of the SPEDS protocol used by the Network layer.",
+      "type": "string"
+    },
+    "speds.net.reference": {
+      "javaName": "spedsReference",
+      "description": "The reference of the SPEDS protocol version used by the Network layer.",
+      "type": "string"
+    },
+    "speds.net.cert": {
+      "javaName": "certificate",
+      "description": "A valid certificate used to verify data integrity",
+      "type": "string"
+    },
+    "speds.net.private.key": {
+      "javaName": "privateKey",
+      "description": "The private key associated with the previous certificate used to sign digital data",
+      "type": "string"
+    },
+    "speds.net.entities": {
+      "javaName": "entities",
+      "description": "The various entities known by the proxy and the address to communicate with them.",
+      "type": "object",
+      "existingJavaType": "java.util.Map<String,String>"
+    }
+  }
+}

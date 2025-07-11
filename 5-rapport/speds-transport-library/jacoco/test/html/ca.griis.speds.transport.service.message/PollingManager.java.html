@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PollingManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.service.message</a> &gt; <span class="el_source">PollingManager.java</span></div><h1>PollingManager.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe PollingManager.
+ * @brief @~english PollingManager class implementation.
+ */
+
+package ca.griis.speds.transport.service.message;
+
+
+import ca.griis.js2p.gen.speds.transport.api.dto.Header45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Debug;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.api.NetworkHost;
+import ca.griis.speds.transport.exception.DeserializationException;
+import ca.griis.speds.transport.serializer.SharedObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Récupère des messages de la couche transport reçu par la couche réseau.
+ * @par Details
+ *      Respecte l'architecture de producteur/consommateur.
+ * 
+ *      Le producteur est un fils d'exécution qui récupère des messages via la couche réseau, et les
+ *      trie dans la bonne file bloquante.
+ *      Ily a trois files : requêtes, réponses, et exceptions.
+ * 
+ *      Le consommateur est celui qui récupére les messages transports (requête et réponse).
+ *      Le consommateur consomme des files de messages bloquantes. Quand il n'y pas de messages, il
+ *      attend d'en reçevoir un.
+ *      En cas d'exception du producteur, le consommateur le sait, et lève l'exception à celui qui
+ *      consomme.
+ * 
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-20 [FO] - Refactorisation majeure&lt;br&gt;
+ *      2025-05-14 [CB] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ * @todo 2025-06-20 [FO]-- Revoir l'entièreté de cette approche, sa pertinence dans une itération
+ *       prochaine .
+ */
+public final class PollingManager implements AutoCloseable {
+<span class="fc" id="L76">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(PollingManager.class);</span>
+
+  private final LinkedBlockingQueue&lt;InterfaceDataUnit45Dto&gt; requests;
+  private final LinkedBlockingQueue&lt;InterfaceDataUnit45Dto&gt; responses;
+  private final LinkedBlockingQueue&lt;Optional&lt;RuntimeException&gt;&gt; exceptions;
+  private final NetworkHost networkHost;
+  private final ExecutorService executorService;
+  private final AtomicBoolean alreadyStarted;
+  private final AtomicBoolean closed;
+
+<span class="fc" id="L86">  public PollingManager(NetworkHost networkHost) {</span>
+<span class="fc" id="L87">    logger.trace(Trace.ENTER_METHOD_1, &quot;networkHost&quot;, networkHost);</span>
+
+<span class="fc" id="L89">    this.requests = new LinkedBlockingQueue&lt;&gt;();</span>
+<span class="fc" id="L90">    this.responses = new LinkedBlockingQueue&lt;&gt;();</span>
+<span class="fc" id="L91">    this.exceptions = new LinkedBlockingQueue&lt;&gt;();</span>
+<span class="fc" id="L92">    this.networkHost = networkHost;</span>
+<span class="fc" id="L93">    this.executorService = Executors.newSingleThreadExecutor();</span>
+<span class="fc" id="L94">    this.alreadyStarted = new AtomicBoolean(false);</span>
+<span class="fc" id="L95">    this.closed = new AtomicBoolean(false);</span>
+<span class="fc" id="L96">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L100">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L102">    this.closed.set(true);</span>
+
+<span class="fc" id="L104">    shutdown();</span>
+
+<span class="fc" id="L106">    requests.clear();</span>
+<span class="fc" id="L107">    responses.clear();</span>
+
+<span class="fc" id="L109">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L110">  }</span>
+
+  /**
+   * 
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Consommae une requête.
+   * @exception DeserializationException En cas quele dernier message reçu a été impossible à
+   *            désérialiser.
+   * @exception RuntimeException En cas d'une erreur d'interruption.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public InterfaceDataUnit45Dto pollRequest() {
+<span class="fc" id="L128">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L130">    InterfaceDataUnit45Dto idu = poll(requests);</span>
+
+<span class="fc" id="L132">    logger.trace(Trace.EXIT_METHOD_1, &quot;idu&quot;, idu);</span>
+<span class="fc" id="L133">    return idu;</span>
+  }
+
+  /**
+   * 
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Consomme une réponse.
+   * @exception DeserializationException En cas quele dernier message reçu a été impossible à
+   *            désérialiser.
+   * @exception RuntimeException En cas d'une erreur d'interruption.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public InterfaceDataUnit45Dto pollResponse() {
+<span class="fc" id="L152">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L154">    InterfaceDataUnit45Dto idu = poll(responses);</span>
+
+<span class="fc" id="L156">    logger.trace(Trace.EXIT_METHOD_1, &quot;idu&quot;, idu);</span>
+<span class="fc" id="L157">    return idu;</span>
+  }
+
+  /**
+   * 
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Consomme un message.
+   * @param queue Le file bloquante de messages.
+   * @exception DeserializationException En cas que le dernier message reçu a été impossible à
+   *            désérialiser.
+   * @exception RuntimeException En cas d'une erreur d'interruption.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  protected InterfaceDataUnit45Dto poll(LinkedBlockingQueue&lt;InterfaceDataUnit45Dto&gt; queue) {
+<span class="fc" id="L177">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L179">    produce();</span>
+
+    InterfaceDataUnit45Dto idu;
+    try {
+<span class="fc" id="L183">      Optional&lt;RuntimeException&gt; exception = exceptions.take();</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">      if (exception.isPresent()) {</span>
+<span class="fc" id="L185">        throw exception.get();</span>
+      }
+
+<span class="fc" id="L188">      idu = queue.take();</span>
+<span class="nc" id="L189">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L190">      Thread.currentThread().interrupt();</span>
+
+<span class="nc" id="L192">      throw new RuntimeException(&quot;Thread interrupted while polling&quot;, e);</span>
+<span class="fc" id="L193">    }</span>
+
+<span class="fc" id="L195">    logger.trace(Trace.EXIT_METHOD_1, &quot;idu&quot;, idu);</span>
+<span class="fc" id="L196">    return idu;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Ajoute des messages transport reçu à la file de messages.
+   *
+   * @note 2025-06-20 - En cas de problème de désérialisation, on est capable de récupérer
+   *       l'exception.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  protected void produce() {
+<span class="fc bfc" id="L214" title="All 2 branches covered.">    if (alreadyStarted.compareAndSet(false, true)) {</span>
+<span class="fc" id="L215">      executorService.execute(() -&gt; {</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">        while (closed.get() == false) {</span>
+<span class="fc" id="L217">          String iduString = networkHost.indication();</span>
+
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">          if (iduString == null) {</span>
+<span class="nc" id="L220">            DeserializationException exception = new DeserializationException(&quot;Unknown IDU&quot;);</span>
+<span class="nc" id="L221">            exceptions.add(Optional.of(exception));</span>
+<span class="nc" id="L222">          } else {</span>
+            final InterfaceDataUnit45Dto receivedIdu;
+            final Header45Dto receivedHeader;
+            try {
+<span class="fc" id="L226">              receivedIdu = SharedObjectMapper.getInstance().getMapper()</span>
+<span class="fc" id="L227">                  .readValue(iduString, InterfaceDataUnit45Dto.class);</span>
+
+<span class="fc" id="L229">              final String receivedStringPdu = receivedIdu.getMessage();</span>
+              final ProtocolDataUnit4TraDto receivedPdu =
+<span class="fc" id="L231">                  SharedObjectMapper.getInstance().getMapper()</span>
+<span class="fc" id="L232">                      .readValue(receivedStringPdu, ProtocolDataUnit4TraDto.class);</span>
+<span class="fc" id="L233">              receivedHeader = receivedPdu.getHeader();</span>
+
+<span class="fc" id="L235">              exceptions.add(Optional.empty());</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">              if (receivedHeader.getMsgtype().value().endsWith(&quot;ENV&quot;)) {</span>
+<span class="fc" id="L237">                requests.add(receivedIdu);</span>
+              } else {
+<span class="fc" id="L239">                responses.add(receivedIdu);</span>
+              }
+<span class="fc" id="L241">            } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L242">              DeserializationException exception = new DeserializationException(e.getMessage());</span>
+<span class="fc" id="L243">              exceptions.add(Optional.of(exception));</span>
+<span class="fc" id="L244">            }</span>
+          }
+<span class="fc" id="L246">          sleep();</span>
+<span class="fc" id="L247">        }</span>
+<span class="fc" id="L248">      });</span>
+    }
+<span class="fc" id="L250">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Suspendre le producteur.
+   *
+   * @note 2025-06-20 - Cela est discutable, mais cela permet de laisser du répis aux autres fils
+   *       d'exécution.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+
+  protected void sleep() {
+<span class="fc" id="L268">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+    try {
+<span class="fc" id="L271">      Thread.sleep(100);</span>
+<span class="nc" id="L272">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L273">      Thread.currentThread().interrupt();</span>
+<span class="fc" id="L274">    }</span>
+
+<span class="fc" id="L276">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L277">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Désalloue le producteur non bloquant.
+   *
+   * @note 2024-02-20 - Comment correctement gérer l'exception d'interruption durant la
+   *       désallocation du service d'exécution:
+   *       https://www.baeldung.com/java-executor-wait-for-threads
+   *
+   * @par Tâches
+   *      S.O.
+   */
+
+  protected void shutdown() {
+<span class="fc" id="L296">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L298">    executorService.shutdown();</span>
+    try {
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">      if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {</span>
+<span class="nc" id="L301">        executorService.shutdownNow();</span>
+      }
+<span class="nc" id="L303">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L304">      logger.debug(Debug.VARIABLE_LOGGING_1, &quot;e&quot;, e);</span>
+
+<span class="nc" id="L306">      executorService.shutdownNow();</span>
+
+<span class="nc" id="L308">      Thread.currentThread().interrupt();</span>
+<span class="fc" id="L309">    }</span>
+
+<span class="fc" id="L311">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L312">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "KeyTransfer - 2025-04-11T11:10:48-0400",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "bytestring": {
+      "description": "A base-64 encoded bytestring",
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGuid"
+    }
+  },
+  "examples": [
+    {
+      "sdek": "RkI5OTMwM0UxMkI4RTBBOTAzNDYwNjVBOURGODY3RDFDMkFERUU0MzVCMjhCQTkyMUJEQjA5OTVDOUI2OTA0Qw==",
+      "pgaNumber": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+      "token": "b2f23f9d-dc93-4460-9fef-88b5ab7b2874"
+    }
+  ],
+  "properties": {
+    "sdek": {
+      "description": "The session data encryption key",
+      "$ref": "#/$defs/bytestring"
+    },
+    "pgaNumber": {
+      "description": "The PGA number",
+      "$ref": "#/$defs/guid"
+    },
+    "token": {
+      "description": "Session token",
+      "$ref": "#/$defs/uuid"
+    }
+  },
+  "required": [
+    "sdek",
+    "pgaNumber",
+    "token"
+  ],
+  "additionalProperties": false
+}

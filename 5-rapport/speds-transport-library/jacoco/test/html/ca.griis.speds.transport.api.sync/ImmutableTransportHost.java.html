@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableTransportHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.api.sync</a> &gt; <span class="el_source">ImmutableTransportHost.java</span></div><h1>ImmutableTransportHost.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ImmutableTransportHost.
+ * @brief @~english Implementation of the ImmutableTransportHost class.
+ */
+
+package ca.griis.speds.transport.api.sync;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.api.NetworkHost;
+import ca.griis.speds.transport.api.TransportHost;
+import ca.griis.speds.transport.service.client.ExchangeDataConfirmation;
+import ca.griis.speds.transport.service.client.ExchangeDataRequest;
+import ca.griis.speds.transport.service.identification.IdentifierGenerator;
+import ca.griis.speds.transport.service.message.PollingManager;
+import ca.griis.speds.transport.service.server.ExchangeDataReply;
+import ca.griis.speds.transport.service.server.datatype.DataReplyMessages;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un hôte de la couche transport.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-03 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutableTransportHost implements TransportHost {
+<span class="fc" id="L58">  private static final GriisLogger logger =</span>
+<span class="fc" id="L59">      GriisLoggerFactory.getLogger(ImmutableTransportHost.class);</span>
+
+  private final NetworkHost networkHost;
+  private final String spedsVersion;
+  private final String spedsReference;
+  private final PollingManager pollingManager;
+  private final IdentifierGenerator identifierGenerator;
+  private final Set&lt;String&gt; sentMessagesIds;
+
+  ImmutableTransportHost(NetworkHost networkHost, String spedsVersion,
+      String spedsReference, PollingManager pollingManager,
+<span class="fc" id="L70">      IdentifierGenerator identifierGenerator) {</span>
+<span class="fc" id="L71">    logger.trace(Trace.ENTER_METHOD_5, &quot;networkHost&quot;, networkHost, &quot;spedsVersion&quot;, spedsVersion,</span>
+        &quot;spedsReference&quot;, spedsReference, &quot;pollingManager&quot;, pollingManager, &quot;identifierGenerator&quot;,
+        identifierGenerator);
+<span class="fc" id="L74">    this.networkHost = networkHost;</span>
+<span class="fc" id="L75">    this.spedsVersion = spedsVersion;</span>
+<span class="fc" id="L76">    this.spedsReference = spedsReference;</span>
+<span class="fc" id="L77">    this.pollingManager = pollingManager;</span>
+<span class="fc" id="L78">    this.identifierGenerator = identifierGenerator;</span>
+<span class="fc" id="L79">    this.sentMessagesIds = ConcurrentHashMap.newKeySet();</span>
+<span class="fc" id="L80">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L84">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L86">    networkHost.close();</span>
+<span class="fc" id="L87">    pollingManager.close();</span>
+
+<span class="fc" id="L89">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L90">  }</span>
+
+  @Override
+  public void dataRequest(String idu) {
+<span class="fc" id="L94">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L96">    final String networkIdu =</span>
+<span class="fc" id="L97">        new ExchangeDataRequest(identifierGenerator).dataRequestProcess(idu, spedsVersion,</span>
+            spedsReference, sentMessagesIds);
+
+<span class="fc" id="L100">    networkHost.request(networkIdu);</span>
+<span class="fc" id="L101">    networkHost.confirm();</span>
+<span class="fc" id="L102">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L103">  }</span>
+
+  @Override
+  public void dataConfirm() {
+<span class="fc" id="L107">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L109">    ExchangeDataConfirmation.dataConfirmationProcess(pollingManager.pollResponse(),</span>
+        sentMessagesIds);
+
+<span class="fc" id="L112">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L113">  }</span>
+
+  @Override
+  public String dataReply() {
+<span class="fc" id="L117">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L119">    final DataReplyMessages dataReplyMessages =</span>
+<span class="fc" id="L120">        ExchangeDataReply.dataReplyProcess(pollingManager.pollRequest(), spedsVersion,</span>
+            spedsReference);
+
+<span class="fc" id="L123">    final String idu34 = dataReplyMessages.response34();</span>
+<span class="fc" id="L124">    final String idu45 = dataReplyMessages.response45();</span>
+
+    // Envoie le Ack vers le client
+<span class="fc" id="L127">    networkHost.request(idu45);</span>
+<span class="fc" id="L128">    networkHost.confirm();</span>
+
+<span class="fc" id="L130">    logger.trace(Trace.EXIT_METHOD_1, &quot;idu34&quot;, idu34);</span>
+<span class="fc" id="L131">    return idu34;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

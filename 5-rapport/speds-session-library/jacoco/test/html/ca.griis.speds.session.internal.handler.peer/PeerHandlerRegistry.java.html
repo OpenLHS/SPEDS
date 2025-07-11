@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PeerHandlerRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.handler.peer</a> &gt; <span class="el_source">PeerHandlerRegistry.java</span></div><h1>PeerHandlerRegistry.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe HandlerRegistry.
+ * @brief @~english Implementation of the HandlerRegistry class.
+ */
+
+package ca.griis.speds.session.internal.handler.peer;
+
+import ca.griis.speds.session.internal.contract.Pidu;
+import ca.griis.speds.session.internal.domain.HostStartupContext;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.handler.HandlerRegistry;
+import ca.griis.speds.session.internal.handler.MessageHandler;
+import ca.griis.speds.session.internal.model.PendingIndication;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation du registre des gestionnaires de message interne.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-29 [MD] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class PeerHandlerRegistry implements HandlerRegistry {
+
+  private final List&lt;MessageHandler&gt; handlers;
+
+  public PeerHandlerRegistry(HostStartupContext ctx, BlockingQueue&lt;Pidu&gt; queue,
+      Map&lt;SessionId, SessionInformation&gt; sessionInfo,
+<span class="fc" id="L61">      ConcurrentLinkedQueue&lt;PendingIndication&gt; indicationTracking) {</span>
+<span class="fc" id="L62">    handlers = List.of(</span>
+<span class="fc" id="L63">        new SesPubEnvHandler(ctx.spedsDto(), ctx.transportHost(), ctx.sharedMapper(), sessionInfo,</span>
+<span class="fc" id="L64">            ctx.hostKeys()),</span>
+<span class="fc" id="L65">        new SesSakEnvHandler(ctx.spedsDto(), ctx.sharedMapper(), ctx.transportHost(),</span>
+<span class="fc" id="L66">            ctx.hostKeys(),</span>
+            sessionInfo),
+<span class="fc" id="L68">        new SesCleEnvHandler(ctx.spedsDto(), ctx.sharedMapper(), ctx.pgaService(),</span>
+<span class="fc" id="L69">            ctx.transportHost(),</span>
+            sessionInfo),
+<span class="fc" id="L71">        new SesMsgEnvHandler(ctx.sharedMapper(), sessionInfo, indicationTracking, queue),</span>
+<span class="fc" id="L72">        new SesFinEnvHandler(ctx.spedsDto(), ctx.sharedMapper(), ctx.transportHost(), sessionInfo));</span>
+<span class="fc" id="L73">  }</span>
+
+  @Override
+  public List&lt;MessageHandler&gt; getHandlers() {
+<span class="fc" id="L77">    return List.copyOf(handlers);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

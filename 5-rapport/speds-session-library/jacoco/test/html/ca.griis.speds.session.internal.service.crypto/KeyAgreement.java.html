@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KeyAgreement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.service.crypto</a> &gt; <span class="el_source">KeyAgreement.java</span></div><h1>KeyAgreement.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe KeyAgreementManager.java
+ * @brief @~english Contains description of KeyAgreementManager.java class.
+ */
+
+package ca.griis.speds.session.internal.service.crypto;
+
+import ca.griis.cryptography.keyexchange.KeyAgreementProvider;
+import ca.griis.cryptography.keyexchange.X25519Provider;
+import ca.griis.speds.session.api.exception.KeyAgreementException;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Service de gestion de l'entente sur la clé de session SKAK utilisant
+ *        Diffie-Hellman avec une courbe elliptique
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-20 [SSC] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class KeyAgreement {
+
+  private final KeyAgreementProvider keyAgreementProvider;
+
+<span class="fc" id="L56">  public KeyAgreement() {</span>
+    try {
+<span class="fc" id="L58">      this.keyAgreementProvider = new X25519Provider();</span>
+<span class="nc" id="L59">    } catch (NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L60">      throw new KeyAgreementException(&quot;Could not generate key choice&quot;, e);</span>
+<span class="fc" id="L61">    }</span>
+<span class="fc" id="L62">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @return «Return description»
+   *
+   * @brief @~french Génère un choix de point sur une courbe elliptique servant à négocier un
+   *        accord de clé secrète
+   * @return Une paire de clé privée et publique correspondant au choix d'un point sur une courbe
+   *         elliptique
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public KeyPair generateChoicePointKey() {
+<span class="fc" id="L77">    final KeyPair keyPair = keyAgreementProvider.generateEphemeralKeys();</span>
+<span class="fc" id="L78">    return keyPair;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Complète la négotiation d'accord de clé secrète
+   * @param sourceChoice La paire de clé privée et publique correspondant au choix de l'entité
+   *        source sur la courbe elliptique pour la négotiation d'accord de clé secrète
+   * @param destinationChoice La clé publique correspondant au choix de l'entité de destination sur
+   *        la courbe elliptique pour la négotiation d'accord de clé secrète
+   * @exception KeyAgreementException Erreur soulevée lors de la complétion de l'accord de clé
+   *            secrète à partir des points choisis par les deux parties
+   * @return La clé secrète partagée entre les deux parties sous forme de tableau d'octets.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public byte[] completeKeyAgreementNegotiation(KeyPair sourceChoice, PublicKey destinationChoice) {
+    try {
+<span class="fc" id="L101">      keyAgreementProvider.initializeAgreement(sourceChoice.getPrivate());</span>
+<span class="fc" id="L102">      byte[] sharedSecretKey = keyAgreementProvider.completeAgreement(destinationChoice);</span>
+
+<span class="fc" id="L104">      byte[] derivedSecuredKey = keyAgreementProvider.deriveSecureKey(sharedSecretKey,</span>
+<span class="fc" id="L105">          sourceChoice.getPublic(), destinationChoice);</span>
+<span class="fc" id="L106">      return derivedSecuredKey;</span>
+<span class="fc" id="L107">    } catch (InvalidKeyException | IllegalStateException | NoSuchAlgorithmException e) {</span>
+<span class="fc" id="L108">      throw new KeyAgreementException(&quot;&quot;, e);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

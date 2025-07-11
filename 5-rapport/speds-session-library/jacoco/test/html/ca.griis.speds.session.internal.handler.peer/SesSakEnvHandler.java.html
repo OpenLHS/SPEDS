@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SesSakEnvHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.handler.peer</a> &gt; <span class="el_source">SesSakEnvHandler.java</span></div><h1>SesSakEnvHandler.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SesSakEnvHandler.
+ * @brief @~english Implementation of the SesSakEnvHandler class.
+ */
+
+package ca.griis.speds.session.internal.handler.peer;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.cryptography.asymmetric.keypair.CertificatePrivateKeysEntry;
+import ca.griis.js2p.gen.speds.session.api.dto.HeaderDto;
+import ca.griis.js2p.gen.speds.session.api.dto.SPEDSDto;
+import ca.griis.js2p.gen.speds.session.api.dto.sak.SesSakEnvDto;
+import ca.griis.js2p.gen.speds.session.api.dto.sak.SesSakRecDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.exception.KeyAgreementException;
+import ca.griis.speds.session.internal.contract.MsgType;
+import ca.griis.speds.session.internal.contract.Sidu;
+import ca.griis.speds.session.internal.contract.SiduContext;
+import ca.griis.speds.session.internal.contract.Spdu;
+import ca.griis.speds.session.internal.contract.SpduHeader;
+import ca.griis.speds.session.internal.domain.ExpandedSidu;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.domain.SkakWithPubKey;
+import ca.griis.speds.session.internal.handler.MessageHandler;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.processing.SilentIgnoreException;
+import ca.griis.speds.session.internal.service.crypto.KeyAgreement;
+import ca.griis.speds.session.internal.service.seal.SealCreator;
+import ca.griis.speds.session.internal.service.seal.SealVerifier;
+import ca.griis.speds.session.internal.util.KeyAlgorithm;
+import ca.griis.speds.session.internal.util.KeyMapping;
+import ca.griis.speds.transport.api.TransportHost;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.security.KeyPair;
+import java.security.PublicKey;
+import java.util.Base64;
+import java.util.Map;
+import java.util.UUID;
+import javax.crypto.SecretKey;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation du gestionnaire de message SES.SAK.ENV
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-29 [MD] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SesSakEnvHandler implements MessageHandler {
+<span class="fc" id="L80">  private static final GriisLogger logger = getLogger(SesSakEnvHandler.class);</span>
+
+  private final ObjectMapper sharedMapper;
+  private final SPEDSDto speds;
+  private final TransportHost transportHost;
+  private final CertificatePrivateKeysEntry hostCertKey;
+  private final Map&lt;SessionId, SessionInformation&gt; sessionInfo;
+
+  public SesSakEnvHandler(SPEDSDto speds, ObjectMapper sharedMapper, TransportHost transportHost,
+<span class="fc" id="L89">      CertificatePrivateKeysEntry hostCertKey, Map&lt;SessionId, SessionInformation&gt; sessionInfo) {</span>
+<span class="fc" id="L90">    logger.trace(Trace.ENTER_METHOD_5, &quot;speds&quot;, speds, &quot;sharedMapper&quot;, sharedMapper,</span>
+        &quot;transportHost&quot;, transportHost, &quot;hostCertKey&quot;, hostCertKey, &quot;sessionInfo&quot;, sessionInfo);
+<span class="fc" id="L92">    this.sharedMapper = sharedMapper;</span>
+<span class="fc" id="L93">    this.transportHost = transportHost;</span>
+<span class="fc" id="L94">    this.hostCertKey = hostCertKey;</span>
+<span class="fc" id="L95">    this.speds = speds;</span>
+<span class="fc" id="L96">    this.sessionInfo = sessionInfo;</span>
+<span class="fc" id="L97">  }</span>
+
+  @Override
+  public MsgType getHandledType() {
+<span class="fc" id="L101">    return MsgType.SES_SAK_ENV;</span>
+  }
+
+  @Override
+  public void handle(ExpandedSidu message) throws SilentIgnoreException {
+<span class="fc" id="L106">    logger.trace(Trace.ENTER_METHOD_1, &quot;message&quot;, message);</span>
+
+    // Authentifier la source de l’envoi
+    // Session
+<span class="fc" id="L110">    SesSakEnvDto sesSakEnvDto = null;</span>
+    SessionId sessionId;
+    SessionInformation sessionInformation;
+    try {
+<span class="fc" id="L114">      sesSakEnvDto =</span>
+<span class="fc" id="L115">          sharedMapper.readValue((String) message.spdu().getContent(), SesSakEnvDto.class);</span>
+<span class="fc" id="L116">      UUID sessionUuid = UUID.fromString(sesSakEnvDto.getSession());</span>
+<span class="fc" id="L117">      sessionId = new SessionId(sessionUuid);</span>
+<span class="fc" id="L118">      sessionInformation = sessionInfo.get(sessionId);</span>
+<span class="nc" id="L119">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L120">      throw new SilentIgnoreException(&quot;Session required&quot;);</span>
+<span class="fc" id="L121">    }</span>
+
+<span class="fc bfc" id="L123" title="All 2 branches covered.">    if (sessionInformation == null) {</span>
+<span class="fc" id="L124">      throw new SilentIgnoreException(&quot;Session required&quot;);</span>
+    }
+
+    // Stamp
+<span class="fc" id="L128">    verifyStamp(sessionInformation.initiatorPubKey, message, sessionId);</span>
+
+    // Traiter le contenu
+    // Création de Skak
+    SkakWithPubKey skakWithPubKey;
+    try {
+<span class="fc" id="L134">      skakWithPubKey = createSkak(sesSakEnvDto, sessionInformation);</span>
+<span class="fc" id="L135">    } catch (Exception e) {</span>
+<span class="fc" id="L136">      throw new KeyAgreementException(&quot;Unable to finish skak creation&quot;, e);</span>
+<span class="fc" id="L137">    }</span>
+
+    // Transmettre la réponse à la couche inférieur
+<span class="fc" id="L140">    Sidu sidu = buildSidu(message, skakWithPubKey, sessionId);</span>
+
+<span class="fc" id="L142">    dispatch(sidu);</span>
+<span class="fc" id="L143">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L144">  }</span>
+
+  private Sidu buildSidu(ExpandedSidu message, SkakWithPubKey skakWithPubKey, SessionId sessionId) {
+    // Créer une SDU SES.SAK.REC
+<span class="fc" id="L148">    String serialChoice = Base64.getEncoder()</span>
+<span class="fc" id="L149">        .encodeToString(skakWithPubKey.choice().getPublic().getEncoded());</span>
+<span class="fc" id="L150">    SesSakRecDto sdu = new SesSakRecDto(serialChoice, sessionId.id());</span>
+
+    // Construire la SPDU=
+<span class="fc" id="L153">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_SAK_REC,</span>
+<span class="fc" id="L154">        message.spdu().getHeader().getId(),</span>
+<span class="fc" id="L155">        false,</span>
+        speds);
+<span class="fc" id="L157">    String stamp = new SealCreator().createSeal(sdu, hostCertKey.getPrivateKey(), sharedMapper);</span>
+<span class="fc" id="L158">    Spdu spdu = null;</span>
+    try {
+<span class="fc" id="L160">      spdu = new Spdu(spduHeader, stamp, sharedMapper.writeValueAsString(sdu));</span>
+<span class="nc" id="L161">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L162">      throw new RuntimeException(e);</span>
+<span class="fc" id="L163">    }</span>
+
+    // Création SIDU
+<span class="fc" id="L166">    SiduContext siduContext = new SiduContext(</span>
+<span class="fc" id="L167">        message.sidu().getContext().getDestinationCode(),</span>
+<span class="fc" id="L168">        message.sidu().getContext().getSourceCode(),</span>
+<span class="fc" id="L169">        message.sidu().getContext().getDestinationIri(),</span>
+<span class="fc" id="L170">        message.sidu().getContext().getTrackingNumber(),</span>
+<span class="fc" id="L171">        message.sidu().getContext().getSourceIri(),</span>
+<span class="fc" id="L172">        false);</span>
+
+    Sidu sidu;
+    try {
+<span class="fc" id="L176">      sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
+<span class="nc" id="L177">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L178">      throw new RuntimeException(e);</span>
+<span class="fc" id="L179">    }</span>
+<span class="fc" id="L180">    return sidu;</span>
+  }
+
+  private void verifyStamp(String key, ExpandedSidu message, SessionId sessionId)
+      throws SilentIgnoreException {
+
+<span class="fc" id="L186">    boolean verifyStamp = new SealVerifier().verifySeal(sharedMapper,</span>
+<span class="fc" id="L187">        message.spdu().getContent(),</span>
+        key,
+<span class="fc" id="L189">        message.spdu().getStamp());</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">    if (!verifyStamp) {</span>
+<span class="fc" id="L191">      sessionInfo.remove(sessionId);</span>
+<span class="fc" id="L192">      throw new SilentIgnoreException(&quot;Stamp is invalid&quot;);</span>
+    }
+<span class="fc" id="L194">  }</span>
+
+  private void dispatch(Sidu sidu) {
+<span class="fc" id="L197">    logger.trace(Trace.ENTER_METHOD_1, &quot;sidu&quot;, sidu);</span>
+    String serialSidu;
+
+    try {
+<span class="fc" id="L201">      serialSidu = sharedMapper.writeValueAsString(sidu);</span>
+<span class="nc" id="L202">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L203">      throw new RuntimeException(e);</span>
+<span class="fc" id="L204">    }</span>
+
+<span class="fc" id="L206">    transportHost.dataRequest(serialSidu);</span>
+<span class="fc" id="L207">    transportHost.dataConfirm();</span>
+
+<span class="fc" id="L209">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L210">  }</span>
+
+  private SkakWithPubKey createSkak(SesSakEnvDto sesSakEnvDto,
+      SessionInformation sessionInformation) {
+<span class="fc" id="L214">    logger.trace(Trace.ENTER_METHOD_2, &quot;sesSakEnvDto&quot;, sesSakEnvDto,</span>
+        &quot;sessionInformation&quot;, sessionInformation);
+
+<span class="fc" id="L217">    KeyAgreement keyAgreement = new KeyAgreement();</span>
+<span class="fc" id="L218">    PublicKey initiatorPubChoice =</span>
+<span class="fc" id="L219">        KeyMapping.getPublicKeyFromString(sesSakEnvDto.getValue(), KeyAlgorithm.X25519);</span>
+<span class="fc" id="L220">    KeyPair peerChoice = keyAgreement.generateChoicePointKey();</span>
+<span class="fc" id="L221">    byte[] skakByte = keyAgreement.completeKeyAgreementNegotiation(peerChoice, initiatorPubChoice);</span>
+<span class="fc" id="L222">    SecretKey skak = KeyMapping.getAesSecretKeyFromByte(skakByte);</span>
+<span class="fc" id="L223">    sessionInformation.skak = skak;</span>
+<span class="fc" id="L224">    sessionInfo.put(sessionInformation.sessionId, sessionInformation);</span>
+<span class="fc" id="L225">    SkakWithPubKey skakWithPubKey = new SkakWithPubKey(skak, peerChoice);</span>
+
+<span class="fc" id="L227">    logger.trace(Trace.EXIT_METHOD_1, &quot;skakWithPubKey&quot;, skakWithPubKey);</span>
+<span class="fc" id="L228">    return skakWithPubKey;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

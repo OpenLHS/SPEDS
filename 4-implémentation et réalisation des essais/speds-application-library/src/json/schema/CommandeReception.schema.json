@@ -1,0 +1,19 @@
+{
+  "$id": "https://griis.ca/SPEDS/CommandeReception.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CommandeReception - 2025-01-16T13:55-0500",
+  "$defs": {
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the reception of a command",
+  "properties": {
+    "planStatus": {
+      "description": "The partial execution trace of the PGA Plan as a Lodad expression (a Unit of Work instance)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "planStatus"
+  ],
+  "additionalProperties": false
+}

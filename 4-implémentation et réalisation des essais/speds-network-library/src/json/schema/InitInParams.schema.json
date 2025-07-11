@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "options": {
+      "description": "Various options required in order for the Network layer to work properly.",
+      "oneOf": [
+        {
+          "const": false
+        },
+        {
+          "type": "object",
+          "minProperties": 1
+        }
+      ]
+    }
+  },
+  "required": [
+    "options"
+  ],
+  "additionalProperties": false
+}

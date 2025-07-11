@@ -1,0 +1,34 @@
+{
+  "$id": "https://griis.ca/SPEDS/DataReception.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DataReception - 2025-01-13T13:14-0500",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the reception of a data transfer",
+  "properties": {
+    "transferId": {
+      "description": "Identifier of the transfer (UUID)",
+      "$ref": "#/$defs/uuid"
+    },
+    "checksum": {
+      "description": "Digital fingerprint of the data. The checksum is applied on the data field of the DataEnvoi message.",
+      "type": "string"
+    },
+    "function": {
+      "description": "Checksum method used to calculate the checksum field.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "transferId",
+    "checksum",
+    "function"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NetworkMarshaller.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.serialization</a> &gt; <span class="el_source">NetworkMarshaller.java</span></div><h1>NetworkMarshaller.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe NetworkMessageMarshaller.
+ * @brief @~english NetworkMessageMarshaller class implementation.
+ */
+
+package ca.griis.speds.network.serialization;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.network.api.dto.Context45Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.Context56Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.InterfaceDataUnit45Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.InterfaceDataUnit56Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.ProtocolDataUnit5Dto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.service.exception.DeserializationException;
+import ca.griis.speds.network.service.exception.SerializationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Permet la sérialisation et désérialisation des échanges de la couche Réseau.
+ * @par Détails
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-10 [CB] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class NetworkMarshaller {
+<span class="fc" id="L58">  private static final GriisLogger logger = getLogger(NetworkMarshaller.class);</span>
+
+  private final ObjectMapper objectMapper;
+
+<span class="fc" id="L62">  public NetworkMarshaller(ObjectMapper objectMapper) {</span>
+<span class="fc" id="L63">    logger.trace(Trace.ENTER_METHOD_1, &quot;objectMapper&quot;, objectMapper);</span>
+<span class="fc" id="L64">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L65">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param ici «Parameter description»
+   * @param sdu «Parameter description»
+   * @exception SerializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Sérialise une unité de données d'interface (IDU) en provenance de la couche
+   *        Réseau à destination de la couche Transport.
+   * @param ici Unité de données d'interface qui offre le contexte de l'échange.
+   * @param sdu Unité de données de service qui offre le contenu de l'échange.
+   * @exception SerializationException Erreur survenue lors de la sérialisation de l'IDU.
+   * @return l'IDU sérialisé et prête à être échanger à la couche Transport.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public String marshallToTransport(Context45Dto ici, String sdu) {
+<span class="fc" id="L85">    logger.trace(Trace.ENTER_METHOD_2, &quot;ici&quot;, ici, &quot;sdu&quot;, sdu);</span>
+    final String result;
+    try {
+<span class="fc" id="L88">      result = objectMapper.writeValueAsString(new InterfaceDataUnit45Dto(ici, sdu));</span>
+<span class="fc" id="L89">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L90">      final String exception =</span>
+          &quot;Cannot serialize Interface Data Unit between Network and Transport layer: &quot;
+<span class="fc" id="L92">              + e.getMessage();</span>
+<span class="fc" id="L93">      logger.error(exception);</span>
+<span class="fc" id="L94">      throw new SerializationException(exception);</span>
+<span class="fc" id="L95">    }</span>
+<span class="fc" id="L96">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L97">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param idu «Parameter description»
+   * @exception DeserializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Désérialise une unité de données d'interface (IDU) en provenance de la couche
+   *        Transport à destination de la couche Réseau.
+   * @param idu Unité de données d'interface contenant le contexte et le contenu de l'échange.
+   * @exception DeserializationException Erreur survenue lors de la désérialisation de l'IDU.
+   * @return l'IDU désérialisé et prêt à être utilisé par la couche Réseau.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public InterfaceDataUnit45Dto unmarshallFromTransport(String idu) {
+<span class="fc" id="L116">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    InterfaceDataUnit45Dto idu45Dto;
+    try {
+<span class="fc" id="L120">      idu45Dto = objectMapper.readValue(idu, InterfaceDataUnit45Dto.class);</span>
+<span class="fc" id="L121">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L122">      final String exception =</span>
+<span class="fc" id="L123">          &quot;Cannot read Interface Data Unit from Transport to Network layer: &quot; + e.getMessage();</span>
+<span class="fc" id="L124">      logger.error(exception);</span>
+<span class="fc" id="L125">      throw new DeserializationException(exception);</span>
+<span class="fc" id="L126">    }</span>
+
+<span class="fc" id="L128">    logger.trace(Trace.EXIT_METHOD_1, &quot;idu45Dto&quot;, idu45Dto);</span>
+<span class="fc" id="L129">    return idu45Dto;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param ici «Parameter description»
+   * @param sdu «Parameter description»
+   * @exception SerializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Sérialise une unité de données d'interface (IDU) en provenance de la couche
+   *        Réseau à destination de la couche Liaison.
+   * @param ici Unité de données d'interface qui offre le contexte de l'échange.
+   * @param sdu Unité de données de service qui offre le contenu de l'échange.
+   * @exception SerializationException Erreur survenue lors de la sérialisation de l'IDU.
+   * @return l'IDU sérialisé et prête à être échanger à la couche Liaison.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public String marshallToDataLink(Context56Dto ici, String sdu) {
+<span class="fc" id="L150">    logger.trace(Trace.ENTER_METHOD_2, &quot;ici&quot;, ici, &quot;sdu&quot;, sdu);</span>
+
+<span class="fc" id="L152">    final InterfaceDataUnit56Dto idu56Dto = new InterfaceDataUnit56Dto(ici, sdu);</span>
+
+    final String result;
+    try {
+<span class="fc" id="L156">      result = objectMapper.writeValueAsString(idu56Dto);</span>
+<span class="fc" id="L157">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L158">      final String exception =</span>
+<span class="fc" id="L159">          &quot;Cannot serialize Interface Data Unit from Network to Datalink layer: &quot; + e.getMessage();</span>
+<span class="fc" id="L160">      logger.error(exception);</span>
+<span class="fc" id="L161">      throw new SerializationException(exception);</span>
+<span class="fc" id="L162">    }</span>
+
+<span class="fc" id="L164">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L165">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param idu «Parameter description»
+   * @exception DeserializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Désérialise une unité de données d'interface (IDU) en provenance de la couche
+   *        Liaison à destination de la couche Réseau.
+   * @param idu Unité de données d'interface contenant le contexte et le contenu de l'échange.
+   * @exception DeserializationException Erreur survenue lors de la désérialisation de l'IDU.
+   * @return l'IDU désérialisé et prêt à être utilisé par la couche Réseau.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public InterfaceDataUnit56Dto unmarshallFromDataLink(String idu) {
+<span class="fc" id="L184">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    final InterfaceDataUnit56Dto idu56Dto;
+    try {
+<span class="fc" id="L188">      idu56Dto = objectMapper.readValue(idu, InterfaceDataUnit56Dto.class);</span>
+<span class="fc" id="L189">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L190">      final String exception =</span>
+<span class="fc" id="L191">          &quot;Cannot read Interface Data Unit from Datalink to Network layer: &quot; + e.getMessage();</span>
+<span class="fc" id="L192">      logger.error(exception);</span>
+<span class="fc" id="L193">      throw new DeserializationException(exception);</span>
+<span class="fc" id="L194">    }</span>
+
+<span class="fc" id="L196">    logger.trace(Trace.EXIT_METHOD_1, &quot;idu56Dto&quot;, idu56Dto);</span>
+<span class="fc" id="L197">    return idu56Dto;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param pdu «Parameter description»
+   * @exception SerializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Sérialise un message Réseau.
+   * @param pdu Message Réseau à sérialiser.
+   * @exception SerializationException Erreur survenue lors de la sérialisation du message Réseau.
+   * @return le message Réseau sérialisé.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public String marshallNetworkPdu(ProtocolDataUnit5Dto pdu) {
+<span class="fc" id="L215">    logger.trace(Trace.ENTER_METHOD_1, &quot;pdu&quot;, pdu);</span>
+
+    final String result;
+    try {
+<span class="fc" id="L219">      result = objectMapper.writeValueAsString(pdu);</span>
+<span class="fc" id="L220">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L221">      final String exception =</span>
+<span class="fc" id="L222">          &quot;Cannot serialize Network PDU: &quot; + e.getMessage();</span>
+<span class="fc" id="L223">      logger.error(exception);</span>
+<span class="fc" id="L224">      throw new SerializationException(exception);</span>
+<span class="fc" id="L225">    }</span>
+
+<span class="fc" id="L227">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L228">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param sdu «Parameter description»
+   * @exception DeserializationException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Désérialise un message Réseau.
+   * @param sdu Message Réseau à désérialiser.
+   * @exception DeserializationException Erreur survenue lors de la désérialisation du message
+   *            Réseau.
+   * @return Le message Réseau désérialisé et prêt à être utilisé.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public ProtocolDataUnit5Dto unmarshallNetworkPdu(String sdu) {
+<span class="fc" id="L247">    logger.trace(Trace.ENTER_METHOD_1, &quot;sdu&quot;, sdu);</span>
+
+    final ProtocolDataUnit5Dto pdu;
+    try {
+<span class="fc" id="L251">      pdu = objectMapper.readValue(sdu, ProtocolDataUnit5Dto.class);</span>
+<span class="fc" id="L252">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L253">      final String exception =</span>
+<span class="fc" id="L254">          &quot;Cannot read Network Protocol Data Unit: &quot; + e.getMessage();</span>
+<span class="fc" id="L255">      logger.error(exception);</span>
+<span class="fc" id="L256">      throw new DeserializationException(exception);</span>
+<span class="fc" id="L257">    }</span>
+
+<span class="fc" id="L259">    logger.trace(Trace.EXIT_METHOD_1, &quot;pdu&quot;, pdu);</span>
+<span class="fc" id="L260">    return pdu;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
