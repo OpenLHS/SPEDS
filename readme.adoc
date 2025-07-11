@@ -1,0 +1,12 @@
+[#licence]
+== Copyright and licences
+
+=== Copyright
+include::copyright.adoc[]
+
+=== Licences
+The code for this project is licensed under the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence
+https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
