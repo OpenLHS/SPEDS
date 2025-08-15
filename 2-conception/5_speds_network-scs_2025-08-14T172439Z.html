@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="Document de conception pour SPEDS Réseau">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Conception du module « SPEDS - Réseau »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Conception du module « <em>SPEDS - Réseau</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version ,</span>
+<span id="revdate">2025-07-01</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_rôle_du_module">1. Rôle du module</a></li>
+<li><a href="#_implémentation_du_module">2. Implémentation du module</a></li>
+<li><a href="#_modèle_propre_au_module">3. Modèle propre au module</a>
+<ul class="sectlevel2">
+<li><a href="#_table_des_identifiants_de_message_en_attente">3.1. Table des identifiants de message en attente</a></li>
+</ul>
+</li>
+<li><a href="#_mode_de_transmission">4. Mode de transmission</a></li>
+<li><a href="#_type_au_module">5. Type au module</a>
+<ul class="sectlevel2">
+<li><a href="#_type_simple_de_donnée">5.1. Type simple de donnée</a></li>
+<li><a href="#_type_complexe_de_données">5.2. Type complexe de données</a>
+<ul class="sectlevel3">
+<li><a href="#_sceau_dauthentification">5.2.1. Sceau d&#8217;authentification</a></li>
+<li><a href="#_format_dentête_ent_n">5.2.2. Format d’entête (<code>Ent_N</code>)</a></li>
+<li><a href="#_message_pdu">5.2.3. Message (PDU)</a></li>
+<li><a href="#_interface_de_lunité_de_données_du_service_idu">5.2.4. Interface de l&#8217;unité de données du service (IDU)</a></li>
+</ul>
+</li>
+<li><a href="#_type_de_message">5.3. Type de message</a>
+<ul class="sectlevel3">
+<li><a href="#_res_env">5.3.1. RES.ENV</a></li>
+<li><a href="#_res_rec">5.3.2. RES.REC</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_hypothèse_du_module">6. Hypothèse du module</a></li>
+<li><a href="#_contrainte_du_module">7. Contrainte du module</a></li>
+<li><a href="#_processus_du_module">8. Processus du module</a>
+<ul class="sectlevel2">
+<li><a href="#_processus_pour_un_hôte">8.1. Processus pour un hôte</a>
+<ul class="sectlevel3">
+<li><a href="#_pro_3_processus_demande_déchanger_des_données">8.1.1. [PRO-3] Processus « Demande d&#8217;échanger des données »</a></li>
+<li><a href="#_pro_4_processus_confirme_léchange_de_données">8.1.2. [PRO-4] Processus « Confirme l&#8217;échange de données »</a></li>
+<li><a href="#_pro_5_processus_traite_léchange_de_données">8.1.3. [PRO-5] Processus « Traite l&#8217;échange de données »</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_incongruités">9. Incongruités</a></li>
+<li><a href="#_annexes">10. Annexes</a>
+<ul class="sectlevel2">
+<li><a href="#_glossaire">10.1. Glossaire</a></li>
+<li><a href="#_sceau_dauthentification_2">10.2. Sceau d’authentification</a></li>
+<li><a href="#InterfaceDataUnit-4-5">10.3. <em>Interface Data Unit</em> entre la couche transport (4) et la couche réseau (5)</a></li>
+<li><a href="#InterfaceDataUnit-5-6">10.4. <em>Interface Data Unit</em> entre la couche réseau (5) et la couche liaison (6)</a></li>
+<li><a href="#Message">10.5. <em>Protocol Data Unit</em> de la couche réseau (5)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 55.5555%;">
+<col style="width: 11.1111%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception prête à être révisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-02 12:47</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du spécificateur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-02 13:06</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur des tests réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-02 13:15</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Historique</caption>
+<colgroup>
+<col style="width: 55.5555%;">
+<col style="width: 11.1111%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Changement important</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Première itération</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-02-10 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deuxième itération</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-05-05 07:30</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Troisième itération</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-17 09:30</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quatrième itération</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-02 12:13</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Référence</caption>
+<colgroup>
+<col style="width: 66.6666%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Consultation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../srs/5_speds_network-srs.adoc">5_speds_network-srs.adoc</a></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-20</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../srs/includes/uml/500-P6.puml">500-P6.puml</a></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-20</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rôle_du_module">1. Rôle du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le rôle de <code>SPEDS - Réseau</code>, la couche réseau, est d&#8217;acheminer les données d&#8217;un hôte source à un hôte destination sous un réseau. La topologie du réseau est composé d&#8217;un ou plusieurs nœuds (services mandataires) entre la source et destination.</p>
+</div>
+<div class="paragraph">
+<p>Communique avec la couche <code>liaison</code> (inférieure) et la couche <code>transport</code> (supérieure).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implémentation_du_module">2. Implémentation du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le module <code>SPEDS - Réseau</code> est implémenté par le produit <code>speds-network</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_modèle_propre_au_module">3. Modèle propre au module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_table_des_identifiants_de_message_en_attente">3.1. Table des identifiants de message en attente</h3>
+<div class="paragraph">
+<p>Le module doit conserver les identifiants de messages de type <code>RES.ENV</code> jusqu&#8217;au moment où il peut faire le lien entre l&#8217;envoi et l&#8217;accusé de réception.</p>
+</div>
+<div class="paragraph">
+<p>Compte tenu de la nature de l&#8217;identifiant du message, il est fortement suggéré de conserver cette mémorisation dans une structure respectant le principe d&#8217;unicité des éléments, un ensemble.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mode_de_transmission">4. Mode de transmission</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sans connexion avec accusé de réception.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Le concept de <strong>primitives de service</strong> n’est pas encore formalisé dans les exigences ni dans un document de conception distinct et autorisé. On constate toutefois que ce concept est bel et bien présent dans ce document, notamment à travers les signatures des interfaces offertes. Les primitives exposées par cette couche s’éloignent des formes usuelles, ce qui reflète des choix spécifiques à la conception.</p>
+</div>
+<div class="paragraph">
+<p>Rappelons également que le concept de primitives de service concerne uniquement la communication entre une couche et ses couches adjacentes (supérieure et inférieure) au sein d&#8217;un même hôte, et non la communication entre deux instances de cette même couche entre deux hôtes.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Sont offertes </dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Request</code></p>
+</li>
+<li>
+<p><code>Indication</code></p>
+</li>
+<li>
+<p><code>Confirm</code></p>
+</li>
+<li>
+<p><code>Response</code></p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Par conséquent, un des processus offrant une primitive (<code>Indication</code>) assure à la fois la transmission vers la couche supérieure <strong>et</strong> l’envoi d’un accusé de réception vers la couche inférieure, à destination de l’initiateur de la requête d’origine.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_type_au_module">5. Type au module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_type_simple_de_donnée">5.1. Type simple de donnée</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+2025-05-12 [BD] @toimprove - "certificate" et "authentification" sont toutes deux des certificats, mais n&#8217;ont pas le même type. Il faut vérifier si c&#8217;est un problème de nommage ou de type.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+2025-05-12 [MD] @toimprove - Revérifier les types de données pour donner un lien plus fort avec les comportements.
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Type simple de donnée</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">certificate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères sous l&#8217;encodage Base64</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères représentant le certificat avec la clé publique de l&#8217;entité.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">privateKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères sous l&#8217;encodage Base64</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères représentant la clé privée associée à clé publique.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">authentification</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">certificat</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un certificat qui contient la clé publique nécessaire pour authentifier la signature du signataire et son identité sous la forme d&#8217;une IRI. Le certificat contient aussi l&#8217;information concernant l&#8217;émetteur, ce qui permet de valider le certificat.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_iri</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IRI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comprend l&#8217;iri joignable de la destination finale.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UUID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le numéro d’identification du message est un numéro généré unique.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Liste ou booleen</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ce champ est optionnel et pourra contenir des spécificités.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_iri</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IRI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comprend l&#8217;iri joignable de la source initiale du message.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le type de message.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">NOTE </dt>
+<dd>
+<p>Bien que le champ <code>authentification</code> soit spécifié comme optionnel dans le diagramme 500-P6.puml, la présente conception en impose l&#8217;utilisation systématique.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_type_complexe_de_données">5.2. Type complexe de données</h3>
+<div class="sect3">
+<h4 id="_sceau_dauthentification">5.2.1. Sceau d&#8217;authentification</h4>
+<div class="paragraph">
+<p>Un type décrivant le timbre contentant les sceaux pour l&#8217;entête et le contenu d&#8217;un message. Ce type est équivalent au schéma JSON du même objet (cf annexe <a href="#_sceau_dauthentification_2">Sceau d’authentification</a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_format_dentête_ent_n">5.2.2. Format d’entête (<code>Ent_N</code>)</h4>
+<div class="paragraph">
+<p>Un type décrivant un format d&#8217;entête.</p>
+</div>
+<div class="paragraph">
+<p>Ce type est équivalent à la propriété <code>header</code> appartenant au schéma JSON du PDU
+(cf. annexe <a href="#Message"><em>Protocol Data Unit</em> de la couche réseau (5)</a>).</p>
+</div>
+<div class="paragraph">
+<p>Rappel que l&#8217;entête fait partie du PCI.</p>
+</div>
+<div class="paragraph">
+<p>La spécification réfère à ce champ comme étant <code>Ent_NS</code>, <code>Ent_ND</code>, ou <code>Ent_ND'</code> car il s&#8217;agit soit de l&#8217;entête du nœud source, ou l&#8217;entête du nœud destination.</p>
+</div>
+<div class="paragraph">
+<p>Comme le rendu de ce document peut porter à confusion pour ce qui est de l&#8217;entête du nœud de destination prime, ce concept est renommer <code>Ent_ND_prime</code></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_message_pdu">5.2.3. Message (PDU)</h4>
+<div class="paragraph">
+<p>Un type décrivant un format de message.
+Ce type est équivalent au schéma JSON du même objet
+(cf. annexe <a href="#Message"><em>Protocol Data Unit</em> de la couche réseau (5)</a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interface_de_lunité_de_données_du_service_idu">5.2.4. Interface de l&#8217;unité de données du service (IDU)</h4>
+<div class="paragraph">
+<p>Unité d’information transférée en une seule interaction à l’interface de deux couches, constituée d’information de contrôle d’interface (<code>ICI</code>) et de l&#8217;unité de données du protocole (<code>PDU</code>).</p>
+</div>
+<div class="paragraph">
+<p>(cf. annexe <a href="#InterfaceDataUnit-4-5"><em>Interface Data Unit</em> entre la couche transport (4) et la couche réseau (5)</a>) et
+(cf. annexe <a href="#InterfaceDataUnit-5-6"><em>Interface Data Unit</em> entre la couche réseau (5) et la couche liaison (6)</a>)</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_type_de_message">5.3. Type de message</h3>
+<div class="paragraph">
+<p>Pour <code>RES.ENV</code> et <code>RES.REC</code>, il faut respecter le schéma JSON suivant de la couche réseau
+(cf. annexe <a href="#Message"><em>Protocol Data Unit</em> de la couche réseau (5)</a>).</p>
+</div>
+<div class="sect3">
+<h4 id="_res_env">5.3.1. RES.ENV</h4>
+<div class="paragraph">
+<p>Message contenant une demande de requête réseau.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/RES_TYPE.png" alt="RES.ENV">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Le contenu sera les données que l&#8217;utilisateur demande d&#8217;échanger.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_res_rec">5.3.2. RES.REC</h4>
+<div class="paragraph">
+<p>Message contenant un accusé de réception d&#8217;une demande de requête réseau.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/RES_TYPE.png" alt="RES.REC">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Le contenu de l&#8217;accusé de réception est toujours vide pour <code>RES.REC</code>. Le <code>content_seal</code> aussi.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèse_du_module">6. Hypothèse du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[HYP-001]
+</td>
+<td class="hdlist2">
+<p><a id="HYP-001"></a> Chaque entité (hôte ou service mandataire) possède un certificat valide et contient une clé privée associée à la clé publique dudit certificat.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[HYP-002]
+</td>
+<td class="hdlist2">
+<p>Toute erreur ou exception signalée par la couche inférieure ne sera pas gérée.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[HYP-003]
+</td>
+<td class="hdlist2">
+<p><a id="HYP-003"></a> Un mécanisme qui permet de déterminer l&#8217;adresse du prochain nœud existe.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Dans la version actuelle (<a href="#LASTUPDATE">[LASTUPDATE]</a>), le mécanisme de HYP-003 va se contenter d&#8217;envoyer le message directement à <code>destination_iri</code> s&#8217;il s&#8217;agit d&#8217;un <code>RES.ENV</code> qui est envoyé et à <code>source_iri</code> s&#8217;il s&#8217;agit d&#8217;un <code>RES.REC</code> qui est envoyé.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contrainte_du_module">7. Contrainte du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[CON-001]
+</td>
+<td class="hdlist2">
+<p>Le champ <code>authentification</code> dans le PDU est obligatoire quand un message reçu vient d’un proxy.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-002]
+</td>
+<td class="hdlist2">
+<p>La couverture de test doit être de 100%.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-003]
+</td>
+<td class="hdlist2">
+<p><a id="CON-003"></a> Le module doit utiliser la bibliothèque de fonctions de SPEDS (implémentée par <code>speds-common-library</code>) qui contient les primitives de service du protocole et les primitives de cryptographie utilisée. Notamment :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>La fonction de hachage est SHA-512.</p>
+</li>
+<li>
+<p>L&#8217;algorithme de signature est RSA et la taille des clés est de 4096 bits.</p>
+</li>
+<li>
+<p>Le format des certificats est X.509.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_processus_du_module">8. Processus du module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_processus_pour_un_hôte">8.1. Processus pour un hôte</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1]
+</td>
+<td class="hdlist2">
+<p>Processus retiré.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2]
+</td>
+<td class="hdlist2">
+<p>Processus retiré.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3]
+</td>
+<td class="hdlist2">
+<p>Demande d&#8217;échange de données - Requête de la couche supérieure qui démarre un envoi de données</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-4]
+</td>
+<td class="hdlist2">
+<p>Confirme l&#8217;échange de données -  Réception de l&#8217;accusé de réception</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-5]
+</td>
+<td class="hdlist2">
+<p>Traite l&#8217;échange de données -  Réception d&#8217;une demande d&#8217;échange de données; produit un accusé de réception et achemine le contenu de l&#8217;échange à la couche supérieure.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_pro_3_processus_demande_déchanger_des_données">8.1.1. [PRO-3] Processus « Demande d&#8217;échanger des données »</h4>
+<div class="sect4">
+<h5 id="_comportement">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.1]
+</td>
+<td class="hdlist2">
+<p><a id="PRO-3.1"></a> Créer l&#8217;entête <code>Ent_NS</code> du message <code>RES.ENV</code> à l&#8217;aide du <code>ICI</code>, et les autres informations nécessaires.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Le certificat de l&#8217;hôte actuel au champ <code>authentification</code></p>
+</li>
+<li>
+<p>L&#8217;IRI de la source au champ <code>source_iri</code></p>
+</li>
+<li>
+<p>L&#8217;IRI de la destination au champ <code>destination_iri</code></p>
+</li>
+<li>
+<p>L&#8217;identifiant du message <code>id</code> est un champ généré</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3.2]
+</td>
+<td class="hdlist2">
+<p>Mémoriser l&#8217;identifiant du message dans la <a href="#_table_des_identifiants_de_message_en_attente">Table des identifiants de message en attente</a>.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.3]
+</td>
+<td class="hdlist2">
+<p><a id="PRO-3.3"></a> Créer les sceaux d&#8217;authentification</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Créer l&#8217;empreinte de l&#8217;entête <code>empreinte_NS</code> en hachant l&#8217;entête <code>Ent_NS</code> selon l&#8217;algorithme de hachage prévue par <a href="#CON-003">[CON-003]</a></p>
+</li>
+<li>
+<p>Créer le sceau <code>sceau_E_NS</code> en signant l&#8217;empreinte de l&#8217;entête <code>empreinte_NS</code> selon l&#8217;algorithme de signature prévue par <a href="#CON-003">[CON-003]</a></p>
+</li>
+<li>
+<p>Créer l&#8217;empreinte du contenu <code>empreinte_contenu</code> en hachant le contenu réseau <code>Contenu_NS</code> selon l&#8217;algorithme prévu par <a href="#CON-003">[CON-003]</a></p>
+</li>
+<li>
+<p>Créer le sceau <code>sceau_C_N</code> en signant l&#8217;empreinte du contenu <code>empreinte_contenu</code> selon l&#8217;algorithme de signature prévue par <a href="#CON-003">[CON-003]</a> avec la clé de l&#8217;entité</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.4]
+</td>
+<td class="hdlist2">
+<p><a id="PRO-3.4"></a>  Créer un message <code>RES.ENV</code> avec l&#8217;entête <a href="#PRO-3.1">[PRO-3.1]</a>, les sceaux <a href="#PRO-3.3">[PRO-3.3]</a> et la propriété <code>content</code> a pour valeur le <code>message</code> de la InterfaceDataUnit-4_5.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.5]
+</td>
+<td class="hdlist2">
+<p><a id="PRO-3.5"></a> Construire une InterfaceDataUnit-5_6.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>la IRI de destination <code>destination_iri</code> est déterminée par le mécanisme prévu par l&#8217;hypothèse <a href="#HYP-003">[HYP-003]</a>.</p>
+</li>
+<li>
+<p>Le numéro de suivi <code>tracking_number</code> est le numéro du message <code>id</code> du message créé à <a href="#PRO-3.4">[PRO-3.4]</a>.</p>
+</li>
+<li>
+<p>Les options <code>options</code> sont de valeur <code>false</code>.</p>
+</li>
+<li>
+<p>Le champ <code>message</code> est le message RES.ENV <a href="#PRO-3.4">[PRO-3.4]</a>.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.6]
+</td>
+<td class="hdlist2">
+<p>Transmettre la InterfaceDataUnit-5_6 construite en <a href="#PRO-3.5">[PRO-3.5]</a> à la couche inférieure (avec comme primitive de service <code>request</code>).</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>request</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>InterfaceDataUnit-4_5</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>InterfaceDataUnit-5_6</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>response</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>InterfaceDataUnit-4_5</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>InterfaceDataUnit-5_6</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_erreur">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pro_4_processus_confirme_léchange_de_données">8.1.2. [PRO-4] Processus « Confirme l&#8217;échange de données »</h4>
+<div class="sect4">
+<h5 id="_comportement_2">Comportement</h5>
+<div class="paragraph">
+<p><strong><em>Validations</em></strong></p>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-4.1]
+</td>
+<td class="hdlist2">
+<p>Validation du message <code>RES.REC</code>.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Vérifier que le type du message est <code>RES.REC</code>; sinon consigner le problème dans un log et terminer le processus (ignorer le message).</p>
+</li>
+<li>
+<p>Vérifier que l&#8217;identifiant du message correspond à un message <code>RES.ENV</code> qui a été précédemment envoyé; sinon consigner le problème dans un log et terminer le processus (ignorer le message).</p>
+</li>
+<li>
+<p>Vérifier que le champ <code>authentification</code> de l&#8217;entête du message contient un certificat valide attribué à la IRI de <code>destination_iri</code>, sinon consigner le problème dans un log et terminer le processus (ignorer le message).</p>
+</li>
+<li>
+<p>Vérifier que <code>header_seal</code> est la signature du hachage du contenu de l&#8217;entête <code>ENT_NS</code>, en utilisant la clé publique du certificat; sinon consigner le problème dans un log et terminer le processus (ignorer le message).</p>
+</li>
+<li>
+<p>Retirer l&#8217;identifiant du message de la <a href="#_table_des_identifiants_de_message_en_attente">Table des identifiants de message en attente</a>.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface_2">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>confirm</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>InterfaceDataUnit-5_6</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>S.O.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_erreur_2">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pro_5_processus_traite_léchange_de_données">8.1.3. [PRO-5] Processus « Traite l&#8217;échange de données »</h4>
+<div class="sect4">
+<h5 id="_comportement_3">Comportement</h5>
+<div class="paragraph">
+<p><strong><em>Validation du message d&#8217;entrée</em></strong></p>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-5.1]
+</td>
+<td class="hdlist2">
+<p><a id="PRO-5.1"></a> Valider le message reçu (propriété <code>message</code> de la InterfaceDataUnit-5_6 reçue)</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Vérifier que le type du message est <code>RES.ENV</code>; sinon consigner le problème dans un log et terminer le processus (ignorer le message).</p>
+</li>
+<li>
+<p>Vérifier que le champ <code>authentification</code> de l&#8217;entête du message contient un certificat valide attribué à la IRI de <code>source_iri</code>, sinon consigner le problème dans un log et terminer le processus (ignorer le message).</p>
+</li>
+<li>
+<p>Vérifier que <code>header_seal</code> est la signature du hachage du contenu de l&#8217;entête <code>ENT_NS</code>, en utilisant la clé publique du certificat; sinon consigner le problème dans un log et terminer le processus (ignorer le message).</p>
+</li>
+<li>
+<p>Vérifier que <code>content_seal</code> est la signature du hachage du contenu du message <code>RES.ENV</code>, en utilisant la clé publique du certificat; sinon consigner le problème dans un log et terminer le processus (ignorer le message).</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong><em>Création du message d&#8217;accusé de réception</em></strong></p>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-5.2]
+</td>
+<td class="hdlist2">
+<p><a id="PRO-5.2"></a> Créer l&#8217;entête <code>Ent_ND</code> du PDU de type <code>RES.REC</code>.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le champ <code>msgtype</code> est <code>RES.REC</code></p>
+</li>
+<li>
+<p>Le champ <code>id</code> est l&#8217;identifiant du PDU <code>id</code> reçu lors de <a href="#PRO-5.1">[PRO-5.1]</a></p>
+</li>
+<li>
+<p>Le champ <code>source_iri</code> est celui de l&#8217;entête du message <code>RES.ENV</code> reçu lors de <a href="#PRO-5.1">[PRO-5.1]</a></p>
+</li>
+<li>
+<p>Le champ <code>destination_iri</code> est celui de l&#8217;entête du message <code>RES.ENV</code> reçu lors de <a href="#PRO-5.1">[PRO-5.1]</a></p>
+</li>
+<li>
+<p>Le champ <code>authentification</code> est le certificat de l&#8217;entité actuelle.</p>
+</li>
+<li>
+<p>Le champ <code>parameters</code> est de valeur <code>false</code></p>
+</li>
+<li>
+<p>Le champ <code>SPEDS</code> est fourni lors de l&#8217;initialisation du module par la couche appelante.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-5.3]
+</td>
+<td class="hdlist2">
+<p><a id="PRO-5.3"></a> Créer le sceau d&#8217;entête <code>sceau_E_ND</code>.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Créer l&#8217;empreinte <code>empreinte_ND</code> en hachant l&#8217;entête <code>Ent_ND</code> en utilisant l&#8217;algorithme de hachage <a href="#CON-003">[CON-003]</a>.</p>
+</li>
+<li>
+<p>Création du sceau <code>sceau_E_ND</code> en signant l&#8217;empreinte <code>empreinte_ND</code> en utilisant l&#8217;algorithme de signature <a href="#CON-003">[CON-003]</a>.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-5.4]
+</td>
+<td class="hdlist2">
+<p><a id="PRO-5.4"></a> Créer un message <code>RES.REC</code> avec l&#8217;entête <a href="#PRO-5.2">[PRO-5.2]</a>, le sceau de l&#8217;entête <a href="#PRO-5.3">[PRO-5.3]</a>, le contenu vide, et le sceau du contenu étant une chaîne de caractère vide.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-5.5]
+</td>
+<td class="hdlist2">
+<p><a id="PRO-5.5"></a> Créer une InterfaceDataUnit-5_6.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>destination_iri</code> est déterminée par le mécanisme prévu par l&#8217;hypothèse <a href="#HYP-003">[HYP-003]</a>.</p>
+</li>
+<li>
+<p><code>tracking_number</code> est le numéro de suivi reçu <a href="#PRO-5.1">[PRO-5.1]</a>.</p>
+</li>
+<li>
+<p><code>options</code> est <code>false</code>.</p>
+</li>
+<li>
+<p><code>message</code> est le message <code>RES.REC</code> de <a href="#PRO-5.4">[PRO-5.4]</a>.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong><em>Préparer le message pour la couche supérieure</em></strong></p>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-5.6]
+</td>
+<td class="hdlist2">
+<p><a id="PRO-5.6"></a> Créer une InterfaceDataUnit-4_5.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>source_iri</code> et <code>destination_iri</code>, sont les mêmes que ceux du message reçu <a href="#PRO-5.1">[PRO-5.1]</a>.</p>
+</li>
+<li>
+<p><code>tracking_number</code> est le numéro de message <code>id</code> du message reçu <a href="#PRO-5.1">[PRO-5.1]</a>.</p>
+</li>
+<li>
+<p><code>message</code> est la valeur de la propriété <code>content</code> du message <code>RES.ENV</code> reçu <a href="#PRO-5.1">[PRO-5.1]</a>.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong><em>Sortie du processus</em></strong></p>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-5.7]
+</td>
+<td class="hdlist2">
+<p>Transmettre les IDU</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La InterfaceDataUnit-5_6 construit à <a href="#PRO-5.5">[PRO-5.5]</a> est transmis à la couche inférieure (comme une primitive de service <code>response</code>).</p>
+</li>
+<li>
+<p>La InterfaceDataUnit-4_5 construit à <a href="#PRO-5.6">[PRO-5.6]</a> est transmis à la couche supérieure (comme une primitive de service <code>indication</code>).</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface_3">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>indication</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>InterfaceDataUnit-5_6</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>InterfaceDataUnit-5_6</p>
+</li>
+<li>
+<p>InterfaceDataUnit-4_5</p>
+</li>
+</ol>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_erreur_3">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">9. Incongruités</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annexes">10. Annexes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_glossaire">10.1. Glossaire</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+Couche inférieure
+</td>
+<td class="hdlist2">
+<p>La couche de communication qui succède à la couche réseau.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Couche supérieure
+</td>
+<td class="hdlist2">
+<p>La couche de communication qui précède la couche réseau.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+IDU
+</td>
+<td class="hdlist2">
+<p><code>Interface Data Unit</code> - Unité d&#8217;interface de données. Message pour la communication entre les couches. Est composé d&#8217;un <code>ICI</code> (propriété <code>context</code> du JSON) et d&#8217;un <code>PDU</code> (propriété <code>message</code> du JSON).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+SDU
+</td>
+<td class="hdlist2">
+<p><code>Service Data Unit</code> - Unité de données du service. Transmis à la couche inférieure, le <code>SDU</code> sert à construire le <code>PDU</code> de cette couche en lui adjoignant un <code>PCI</code>;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+ICI
+</td>
+<td class="hdlist2">
+<p><code>Information Control Interface</code> - Information de contrôle de l&#8217;interface. Correspond à la propriété <code>context</code> du JSON de la <code>IDU</code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+PDU
+</td>
+<td class="hdlist2">
+<p><code>Protocol Data Unit</code> - Unité de données de protocole. Correspond à la propritété <code>message</code> du JSON d&#8217;un IDU.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+PCI
+</td>
+<td class="hdlist2">
+<p><code>Protocol Control Information</code> - Information de contrôle du protocole. Il s&#8217;agit de l&#8217;ensemble des informations partagées entre les couches ; l&#8217;entête et le pied du message.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+IRI
+</td>
+<td class="hdlist2">
+<p><code>International resources identifiers</code> - Identifiant de ressource internationalisé balisé par RFC-3987</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sceau_dauthentification_2">10.2. Sceau d’authentification</h3>
+<div class="listingblock">
+<div class="title">Format json schema du timbre des sceaux d&#8217;authentification</div>
+<div class="content">
+<pre> "stamp": {
+      "type": "object",
+      "properties": {
+        "header_seal": {
+          "$ref": "#/$defs/bytestring"
+        },
+        "content_seal": {
+          "$ref": "#/$defs/bytestring"
+        }
+      },
+      "required": [
+        "header_seal",
+        "content_seal"
+      ],
+      "additionalProperties": false
+    },</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="InterfaceDataUnit-4-5">10.3. <em>Interface Data Unit</em> entre la couche transport (4) et la couche réseau (5)</h3>
+<div class="listingblock">
+<div class="title">Format d&#8217;interface d&#8217;unité de données entre la couche supérieure et la couche réseau</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/speds/json/schema/idu/InterfaceDataUnit-4_5.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InterfaceDataUnit-4_5 - 2025-07-01T21:30:00-0400",
+  "description": "An agreed way of communication among SPEDS layers Transport (4) and Network (5).",
+  "type": "object",
+  "properties": {
+    "context": {
+      "description": "The context shared between these two SPEDS layers. This is the ICI (Interface Control Information), i.e. an information passed across an interface to coordinate interactions between two adjacent layers.",
+      "type": "object",
+      "properties": {
+        "source_iri": {
+          "description": "The source entity IRI (according to RFC3987).",
+          "type": "string",
+          "format": "iri"
+        },
+        "destination_iri": {
+          "description": "The destination entity IRI (according to RFC3987).",
+          "type": "string",
+          "format": "iri"
+        },
+        "tracking_number": {
+          "description": "The number used to track the PDU. If the PDU is a response (resp. a confirmation), it should be the tracking number of the corresponding original indication (resp. request).",
+          "type": "string",
+          "format": "uuid"
+        },
+        "options": {
+          "description": "The options shared between the layers.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "source_iri",
+        "destination_iri",
+        "tracking_number",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "message": {
+      "description": "The message shared between these two SPEDS layers. This is the TPDU : the PDU (Protocol Data Unit) of the Transport layer (4).",
+      "type": "string"
+    }
+  },
+  "required": [
+    "context",
+    "message"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="InterfaceDataUnit-5-6">10.4. <em>Interface Data Unit</em> entre la couche réseau (5) et la couche liaison (6)</h3>
+<div class="listingblock">
+<div class="title">Format d&#8217;interface d&#8217;unité de données entre la couche réseau et la couche inférieure</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/speds/json/schema/idu/InterfaceDataUnit-5_6.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InterfaceDataUnit-5_6 - 2025-07-01T21:30:00-0400",
+  "description": "An agreed way of communication among SPEDS layers Network (5) and (Data)Link (6).",
+  "type": "object",
+  "properties": {
+    "context": {
+      "description": "The context shared between these two SPEDS layers. This is the ICI (Interface Control Information), i.e. an information passed across an interface to coordinate interactions between two adjacent layers.",
+      "type": "object",
+      "properties": {
+        "destination_iri": {
+          "description": "The destination node IRI (according to RFC3987).",
+          "type": "string",
+          "format": "iri"
+        },
+        "tracking_number": {
+          "description": "The number used to track the PDU. If the PDU is a response (resp. a confirmation), it should be the tracking number of the corresponding original indication (resp. request).",
+          "type": "string",
+          "format": "uuid"
+        },
+        "options": {
+          "description": "The options shared between the layers.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "destination_iri",
+        "tracking_number",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "message": {
+      "description": "The message shared between these two SPEDS layers. This is the NPDU : the PDU (Protocol Data Unit) of the Network layer (5).",
+      "type": "string"
+    }
+  },
+  "required": [
+    "context",
+    "message"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Message">10.5. <em>Protocol Data Unit</em> de la couche réseau (5)</h3>
+<div class="listingblock">
+<div class="title">Schéma du message de la couche réseau</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/speds/json/schema/pdu/ProtocolDataUnit-5-NET.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolDataUnit-5-NET - 2025-04-11T15:25:46-0400",
+  "$defs": {
+    "iri": {
+      "description": "A valid IR according to RFC 3987",
+      "type": "string",
+      "format": "iri"
+    },
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "bytestring": {
+      "description": "A base-64 encoded bytestring",
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "speds_version": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)(\\.[0-9]+[a-z]*)$"
+    }
+  },
+  "description": "For the Network Layer of SPEDS (Layer 5) : a unit of data which is transferred from one end of a connection to the other with no loss of identity or meaning.",
+  "type": "object",
+  "properties": {
+    "header": {
+      "description": "The header of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "properties": {
+        "msgtype": {
+          "description": "The type of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "enum": [
+            "RES.ENV",
+            "RES.REC"
+          ]
+        },
+        "id": {
+          "description": "The identifier of a SPEDS message. Mandatory in all layers.",
+          "$ref": "#/$defs/uuid"
+        },
+        "source_iri": {
+          "description": "The source entity IRI (according to RFC3987).",
+          "$ref": "#/$defs/iri"
+        },
+        "destination_iri": {
+          "description": "The destination entity IRI (according to RFC3987).",
+          "$ref": "#/$defs/iri",
+        },
+        "authentification": {
+          "description": "The authentification method used",
+          "oneOf": [
+            {
+              "description": "A valid authentification certificate",
+              "$ref": "#/$defs/bytestring"
+            },
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "type": "string"
+                },
+                "parameters": {
+                  "type": "object",
+                  "minProperties": 1
+                }
+              },
+              "required": [
+                "method"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "parameters": {
+          "description": "The parameters of the Network layer.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        },
+        "SPEDS" : {
+          "type": "object",
+          "properties": {
+            "properties": {
+              "version": {
+                "description": "The version of the SPEDS protocol used for this SDU.",
+                "$ref": "#/$defs/speds_version"
+              },
+              "reference": {
+                "description": "The reference of the SPEDS protocol version used for this SDU.",
+                "$ref": "#/$defs/iri"
+              }
+            }
+          },
+          "required": ["version","reference"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "msgtype",
+        "id",
+        "source_iri",
+        "destination_iri",
+        "authentification",
+        "parameters",
+        "SPEDS"
+      ]
+    },
+    "stamp": {
+      "type": "object",
+      "properties": {
+        "header_seal": {
+          "$ref": "#/$defs/bytestring"
+        },
+        "content_seal": {
+          "$ref": "#/$defs/bytestring"
+        }
+      },
+      "required": [
+        "header_seal",
+        "content_seal"
+      ],
+      "additionalProperties": false
+    },
+    "content": {
+      "description": "The content of a SPEDS message. Mandatory in all layers.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "header",
+    "stamp",
+    "content"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version <br>
+Last updated 2025-07-22 14:19:14 -0400
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>

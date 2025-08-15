@@ -55,6 +55,22 @@ public interface TransportClient {
    * @par Tâches
    *      S.O.
    */
+  void request(String idu);
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Demande d’échanger des données.
+   * @param idu L’interface d’unité de données entre la couche supérieure et la couche transport
+   *        sous le format JSON.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  @Deprecated
   void dataRequest(String idu);
 
   /**
@@ -68,7 +84,24 @@ public interface TransportClient {
    *         le format JSON.
    *
    * @par Tâches
+   * @note - La méthode sera retirée, car son utilité n'y est plus. La confirmation est maintenant
+   *       gérer automatiquement.
+   */
+  @Deprecated
+  void dataConfirm();
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Vérifie si la demande d’échange de données a fait l’objet d’une confirmation.
+   * @param msgId Identifiant du message de la couche transport à vérifier.
+   * @return Vrai si la confirmation n'a pas été encore effectuée.
+   *
+   * @par Tâches
    *      S.O.
    */
-  void dataConfirm();
+  Boolean isPending(String msgId);
 }

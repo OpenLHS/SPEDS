@@ -3,6 +3,7 @@ package ca.griis.speds.integration.bottomup;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import ca.griis.js2p.gen.speds.link.api.dto.Context56Dto;
 import ca.griis.js2p.gen.speds.link.api.dto.InterfaceDataUnit56Dto;
 import ca.griis.speds.integration.util.LinkDomainProviderUtil;
 import ca.griis.speds.integration.util.TestUtil;
@@ -104,15 +105,24 @@ public class LinSpedsIt {
       String result = targetLinkHost.indication();
       InterfaceDataUnit56Dto resultDto =
           objectMapper.readValue(result, InterfaceDataUnit56Dto.class);
-
-      originLinkHost.close();
-      targetLinkHost.close();
-
       assertEquals(idu56Dto.getMessage(), resultDto.getMessage());
       assertEquals(idu56Dto.getContext().getDestinationIri(),
           resultDto.getContext().getDestinationIri());
       assertNotEquals(idu56Dto.getContext().getTrackingNumber(),
           resultDto.getContext().getTrackingNumber());
+
+      InterfaceDataUnit56Dto response = new InterfaceDataUnit56Dto(
+          new Context56Dto("localhost:4050", resultDto.getContext().getTrackingNumber(), false),
+          "answer");
+      String serialResponse = objectMapper.writeValueAsString(response);
+      targetLinkHost.response(serialResponse);
+      String confirmation = originLinkHost.confirm();
+      InterfaceDataUnit56Dto actualIdu =
+          objectMapper.readValue(confirmation, InterfaceDataUnit56Dto.class);
+      assertEquals(actualIdu.getMessage(), response.getMessage());
+
+      originLinkHost.close();
+      targetLinkHost.close();
     }
   }
 

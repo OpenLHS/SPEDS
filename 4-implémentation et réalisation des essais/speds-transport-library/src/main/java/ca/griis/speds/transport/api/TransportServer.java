@@ -55,5 +55,21 @@ public interface TransportServer {
    * @par Tâches
    *      S.O.
    */
+  @Deprecated
   String dataReply();
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Répond à un échange de données.
+   * @return L’interface d’unité de données entre la couche inférieure et la couche transport
+   *         sous le format JSON.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  String indication();
 }

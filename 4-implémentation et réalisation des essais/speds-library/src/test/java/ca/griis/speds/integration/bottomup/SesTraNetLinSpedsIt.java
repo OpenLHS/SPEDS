@@ -2,7 +2,9 @@ package ca.griis.speds.integration.bottomup;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import ca.griis.js2p.gen.speds.session.api.dto.Context23Dto;
 import ca.griis.js2p.gen.speds.session.api.dto.InterfaceDataUnit23Dto;
 import ca.griis.speds.integration.util.KeyVar;
 import ca.griis.speds.integration.util.PgaServiceMock;
@@ -16,8 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.security.cert.CertificateException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import net.jqwik.api.domains.Domain;
@@ -45,8 +45,7 @@ public class SesTraNetLinSpedsIt {
   @Property(tries = 1)
   @Domain(SessionDomainProviderUtil.class)
   public void SesNetLinkExchangeTest(@ForAll InterfaceDataUnit23Dto idu23Dto)
-      throws IOException, InterruptedException, ExecutionException, TimeoutException,
-      CertificateException {
+      throws IOException, CertificateException {
 
     new PgaServiceMock().mock(pgaService, 4030, 4031);
 
@@ -109,17 +108,18 @@ public class SesTraNetLinSpedsIt {
                   KeyVar.localhostCertRsa, KeyVar.localhostPrikeyRsa,
                   targetSocket.getLocalPort());
 
-      // network-server-init-success
+      // session-server-init-success
       SessionHost targetSesHost = sessionFactory.init(targetParams);
 
-      // network-client-request-success
+      // session-client-init-success
       SessionHost originSesHost = sessionFactory.init(originParams);
       String idu23 = SharedObjectMapper.getInstance().getMapper().writeValueAsString(idu23Dto);
 
+      // session-client-request-success
       originSesHost.requestFuture(idu23);
 
+      // session-server-indication-success
       String result = targetSesHost.indication();
-
       InterfaceDataUnit23Dto resultDto;
       resultDto = objectMapper.readValue(result, InterfaceDataUnit23Dto.class);
       assertEquals(idu23Dto.getMessage(), resultDto.getMessage());
@@ -130,7 +130,26 @@ public class SesTraNetLinSpedsIt {
       assertNotEquals(idu23Dto.getContext().getTrackingNumber(),
           resultDto.getContext().getTrackingNumber());
       assertEquals(Boolean.FALSE, resultDto.getContext().getOptions());
+
+      // session-server-response-success
+      Context23Dto responseContext = new Context23Dto(resultDto.getContext().getPga(),
+          resultDto.getContext().getDestinationCode(), resultDto.getContext().getSourceCode(),
+          resultDto.getContext().getTrackingNumber(), false);
+      String responseContent = "anwser";
+      InterfaceDataUnit23Dto response = new InterfaceDataUnit23Dto(responseContext,
+          responseContent);
+      String serialResponse = objectMapper.writeValueAsString(response);
+      targetSesHost.response(serialResponse);
+
+      // session-client-confirm-success
+      String actualResponse = originSesHost.confirm();
+      assertNotNull(actualResponse);
+      InterfaceDataUnit23Dto actualIdu = objectMapper.readValue(actualResponse,
+          InterfaceDataUnit23Dto.class);
+      assertEquals(responseContent, actualIdu.getMessage());
+
+      originSesHost.close();
+      targetSesHost.close();
     }
   }
-
 }

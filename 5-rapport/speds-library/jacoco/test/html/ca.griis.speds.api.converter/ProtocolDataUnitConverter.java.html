@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProtocolDataUnitConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.api.converter</a> &gt; <span class="el_source">ProtocolDataUnitConverter.java</span></div><h1>ProtocolDataUnitConverter.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe ProtocolDataUnitConverter.
+ * @brief @~english Contains description of ProtocolDataUnitConverter class.
+ */
+
+package ca.griis.speds.api.converter;
+
+import ca.griis.js2p.gen.speds.application.api.dto.CommandeEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.CommandeReceptionDto;
+import ca.griis.js2p.gen.speds.application.api.dto.DataEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.DataReceptionDto;
+import ca.griis.js2p.gen.speds.application.api.dto.ExceptionEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.ExceptionReceptionDto;
+import ca.griis.js2p.gen.speds.application.api.dto.FinEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.FinReceptionDto;
+import ca.griis.js2p.gen.speds.application.api.dto.PgaConfirmationDto;
+import ca.griis.js2p.gen.speds.application.api.dto.PgaFinDto;
+import ca.griis.js2p.gen.speds.application.api.dto.ProtocolDataUnit1APPDto;
+import ca.griis.js2p.gen.speds.application.api.dto.StatutEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.StatutReceptionDto;
+import ca.griis.js2p.gen.speds.application.api.dto.TacheEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.TacheReceptionDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Définit un convertisseur d'unité de données de protocole.
+ * @par Détails
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-04-07 [FO] - Première ébauche.&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ProtocolDataUnitConverter {
+  private final ObjectMapper mapper;
+
+<span class="fc" id="L64">  public ProtocolDataUnitConverter(ObjectMapper mapper) {</span>
+<span class="fc" id="L65">    this.mapper = mapper;</span>
+<span class="fc" id="L66">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'envoi de tâches - Convertit l'unité de travail du protocole en un
+   *        envoi de tâche.
+   * @param pdu L'unité de travail du protocole.
+   * @return Un envoi de tâche.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public TacheEnvoiDto convertToTacheEnvoiDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L84">    var content = convert(pdu, TacheEnvoiDto.class);</span>
+<span class="fc" id="L85">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'envoi de tâches - Convertit l'unité de travail du protocole en une
+   *        réception de tâche.
+   * @param pdu L'unité de travail du protocole.
+   * @return Une réception de tâche.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public TacheReceptionDto convertToTacheReceptionDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L104">    var content = convert(pdu, TacheReceptionDto.class);</span>
+<span class="fc" id="L105">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole de fin de tâches - Convertit l'unité de travail du protocole en un
+   *        envoi de fin de tâche.
+   * @param pdu L'unité de travail du protocole.
+   * @return Une envoi de fin de tâche.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public FinEnvoiDto convertToFinEnvoiDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L124">    var content = convert(pdu, FinEnvoiDto.class);</span>
+<span class="fc" id="L125">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole de fin de tâches - Convertit l'unité de travail du protocole en une
+   *        réception de fin de tâche.
+   * @param pdu L'unité de travail du protocole.
+   * @return Une réception de fin tâche.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public FinReceptionDto convertToFinReceptionDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L144">    var content = convert(pdu, FinReceptionDto.class);</span>
+<span class="fc" id="L145">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'exception de tâches - Convertit l'unité de travail du protocole en
+   *        un envoi d'une exception de tâche.
+   * @param pdu L'unité de travail du protocole.
+   * @return Un envoi d'une exception de tâche.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public ExceptionEnvoiDto convertToExceptionEnvoiDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L164">    var content = convert(pdu, ExceptionEnvoiDto.class);</span>
+<span class="fc" id="L165">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'exception de tâches - Convertit l'unité de travail du protocole en
+   *        une
+   *        réception d'une exception de tâche.
+   * @param pdu L'unité de travail du protocole.
+   * @return Une réception d'une exception de tâche.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public ExceptionReceptionDto convertToExceptionReceptionDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L185">    var content = convert(pdu, ExceptionReceptionDto.class);</span>
+<span class="fc" id="L186">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'envoi de données - Convertit l'unité de travail du protocole en un
+   *        envoi de données.
+   * @param pdu L'unité de travail du protocole.
+   * @return Un envoi de données.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public DataEnvoiDto convertToDataEnvoiDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L205">    var content = convert(pdu, DataEnvoiDto.class);</span>
+<span class="fc" id="L206">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'envoi de données - Convertit l'unité de travail du protocole en une
+   *        réception de données.
+   * @param pdu L'unité de travail du protocole.
+   * @return Une réception de données.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public DataReceptionDto convertToDataReceptionDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L225">    var content = convert(pdu, DataReceptionDto.class);</span>
+<span class="fc" id="L226">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'envoi de statuts - Convertit l'unité de travail du protocole en un
+   *        envoi de statut.
+   * @param pdu L'unité de travail du protocole.
+   * @return Un envoi de statut.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public StatutEnvoiDto convertToStatutEnvoiDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L245">    var content = convert(pdu, StatutEnvoiDto.class);</span>
+<span class="fc" id="L246">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'envoi de statuts - Convertit l'unité de travail du protocole en une
+   *        réception de statut.
+   * @param pdu L'unité de travail du protocole.
+   * @return Une réception de statut.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public StatutReceptionDto convertToStatutReceptionDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L265">    var content = convert(pdu, StatutReceptionDto.class);</span>
+<span class="fc" id="L266">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'envoi de commande - Convertit l'unité de travail du protocole en un
+   *        envoi de commande.
+   * @param pdu L'unité de travail du protocole.
+   * @return Un envoi de commande.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public CommandeEnvoiDto convertToCommandeEnvoiDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L285">    var content = convert(pdu, CommandeEnvoiDto.class);</span>
+<span class="fc" id="L286">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'envoi de commande - Convertit l'unité de travail du protocole en
+   *        une
+   *        réception de commande.
+   * @param pdu L'unité de travail du protocole.
+   * @return Une réception de commande.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public CommandeReceptionDto convertToCommandeReceptionDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L306">    var content = convert(pdu, CommandeReceptionDto.class);</span>
+<span class="fc" id="L307">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'envoi de fin de PGA - Convertit l'unité de travail du protocole en
+   *        un envoi de fin de PGA.
+   * @param pdu L'unité de travail du protocole.
+   * @return Un envoi de fin de PGA.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public PgaFinDto convertToPgaFinDto(ProtocolDataUnit1APPDto pdu) throws JsonProcessingException {
+<span class="fc" id="L325">    var content = convert(pdu, PgaFinDto.class);</span>
+<span class="fc" id="L326">    return content;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Protocole d'envoi de fin de PGA - Convertit l'unité de travail du protocole en
+   *        une confirmation de fin de PGA.
+   * @param pdu L'unité de travail du protocole.
+   * @return Une confirmation de fin PGA.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public PgaConfirmationDto convertToPgaConfirmationDto(ProtocolDataUnit1APPDto pdu)
+      throws JsonProcessingException {
+<span class="fc" id="L345">    var content = convert(pdu, PgaConfirmationDto.class);</span>
+<span class="fc" id="L346">    return content;</span>
+  }
+
+  protected &lt;T&gt; T convert(ProtocolDataUnit1APPDto pdu, Class&lt;T&gt; valueType)
+      throws JsonProcessingException {
+<span class="fc" id="L351">    var content = mapper.readValue(pdu.getContent(), valueType);</span>
+<span class="fc" id="L352">    return content;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -181,6 +181,13 @@ Pour générer localement la version *française* de la documentation du code ac
 Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
 dossier `build\doc-fr-doxygen\html`.
 
+[#contact]
+== Personnes ressources
+
+* Charles Beaudette : Charles.Beaudette@usherbrooke.ca
+* Marc Dupuis : Marc.Dupuis@usherbrooke.ca
+* Jean-François Éthier : JF.Ethier@usherbrooke.ca
+
 [#licence]
 == Copyright et licences
 

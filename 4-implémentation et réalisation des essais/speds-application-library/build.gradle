@@ -11,12 +11,12 @@ repositories {
 }
 
 group = "ca.griis"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 dependencies {
   api files('lib/logger-library-1.0.3.jar')
   api files('lib/slf4j-ext-griis-1.0.3.jar')
-  implementation "ca.griis:speds-presentation-library:1.0.0-SNAPSHOT"
+  implementation "ca.griis:speds-presentation-library:1.0.0"
   implementation "com.fasterxml.jackson.core:jackson-databind:2.17.2"
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.17.2"
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2"

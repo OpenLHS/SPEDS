@@ -71,14 +71,14 @@ public final class ImmutableSessionHost implements SessionHost {
 
   @Override
   public void close() {
-<span class="nc" id="L74">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L74">    logger.trace(Trace.ENTER_METHOD_0);</span>
 
-<span class="nc" id="L76">    client.close();</span>
-<span class="nc" id="L77">    server.close();</span>
-<span class="nc" id="L78">    poller.stop();</span>
+<span class="fc" id="L76">    client.close();</span>
+<span class="fc" id="L77">    server.close();</span>
+<span class="fc" id="L78">    poller.stop();</span>
 
-<span class="nc" id="L80">    logger.trace(Trace.EXIT_METHOD_0);</span>
-<span class="nc" id="L81">  }</span>
+<span class="fc" id="L80">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L81">  }</span>
 
   @Override
   public void closePreservingSessionStates() {

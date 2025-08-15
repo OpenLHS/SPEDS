@@ -13,20 +13,16 @@
 
 package ca.griis.speds.transport.service.client;
 
-import ca.griis.cryptography.hash.entity.Hash;
 import ca.griis.cryptography.hash.hashing.Sha512Hashing;
 import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
 import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
 import ca.griis.logger.GriisLogger;
 import ca.griis.logger.GriisLoggerFactory;
 import ca.griis.logger.statuscode.Trace;
-import ca.griis.speds.transport.exception.ContentSealException;
-import ca.griis.speds.transport.exception.DeserializationException;
-import ca.griis.speds.transport.exception.HeaderSealException;
-import ca.griis.speds.transport.exception.SerializationException;
 import ca.griis.speds.transport.serializer.SharedObjectMapper;
+import ca.griis.speds.transport.service.SilentIgnoredException;
+import ca.griis.speds.transport.service.security.StampVerifier;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 /**
@@ -56,54 +52,48 @@ import java.util.Set;
  * @par Tâches
  *      S.O.
  */
-<span class="nc" id="L59">public class ExchangeDataConfirmation {</span>
-<span class="fc" id="L60">  private static final GriisLogger logger =</span>
-<span class="fc" id="L61">      GriisLoggerFactory.getLogger(ExchangeDataConfirmation.class);</span>
+public final class ExchangeDataConfirmation {
+<span class="fc" id="L56">  private static final GriisLogger logger =</span>
+<span class="fc" id="L57">      GriisLoggerFactory.getLogger(ExchangeDataConfirmation.class);</span>
 
-  public static void dataConfirmationProcess(InterfaceDataUnit45Dto iduDto,
-      Set&lt;String&gt; sentMessagesId) {
-<span class="fc" id="L65">    logger.trace(Trace.ENTER_METHOD_1, &quot;iduDto&quot;, iduDto);</span>
+  private final Set&lt;String&gt; pendingMessagesId;
+  private final StampVerifier stampVerfier;
 
-    // Vérifier le sceau de l'entête du message
-    // Prendre l'entête du message
-    final ProtocolDataUnit4TraDto sdu;
+<span class="fc" id="L62">  public ExchangeDataConfirmation(Set&lt;String&gt; pendingMessagesId) {</span>
+<span class="fc" id="L63">    logger.trace(Trace.ENTER_METHOD_1, &quot; pendingMessagesId&quot;, pendingMessagesId);</span>
+
+<span class="fc" id="L65">    this.pendingMessagesId = pendingMessagesId;</span>
+<span class="fc" id="L66">    this.stampVerfier = new StampVerifier();</span>
+<span class="fc" id="L67">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Traite la réception d'un message réponse de la couche transport.
+   * @param iduDto IDU de la couche inférieure.
+   * @exception SilentIgnoredException Exception silencieuse.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public void confirm(InterfaceDataUnit45Dto iduDto) {
+<span class="fc" id="L83">    logger.trace(Trace.ENTER_METHOD_1, &quot;iduDto&quot;, iduDto);</span>
+
+    final ProtocolDataUnit4TraDto pdu;
     try {
-<span class="fc" id="L71">      sdu = SharedObjectMapper.getInstance().getMapper().readValue(iduDto.getMessage(),</span>
+<span class="fc" id="L87">      pdu = SharedObjectMapper.getInstance().getMapper().readValue(iduDto.getMessage(),</span>
           ProtocolDataUnit4TraDto.class);
-<span class="nc" id="L73">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L74">      throw new DeserializationException(e.getMessage());</span>
-<span class="fc" id="L75">    }</span>
+<span class="nc" id="L89">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L90">      throw new SilentIgnoredException(e.getMessage());</span>
+<span class="fc" id="L91">    }</span>
 
-<span class="fc bfc" id="L77" title="All 2 branches covered.">    if (sentMessagesId.remove(sdu.getHeader().getId().toString())) {</span>
-<span class="fc" id="L78">      verifyStamps(sdu);</span>
-    }
-<span class="fc" id="L80">  }</span>
+<span class="fc" id="L93">    final Sha512Hashing hashing = new Sha512Hashing();</span>
+<span class="fc" id="L94">    stampVerfier.verifyStamps(pdu, hashing);</span>
 
-  private static void verifyStamps(ProtocolDataUnit4TraDto sdu) {
-    final String sduHeader;
-    try {
-      sduHeader =
-<span class="fc" id="L86">          SharedObjectMapper.getInstance().getMapper().writeValueAsString(sdu.getHeader());</span>
-<span class="nc" id="L87">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L88">      throw new SerializationException(e.getMessage());</span>
-<span class="fc" id="L89">    }</span>
-
-    // Hasher l'entête et le contenu
-<span class="fc" id="L92">    final Sha512Hashing sha512Hashing = new Sha512Hashing();</span>
-<span class="fc" id="L93">    final Hash headerEncrypt = sha512Hashing.hash(sduHeader.getBytes(StandardCharsets.UTF_8));</span>
-<span class="fc" id="L94">    final Hash contentEncrypt =</span>
-<span class="fc" id="L95">        sha512Hashing.hash(sdu.getContent().getBytes(StandardCharsets.UTF_8));</span>
-<span class="fc" id="L96">    final String sealHeaderSduGenerated = headerEncrypt.asBase64();</span>
-<span class="fc" id="L97">    final String sealContentSduGenerated = contentEncrypt.asBase64();</span>
-
-    // Vérifier l'intégrité de l'entête et du contenu
-<span class="fc bfc" id="L100" title="All 2 branches covered.">    if (!sdu.getStamp().getHeaderSeal().equals(sealHeaderSduGenerated)) {</span>
-<span class="fc" id="L101">      throw new HeaderSealException(&quot;Header seal are not the same&quot;);</span>
-    }
-
-<span class="fc bfc" id="L104" title="All 2 branches covered.">    if (!sdu.getStamp().getContentSeal().equals(sealContentSduGenerated)) {</span>
-<span class="fc" id="L105">      throw new ContentSealException(&quot;Content seal are not the same&quot;);</span>
-    }
-<span class="fc" id="L107">  }</span>
+<span class="fc" id="L96">    pendingMessagesId.remove(pdu.getHeader().getId());</span>
+<span class="fc" id="L97">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

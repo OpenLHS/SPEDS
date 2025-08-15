@@ -3,7 +3,9 @@ package ca.griis.speds.integration.bottomup;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import ca.griis.js2p.gen.speds.application.api.dto.HeaderDto;
 import ca.griis.js2p.gen.speds.application.api.dto.InterfaceDataUnit01Dto;
+import ca.griis.js2p.gen.speds.application.api.dto.ProtocolDataUnit1APPDto;
 import ca.griis.speds.application.api.ApplicationHost;
 import ca.griis.speds.application.api.sync.SyncApplicationFactory;
 import ca.griis.speds.integration.util.ApplicationDomainProviderUtil;
@@ -125,14 +127,28 @@ public class AppPreSesTraNetLinSpedsIt {
       originAppHost.request(idu01Dto);
 
       InterfaceDataUnit01Dto resultDto = targetAppHost.indication();
-
       assertEquals(idu01Dto.getMessage(), resultDto.getMessage());
       assertEquals(idu01Dto.getContext().getPga(),
           resultDto.getContext().getPga());
       assertNotEquals(idu01Dto.getContext().getTrackingNumber(),
           resultDto.getContext().getTrackingNumber());
       assertEquals(Boolean.FALSE, resultDto.getContext().getOptions());
+      ProtocolDataUnit1APPDto actualResultPdu = objectMapper.readValue(resultDto.getMessage(),
+          ProtocolDataUnit1APPDto.class);
+
+      HeaderDto headerDto = new HeaderDto(HeaderDto.Msgtype.TACHE_RECEPTION,
+          actualResultPdu.getHeader().getId(), false, actualResultPdu.getHeader().getSpeds());
+      ProtocolDataUnit1APPDto pdu = new ProtocolDataUnit1APPDto(headerDto, "any");
+      String serialPdu = objectMapper.writeValueAsString(pdu);
+      InterfaceDataUnit01Dto response = new InterfaceDataUnit01Dto(resultDto.getContext(),
+          serialPdu);
+      targetAppHost.response(response);
+
+      InterfaceDataUnit01Dto actualResponse = originAppHost.confirm();
+      ProtocolDataUnit1APPDto actualResponsePdu =
+          objectMapper.readValue(actualResponse.getMessage(),
+              ProtocolDataUnit1APPDto.class);
+      assertEquals(pdu.getContent(), actualResponsePdu.getContent());
     }
   }
-
 }

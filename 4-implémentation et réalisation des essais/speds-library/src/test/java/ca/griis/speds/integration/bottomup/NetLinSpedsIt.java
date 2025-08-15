@@ -2,7 +2,9 @@ package ca.griis.speds.integration.bottomup;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import ca.griis.js2p.gen.speds.network.api.dto.Context45Dto;
 import ca.griis.js2p.gen.speds.network.api.dto.InterfaceDataUnit45Dto;
 import ca.griis.speds.integration.util.NetworkDomainProviderUtil;
 import ca.griis.speds.integration.util.TestUtil;
@@ -105,20 +107,36 @@ public class NetLinSpedsIt {
       originNetHost.request(idu45);
 
       String result = targetNetHost.indication();
+      originNetHost.confirm();
 
       InterfaceDataUnit45Dto resultDto =
           objectMapper.readValue(result, InterfaceDataUnit45Dto.class);
-
-      targetNetHost.close();
-      originNetHost.close();
-
       assertEquals(idu45Dto.getMessage(), resultDto.getMessage());
       assertEquals(idu45Dto.getContext().getDestinationIri(),
           resultDto.getContext().getDestinationIri());
       assertNotEquals(idu45Dto.getContext().getTrackingNumber(),
           resultDto.getContext().getTrackingNumber());
       assertEquals(Boolean.FALSE, resultDto.getContext().getOptions());
+
+      InterfaceDataUnit45Dto responseIdu = new InterfaceDataUnit45Dto(
+          new Context45Dto(resultDto.getContext().getDestinationIri(),
+              resultDto.getContext().getSourceIri(),
+              resultDto.getContext().getTrackingNumber(),
+              false),
+          "answer");
+      String serialResponse = objectMapper.writeValueAsString(responseIdu);
+
+      targetNetHost.response(serialResponse);
+      String actualSerialResponse = originNetHost.indication();
+      InterfaceDataUnit45Dto actualResponseIdu = objectMapper.readValue(actualSerialResponse,
+          InterfaceDataUnit45Dto.class);
+      targetNetHost.confirm();
+
+      assertNotNull(actualResponseIdu);
+      assertEquals(responseIdu.getMessage(), actualResponseIdu.getMessage());
+
+      targetNetHost.close();
+      originNetHost.close();
     }
   }
-
 }

@@ -1,0 +1,2794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="Spécification des essais de conceptions (CXS) de SPEDS Présentation">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Date de création: 2025-01-16 +">
+<meta name="copyright" content="GRIIS">
+<title>Spécification des Essais du module « SPEDS - présentation »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification des Essais du module « <em>SPEDS - présentation</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v6.2.0,</span>
+<span id="revdate">2025-07-01</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_historique">1. Historique</a></li>
+<li><a href="#_contexte_général_des_tests">2. Contexte général des tests</a></li>
+<li><a href="#_éléments_testées">3. Éléments Testées</a></li>
+<li><a href="#_hypothèses">4. Hypothèses</a></li>
+<li><a href="#_données_globales">5. Données globales</a></li>
+<li><a href="#_cas_de_test">6. Cas de Test</a>
+<ul class="sectlevel2">
+<li><a href="#_cas_de_test_1_ct_001">6.1. Cas de Test 1 - CT_001</a></li>
+<li><a href="#_cas_de_test_2_ct_002">6.2. Cas de Test 2 - CT_002</a></li>
+<li><a href="#_cas_de_test_3_ct_003">6.3. Cas de Test 3 - CT_003</a></li>
+<li><a href="#_cas_de_test_4_ct_004">6.4. Cas de Test 4 - CT_004</a></li>
+<li><a href="#_cas_de_test_5_ct_005">6.5. Cas de Test 5 - CT_005</a></li>
+<li><a href="#_cas_de_test_6_ct_006">6.6. Cas de Test 6 - CT_006</a></li>
+<li><a href="#_cas_de_test_7_ct_007">6.7. Cas de Test 7 - CT_007</a></li>
+<li><a href="#_cas_de_test_8_ct_008">6.8. Cas de Test 8 - CT_008</a></li>
+<li><a href="#_cas_de_test_9_ct_009">6.9. Cas de Test 9 - CT_009</a></li>
+</ul>
+</li>
+<li><a href="#_essais">7. Essais</a>
+<ul class="sectlevel2">
+<li><a href="#_descriptions">7.1. Descriptions</a></li>
+<li><a href="#_matrice_de_correspondance_élémentsessais">7.2. Matrice de correspondance Éléments/Essais</a></li>
+<li><a href="#_incongruences">7.3. Incongruences</a>
+<ul class="sectlevel3">
+<li><a href="#_de_cette_specification">7.3.1. De cette specification</a></li>
+<li><a href="#_de_la_conception">7.3.2. De la conception</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec essai prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-05-01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-05-01</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_historique">1. Historique</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 58.3333%;">
+<col style="width: 16.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Modification</th>
+<th class="tableblock halign-left valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Marc Dupuis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception initiale</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-01-16</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jonathan Moreau</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deuxième ittération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-05-01</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contexte_général_des_tests">2. Contexte général des tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le module <em>SPEDS - présentation</em> est responsable de la gestion des messages de la couche présentation. Il doit être capable de recevoir des messages des couches inférieure et supérieure. Les messages reçus doivent être valides et respecter le format attendu. Les messages envoyés doivent être conformes au format attendu.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_éléments_testées">3. Éléments Testées</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Élément de la conception associé</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Demande d&#8217;échanger des données</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-1], [PRO-1.1], [PRO-1.2], [PRO-1.3], [PRO-1.4], [PRO-1.5]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_002</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Confirme l&#8217;échange de données</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-2], [PRO-2.1], [PRO-2.2], [PRO-2.3]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_003</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception de désérialisation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-2.1.2]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_004</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception de chiffrement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-2.1.3]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_005</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serveur indique un message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-3], [PRO-3.1], [PRO-3.2], [PRO-3.3]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_006</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception de désérialisation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-3.1.1]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_007</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception de chiffrement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-3.1.2]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_008</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serveur répond à un message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-4], [PRO-4.1], [PRO-4.2], [PRO-4.3], [PRO-4.4], [PRO-4.5]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_009</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clef SDEK au format attendu</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[CON-001], [CON-002]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_010</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le format de serialisation est JSON</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[CON-003]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_011</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le numéro de message correspond</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-2] [PRO-2.1.3]</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèses">4. Hypothèses</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_données_globales">5. Données globales</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cas_de_test">6. Cas de Test</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_cas_de_test_1_ct_001">6.1. Cas de Test 1 - <a id="CT_001"></a>CT_001</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche supérieure par un client et production d&#8217;un message pour la couche inférieure</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>Le client est démarré</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<p>L&#8217;entrée est un message de la couche supérieure, soit un IDU 1_2 contenant le PDU 1 / APP.MSG. Le message applicatif est laissé au choix de l&#8217;implémenteur des tests.</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. IDU_1_2</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte obtenu de la couche supérieure (ICI)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères aléatoire représentant un message applicatif de contenu (SDU)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. IDU_1_2_.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>Le message de sortie est un message de la couche inférieure, soit l&#8217;IDU 2_3 contenant le PDU 2 / PRE.MSG.ENV</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. IDU_2_3</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte qui sera nécessaire à la couche inférieur</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le message PRE.MSG.ENV <strong><em>chiffré</em></strong> en JSON</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. IDU_2_3_.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir entrée</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La valeur de pga reçu de la couche supérieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir entrée</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La valeur de source_code reçu de la couche supérieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir entrée</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La valeur de destination_code reçu de la couche supérieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SDEK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SDEK"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une clef symétrique de chiffrement généré par la couche</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. IDU_2_3_.message (PDU 2 / PRE.MSG.ENV)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir le détail dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;entête du message PRE.MSG.ENV</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP.MSG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contenu du message soit le message de IDU 1_2 <strong><em>chiffré</em></strong> par <code>SDEK</code> (voir entrée)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. IDU_2_3_.message.header (PDU 2 / PRE.MSG.ENV)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msgType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRE.MSG.ENV</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le type du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du message, valeur aléatoire attendu</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les paramètres additionnels addressés à la couche session</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SPEDS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SPEDS"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les informations de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. IDU_2_3_.message.header.SPEDS</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"6.0.0"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La version de SPEDS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La référence de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Aucune exception n&#8217;est levée<br>
+Il est possible de déchiffré le <code>content</code> dans <code>IDU_2_3.message</code> de <em>IDU 2_3</em> à l&#8217;aide de la clef SDEK<br>
+Le message de sortie est conforme au format attendu</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_2_ct_002">6.2. Cas de Test 2 - <a id="CT_002"></a>CT_002</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche inférieure par un serveur et production d&#8217;un message pour la couche supérieure</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>Le serveur est démarré</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<p>Le message d&#8217;entrée est un message de la couche inférieure, soit l&#8217;IDU 2_3 contenant le PDU 2 / PRE.MSG.ENV. Le message est laissé au choix de l&#8217;implémenteur des tests.</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. IDU_2_3</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte reçu de la couche inférieure (ICI)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le message PRE.MSG.ENV reçu à traiter <strong><em>chiffré</em></strong> en JSON (SDU)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. IDU_2_3.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SDEK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SDEK"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une clef symétrique de chiffrement respectant [CON-001] et [CON-002]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. IDU_2_3.message (PDU 2 / PRE.MSG.ENV)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;entête du message PRE.MSG.ENV</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP.MSG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contenu du message soit le message de IDU 1_2 <strong>_chiffré</strong> par <code>SDEK</code> (voir entrée)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 12. IDU_2_3.message.header (PDU 2 / PRE.MSG.ENV)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msgType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRE.MSG.ENV</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le type du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les paramètres additionnels adressée à la couche session</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SPEDS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SPEDS"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les informations de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 13. IDU_2_3.message.header.SPEDS</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"6.0.0"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La version de SPEDS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La référence de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>Le message de sortie est un message de la couche supérieure, soit l&#8217;IDU 1_2 contenant le PDU 1 / APP.MSG</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 14. IDU_1_2</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte passé à la couche supérieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP.MSG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le message de la couche applicative  en JSON. Le message est le contenu <strong><em>déchiffré</em></strong> de <code>content</code> dans <code>IDU 2_3.message</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 15. IDU_1_2.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Aucune exception n&#8217;est levée<br>
+Le message de sortie est conforme au format attendu<br>
+Le message applicatif est bien celui attendu (le contenu <strong><em>déchiffré</em></strong> de <code>content</code> dans <code>IDU 2_3.message</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_3_ct_003">6.3. Cas de Test 3 - <a id="CT_003"></a>CT_003</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche supérieure par un serveur et production d&#8217;un message pour la couche inférieure</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>Le serveur est démarré.
+Le serveur a reçu un message 'indication' précédemment.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<p>Le message d&#8217;entrée est un message de la couche supérieure, soit l&#8217;IDU 1_2 contenant le PDU 1 / APP.MSG. Le message est laissé au choix de l&#8217;implémenteur des tests.</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 16. IDU_1_2</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte reçu de la couche supérieure (ICI)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères aléatoire représentant un message applicatif de contenu (SDU)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 17. IDU_1_2.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selon la sortie du message 'indication'</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selon la sortie du message 'indication'</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selon la sortie du message 'indication'</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selon la sortie du message 'indication'</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>Le message de sortie est un message de la couche inférieur, soit l&#8217;IDU 2_3 contenant le PDU 2 / PRE.MSG.REC</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 18. IDU_2_3</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte passé à la couche inférieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le message PRE.MSG.REC <strong><em>chiffré</em></strong> en JSON</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 19. IDU_2_3.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir entrée</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La valeur de pga reçu de la couche supérieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir entrée</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La valeur de source_code reçu de la couche supérieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir entrée</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La valeur de destination_code reçu de la couche supérieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SDEK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SDEK"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une clé symétrique de chiffrement générée par la couche</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 20. IDU_2_3.message (PDU 2 / PRE.MSG.REC)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;entête du message PRE.MSG.REC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>APP.MSG</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contenu du message soit le message de IDU 1_2 <strong><em>chiffré</em></strong> par <code>SDEK</code> (voir entrée)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 21. IDU_2_3.message.header (PDU 2 / PRE.MSG.REC)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msgType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRE.MSG.REC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le type du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les paramètres additionnels addressés à la couche session</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SPEDS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SPEDS"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les informations de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 22. IDU_2_3.message.header.SPEDS</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"6.0.0"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La version de SPEDS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La référence de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Aucune exception n&#8217;est levée<br>
+Il est possible de déchiffrer le <code>content</code> dans <code>IDU_2_3.message</code> de <em>IDU 2_3</em> à l&#8217;aide de la clef SDEK<br>
+Le message de sortie est conforme au format attendu</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_4_ct_004">6.4. Cas de Test 4 - <a id="CT_004"></a>CT_004</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche inférieure par un client et production d&#8217;un message pour la couche supérieure</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>Le client est démarré.
+Le client a envoyé un message 'request' précédemment.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<p>Le message d&#8217;entrée est un message de la couche inférieure, soit l&#8217;IDU 2_3 contenant le PDU 2 / PRE.MSG.REC. Le message est laissé au choix de l&#8217;implémenteur des tests.</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 23. IDU_2_3</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte reçu de la couche inférieure (ICI)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le message PRE.MSG.REC reçu à traiter <strong><em>chiffré</em></strong> en JSON (SDU)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 24. IDU_2_3.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selon le message 'request' envoyé précédemment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selon le message 'request' envoyé précédemment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selon le message 'request' envoyé précédemment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selon le message 'request' envoyé précédemment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SDEK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SDEK"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selon le message 'request' envoyé précédemment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 25. IDU_2_3.message (PDU 2 / PRE.MSG.REC)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;entête du message PRE.MSG.REC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP.MSG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contenu du message soit le message de IDU 1_2 <strong>_chiffré</strong> par <code>SDEK</code> (voir entrée)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 26. IDU_2_3.message.header (PDU 2 / PRE.MSG.REC)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msgType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRE.MSG.REC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le type du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les paramètres additionnels adressée à la couche session</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SPEDS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SPEDS"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les informations de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 27. IDU_2_3.message.header.SPEDS</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"6.0.0"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La version de SPEDS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La référence de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>Le message de sortie est un message de la couche supérieure, soit l&#8217;IDU 1_2 contenant le PDU 1 / APP.MSG</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 28. IDU_1_2</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte passé à la couche supérieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP.MSG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le message de la couche applicative en JSON. Le message est le contenu <strong><em>déchiffré</em></strong> de <code>content</code> dans <code>IDU 2_3.message</code>. Le contenu dépend du message reçu de la couche inférieure.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 29. IDU_1_2.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir entrée</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La valeur de pga reçu de la couche inférieur</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir entrée</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La valeur de source_code reçu de la couche inférieur</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir entrée</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La valeur de destination_code reçu de la couche inférieur</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Aucune exception n&#8217;est levée<br>
+Le message de sortie est conforme au format attendu<br>
+Le message applicatif est bien celui atendu (le contenu <strong><em>déchiffré</em></strong> de <code>content</code> dans <code>IDU 2_3.message</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_5_ct_005">6.5. Cas de Test 5 - <a id="CT_005"></a>CT_005</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche inférieure par un serveur et tentative de production d&#8217;un message pour la couche supérieure.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Erreur de serialisation captée.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hyptohèse</dt>
+<dd>
+<p>Le serveur est démarré</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Un message autre que le format attendu est reçu</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<p>.IDU_2_3</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte reçu de la couche inférieure (ICI)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Random</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractère aléatoire</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exception</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DeserializationException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception levée de type DeserializeException</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Une exception de type DeserializeException est levée<br>
+Le message de sortie est conforme au format attendu</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_6_ct_006">6.6. Cas de Test 6 - <a id="CT_006"></a>CT_006</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche inférieure par un serveur et tentative de production d&#8217;un message pour la couche supérieure.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Erreur de chiffrement captée.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>Le serveur est démarré<br>
+La clé de chiffrement ne permet pas de déchiffrer le message</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<p>.IDU_2_3</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte reçu de la couche inférieure (ICI)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le message PRE.MSG.ENV reçu à traiter <strong><em>chiffré</em></strong> en JSON (SDU)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 30. IDU_2_3.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SDEK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SDEK"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une clé ne permettant pas de déchiffrer le message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 31. IDU_2_3.message (PDU 2 / PRE.MSG.ENV)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;entête du message PRE.MSG.ENV</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un contenu de message aléatoire (ne pourra pas être déchiffré à moins d&#8217;être très chanceux)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 32. IDU_2_3.message.header (PDU 2 / PRE.MSG.ENV)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msgType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRE.MSG.ENV</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le type du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les paramètres additionnels adressé à la couche session</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SPEDS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SPEDS"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les informations de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 33. IDU_2_3.message.header.SPEDS</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"6.0.0"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La version de SPEDS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Random</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La référence de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exception</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CipherException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception levée de type CipherException</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Une exception de type CipherException est levée</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_7_ct_007">6.7. Cas de Test 7 - <a id="CT_007"></a>CT_007</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche inférieure par un client et tentative de production d&#8217;un message pour la couche supérieure</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Erreur de serialisation captée</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>Le client est démarré<br>
+Un message autre que le format attendu est reçu</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<p>.IDU_2_3</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte reçu de la couche inférieure (ICI)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Random</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractère aléatoire</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 34. IDU_2_3.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SDEK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SDEK"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une clé ne permettant pas de déchiffrer le message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exception</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DeserializationException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception levée de type DeserializeException</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Une exception de type DeserializeException est levée<br>
+Le message de sortie est conforme au format attendu</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_8_ct_008">6.8. Cas de Test 8 - <a id="CT_008"></a>CT_008</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche inférieure par un client et production d&#8217;un message pour la couche supérieure.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Erreur de chiffrement captée</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>Le client est démarré<br>
+La clé de chiffrement ne permet pas de déchiffrer le message</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<p>Le message d&#8217;entrée est un message de la couche inférieure, soit l&#8217;IDU 2_3 contenant le PDU 2 / PRE.MSG.REC. Le message est laissé au choix de l&#8217;implémenteur des tests.</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 35. IDU_2_3</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte reçu de la couche inférieure (ICI)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le message PRE.MSG.REC reçu à traiter <strong><em>chiffré</em></strong> en JSON (SDU)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 36. IDU_2_3.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SDEK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SDEK"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une clé ne permettant pas de déchiffrer le message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 37. IDU_2_3.message (PDU 2 / PRE.MSG.REC)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;entête du message PRE.MSG.REC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne aléatoire représentant le message de IDU 1_2 <strong><em>chiffré</em></strong> par une clef <code>SDEK</code> quelqu&#8217;onque (ne pourra donc pas être déchiffré)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 38. IDU_2_3.message.header (PDU 2 / PRE.MSG.REC)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msgType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRE.MSG.REC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le type du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les paramètres additionnels adressés à la couche session</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SPEDS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SPEDS"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les informations de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 39. IDU_2_3.message.header.SPEDS</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"6.0.0"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La version de SPEDS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La référence de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exception</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CipherException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception levée de type CipherException</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Une exception de type CipherException est levée</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_9_ct_009">6.9. Cas de Test 9 - <a id="CT_009"></a>CT_009</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche inférieure par un client et tentative de production d&#8217;un message pour la couche supérieure.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Erreur d&#8217;identifiant de message captée.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>Le client est démarré<br>
+Un message d&#8217;envoi a été fait par le client précédemment avec un identifiant de message différent que celui détaillé en donnée d&#8217;entrée</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<p>.IDU_2_3</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contexte reçu de la couche inférieure (ICI)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le message PRE.MSG.REC reçu à traiter <strong><em>chiffré</em></strong> en JSON (SDU)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 40. IDU_2_3.context</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tracking_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une valeur aléatoire respectant le domaine du schéma</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SDEK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SDEK"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une clef symétrique de chiffrement respectant [CON-001] et [CON-002]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les options ne sont pas utilisées dans cette couche</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 41. IDU_2_3.message (PDU 2 / PRE.MSG.REC)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voir-dessous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;entête du message PRE.MSG.REC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP.MSG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le contenu du message soit le message de IDU 1_2 <strong><em>chiffré</em></strong> par <code>SDEK</code> (voir entrée)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 42. IDU_2_3.message.header (PDU 2 / PRE.MSG.REC)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msgType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRE.MSG.REC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le type du message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du message (différent de celui de la demande)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les paramètres additionnels adressés à la couche session</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SPEDS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"SPEDS"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les informations de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 43. IDU_2_3.message.header.SPEDS</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"6.0.0"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La version de SPEDS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Any"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La référence de SPEDS</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exception</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InvalidPduId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception levée de type InvalidPduId</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Une exception de type InvalidPduId est levée</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_essais">7. Essais</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_descriptions">7.1. Descriptions</h3>
+<div class="paragraph">
+<p>Essais dénottant le parcours nominal:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environnement 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_001">[CT_001]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifiie l&#8217;envoie de message du client</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environnement 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_001">[CT_001]</a>, <a href="#CT_002">[CT_002]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie la réception de message du serveur</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environnement 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_001">[CT_001]</a>, <a href="#CT_002">[CT_002]</a>, <a href="#CT_003">[CT_003]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie la production de réponse du serveur</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environnement 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_001">[CT_001]</a>, <a href="#CT_002">[CT_002]</a>, <a href="#CT_003">[CT_003]</a>, <a href="#CT_004">[CT_004]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie le traitement de la  réponse du client</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Il n&#8217;y a pas de contraintes apparentes liés à l&#8217;environnement.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Essais dénottant la gestion des cas d&#8217;erreurs:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environnement 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_005">[CT_005]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie la gestion de la désérialisation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environnement 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_006">[CT_006]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie la gestion du chiffrement</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environnement 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_007">[CT_007]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie la gestion de la désérialisation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_08</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environnement 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_008">[CT_008]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie la gestion du chiffrement</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_09</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environnement 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_009">[CT_009]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie la gestion de la réponse sans demande</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_matrice_de_correspondance_élémentsessais">7.2. Matrice de correspondance Éléments/Essais</h3>
+<table class="tableblock frame-all grid-all fit-content">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai\Élem.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_002</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_003</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_004</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_005</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_006</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_007</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_008</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_009</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_010</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ET_011</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_05</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_06</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_07</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_08</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_09</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_incongruences">7.3. Incongruences</h3>
+<div class="sect3">
+<h4 id="_de_cette_specification">7.3.1. De cette specification</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Il n&#8217;est pas pratique de tester ET_009, conséquemment une revue de code est nécessaire pour cet élément.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_de_la_conception">7.3.2. De la conception</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Matrice des dépendances absente de la conception.</p>
+</li>
+<li>
+<p>Il n&#8217;est pas trivial de savoir quel est le point d&#8217;entrée ou de sortie dans la couche avec laquelle on communique du point de vue de la couche présentation (Qui est responsable de gérer le routage?).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v6.2.0<br>
+Last updated 2025-07-22 14:19:14 -0400
+</div>
+</div>
+</body>
+</html>

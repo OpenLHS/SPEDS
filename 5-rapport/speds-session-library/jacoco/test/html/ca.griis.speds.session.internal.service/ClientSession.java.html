@@ -67,7 +67,6 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,9 +107,9 @@ import javax.crypto.spec.SecretKeySpec;
  *      S.O.
  */
 public final class ClientSession {
-<span class="fc" id="L111">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(ClientSession.class);</span>
+<span class="fc" id="L110">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(ClientSession.class);</span>
 
-<span class="fc" id="L113">  private static final ExpandedSidu poisonPill = new ExpandedSidu(null, null, null);</span>
+<span class="fc" id="L112">  private static final ExpandedSidu poisonPill = new ExpandedSidu(null, null, null);</span>
 
   private final PgaService pgaService;
   private final ObjectMapper sharedMapper;
@@ -127,51 +126,52 @@ public final class ClientSession {
   private final LinkedBlockingQueue&lt;InterfaceDataUnit23Dto&gt; pidus;
 
   public ClientSession(HostStartupContext hostStartupContext, Poller poller,
-<span class="fc" id="L130">      LinkedBlockingQueue&lt;InterfaceDataUnit23Dto&gt; pidus) {</span>
-<span class="fc" id="L131">    logger.trace(Trace.ENTER_METHOD_2, &quot;hostStartupContext&quot;, hostStartupContext, &quot;poller&quot;, poller);</span>
-<span class="fc" id="L132">    this.messageWeHandle = new LinkedBlockingDeque&lt;&gt;();</span>
-<span class="fc" id="L133">    this.pendingResponse = new ConcurrentLinkedQueue&lt;&gt;();</span>
-<span class="fc" id="L134">    this.pidus = pidus;</span>
-<span class="fc" id="L135">    this.pgaService = hostStartupContext.pgaService();</span>
-<span class="fc" id="L136">    this.sessionInformations = new ConcurrentHashMap&lt;&gt;();</span>
-<span class="fc" id="L137">    this.hostCertificate = hostStartupContext.hostKeys();</span>
-<span class="fc" id="L138">    this.sharedMapper = hostStartupContext.sharedMapper();</span>
-<span class="fc" id="L139">    this.speds = hostStartupContext.spedsDto();</span>
-<span class="fc" id="L140">    this.transportHost = hostStartupContext.transportHost();</span>
-<span class="fc" id="L141">    this.clientTimeout = hostStartupContext.responseTimeout();</span>
-<span class="fc" id="L142">    this.poller = poller;</span>
-<span class="fc" id="L143">    HandlerRegistry handlerRegistry = new InitiatorHandlerRegistry(sharedMapper, pgaService,</span>
+<span class="fc" id="L129">      LinkedBlockingQueue&lt;InterfaceDataUnit23Dto&gt; pidus) {</span>
+<span class="fc" id="L130">    logger.trace(Trace.ENTER_METHOD_2, &quot;hostStartupContext&quot;, hostStartupContext, &quot;poller&quot;, poller);</span>
+<span class="fc" id="L131">    this.messageWeHandle = new LinkedBlockingDeque&lt;&gt;();</span>
+<span class="fc" id="L132">    this.pendingResponse = new ConcurrentLinkedQueue&lt;&gt;();</span>
+<span class="fc" id="L133">    this.pidus = pidus;</span>
+<span class="fc" id="L134">    this.pgaService = hostStartupContext.pgaService();</span>
+<span class="fc" id="L135">    this.sessionInformations = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L136">    this.hostCertificate = hostStartupContext.hostKeys();</span>
+<span class="fc" id="L137">    this.sharedMapper = hostStartupContext.sharedMapper();</span>
+<span class="fc" id="L138">    this.speds = hostStartupContext.spedsDto();</span>
+<span class="fc" id="L139">    this.transportHost = hostStartupContext.transportHost();</span>
+<span class="fc" id="L140">    this.clientTimeout = hostStartupContext.responseTimeout();</span>
+<span class="fc" id="L141">    this.poller = poller;</span>
+<span class="fc" id="L142">    HandlerRegistry handlerRegistry = new InitiatorHandlerRegistry(sharedMapper, pgaService,</span>
         messageWeHandle, sessionInformations);
-<span class="fc" id="L145">    this.poller.registerHandlers(handlerRegistry);</span>
-<span class="fc" id="L146">    this.sealCreator = new SealCreator();</span>
-<span class="fc" id="L147">  }</span>
+<span class="fc" id="L144">    this.poller.registerHandlers(handlerRegistry);</span>
+<span class="fc" id="L145">    this.sealCreator = new SealCreator();</span>
+<span class="fc" id="L146">  }</span>
 
   public void close() {
-<span class="nc" id="L150">    closePreservingSessionStates();</span>
-<span class="nc" id="L151">    sessionInformations.clear();</span>
-<span class="nc" id="L152">  }</span>
+<span class="fc" id="L149">    closePreservingSessionStates();</span>
+<span class="fc" id="L150">    sessionInformations.clear();</span>
+<span class="fc" id="L151">  }</span>
 
   public void closePreservingSessionStates() {
-<span class="fc" id="L155">    saveSessionState();</span>
+<span class="fc" id="L154">    saveSessionState();</span>
 
-<span class="fc" id="L157">    poller.stop();</span>
-<span class="fc" id="L158">    transportHost.close();</span>
-<span class="fc" id="L159">    pendingResponse.clear();</span>
-<span class="fc" id="L160">    messageWeHandle.clear();</span>
+<span class="fc" id="L156">    poller.stop();</span>
+<span class="fc" id="L157">    transportHost.close();</span>
+<span class="fc" id="L158">    pendingResponse.clear();</span>
+<span class="fc" id="L159">    messageWeHandle.clear();</span>
 
     try {
-<span class="fc" id="L163">      messageWeHandle.put(poisonPill);</span>
-<span class="nc" id="L164">    } catch (InterruptedException e) {</span>
-<span class="nc" id="L165">      Thread.currentThread().interrupt();</span>
-<span class="fc" id="L166">    }</span>
-<span class="fc" id="L167">  }</span>
+<span class="fc" id="L162">      messageWeHandle.put(poisonPill);</span>
+<span class="nc" id="L163">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L164">      Thread.currentThread().interrupt();</span>
+<span class="fc" id="L165">    }</span>
+<span class="fc" id="L166">  }</span>
 
   public void clearSessionStates() {
-<span class="fc" id="L170">    sessionInformations.clear();</span>
-<span class="fc" id="L171">  }</span>
+<span class="fc" id="L169">    sessionInformations.clear();</span>
+<span class="fc" id="L170">  }</span>
 
   public void sendMessageWithManagedSession(Pidu pidu) throws JsonProcessingException {
-<span class="fc" id="L174">    logger.trace(Trace.ENTER_METHOD_1, &quot;pidu&quot;, pidu);</span>
+<span class="fc" id="L173">    logger.trace(Trace.ENTER_METHOD_1, &quot;pidu&quot;, pidu);</span>
+
     // init a session
 <span class="fc" id="L176">    SessionId sessionId = new SessionId(UUID.randomUUID());</span>
 
@@ -191,453 +191,445 @@ public final class ClientSession {
 <span class="fc" id="L191">        .initiatorIri(initiatorIri)</span>
 <span class="fc" id="L192">        .initiatorPubKey(initiatorPubKey)</span>
 <span class="fc" id="L193">        .sdek(secretKey)</span>
-<span class="fc" id="L194">        .peerId(pidu.getContext().getDestinationCode())</span>
-<span class="fc" id="L195">        .peerIri(peerIri)</span>
-<span class="fc" id="L196">        .piduMessage(pidu.getMessage())</span>
-<span class="fc" id="L197">        .pgaId(pidu.getContext().getPga())</span>
-<span class="fc" id="L198">        .numberOfMessage(0)</span>
-<span class="fc" id="L199">        .build();</span>
-<span class="fc" id="L200">    this.sessionInformations.put(sessionId, sessionInfo);</span>
+<span class="fc" id="L194">        .trackingNumber(pidu.getContext().getTrackingNumber())</span>
+<span class="fc" id="L195">        .peerId(pidu.getContext().getDestinationCode())</span>
+<span class="fc" id="L196">        .peerIri(peerIri)</span>
+<span class="fc" id="L197">        .piduMessage(pidu.getMessage())</span>
+<span class="fc" id="L198">        .pgaId(pidu.getContext().getPga())</span>
+<span class="fc" id="L199">        .numberOfMessage(0)</span>
+<span class="fc" id="L200">        .build();</span>
+<span class="fc" id="L201">    this.sessionInformations.put(sessionId, sessionInfo);</span>
 
     // call initSession
-<span class="fc" id="L203">    sendPubEnv(pidu, sessionId);</span>
+<span class="fc" id="L204">    sendPubEnv(pidu, sessionId);</span>
 
-<span class="fc" id="L205">    Optional&lt;Pidu&gt; outPidu = Optional.empty();</span>
-
-<span class="fc bfc" id="L207" title="All 2 branches covered.">    while (!pendingResponse.isEmpty()) {</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">    while (!pendingResponse.isEmpty()) {</span>
       try {
-<span class="fc" id="L209">        ExpandedSidu expandedSidu =</span>
-<span class="fc" id="L210">            messageWeHandle.poll(clientTimeout.getSeconds(), TimeUnit.SECONDS);</span>
-<span class="fc" id="L211">        Objects.requireNonNull(expandedSidu);</span>
+<span class="fc" id="L208">        ExpandedSidu expandedSidu =</span>
+<span class="fc" id="L209">            messageWeHandle.poll(clientTimeout.getSeconds(), TimeUnit.SECONDS);</span>
+<span class="fc" id="L210">        Objects.requireNonNull(expandedSidu);</span>
 
-<span class="pc bpc" id="L213" title="1 of 2 branches missed.">        if (!expandedSidu.equals(poisonPill)) {</span>
-<span class="fc" id="L214">          PiduAndSession msgResponse = handleSession(expandedSidu);</span>
-
-<span class="fc bfc" id="L216" title="All 4 branches covered.">          if (outPidu.isEmpty() &amp;&amp; msgResponse != null) {</span>
-<span class="fc" id="L217">            outPidu = Optional.ofNullable(msgResponse.pidu());</span>
-<span class="fc" id="L218">            pidus.add(outPidu.get());</span>
-          }
-<span class="fc" id="L220">        } else {</span>
-<span class="nc" id="L221">          pendingResponse.clear();</span>
-<span class="nc" id="L222">          logger.debug(Debug.VARIABLE_LOGGING_1, &quot;poisonPill&quot;, poisonPill);</span>
+<span class="pc bpc" id="L212" title="1 of 2 branches missed.">        if (!expandedSidu.equals(poisonPill)) {</span>
+<span class="fc" id="L213">          handleSession(expandedSidu);</span>
+        } else {
+<span class="nc" id="L215">          pendingResponse.clear();</span>
+<span class="nc" id="L216">          logger.debug(Debug.VARIABLE_LOGGING_1, &quot;poisonPill&quot;, poisonPill);</span>
         }
-<span class="nc" id="L224">      } catch (InterruptedException e) {</span>
-<span class="nc" id="L225">        Thread.currentThread().interrupt();</span>
-<span class="pc" id="L226">      }</span>
+<span class="nc" id="L218">      } catch (InterruptedException e) {</span>
+<span class="nc" id="L219">        Thread.currentThread().interrupt();</span>
+<span class="pc" id="L220">      }</span>
     }
 
-<span class="fc" id="L229">    logger.trace(Trace.EXIT_METHOD_0);</span>
-<span class="fc" id="L230">  }</span>
+<span class="fc" id="L223">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L224">  }</span>
 
-  private PiduAndSession handleSession(ExpandedSidu expandedSidu) throws JsonProcessingException {
-<span class="fc" id="L233">    PiduAndSession msgResponse = null;</span>
-<span class="pc bpc" id="L234" title="1 of 6 branches missed.">    switch (expandedSidu.msgType()) {</span>
-<span class="fc" id="L235">      case SES_PUB_REC -&gt; sendSkak(expandedSidu);</span>
-<span class="fc" id="L236">      case SES_SAK_REC -&gt; sendSdek(expandedSidu);</span>
-<span class="fc" id="L237">      case SES_CLE_REC -&gt; sendMsg(expandedSidu);</span>
-<span class="fc" id="L238">      case SES_MSG_REC -&gt; msgResponse = retrieveAnswer(expandedSidu);</span>
-<span class="fc" id="L239">      case SES_FIN_REC -&gt; closeSession(expandedSidu);</span>
-<span class="nc" id="L240">      default -&gt; throw new IllegalArgumentException(&quot;Unexpected message type: &quot;</span>
-<span class="nc" id="L241">          + expandedSidu.msgType());</span>
+  private void handleSession(ExpandedSidu expandedSidu) throws JsonProcessingException {
+<span class="fc" id="L227">    PiduAndSession msgResponse = null;</span>
+<span class="pc bpc" id="L228" title="1 of 6 branches missed.">    switch (expandedSidu.msgType()) {</span>
+<span class="fc" id="L229">      case SES_PUB_REC -&gt; sendSkak(expandedSidu);</span>
+<span class="fc" id="L230">      case SES_SAK_REC -&gt; sendSdek(expandedSidu);</span>
+<span class="fc" id="L231">      case SES_CLE_REC -&gt; sendMsg(expandedSidu);</span>
+<span class="fc" id="L232">      case SES_MSG_REC -&gt; msgResponse = retrieveAnswer(expandedSidu);</span>
+<span class="fc" id="L233">      case SES_FIN_REC -&gt; closeSession(expandedSidu);</span>
+<span class="nc" id="L234">      default -&gt; throw new IllegalArgumentException(&quot;Unexpected message type: &quot;</span>
+<span class="nc" id="L235">          + expandedSidu.msgType());</span>
     }
 
-<span class="fc bfc" id="L244" title="All 2 branches covered.">    if (msgResponse != null) {</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">    if (msgResponse != null) {</span>
       // Supprimer du Tableau des réponses en attente, l’entrée de SES.MSG.ENV d’identifiant
       // id.
-<span class="fc" id="L247">      PendingConfirmation match = this.pendingResponse.stream()</span>
-<span class="fc" id="L248">          .filter(x -&gt; x.uniqueId().equals(expandedSidu.spdu().getHeader().getId()))</span>
-<span class="fc" id="L249">          .findFirst()</span>
-<span class="pc" id="L250">          .orElseThrow(() -&gt; new IllegalStateException(&quot;Element not found&quot;));</span>
-<span class="fc" id="L251">      this.pendingResponse.remove(match);</span>
+<span class="fc" id="L241">      PendingConfirmation match = this.pendingResponse.stream()</span>
+<span class="fc" id="L242">          .filter(x -&gt; x.uniqueId().equals(expandedSidu.spdu().getHeader().getId()))</span>
+<span class="fc" id="L243">          .findFirst()</span>
+<span class="pc" id="L244">          .orElseThrow(() -&gt; new IllegalStateException(&quot;Element not found&quot;));</span>
+<span class="fc" id="L245">      this.pendingResponse.remove(match);</span>
 
       // Session is done we close
-<span class="fc" id="L254">      sendClose(msgResponse);</span>
+<span class="fc" id="L248">      sendClose(msgResponse);</span>
     }
-
-<span class="fc" id="L257">    return msgResponse;</span>
-  }
+<span class="fc" id="L250">  }</span>
 
   public void sendPubEnv(Pidu pidu, SessionId sessionId) {
-<span class="fc" id="L261">    logger.trace(Trace.ENTER_METHOD_2, &quot;pidu&quot;, pidu, &quot;sessionId&quot;, sessionId);</span>
+<span class="fc" id="L253">    logger.trace(Trace.ENTER_METHOD_2, &quot;pidu&quot;, pidu, &quot;sessionId&quot;, sessionId);</span>
 
-<span class="fc" id="L263">    SessionInformation currentSession = this.sessionInformations.get(sessionId);</span>
+<span class="fc" id="L255">    SessionInformation currentSession = this.sessionInformations.get(sessionId);</span>
 
     // Créer une SDU SES.PUB.ENV pour transmettre la clé publique avec le numéro de la session
 
     // Créer une SDU de type SES_PUB_ENV
-<span class="fc" id="L268">    String pubKey = currentSession.initiatorPubKey;</span>
-<span class="fc" id="L269">    SesPubEnvDto sesPubEnvDto = new SesPubEnvDto(pubKey, currentSession.sessionId.id());</span>
+<span class="fc" id="L260">    String pubKey = currentSession.initiatorPubKey;</span>
+<span class="fc" id="L261">    SesPubEnvDto sesPubEnvDto = new SesPubEnvDto(pubKey, currentSession.sessionId.id());</span>
 
     // Construire la SPDU
-<span class="fc" id="L272">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_PUB_ENV, UUID.randomUUID(),</span>
-<span class="fc" id="L273">        false,</span>
+<span class="fc" id="L264">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_PUB_ENV, UUID.randomUUID(),</span>
+<span class="fc" id="L265">        false,</span>
         speds);
-<span class="fc" id="L275">    Spdu spdu = null;</span>
+<span class="fc" id="L267">    Spdu spdu = null;</span>
     try {
-<span class="fc" id="L277">      spdu = new Spdu(spduHeader, &quot;0&quot;, sharedMapper.writeValueAsString(sesPubEnvDto));</span>
-<span class="nc" id="L278">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L279">      throw new RuntimeException(e);</span>
-<span class="fc" id="L280">    }</span>
+<span class="fc" id="L269">      spdu = new Spdu(spduHeader, &quot;0&quot;, sharedMapper.writeValueAsString(sesPubEnvDto));</span>
+<span class="nc" id="L270">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L271">      throw new RuntimeException(e);</span>
+<span class="fc" id="L272">    }</span>
 
     // Construire le SIDU
-<span class="fc" id="L283">    String sourceIri = currentSession.initiatorIri;</span>
-<span class="fc" id="L284">    String destinationIri = currentSession.peerIri;</span>
-<span class="fc" id="L285">    SiduContext siduContext = new SiduContext(</span>
-<span class="fc" id="L286">        pidu.getContext().getSourceCode(),</span>
-<span class="fc" id="L287">        pidu.getContext().getDestinationCode(),</span>
+<span class="fc" id="L275">    String sourceIri = currentSession.initiatorIri;</span>
+<span class="fc" id="L276">    String destinationIri = currentSession.peerIri;</span>
+<span class="fc" id="L277">    SiduContext siduContext = new SiduContext(</span>
+<span class="fc" id="L278">        pidu.getContext().getSourceCode(),</span>
+<span class="fc" id="L279">        pidu.getContext().getDestinationCode(),</span>
         sourceIri,
-<span class="fc" id="L289">        spduHeader.getId(),</span>
+<span class="fc" id="L281">        spduHeader.getId(),</span>
         destinationIri,
-<span class="fc" id="L291">        false);</span>
+<span class="fc" id="L283">        false);</span>
 
     String serialSidu;
     try {
-<span class="fc" id="L295">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
-<span class="fc" id="L296">      serialSidu = sharedMapper.writeValueAsString(sidu);</span>
-<span class="nc" id="L297">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L298">      throw new RuntimeException(e);</span>
-<span class="fc" id="L299">    }</span>
+<span class="fc" id="L287">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
+<span class="fc" id="L288">      serialSidu = sharedMapper.writeValueAsString(sidu);</span>
+<span class="nc" id="L289">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L290">      throw new RuntimeException(e);</span>
+<span class="fc" id="L291">    }</span>
 
     // Transmettre la IDU à la couche inférieure et attendre qu’une réponse de type [SES.PUB.REC] et
     // d’identifiant le id
-<span class="fc" id="L303">    pendingResponse</span>
-<span class="fc" id="L304">        .add(new PendingConfirmation(spduHeader.getId(), sessionId, MsgType.SES_PUB_ENV));</span>
+<span class="fc" id="L295">    pendingResponse</span>
+<span class="fc" id="L296">        .add(new PendingConfirmation(spduHeader.getId(), sessionId, MsgType.SES_PUB_ENV));</span>
 
-<span class="fc" id="L306">    logger.trace(Trace.ALGORITHM_1, &quot;serialSidu&quot;, serialSidu);</span>
+<span class="fc" id="L298">    logger.trace(Trace.ALGORITHM_1, &quot;serialSidu&quot;, serialSidu);</span>
 
-<span class="fc" id="L308">    transportHost.dataRequest(serialSidu);</span>
-<span class="fc" id="L309">    transportHost.dataConfirm();</span>
+<span class="fc" id="L300">    transportHost.dataRequest(serialSidu);</span>
+<span class="fc" id="L301">    transportHost.dataConfirm();</span>
 
-<span class="fc" id="L311">    logger.trace(Trace.EXIT_METHOD_0);</span>
-<span class="fc" id="L312">  }</span>
+<span class="fc" id="L303">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L304">  }</span>
 
   public void sendSkak(ExpandedSidu expandedSidu) throws JsonProcessingException {
     // Supprimer du Tableau des réponses en attente, l’entrée de SES.PUB.ENV d’identifiant id.
-<span class="fc" id="L316">    PendingConfirmation match = this.pendingResponse.stream()</span>
-<span class="fc" id="L317">        .filter(x -&gt; x.uniqueId().equals(expandedSidu.spdu().getHeader().getId()))</span>
-<span class="fc" id="L318">        .findFirst()</span>
-<span class="pc" id="L319">        .orElseThrow(() -&gt; new IllegalStateException(&quot;Element not found&quot;));</span>
-<span class="fc" id="L320">    this.pendingResponse.remove(match);</span>
-<span class="fc" id="L321">    SessionInformation session = this.sessionInformations.get(match.sessionId());</span>
+<span class="fc" id="L308">    PendingConfirmation match = this.pendingResponse.stream()</span>
+<span class="fc" id="L309">        .filter(x -&gt; x.uniqueId().equals(expandedSidu.spdu().getHeader().getId()))</span>
+<span class="fc" id="L310">        .findFirst()</span>
+<span class="pc" id="L311">        .orElseThrow(() -&gt; new IllegalStateException(&quot;Element not found&quot;));</span>
+<span class="fc" id="L312">    this.pendingResponse.remove(match);</span>
+<span class="fc" id="L313">    SessionInformation session = this.sessionInformations.get(match.sessionId());</span>
 
     // Créer une SDU de type SES.SAK.ENV
     // Déterminer le choix de la clef
-<span class="fc" id="L325">    KeyAgreement keyAgreement = new KeyAgreement();</span>
-<span class="fc" id="L326">    KeyPair choiceKeyPair = keyAgreement.generateChoicePointKey();</span>
-<span class="fc" id="L327">    String choice = Base64.getEncoder().encodeToString(choiceKeyPair.getPublic().getEncoded());</span>
-<span class="fc" id="L328">    String serialId = session.sessionId.id().toString();</span>
-<span class="fc" id="L329">    SesSakEnvDto sdu = new SesSakEnvDto(choice, serialId);</span>
-<span class="fc" id="L330">    String serialSdu = sharedMapper.writeValueAsString(sdu);</span>
-<span class="fc" id="L331">    session.firstChoice = choiceKeyPair;</span>
+<span class="fc" id="L317">    KeyAgreement keyAgreement = new KeyAgreement();</span>
+<span class="fc" id="L318">    KeyPair choiceKeyPair = keyAgreement.generateChoicePointKey();</span>
+<span class="fc" id="L319">    String choice = Base64.getEncoder().encodeToString(choiceKeyPair.getPublic().getEncoded());</span>
+<span class="fc" id="L320">    String serialId = session.sessionId.id().toString();</span>
+<span class="fc" id="L321">    SesSakEnvDto sdu = new SesSakEnvDto(choice, serialId);</span>
+<span class="fc" id="L322">    String serialSdu = sharedMapper.writeValueAsString(sdu);</span>
+<span class="fc" id="L323">    session.firstChoice = choiceKeyPair;</span>
 
     // Construire la SPDU
-<span class="fc" id="L334">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_SAK_ENV, UUID.randomUUID(),</span>
-<span class="fc" id="L335">        false, speds);</span>
-<span class="fc" id="L336">    String stamp = sealCreator.createSeal(serialSdu, hostCertificate.getPrivateKey(), sharedMapper);</span>
-<span class="fc" id="L337">    Spdu spdu = new Spdu(spduHeader, stamp, serialSdu);</span>
+<span class="fc" id="L326">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_SAK_ENV, UUID.randomUUID(),</span>
+<span class="fc" id="L327">        false, speds);</span>
+<span class="fc" id="L328">    String stamp = sealCreator.createSeal(serialSdu, hostCertificate.getPrivateKey(), sharedMapper);</span>
+<span class="fc" id="L329">    Spdu spdu = new Spdu(spduHeader, stamp, serialSdu);</span>
 
     // Construire le SIDU
-<span class="fc" id="L340">    SiduContext siduContext = new SiduContext(</span>
+<span class="fc" id="L332">    SiduContext siduContext = new SiduContext(</span>
         session.initiatorId,
         session.peerId,
         session.initiatorIri,
-<span class="fc" id="L344">        spduHeader.getId(),</span>
+<span class="fc" id="L336">        spduHeader.getId(),</span>
         session.peerIri,
-<span class="fc" id="L346">        false);</span>
+<span class="fc" id="L338">        false);</span>
     String serialSidu;
     try {
-<span class="fc" id="L349">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
-<span class="fc" id="L350">      serialSidu = sharedMapper.writeValueAsString(sidu);</span>
-<span class="nc" id="L351">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L352">      throw new RuntimeException(e);</span>
-<span class="fc" id="L353">    }</span>
+<span class="fc" id="L341">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
+<span class="fc" id="L342">      serialSidu = sharedMapper.writeValueAsString(sidu);</span>
+<span class="nc" id="L343">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L344">      throw new RuntimeException(e);</span>
+<span class="fc" id="L345">    }</span>
 
     // Transmettre la IDU à la couche inférieure &amp;&amp; inscrire qu'on attend une réponse pour
     // SES_SAK_ENV
-<span class="fc" id="L357">    pendingResponse</span>
-<span class="fc" id="L358">        .add(new PendingConfirmation(spduHeader.getId(), session.sessionId, MsgType.SES_SAK_ENV));</span>
+<span class="fc" id="L349">    pendingResponse</span>
+<span class="fc" id="L350">        .add(new PendingConfirmation(spduHeader.getId(), session.sessionId, MsgType.SES_SAK_ENV));</span>
 
-<span class="fc" id="L360">    transportHost.dataRequest(serialSidu);</span>
-<span class="fc" id="L361">    transportHost.dataConfirm();</span>
+<span class="fc" id="L352">    transportHost.dataRequest(serialSidu);</span>
+<span class="fc" id="L353">    transportHost.dataConfirm();</span>
 
-<span class="fc" id="L363">    logger.trace(Trace.EXIT_METHOD_0);</span>
-<span class="fc" id="L364">  }</span>
+<span class="fc" id="L355">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L356">  }</span>
 
   public void sendSdek(ExpandedSidu expandedSidu) throws JsonProcessingException {
     // Supprimer du Tableau des réponses en attente, l’entrée de SES.SAK.ENV d’identifiant id.
-<span class="fc" id="L368">    PendingConfirmation match = this.pendingResponse.stream()</span>
-<span class="fc" id="L369">        .filter(x -&gt; x.uniqueId().equals(expandedSidu.spdu().getHeader().getId()))</span>
-<span class="fc" id="L370">        .findFirst()</span>
-<span class="pc" id="L371">        .orElseThrow(() -&gt; new IllegalStateException(&quot;Element not found&quot;));</span>
-<span class="fc" id="L372">    this.pendingResponse.remove(match);</span>
-<span class="fc" id="L373">    SessionInformation session = this.sessionInformations.get(match.sessionId());</span>
+<span class="fc" id="L360">    PendingConfirmation match = this.pendingResponse.stream()</span>
+<span class="fc" id="L361">        .filter(x -&gt; x.uniqueId().equals(expandedSidu.spdu().getHeader().getId()))</span>
+<span class="fc" id="L362">        .findFirst()</span>
+<span class="pc" id="L363">        .orElseThrow(() -&gt; new IllegalStateException(&quot;Element not found&quot;));</span>
+<span class="fc" id="L364">    this.pendingResponse.remove(match);</span>
+<span class="fc" id="L365">    SessionInformation session = this.sessionInformations.get(match.sessionId());</span>
 
     // Déterminer / mémoriser SKAK
-<span class="fc" id="L376">    KeyAgreement keyAgreement = new KeyAgreement();</span>
-<span class="fc" id="L377">    SesSakRecDto sesSakRecDto =</span>
-<span class="fc" id="L378">        sharedMapper.readValue((String) expandedSidu.spdu().getContent(), SesSakRecDto.class);</span>
-<span class="fc" id="L379">    PublicKey peerChoice =</span>
-<span class="fc" id="L380">        KeyMapping.getPublicKeyFromString(sesSakRecDto.getValue(), KeyAlgorithm.X25519);</span>
-<span class="fc" id="L381">    byte[] skakByte = keyAgreement.completeKeyAgreementNegotiation(session.firstChoice,</span>
+<span class="fc" id="L368">    KeyAgreement keyAgreement = new KeyAgreement();</span>
+<span class="fc" id="L369">    SesSakRecDto sesSakRecDto =</span>
+<span class="fc" id="L370">        sharedMapper.readValue((String) expandedSidu.spdu().getContent(), SesSakRecDto.class);</span>
+<span class="fc" id="L371">    PublicKey peerChoice =</span>
+<span class="fc" id="L372">        KeyMapping.getPublicKeyFromString(sesSakRecDto.getValue(), KeyAlgorithm.X25519);</span>
+<span class="fc" id="L373">    byte[] skakByte = keyAgreement.completeKeyAgreementNegotiation(session.firstChoice,</span>
         peerChoice);
-<span class="fc" id="L383">    SecretKey skak = KeyMapping.getAesSecretKeyFromByte(skakByte);</span>
-<span class="fc" id="L384">    session.skak = skak;</span>
+<span class="fc" id="L375">    SecretKey skak = KeyMapping.getAesSecretKeyFromByte(skakByte);</span>
+<span class="fc" id="L376">    session.skak = skak;</span>
 
-<span class="fc" id="L386">    UUID sessionToken = UUID.randomUUID();</span>
-<span class="fc" id="L387">    SessionInformation updatedInfo = SessionInformation.builder()</span>
-<span class="fc" id="L388">        .of(session)</span>
-<span class="fc" id="L389">        .token(sessionToken)</span>
-<span class="fc" id="L390">        .build();</span>
-<span class="fc" id="L391">    sessionInformations.put(match.sessionId(), updatedInfo);</span>
+<span class="fc" id="L378">    UUID sessionToken = UUID.randomUUID();</span>
+<span class="fc" id="L379">    SessionInformation updatedInfo = SessionInformation.builder()</span>
+<span class="fc" id="L380">        .of(session)</span>
+<span class="fc" id="L381">        .token(sessionToken)</span>
+<span class="fc" id="L382">        .build();</span>
+<span class="fc" id="L383">    sessionInformations.put(match.sessionId(), updatedInfo);</span>
 
     // Procéder à l’envoi de la clé de chiffrement SDEK
     // Créer SDU
-<span class="fc" id="L395">    byte[] keyBytes = session.sdek.getEncoded();</span>
-<span class="fc" id="L396">    String serialKey = Base64.getEncoder().encodeToString(keyBytes);</span>
-<span class="fc" id="L397">    KeyTransferDto keyTransferDto = new KeyTransferDto(serialKey, session.pgaId, sessionToken);</span>
-<span class="fc" id="L398">    AesGcmEncryptor symmetricEncrypt = new AesGcmEncryptor(skak);</span>
-<span class="fc" id="L399">    byte[] cryptedKeyTrans =</span>
-<span class="fc" id="L400">        symmetricEncrypt.encrypt(sharedMapper.writeValueAsBytes(keyTransferDto));</span>
-<span class="fc" id="L401">    String serialKeyTrans = Base64.getEncoder().encodeToString(cryptedKeyTrans);</span>
-<span class="fc" id="L402">    SesCleEnvDto sdu = new SesCleEnvDto(serialKeyTrans, session.sessionId.id());</span>
+<span class="fc" id="L387">    byte[] keyBytes = session.sdek.getEncoded();</span>
+<span class="fc" id="L388">    String serialKey = Base64.getEncoder().encodeToString(keyBytes);</span>
+<span class="fc" id="L389">    KeyTransferDto keyTransferDto = new KeyTransferDto(serialKey, session.pgaId, sessionToken);</span>
+<span class="fc" id="L390">    AesGcmEncryptor symmetricEncrypt = new AesGcmEncryptor(skak);</span>
+<span class="fc" id="L391">    byte[] cryptedKeyTrans =</span>
+<span class="fc" id="L392">        symmetricEncrypt.encrypt(sharedMapper.writeValueAsBytes(keyTransferDto));</span>
+<span class="fc" id="L393">    String serialKeyTrans = Base64.getEncoder().encodeToString(cryptedKeyTrans);</span>
+<span class="fc" id="L394">    SesCleEnvDto sdu = new SesCleEnvDto(serialKeyTrans, session.sessionId.id());</span>
 
     // Construire la SPDU
-<span class="fc" id="L405">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_CLE_ENV,</span>
-<span class="fc" id="L406">        UUID.randomUUID(), false, speds);</span>
+<span class="fc" id="L397">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_CLE_ENV,</span>
+<span class="fc" id="L398">        UUID.randomUUID(), false, speds);</span>
 
-<span class="fc" id="L408">    String stamp = sealCreator.createSymmetricalSeal(sdu, skak, sharedMapper);</span>
-<span class="fc" id="L409">    Spdu spdu = new Spdu(spduHeader, stamp, sharedMapper.writeValueAsString(sdu));</span>
+<span class="fc" id="L400">    String stamp = sealCreator.createSymmetricalSeal(sdu, skak, sharedMapper);</span>
+<span class="fc" id="L401">    Spdu spdu = new Spdu(spduHeader, stamp, sharedMapper.writeValueAsString(sdu));</span>
 
     // Construire la SIDU
-<span class="fc" id="L412">    SiduContext siduContext = new SiduContext(</span>
+<span class="fc" id="L404">    SiduContext siduContext = new SiduContext(</span>
         session.initiatorId,
         session.peerId,
         session.initiatorIri,
-<span class="fc" id="L416">        spdu.getHeader().getId(),</span>
+<span class="fc" id="L408">        spdu.getHeader().getId(),</span>
         session.peerIri,
-<span class="fc" id="L418">        false);</span>
+<span class="fc" id="L410">        false);</span>
     String serialSidu;
     try {
-<span class="fc" id="L421">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
-<span class="fc" id="L422">      serialSidu = sharedMapper.writeValueAsString(sidu);</span>
-<span class="nc" id="L423">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L424">      throw new RuntimeException(e);</span>
-<span class="fc" id="L425">    }</span>
+<span class="fc" id="L413">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
+<span class="fc" id="L414">      serialSidu = sharedMapper.writeValueAsString(sidu);</span>
+<span class="nc" id="L415">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L416">      throw new RuntimeException(e);</span>
+<span class="fc" id="L417">    }</span>
 
     // Transmettre la IDU à la couche inférieur &amp;&amp; inscrire qu'on attend une réponse pour
     // SES_CLE_ENV
-<span class="fc" id="L429">    pendingResponse</span>
-<span class="fc" id="L430">        .add(new PendingConfirmation(spduHeader.getId(), session.sessionId, MsgType.SES_CLE_ENV));</span>
-<span class="fc" id="L431">    logger.trace(Trace.ALGORITHM_1, serialSidu, serialSidu);</span>
+<span class="fc" id="L421">    pendingResponse</span>
+<span class="fc" id="L422">        .add(new PendingConfirmation(spduHeader.getId(), session.sessionId, MsgType.SES_CLE_ENV));</span>
+<span class="fc" id="L423">    logger.trace(Trace.ALGORITHM_1, serialSidu, serialSidu);</span>
 
-<span class="fc" id="L433">    transportHost.dataRequest(serialSidu);</span>
-<span class="fc" id="L434">    transportHost.dataConfirm();</span>
+<span class="fc" id="L425">    transportHost.dataRequest(serialSidu);</span>
+<span class="fc" id="L426">    transportHost.dataConfirm();</span>
 
-<span class="fc" id="L436">    logger.trace(Trace.EXIT_METHOD_0);</span>
-<span class="fc" id="L437">  }</span>
+<span class="fc" id="L428">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L429">  }</span>
 
   public void sendMsg(ExpandedSidu expandedSidu) throws JsonProcessingException {
-<span class="fc" id="L440">    logger.trace(Trace.ENTER_METHOD_1, &quot;expandedSidu&quot;, expandedSidu);</span>
+<span class="fc" id="L432">    logger.trace(Trace.ENTER_METHOD_1, &quot;expandedSidu&quot;, expandedSidu);</span>
 
     // Supprimer du Tableau des réponses en attente, l’entrée de SES.CLE.ENV d’identifiant id.
-<span class="fc" id="L443">    PendingConfirmation match = this.pendingResponse.stream()</span>
-<span class="fc" id="L444">        .filter(x -&gt; x.uniqueId().equals(expandedSidu.spdu().getHeader().getId()))</span>
-<span class="fc" id="L445">        .findFirst()</span>
-<span class="pc" id="L446">        .orElseThrow(() -&gt; new IllegalStateException(&quot;Element not found&quot;));</span>
-<span class="fc" id="L447">    this.pendingResponse.remove(match);</span>
-<span class="fc" id="L448">    SessionInformation session = this.sessionInformations.get(match.sessionId());</span>
-<span class="fc" id="L449">    SesCleRecDto sesCleRecDto =</span>
-<span class="fc" id="L450">        sharedMapper.readValue((String) expandedSidu.spdu().getContent(), SesCleRecDto.class);</span>
+<span class="fc" id="L435">    PendingConfirmation match = this.pendingResponse.stream()</span>
+<span class="fc" id="L436">        .filter(x -&gt; x.uniqueId().equals(expandedSidu.spdu().getHeader().getId()))</span>
+<span class="fc" id="L437">        .findFirst()</span>
+<span class="pc" id="L438">        .orElseThrow(() -&gt; new IllegalStateException(&quot;Element not found&quot;));</span>
+<span class="fc" id="L439">    this.pendingResponse.remove(match);</span>
+<span class="fc" id="L440">    SessionInformation session = this.sessionInformations.get(match.sessionId());</span>
+<span class="fc" id="L441">    SesCleRecDto sesCleRecDto =</span>
+<span class="fc" id="L442">        sharedMapper.readValue((String) expandedSidu.spdu().getContent(), SesCleRecDto.class);</span>
 
     try {
-<span class="fc" id="L453">      byte[] encryptedToken = Base64.getDecoder().decode(sesCleRecDto.getContent());</span>
-<span class="fc" id="L454">      AesGcmDecryptor aesGcmDecryptor = new AesGcmDecryptor(session.sdek);</span>
-<span class="fc" id="L455">      byte[] decryptedToken = aesGcmDecryptor.decrypt(encryptedToken);</span>
-<span class="fc" id="L456">      UUID token = UUID.fromString(new String(decryptedToken, StandardCharsets.UTF_8));</span>
-<span class="pc bpc" id="L457" title="1 of 2 branches missed.">      if (token.compareTo(session.token) != 0) {</span>
-<span class="nc" id="L458">        throw new InvalidTokenException(&quot;Token is invalid&quot;);</span>
+<span class="fc" id="L445">      byte[] encryptedToken = Base64.getDecoder().decode(sesCleRecDto.getContent());</span>
+<span class="fc" id="L446">      AesGcmDecryptor aesGcmDecryptor = new AesGcmDecryptor(session.sdek);</span>
+<span class="fc" id="L447">      byte[] decryptedToken = aesGcmDecryptor.decrypt(encryptedToken);</span>
+<span class="fc" id="L448">      UUID token = UUID.fromString(new String(decryptedToken, StandardCharsets.UTF_8));</span>
+<span class="pc bpc" id="L449" title="1 of 2 branches missed.">      if (token.compareTo(session.token) != 0) {</span>
+<span class="nc" id="L450">        throw new InvalidTokenException(&quot;Token is invalid&quot;);</span>
       }
-<span class="fc" id="L460">    } catch (Exception e) {</span>
-<span class="fc" id="L461">      throw new InvalidTokenException(&quot;Impossible to retrieve the token&quot;);</span>
-<span class="fc" id="L462">    }</span>
+<span class="fc" id="L452">    } catch (Exception e) {</span>
+<span class="fc" id="L453">      throw new InvalidTokenException(&quot;Impossible to retrieve the token&quot;);</span>
+<span class="fc" id="L454">    }</span>
 
     // Procéder à l’envoi du message à transmettre
     // Créer une SDU SES.MSG.ENV
-<span class="fc" id="L466">    SesMsgEnvDto sdu = new SesMsgEnvDto(session.piduMessage, session.sessionId.id());</span>
+<span class="fc" id="L458">    SesMsgEnvDto sdu = new SesMsgEnvDto(session.piduMessage, session.sessionId.id());</span>
 
     // Construire la SPDU
-<span class="fc" id="L469">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_MSG_ENV,</span>
-<span class="fc" id="L470">        UUID.randomUUID(),</span>
-<span class="fc" id="L471">        false,</span>
+<span class="fc" id="L461">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_MSG_ENV,</span>
+<span class="fc" id="L462">        UUID.randomUUID(),</span>
+<span class="fc" id="L463">        false,</span>
         speds);
-<span class="fc" id="L473">    String stamp = sealCreator.createSymmetricalSeal(sdu, session.skak, sharedMapper);</span>
-<span class="fc" id="L474">    Spdu spdu = new Spdu(spduHeader, stamp, sharedMapper.writeValueAsString(sdu));</span>
+<span class="fc" id="L465">    String stamp = sealCreator.createSymmetricalSeal(sdu, session.skak, sharedMapper);</span>
+<span class="fc" id="L466">    Spdu spdu = new Spdu(spduHeader, stamp, sharedMapper.writeValueAsString(sdu));</span>
 
     // Construire la SIDU
-<span class="fc" id="L477">    SiduContext siduContext = new SiduContext(</span>
+<span class="fc" id="L469">    SiduContext siduContext = new SiduContext(</span>
         session.initiatorId,
         session.peerId,
         session.initiatorIri,
-<span class="fc" id="L481">        spduHeader.getId(),</span>
+<span class="fc" id="L473">        spduHeader.getId(),</span>
         session.peerIri,
-<span class="fc" id="L483">        false);</span>
+<span class="fc" id="L475">        false);</span>
     String serialSidu;
     try {
-<span class="fc" id="L486">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
-<span class="fc" id="L487">      serialSidu = sharedMapper.writeValueAsString(sidu);</span>
-<span class="nc" id="L488">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L489">      throw new RuntimeException(e);</span>
-<span class="fc" id="L490">    }</span>
+<span class="fc" id="L478">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
+<span class="fc" id="L479">      serialSidu = sharedMapper.writeValueAsString(sidu);</span>
+<span class="nc" id="L480">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L481">      throw new RuntimeException(e);</span>
+<span class="fc" id="L482">    }</span>
 
-<span class="fc" id="L492">    session.trackingNumber = siduContext.getTrackingNumber();</span>
-<span class="fc" id="L493">    this.sessionInformations.put(session.sessionId, session);</span>
+<span class="fc" id="L484">    this.sessionInformations.put(session.sessionId, session);</span>
 
     // Transmettre la IDU à la couche inférieur &amp;&amp; inscrire qu'on attend une réponse pour
     // SES_MSG_ENV
-<span class="fc" id="L497">    pendingResponse</span>
-<span class="fc" id="L498">        .add(new PendingConfirmation(spduHeader.getId(), session.sessionId, MsgType.SES_MSG_ENV));</span>
-<span class="fc" id="L499">    logger.trace(Trace.ALGORITHM_1, serialSidu, serialSidu);</span>
+<span class="fc" id="L488">    pendingResponse</span>
+<span class="fc" id="L489">        .add(new PendingConfirmation(spduHeader.getId(), session.sessionId, MsgType.SES_MSG_ENV));</span>
+<span class="fc" id="L490">    logger.trace(Trace.ALGORITHM_1, serialSidu, serialSidu);</span>
 
-<span class="fc" id="L501">    transportHost.dataRequest(serialSidu);</span>
-<span class="fc" id="L502">    transportHost.dataConfirm();</span>
+<span class="fc" id="L492">    transportHost.dataRequest(serialSidu);</span>
+<span class="fc" id="L493">    transportHost.dataConfirm();</span>
 
-<span class="fc" id="L504">    logger.trace(Trace.EXIT_METHOD_0);</span>
-<span class="fc" id="L505">  }</span>
+<span class="fc" id="L495">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L496">  }</span>
 
   public PiduAndSession retrieveAnswer(ExpandedSidu expandedSidu) {
-<span class="fc" id="L508">    logger.trace(Trace.ENTER_METHOD_1, &quot;expandedSidu&quot;, expandedSidu);</span>
+<span class="fc" id="L499">    logger.trace(Trace.ENTER_METHOD_1, &quot;expandedSidu&quot;, expandedSidu);</span>
 
     // Incrémenter le nombre de messages traités avec succès durant la session.
-<span class="fc" id="L511">    SesMsgRecDto sesMsgRecDto = null;</span>
+<span class="fc" id="L502">    SesMsgRecDto sesMsgRecDto = null;</span>
     try {
-<span class="fc" id="L513">      sesMsgRecDto =</span>
-<span class="fc" id="L514">          sharedMapper.readValue((String) expandedSidu.spdu().getContent(), SesMsgRecDto.class);</span>
-<span class="nc" id="L515">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L516">      throw new RuntimeException(e);</span>
-<span class="fc" id="L517">    }</span>
-<span class="fc" id="L518">    SessionInformation session = sessionInformations.get(new SessionId(sesMsgRecDto.getSession()));</span>
-<span class="fc" id="L519">    session.numberOfMessage += 1;</span>
-<span class="fc" id="L520">    sessionInformations.put(session.sessionId, session);</span>
+<span class="fc" id="L504">      sesMsgRecDto =</span>
+<span class="fc" id="L505">          sharedMapper.readValue((String) expandedSidu.spdu().getContent(), SesMsgRecDto.class);</span>
+<span class="nc" id="L506">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L507">      throw new RuntimeException(e);</span>
+<span class="fc" id="L508">    }</span>
+<span class="fc" id="L509">    SessionInformation session = sessionInformations.get(new SessionId(sesMsgRecDto.getSession()));</span>
+<span class="fc" id="L510">    session.numberOfMessage += 1;</span>
+<span class="fc" id="L511">    sessionInformations.put(session.sessionId, session);</span>
 
     // Transmettre la réponse attendue à la couche supérieure
     // PIDU
     // Transmettre la PIDU à la couche supérieure.
-<span class="fc" id="L525">    byte[] keyBytes = session.sdek.getEncoded();</span>
-<span class="fc" id="L526">    String serialSdek = Base64.getEncoder().encodeToString(keyBytes);</span>
-<span class="fc" id="L527">    PiduContext contextDto = new PiduContext(</span>
+<span class="fc" id="L516">    byte[] keyBytes = session.sdek.getEncoded();</span>
+<span class="fc" id="L517">    String serialSdek = Base64.getEncoder().encodeToString(keyBytes);</span>
+<span class="fc" id="L518">    PiduContext contextDto = new PiduContext(</span>
         session.pgaId,
         session.initiatorId,
         session.peerId,
         serialSdek,
         session.trackingNumber,
-<span class="fc" id="L533">        false);</span>
-<span class="fc" id="L534">    Pidu pidu = new Pidu(contextDto, sesMsgRecDto.getContent());</span>
+<span class="fc" id="L524">        false);</span>
+<span class="fc" id="L525">    Pidu pidu = new Pidu(contextDto, sesMsgRecDto.getContent());</span>
+<span class="fc" id="L526">    pidus.add(pidu);</span>
 
-<span class="fc" id="L536">    PiduAndSession piduAndSession = new PiduAndSession(pidu, session);</span>
-<span class="fc" id="L537">    logger.trace(Trace.EXIT_METHOD_1, &quot;piduAndSession&quot;, piduAndSession);</span>
-<span class="fc" id="L538">    return piduAndSession;</span>
+<span class="fc" id="L528">    PiduAndSession piduAndSession = new PiduAndSession(pidu, session);</span>
+<span class="fc" id="L529">    logger.trace(Trace.EXIT_METHOD_1, &quot;piduAndSession&quot;, piduAndSession);</span>
+<span class="fc" id="L530">    return piduAndSession;</span>
   }
 
   public void sendClose(PiduAndSession msgResponse) {
-<span class="fc" id="L542">    logger.trace(Trace.ENTER_METHOD_1, &quot;msgResponse&quot;, msgResponse);</span>
+<span class="fc" id="L534">    logger.trace(Trace.ENTER_METHOD_1, &quot;msgResponse&quot;, msgResponse);</span>
 
     // Procéder à l’envoi de la fin de session
     // Créer SDU
-<span class="fc" id="L546">    SessionInformation session = msgResponse.sessionInformation();</span>
-<span class="fc" id="L547">    UUID token = UUID.randomUUID();</span>
+<span class="fc" id="L538">    SessionInformation session = msgResponse.sessionInformation();</span>
+<span class="fc" id="L539">    UUID token = UUID.randomUUID();</span>
 
-<span class="fc" id="L549">    SessionInformation updatedInfo = SessionInformation.builder()</span>
-<span class="fc" id="L550">        .of(session)</span>
-<span class="fc" id="L551">        .token(token)</span>
-<span class="fc" id="L552">        .build();</span>
-<span class="fc" id="L553">    sessionInformations.put(msgResponse.sessionInformation().sessionId, updatedInfo);</span>
+<span class="fc" id="L541">    SessionInformation updatedInfo = SessionInformation.builder()</span>
+<span class="fc" id="L542">        .of(session)</span>
+<span class="fc" id="L543">        .token(token)</span>
+<span class="fc" id="L544">        .build();</span>
+<span class="fc" id="L545">    sessionInformations.put(msgResponse.sessionInformation().sessionId, updatedInfo);</span>
 
-<span class="fc" id="L555">    SesFinEnvDto sdu = new SesFinEnvDto(token,</span>
-<span class="fc" id="L556">        session.numberOfMessage.toString(), session.sessionId.id());</span>
+<span class="fc" id="L547">    SesFinEnvDto sdu = new SesFinEnvDto(token,</span>
+<span class="fc" id="L548">        session.numberOfMessage.toString(), session.sessionId.id());</span>
     String serialSdu;
     try {
-<span class="fc" id="L559">      serialSdu = sharedMapper.writeValueAsString(sdu);</span>
-<span class="nc" id="L560">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L561">      throw new RuntimeException(e);</span>
-<span class="fc" id="L562">    }</span>
+<span class="fc" id="L551">      serialSdu = sharedMapper.writeValueAsString(sdu);</span>
+<span class="nc" id="L552">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L553">      throw new RuntimeException(e);</span>
+<span class="fc" id="L554">    }</span>
 
     // Construire la SPDU
-<span class="fc" id="L565">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_FIN_ENV,</span>
-<span class="fc" id="L566">        UUID.randomUUID(),</span>
-<span class="fc" id="L567">        false,</span>
+<span class="fc" id="L557">    SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_FIN_ENV,</span>
+<span class="fc" id="L558">        UUID.randomUUID(),</span>
+<span class="fc" id="L559">        false,</span>
         speds);
-<span class="fc" id="L569">    String stamp = sealCreator.createSymmetricalSeal(serialSdu, session.skak, sharedMapper);</span>
-<span class="fc" id="L570">    Spdu spdu = new Spdu(spduHeader, stamp, serialSdu);</span>
+<span class="fc" id="L561">    String stamp = sealCreator.createSymmetricalSeal(serialSdu, session.skak, sharedMapper);</span>
+<span class="fc" id="L562">    Spdu spdu = new Spdu(spduHeader, stamp, serialSdu);</span>
 
     // Construire la SIDU
-<span class="fc" id="L573">    SiduContext siduContext = new SiduContext(</span>
+<span class="fc" id="L565">    SiduContext siduContext = new SiduContext(</span>
         session.initiatorId,
         session.peerId,
         session.initiatorIri,
-<span class="fc" id="L577">        spdu.getHeader().getId(),</span>
+<span class="fc" id="L569">        spdu.getHeader().getId(),</span>
         session.peerIri,
-<span class="fc" id="L579">        false);</span>
+<span class="fc" id="L571">        false);</span>
 
     try {
-<span class="fc" id="L582">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
-<span class="fc" id="L583">      String serialSidu = sharedMapper.writeValueAsString(sidu);</span>
-<span class="fc" id="L584">      pendingResponse.add(new PendingConfirmation(token, session.sessionId,</span>
+<span class="fc" id="L574">      Sidu sidu = new Sidu(siduContext, sharedMapper.writeValueAsString(spdu));</span>
+<span class="fc" id="L575">      String serialSidu = sharedMapper.writeValueAsString(sidu);</span>
+<span class="fc" id="L576">      pendingResponse.add(new PendingConfirmation(token, session.sessionId,</span>
           MsgType.SES_FIN_ENV));
-<span class="fc" id="L586">      logger.trace(Trace.ALGORITHM_1, &quot;serialSidu&quot;, serialSidu);</span>
+<span class="fc" id="L578">      logger.trace(Trace.ALGORITHM_1, &quot;serialSidu&quot;, serialSidu);</span>
 
-<span class="fc" id="L588">      transportHost.dataRequest(serialSidu);</span>
-<span class="fc" id="L589">      transportHost.dataConfirm();</span>
-<span class="nc" id="L590">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L591">      throw new RuntimeException(e);</span>
-<span class="fc" id="L592">    }</span>
+<span class="fc" id="L580">      transportHost.dataRequest(serialSidu);</span>
+<span class="fc" id="L581">      transportHost.dataConfirm();</span>
+<span class="nc" id="L582">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L583">      throw new RuntimeException(e);</span>
+<span class="fc" id="L584">    }</span>
 
-<span class="fc" id="L594">    logger.trace(Trace.EXIT_METHOD_0);</span>
-<span class="fc" id="L595">  }</span>
+<span class="fc" id="L586">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L587">  }</span>
 
   public void closeSession(ExpandedSidu expandedSidu) {
-<span class="fc" id="L598">    logger.trace(Trace.ENTER_METHOD_1, &quot;expandedSidu&quot;, expandedSidu);</span>
+<span class="fc" id="L590">    logger.trace(Trace.ENTER_METHOD_1, &quot;expandedSidu&quot;, expandedSidu);</span>
     // Supprimer du Tableau des réponses en attente, l’entrée de SES.FIN.ENV d’identifiant id.
 
     SesFinRecDto sdu;
     try {
-<span class="fc" id="L603">      sdu = sharedMapper.readValue((String) expandedSidu.spdu().getContent(), SesFinRecDto.class);</span>
-<span class="nc" id="L604">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L605">      throw new DeserializationException(e);</span>
-<span class="fc" id="L606">    }</span>
+<span class="fc" id="L595">      sdu = sharedMapper.readValue((String) expandedSidu.spdu().getContent(), SesFinRecDto.class);</span>
+<span class="nc" id="L596">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L597">      throw new DeserializationException(e);</span>
+<span class="fc" id="L598">    }</span>
 
-<span class="fc" id="L608">    PendingConfirmation match = this.pendingResponse.stream()</span>
-<span class="fc" id="L609">        .filter(x -&gt; x.uniqueId().equals(sdu.getToken()))</span>
-<span class="fc" id="L610">        .findFirst()</span>
-<span class="fc" id="L611">        .orElseThrow(() -&gt; new SessionTerminaisonFailedException(&quot;Element not found&quot;));</span>
-<span class="fc" id="L612">    this.pendingResponse.remove(match);</span>
-<span class="fc" id="L613">    SessionInformation session = this.sessionInformations.get(match.sessionId());</span>
+<span class="fc" id="L600">    PendingConfirmation match = this.pendingResponse.stream()</span>
+<span class="fc" id="L601">        .filter(x -&gt; x.uniqueId().equals(sdu.getToken()))</span>
+<span class="fc" id="L602">        .findFirst()</span>
+<span class="fc" id="L603">        .orElseThrow(() -&gt; new SessionTerminaisonFailedException(&quot;Element not found&quot;));</span>
+<span class="fc" id="L604">    this.pendingResponse.remove(match);</span>
+<span class="fc" id="L605">    SessionInformation session = this.sessionInformations.get(match.sessionId());</span>
 
     // Retirer les informations de session
-<span class="fc" id="L616">    this.sessionInformations.remove(session.sessionId);</span>
+<span class="fc" id="L608">    this.sessionInformations.remove(session.sessionId);</span>
 
     // Vérifier la correspondance avec le message d'envoi
-<span class="pc bpc" id="L619" title="1 of 2 branches missed.">    if (!sdu.getToken().equals(match.uniqueId())) {</span>
-<span class="nc" id="L620">      throw new SessionTerminaisonFailedException(&quot;Token does not match original token - &quot;</span>
-<span class="nc" id="L621">          + &quot;orignal=&quot; + match.uniqueId() + &quot; response=&quot; + sdu.getToken());</span>
+<span class="pc bpc" id="L611" title="1 of 2 branches missed.">    if (!sdu.getToken().equals(match.uniqueId())) {</span>
+<span class="nc" id="L612">      throw new SessionTerminaisonFailedException(&quot;Token does not match original token - &quot;</span>
+<span class="nc" id="L613">          + &quot;orignal=&quot; + match.uniqueId() + &quot; response=&quot; + sdu.getToken());</span>
     }
 
-<span class="fc" id="L624">    logger.trace(Trace.EXIT_METHOD_0);</span>
-<span class="fc" id="L625">  }</span>
+<span class="fc" id="L616">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L617">  }</span>
 
   public void loadSessionState() {
     // TODO
-<span class="nc" id="L629">  }</span>
+<span class="nc" id="L621">  }</span>
 
   public void saveSessionState() {
     // TODO
-<span class="fc" id="L633">  }</span>
+<span class="fc" id="L625">  }</span>
 
   public Map&lt;SessionId, SessionInformation&gt; getSessionInfo() {
-<span class="fc" id="L636">    return Map.copyOf(this.sessionInformations);</span>
+<span class="fc" id="L628">    return Map.copyOf(this.sessionInformations);</span>
   }
 
   public ConcurrentLinkedQueue&lt;PendingConfirmation&gt; getPendingResponse() {
-<span class="nc" id="L640">    return pendingResponse;</span>
+<span class="nc" id="L632">    return pendingResponse;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -2,7 +2,9 @@ package ca.griis.speds.integration.bottomup;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import ca.griis.js2p.gen.speds.presentation.api.dto.ContextDto;
 import ca.griis.js2p.gen.speds.presentation.api.dto.InterfaceDataUnit12Dto;
 import ca.griis.speds.integration.util.KeyVar;
 import ca.griis.speds.integration.util.PgaServiceMock;
@@ -136,6 +138,19 @@ public class PreSesTraNetLinSpedsIt {
       assertNotEquals(idu12Dto.getContext().getTrackingNumber(),
           resultDto.getContext().getTrackingNumber());
       assertEquals(Boolean.FALSE, resultDto.getContext().getOptions());
+
+      ContextDto contextDto = new ContextDto(resultDto.getContext().getPga(),
+          resultDto.getContext().getDestinationCode(), resultDto.getContext().getSourceCode(),
+          resultDto.getContext().getTrackingNumber(), false);
+      InterfaceDataUnit12Dto response = new InterfaceDataUnit12Dto(contextDto, "answer");
+      String serialResponse = objectMapper.writeValueAsString(response);
+      targetPreHost.response(serialResponse);
+
+      String actualConfirm = originPreHost.confirm();
+      InterfaceDataUnit12Dto actualConfirmIdu =
+          objectMapper.readValue(actualConfirm, InterfaceDataUnit12Dto.class);
+      assertNotNull(actualConfirmIdu);
+      assertEquals(response.getMessage(), actualConfirmIdu.getMessage());
     }
   }
 

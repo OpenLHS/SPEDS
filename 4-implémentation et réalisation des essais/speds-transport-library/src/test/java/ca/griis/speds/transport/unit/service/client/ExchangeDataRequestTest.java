@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.Test;
 
 public class ExchangeDataRequestTest {
-
   @Test
   public void testDataRequestProcess() throws Exception {
     Set<String> sentMessagesId = ConcurrentHashMap.newKeySet();
@@ -46,8 +45,8 @@ public class ExchangeDataRequestTest {
             """;
 
     final String actualIdu4_5 =
-        new ExchangeDataRequest(() -> UUID.randomUUID().toString()).dataRequestProcess(validIdu3_4,
-            spedsVersion, spedsReference, sentMessagesId);
+        new ExchangeDataRequest(() -> UUID.randomUUID().toString(), sentMessagesId)
+            .request(validIdu3_4, spedsVersion, spedsReference);
     assertNotNull(actualIdu4_5);
 
     // Comparer champs par champs car le header_seal change vu que le message id est géréré

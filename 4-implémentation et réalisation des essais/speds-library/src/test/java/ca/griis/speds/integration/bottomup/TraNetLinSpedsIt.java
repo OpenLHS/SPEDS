@@ -2,7 +2,9 @@ package ca.griis.speds.integration.bottomup;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import ca.griis.js2p.gen.speds.transport.api.dto.Context34Dto;
 import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit34Dto;
 import ca.griis.speds.integration.util.TestUtil;
 import ca.griis.speds.integration.util.TransportDomainProviderUtil;
@@ -13,6 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -107,6 +110,7 @@ public class TraNetLinSpedsIt {
       String idu34 = SharedObjectMapper.getInstance().getMapper().writeValueAsString(idu34Dto);
 
       final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+      String answer = UUID.randomUUID().toString();
       executorService.scheduleWithFixedDelay(new Runnable() {
         @Override
         public void run() {
@@ -120,6 +124,16 @@ public class TraNetLinSpedsIt {
             assertNotEquals(idu34Dto.getContext().getTrackingNumber(),
                 resultDto.getContext().getTrackingNumber());
             assertEquals(Boolean.FALSE, resultDto.getContext().getOptions());
+
+            InterfaceDataUnit34Dto response = new InterfaceDataUnit34Dto(
+                new Context34Dto(resultDto.getContext().getDestinationCode(),
+                    resultDto.getContext().getSourceCode(),
+                    resultDto.getContext().getDestinationIri(),
+                    resultDto.getContext().getTrackingNumber(),
+                    resultDto.getContext().getSourceIri(), false),
+                answer);
+            String serialResponse = objectMapper.writeValueAsString(response);
+            targetTraHost.dataRequest(serialResponse);
           } catch (JsonProcessingException e) {
             e.printStackTrace();
           }
@@ -127,6 +141,12 @@ public class TraNetLinSpedsIt {
       }, 5, 5, TimeUnit.SECONDS);
 
       originTraHost.dataRequest(idu34);
+      String actualSerialReply = originTraHost.dataReply();
+      InterfaceDataUnit34Dto actualReplyIdu =
+          objectMapper.readValue(actualSerialReply, InterfaceDataUnit34Dto.class);
+      assertNotNull(actualReplyIdu);
+      assertEquals(answer, actualReplyIdu.getMessage());
+
       targetTraHost.close();
       originTraHost.close();
     }

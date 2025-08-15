@@ -15,5 +15,4 @@ do
    ./gradlew build
    ./gradlew publishToMavenLocal
    cd ..
-   # or do whatever with individual element of the array
 done

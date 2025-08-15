@@ -11,7 +11,7 @@ repositories {
 }
 
 group = "ca.griis"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 dependencies {
   api files('lib/cryptography-library-3.0.0.jar')

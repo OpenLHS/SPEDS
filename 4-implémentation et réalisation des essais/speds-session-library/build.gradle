@@ -1,4 +1,4 @@
-// Generated 2025-07-10T11:07:12.138306407
+// Generated 2025-08-14T08:48:08.709197980
 plugins {
   id 'maven-publish'
   id 'java-library'
@@ -11,77 +11,79 @@ repositories {
 }
 
 group = "ca.griis"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.1"
 
 dependencies {
-  api files('lib/cryptography-library-3.0.0.jar')
-  api files('lib/logger-library-1.0.3.jar')
-  api files('lib/slf4j-ext-griis-1.0.3.jar')
-  api "ca.griis:speds-transport-library:1.0.0-SNAPSHOT"
-  implementation "ch.qos.cal10n:cal10n-api:0.8.1"
-  api "com.fasterxml.jackson.core:jackson-databind:2.17.2"
-  api "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.17.2"
-  api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2"
-  api "javax.validation:validation-api:2.0.1.Final"
-  api "jakarta.validation:jakarta.validation-api:3.0.2"
-  api "org.apache.commons:commons-lang3:3.14.0"
-  api "org.apache.commons:commons-collections4:4.4"
-  implementation "org.slf4j:slf4j-api:2.0.9"
-  testImplementation "org.assertj:assertj-core:3.25.3"
-  testImplementation "org.junit.jupiter:junit-jupiter-engine:5.10.3"
-  testImplementation "org.mockito:mockito-core:5.11.0"
-  testImplementation "org.mockito:mockito-junit-jupiter:5.11.0"
-  testImplementation "net.jqwik:jqwik:1.7.0"
-  testImplementation "net.jqwik:jqwik-api:1.7.0"
+    api files('lib/cryptography-library-3.0.0.jar')
+    api files('lib/logger-library-1.0.3.jar')
+    api files('lib/slf4j-ext-griis-1.0.3.jar')
+    api "ca.griis:speds-transport-library:1.0.1"
+    api "com.fasterxml.jackson.core:jackson-databind:2.17.2"
+    api "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.17.2"
+    api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2"
+    api "org.apache.commons:commons-lang3:3.14.0"
+    api "org.apache.commons:commons-collections4:4.4"
+    api "javax.validation:validation-api:2.0.1.Final"
+    api "jakarta.validation:jakarta.validation-api:3.0.2"
+    testImplementation "org.assertj:assertj-core:3.25.3"
+    testImplementation "org.bouncycastle:bcprov-jdk15on:1.70"
+    testImplementation "org.bouncycastle:bcpkix-jdk15on:1.70"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.10.3"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.3"
+    testImplementation "org.mockito:mockito-core:5.11.0"
+    testImplementation "org.mockito:mockito-junit-jupiter:5.11.0"
+    testImplementation "net.jqwik:jqwik:1.7.0"
+    testImplementation "net.jqwik:jqwik-api:1.7.0"
 
 }
 
 jsonSchema2Pojo {
-  // Location of the JSON Schema file(s). This may refer to a single file or a directory of files.
-  source = files("src/json/schema")
+    // Location of the JSON Schema file(s). This may refer to a single file or a directory of files.
+    source = files("src/json/schema")
 
-  // Target directory for generated Java source files. The plugin will add this directory to the
-  // java source set so the compiler will find and compile the newly generated source files.
-  targetDirectory = file("src/gen/js2p")
+    // Target directory for generated Java source files. The plugin will add this directory to the
+    // java source set so the compiler will find and compile the newly generated source files.
+    targetDirectory = file("src/gen/js2p")
 
-  targetPackage = "ca.griis.js2p.gen.speds.session.api.dto"
+    targetPackage = "ca.griis.js2p.gen.speds.session.api.dto"
 
-  // Whether to allow 'additional' properties to be supported in classes by adding a map to
-  // hold these. This is true by default, meaning that the schema rule 'additionalProperties'
-  // controls whether the map is added. Set this to false to globally disable additional properties.
-  includeAdditionalProperties = false
-  // Whether to use the java type BigDecimal when representing the JSON Schema type 'number'. Note
-  // that this configuration overrides useDoubleNumbers
-  useBigDecimals = true
-  // Whether to include hashCode and equals methods in generated Java types.
-  includeHashcodeAndEquals = true
-  // Whether to include a toString method in generated Java types.
-  includeToString = true
+    // Whether to allow 'additional' properties to be supported in classes by adding a map to
+    // hold these. This is true by default, meaning that the schema rule 'additionalProperties'
+    // controls whether the map is added. Set this to false to globally disable additional properties.
+    includeAdditionalProperties = false
+    // Whether to use the java type BigDecimal when representing the JSON Schema type 'number'. Note
+    // that this configuration overrides useDoubleNumbers
+    useBigDecimals = true
+    // Whether to include hashCode and equals methods in generated Java types.
+    includeHashcodeAndEquals = true
+    // Whether to include a toString method in generated Java types.
+    includeToString = true
 
-  annotationStyle = "jackson"
-  includeJsr303Annotations = true
-  // includeJsr305Annotations = true
-  removeOldOutput = true
-  sourceType = "jsonschema"
-  outputEncoding = "UTF-8"
+    annotationStyle = "jackson"
+    includeJsr303Annotations = true
+    // includeJsr305Annotations = true
+    removeOldOutput = true
+    sourceType = "jsonschema"
+    outputEncoding = "UTF-8"
 
-  classNameSuffix = "Dto"
-  fileExtensions = [".schema.json"]
+    classNameSuffix = "Dto"
+    fileExtensions = [".schema.json"]
 
-  includeConstructors = true
-  includeRequiredPropertiesConstructor = true
-  includeAllPropertiesConstructor = true
-  includeSetters = false
-  serializable = true
-  dateType = "java.time.OffsetDateTime"
-  targetVersion = "17"
-  useJakartaValidation = true
+    includeConstructors = true
+    includeRequiredPropertiesConstructor  = true
+    includeAllPropertiesConstructor = true
+    includeSetters = false
+    serializable = true
+    dateType = "java.time.OffsetDateTime"
+    targetVersion = "17"
+    useJakartaValidation = true
 }
+
 
 publishing {
   publications {
-    mavenJava(MavenPublication) {
-      from components.java
-    }
+      mavenJava(MavenPublication) {
+          from components.java
+      }
   }
 }

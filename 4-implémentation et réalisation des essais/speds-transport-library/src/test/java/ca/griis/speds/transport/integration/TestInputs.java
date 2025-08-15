@@ -10,7 +10,6 @@ import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
 import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
 import ca.griis.js2p.gen.speds.transport.api.dto.Speds45Dto;
 import ca.griis.js2p.gen.speds.transport.api.dto.StampDto;
-import ca.griis.speds.transport.exception.DeserializationException;
 import ca.griis.speds.transport.serializer.SharedObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,12 +52,6 @@ public class TestInputs {
         new InterfaceDataUnit34Dto(context, message);
 
     return InterfaceDataUnit34Dto;
-  }
-
-  public static String make_ct_pro_04_02_e1() {
-    int badJsonLength = ThreadLocalRandom.current().nextInt(100);
-    String badJson = RandomStringUtils.randomAlphanumeric(badJsonLength);
-    return badJson;
   }
 
   public static InterfaceDataUnit45Dto make_ct_pro_05_01_e1(Speds45Dto speds45Dto,
@@ -282,12 +275,6 @@ public class TestInputs {
     return idu45;
   }
 
-  public static String make_ct_pro_05_06_e1() {
-    int badJsonLength = ThreadLocalRandom.current().nextInt(100);
-    String badJson = RandomStringUtils.randomAlphanumeric(badJsonLength);
-    return badJson;
-  }
-
   public static InterfaceDataUnit45Dto make_ct_pro_11_01_e1(Speds45Dto speds45Dto,
       ObjectMapper obm) throws JsonProcessingException {
     int sourceCodeLength = ThreadLocalRandom.current().nextInt(100);
@@ -373,13 +360,8 @@ public class TestInputs {
     String destinationIri = ct_pro_11_02_e1.getContext().getDestinationIri();
 
     final ProtocolDataUnit4TraDto pdu;
-    try {
-      pdu = SharedObjectMapper.getInstance().getMapper().readValue(ct_pro_11_02_e1.getMessage(),
-          ProtocolDataUnit4TraDto.class);
-    } catch (JsonProcessingException e) {
-      throw new DeserializationException(e.getMessage());
-    }
-
+    pdu = SharedObjectMapper.getInstance().getMapper().readValue(ct_pro_11_02_e1.getMessage(),
+        ProtocolDataUnit4TraDto.class);
     Context45Dto context45Dto = new Context45Dto(
         sourceIri,
         destinationIri,
@@ -486,15 +468,61 @@ public class TestInputs {
     return c007_e1;
   }
 
-  public static String make_ct_pro_11_05_e1(Speds45Dto speds45Dto, ObjectMapper objectMapper) {
-    int badJsonLength = ThreadLocalRandom.current().nextInt(100);
-    String badJson = RandomStringUtils.randomAlphanumeric(badJsonLength);
-    return badJson;
-  }
-
   private static String hash(String content) {
     Sha512Hashing sha512Hashing = new Sha512Hashing();
     Hash hashSdu = sha512Hashing.hash(content.getBytes(StandardCharsets.UTF_8));
     return hashSdu.asBase64();
+  }
+
+  public static InterfaceDataUnit34Dto make_ct_gen_01_e1() {
+    int sourceCodeLength = ThreadLocalRandom.current().nextInt(100);
+    String sourceCode = RandomStringUtils.randomAlphanumeric(sourceCodeLength);
+
+    int destinationCodeLength = ThreadLocalRandom.current().nextInt(100);
+    String destinationCode = RandomStringUtils.randomAlphanumeric(destinationCodeLength);
+
+    int sourceIriLength = ThreadLocalRandom.current().nextInt(100);
+    String sourceIri = RandomStringUtils.randomAlphanumeric(sourceIriLength);
+
+    int destinationIriLength = ThreadLocalRandom.current().nextInt(100);
+    String destinationIri = RandomStringUtils.randomAlphanumeric(destinationIriLength);
+
+    UUID trackingNumber = UUID.randomUUID();
+
+    Boolean options = false;
+
+    Context34Dto context = new Context34Dto(sourceCode, destinationCode, sourceIri, trackingNumber,
+        destinationIri, options);
+
+    InterfaceDataUnit34Dto InterfaceDataUnit34Dto =
+        new InterfaceDataUnit34Dto(context, "Alpha request Beta");
+
+    return InterfaceDataUnit34Dto;
+  }
+
+  public static InterfaceDataUnit34Dto make_ct_gen_01_e2() {
+    int sourceCodeLength = ThreadLocalRandom.current().nextInt(100);
+    String sourceCode = RandomStringUtils.randomAlphanumeric(sourceCodeLength);
+
+    int destinationCodeLength = ThreadLocalRandom.current().nextInt(100);
+    String destinationCode = RandomStringUtils.randomAlphanumeric(destinationCodeLength);
+
+    int sourceIriLength = ThreadLocalRandom.current().nextInt(100);
+    String sourceIri = RandomStringUtils.randomAlphanumeric(sourceIriLength);
+
+    int destinationIriLength = ThreadLocalRandom.current().nextInt(100);
+    String destinationIri = RandomStringUtils.randomAlphanumeric(destinationIriLength);
+
+    UUID trackingNumber = UUID.randomUUID();
+
+    Boolean options = false;
+
+    Context34Dto context = new Context34Dto(sourceCode, destinationCode, sourceIri, trackingNumber,
+        destinationIri, options);
+
+    InterfaceDataUnit34Dto InterfaceDataUnit34Dto =
+        new InterfaceDataUnit34Dto(context, "Beta request alpha");
+
+    return InterfaceDataUnit34Dto;
   }
 }

@@ -5,20 +5,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
-import ca.griis.speds.transport.exception.ContentSealException;
-import ca.griis.speds.transport.exception.HeaderSealException;
 import ca.griis.speds.transport.serializer.SharedObjectMapper;
+import ca.griis.speds.transport.service.DataReplyMessages;
+import ca.griis.speds.transport.service.SilentIgnoredException;
 import ca.griis.speds.transport.service.server.ExchangeDataReply;
-import ca.griis.speds.transport.service.server.datatype.DataReplyMessages;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 
 public class ExchangeDataReplyTest {
+  private ExchangeDataReply indication = new ExchangeDataReply();
 
   @Test
   public void testDataIndication() throws JsonProcessingException {
-    final String spedsVersion = "2.0.0";
-    final String spedsReference = "a reference";
     final String validIndicationIdu4_5 =
         """
             {
@@ -39,8 +37,7 @@ public class ExchangeDataReplyTest {
     final InterfaceDataUnit45Dto iduDto = SharedObjectMapper.getInstance().getMapper()
         .readValue(validIndicationIdu4_5, InterfaceDataUnit45Dto.class);
 
-    final DataReplyMessages dataReplyMessages = ExchangeDataReply.dataReplyProcess(iduDto,
-        spedsVersion, spedsReference);
+    final DataReplyMessages dataReplyMessages = indication.indication(iduDto);
 
     final String actualIdu34 = dataReplyMessages.response34();
     final String actualIdu45 = dataReplyMessages.response45();
@@ -51,8 +48,6 @@ public class ExchangeDataReplyTest {
 
   @Test
   public void testDataIndication_headerSealException() {
-    final String spedsVersion = "2.0.0";
-    final String spedsReference = "a reference";
     final String invalidHeaderIndicationIdu4_5 =
         """
             {
@@ -65,17 +60,15 @@ public class ExchangeDataReplyTest {
             }
             """;
 
-    assertThrows(HeaderSealException.class, () -> {
+    assertThrows(SilentIgnoredException.class, () -> {
       InterfaceDataUnit45Dto iduDto = SharedObjectMapper.getInstance().getMapper()
           .readValue(invalidHeaderIndicationIdu4_5, InterfaceDataUnit45Dto.class);
-      ExchangeDataReply.dataReplyProcess(iduDto, spedsVersion, spedsReference);
+      indication.indication(iduDto);
     });
   }
 
   @Test
   public void testDataIndication_contentSealException() {
-    final String spedsVersion = "2.0.0";
-    final String spedsReference = "a reference";
     final String invalidContentIndicationIdu4_5 =
         """
             {
@@ -88,10 +81,10 @@ public class ExchangeDataReplyTest {
             }
               """;
 
-    assertThrows(ContentSealException.class, () -> {
+    assertThrows(SilentIgnoredException.class, () -> {
       InterfaceDataUnit45Dto iduDto = SharedObjectMapper.getInstance().getMapper()
           .readValue(invalidContentIndicationIdu4_5, InterfaceDataUnit45Dto.class);
-      ExchangeDataReply.dataReplyProcess(iduDto, spedsVersion, spedsReference);
+      indication.indication(iduDto);
     });
   }
 }

@@ -3,20 +3,21 @@ package ca.griis.speds.transport.unit.service.client;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
-import ca.griis.speds.transport.exception.ContentSealException;
-import ca.griis.speds.transport.exception.HeaderSealException;
 import ca.griis.speds.transport.serializer.SharedObjectMapper;
+import ca.griis.speds.transport.service.SilentIgnoredException;
 import ca.griis.speds.transport.service.client.ExchangeDataConfirmation;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.Test;
 
 public class ExchangeDataConfirmationTest {
+  private Set<String> sentMessagesId = ConcurrentHashMap.newKeySet();
+  private ExchangeDataConfirmation confirm = new ExchangeDataConfirmation(sentMessagesId);
 
   @Test
   public void testDataConfirmProcess() throws Exception {
-    Set<String> sentMessagesId = ConcurrentHashMap.newKeySet();
     sentMessagesId.add("870107df-f90e-4bda-862b-da4f1f787799");
+
     final String validConfirmIdu4_5 =
         """
             {
@@ -32,13 +33,13 @@ public class ExchangeDataConfirmationTest {
     final InterfaceDataUnit45Dto iduDto = SharedObjectMapper.getInstance().getMapper()
         .readValue(validConfirmIdu4_5, InterfaceDataUnit45Dto.class);
 
-    ExchangeDataConfirmation.dataConfirmationProcess(iduDto, sentMessagesId);
+    confirm.confirm(iduDto);
   }
 
   @Test
   public void testDataConfirm_headerSealException() {
-    Set<String> sentMessagesId = ConcurrentHashMap.newKeySet();
     sentMessagesId.add("870107df-f90e-4bda-862b-da4f1f787799");
+
     String invalidConfirmHeaderSealIdu4_5 =
         """
             {
@@ -52,17 +53,17 @@ public class ExchangeDataConfirmationTest {
             }
             """;
 
-    assertThrows(HeaderSealException.class, () -> {
+    assertThrows(SilentIgnoredException.class, () -> {
       InterfaceDataUnit45Dto iduDto = SharedObjectMapper.getInstance().getMapper()
           .readValue(invalidConfirmHeaderSealIdu4_5, InterfaceDataUnit45Dto.class);
-      ExchangeDataConfirmation.dataConfirmationProcess(iduDto, sentMessagesId);
+      confirm.confirm(iduDto);
     });
   }
 
   @Test
   public void testDataConfirm_contentSealException() {
-    Set<String> sentMessagesId = ConcurrentHashMap.newKeySet();
     sentMessagesId.add("870107df-f90e-4bda-862b-da4f1f787799");
+
     String invalidConfirmContentSealIdu4_5 =
         """
             {
@@ -76,10 +77,10 @@ public class ExchangeDataConfirmationTest {
             }
             """;
 
-    assertThrows(ContentSealException.class, () -> {
+    assertThrows(SilentIgnoredException.class, () -> {
       InterfaceDataUnit45Dto iduDto = SharedObjectMapper.getInstance().getMapper()
           .readValue(invalidConfirmContentSealIdu4_5, InterfaceDataUnit45Dto.class);
-      ExchangeDataConfirmation.dataConfirmationProcess(iduDto, sentMessagesId);
+      confirm.confirm(iduDto);
     });
   }
 }
