@@ -128,20 +128,20 @@ public final class ImmutableSessionClient implements SessionClient {
 
   @Override
   public void close() {
-<span class="nc" id="L131">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L131">    logger.trace(Trace.ENTER_METHOD_0);</span>
 
     try {
-<span class="nc bnc" id="L134" title="All 2 branches missed.">      if (pids.isEmpty()) {</span>
-<span class="nc" id="L135">        pids.put(poisonPill);</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">      if (pids.isEmpty()) {</span>
+<span class="fc" id="L135">        pids.put(poisonPill);</span>
       }
 <span class="nc" id="L137">    } catch (InterruptedException e) {</span>
 <span class="nc" id="L138">      Thread.currentThread().interrupt();</span>
-<span class="nc" id="L139">    }</span>
+<span class="fc" id="L139">    }</span>
 
-<span class="nc" id="L141">    clientSession.close();</span>
+<span class="fc" id="L141">    clientSession.close();</span>
 
-<span class="nc" id="L143">    logger.trace(Trace.EXIT_METHOD_0);</span>
-<span class="nc" id="L144">  }</span>
+<span class="fc" id="L143">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L144">  }</span>
 
   @Override
   public void closePreservingSessionStates() {

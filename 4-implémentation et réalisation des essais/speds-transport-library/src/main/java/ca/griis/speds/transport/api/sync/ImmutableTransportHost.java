@@ -18,12 +18,14 @@ import ca.griis.logger.GriisLoggerFactory;
 import ca.griis.logger.statuscode.Trace;
 import ca.griis.speds.network.api.NetworkHost;
 import ca.griis.speds.transport.api.TransportHost;
+import ca.griis.speds.transport.exception.SerializationException;
+import ca.griis.speds.transport.service.DataReplyMessages;
+import ca.griis.speds.transport.service.IdentifierGenerator;
+import ca.griis.speds.transport.service.Poller;
 import ca.griis.speds.transport.service.client.ExchangeDataConfirmation;
 import ca.griis.speds.transport.service.client.ExchangeDataRequest;
-import ca.griis.speds.transport.service.identification.IdentifierGenerator;
-import ca.griis.speds.transport.service.message.PollingManager;
 import ca.griis.speds.transport.service.server.ExchangeDataReply;
-import ca.griis.speds.transport.service.server.datatype.DataReplyMessages;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -61,30 +63,58 @@ public final class ImmutableTransportHost implements TransportHost {
   private final NetworkHost networkHost;
   private final String spedsVersion;
   private final String spedsReference;
-  private final PollingManager pollingManager;
-  private final IdentifierGenerator identifierGenerator;
-  private final Set<String> sentMessagesIds;
+  private final ExchangeDataRequest request;
+  private final Poller poller;
+  private final Set<String> pendingMessagesId;
 
   ImmutableTransportHost(NetworkHost networkHost, String spedsVersion,
-      String spedsReference, PollingManager pollingManager,
-      IdentifierGenerator identifierGenerator) {
-    logger.trace(Trace.ENTER_METHOD_5, "networkHost", networkHost, "spedsVersion", spedsVersion,
-        "spedsReference", spedsReference, "pollingManager", pollingManager, "identifierGenerator",
-        identifierGenerator);
+      String spedsReference, IdentifierGenerator identifierGenerator,
+      Integer pollerMaxQueueCapacity, Integer pollerNbThreads, Integer pollerSleepsMs) {
+    logger.trace(Trace.ENTER_METHOD_7, "networkHost", networkHost, "spedsVersion", spedsVersion,
+        "spedsReference", spedsReference, "identifierGenerator", identifierGenerator,
+        "pollerMaxQueueCapacity", pollerMaxQueueCapacity, "pollerNbThreads", pollerNbThreads,
+        "pollerSleepMs", pollerSleepsMs);
     this.networkHost = networkHost;
     this.spedsVersion = spedsVersion;
     this.spedsReference = spedsReference;
-    this.pollingManager = pollingManager;
-    this.identifierGenerator = identifierGenerator;
-    this.sentMessagesIds = ConcurrentHashMap.newKeySet();
+
+    this.pendingMessagesId = ConcurrentHashMap.newKeySet();
+    this.request = new ExchangeDataRequest(identifierGenerator, pendingMessagesId);
+
+    ExchangeDataReply indication = new ExchangeDataReply();
+    ExchangeDataConfirmation confirm = new ExchangeDataConfirmation(pendingMessagesId);
+    this.poller =
+        new Poller(networkHost, indication, confirm, pollerMaxQueueCapacity, pollerNbThreads,
+            pollerSleepsMs);
+  }
+
+  @Override
+  public void listen() {
+    poller.start();
   }
 
   @Override
   public void close() {
     logger.trace(Trace.ENTER_METHOD_0);
 
-    networkHost.close();
-    pollingManager.close();
+    poller.close();
+
+    logger.trace(Trace.EXIT_METHOD_0);
+  }
+
+  @Override
+  public void request(String idu) {
+    logger.trace(Trace.ENTER_METHOD_1, "idu", idu);
+
+    String networkIdu;
+    try {
+      networkIdu = request.request(idu, spedsVersion, spedsReference);
+
+      networkHost.request(networkIdu);
+      networkHost.confirm();
+    } catch (JsonProcessingException e) {
+      throw new SerializationException(e.getMessage());
+    }
 
     logger.trace(Trace.EXIT_METHOD_0);
   }
@@ -93,21 +123,14 @@ public final class ImmutableTransportHost implements TransportHost {
   public void dataRequest(String idu) {
     logger.trace(Trace.ENTER_METHOD_1, "idu", idu);
 
-    final String networkIdu =
-        new ExchangeDataRequest(identifierGenerator).dataRequestProcess(idu, spedsVersion,
-            spedsReference, sentMessagesIds);
+    request(idu);
 
-    networkHost.request(networkIdu);
-    networkHost.confirm();
     logger.trace(Trace.EXIT_METHOD_0);
   }
 
   @Override
   public void dataConfirm() {
     logger.trace(Trace.ENTER_METHOD_0);
-
-    ExchangeDataConfirmation.dataConfirmationProcess(pollingManager.pollResponse(),
-        sentMessagesIds);
 
     logger.trace(Trace.EXIT_METHOD_0);
   }
@@ -116,18 +139,30 @@ public final class ImmutableTransportHost implements TransportHost {
   public String dataReply() {
     logger.trace(Trace.ENTER_METHOD_0);
 
-    final DataReplyMessages dataReplyMessages =
-        ExchangeDataReply.dataReplyProcess(pollingManager.pollRequest(), spedsVersion,
-            spedsReference);
+    final String idu = indication();
+
+    logger.trace(Trace.EXIT_METHOD_1, "idu", idu);
+    return idu;
+  }
+
+  @Override
+  public String indication() {
+    logger.trace(Trace.ENTER_METHOD_0);
+
+    final DataReplyMessages dataReplyMessages = poller.poll();
 
     final String idu34 = dataReplyMessages.response34();
     final String idu45 = dataReplyMessages.response45();
 
-    // Envoie le Ack vers le client
     networkHost.request(idu45);
     networkHost.confirm();
 
     logger.trace(Trace.EXIT_METHOD_1, "idu34", idu34);
     return idu34;
+  }
+
+  @Override
+  public Boolean isPending(String msgId) {
+    return pendingMessagesId.contains(msgId);
   }
 }

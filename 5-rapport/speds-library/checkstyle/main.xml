@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.3">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/main/java/ca/griis/speds/api/dto/SpedsInterfaceDataUnit.java">
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/main/java/ca/griis/speds/api/factory/SpedsFactory.java">
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/main/java/ca/griis/speds/api/converter/ContentConverter.java">
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/main/java/ca/griis/speds/api/converter/ProtocolDataUnitConverter.java">
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/main/java/ca/griis/speds/api/converter/InterfaceDataUnitConverter.java">
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/main/java/ca/griis/speds/api/converter/ContentToAppIduConverter.java">
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/main/java/ca/griis/speds/api/converter/ContentToSpedsIduConverter.java">
+</file>
+</checkstyle>

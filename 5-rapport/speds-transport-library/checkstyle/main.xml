@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="9.3">
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportClient.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/Poller.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportFactory.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/security/StampVerifier.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/sync/SyncTransportFactory.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/DataReplyMessages.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/sync/ImmutableTransportHost.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/SilentIgnoredException.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportServer.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/client/ExchangeDataConfirmation.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportHost.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/client/ExchangeDataRequest.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/serializer/SharedObjectMapper.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/IdentifierGenerator.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/client/ExchangeDataConfirmation.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/server/ExchangeDataReply.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/client/ExchangeDataRequest.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/ParameterException.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/server/datatype/DataReplyMessages.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/SerializationException.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/server/ExchangeDataReply.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/serializer/SharedObjectMapper.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/message/PollingManager.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportFactory.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/service/identification/IdentifierGenerator.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportServer.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/SerializationException.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportClient.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/HeaderSealException.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/sync/ImmutableTransportHost.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/DeserializationException.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/sync/SyncTransportFactory.java">
 </file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/ParameterException.java">
-</file>
-<file name="/builds/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/exception/ContentSealException.java">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-transport-library/src/main/java/ca/griis/speds/transport/api/TransportHost.java">
 </file>
 </checkstyle>

@@ -116,7 +116,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_01_getIriException_source() throws Exception {
+  public void e_02_getIriException_source() throws Exception {
     doAnswer(interruptAnswer(requests, SES_PUB_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -136,7 +136,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_01_getIriException_destination() throws Exception {
+  public void e_03_getIriException_destination() throws Exception {
     doAnswer(interruptAnswer(requests, SES_PUB_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -157,7 +157,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_02_success() throws Exception {
+  public void e_04_success() throws Exception {
     doAnswer(interruptAnswer(requests, SES_PUB_ENV, environment.initiatrice, true))
         .when(clientTransportHost).dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_PUB_REC, environment.partenaire, false))
@@ -177,7 +177,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_02_invalidStamp() throws Exception {
+  public void e_05_invalidStamp() throws Exception {
     doAnswer(invalidStampAnswer(requests, SES_PUB_ENV)).when(clientTransportHost)
         .dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_PUB_REC, environment.partenaire, false))
@@ -199,7 +199,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_03_success() throws Exception {
+  public void e_06_success() throws Exception {
     doAnswer(interruptAnswer(requests, SES_SAK_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -226,7 +226,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_03_unknownSession() throws Exception {
+  public void e_07_unknownSession() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost).dataRequest(anyString());
     doAnswer(invocation -> responses.poll()).when(clientTransportHost)
         .dataReply();
@@ -243,7 +243,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_03_invalidStamp() throws Exception {
+  public void e_08_invalidStamp() throws Exception {
     doAnswer(interruptAnswer(requests, SES_SAK_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -270,7 +270,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_04_success() throws Exception {
+  public void e_09_success() throws Exception {
     doAnswer(interruptAnswer(requests, SES_SAK_ENV, environment.initiatrice, true))
         .when(clientTransportHost).dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_SAK_REC, environment.partenaire, false))
@@ -296,7 +296,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_04_unknownSession() throws Exception {
+  public void e_10_unknownSession() throws Exception {
     doAnswer(normalAnswer(responses)).when(serverTransportHost)
         .dataRequest(anyString());
     doAnswer(invocation -> requests.poll()).when(serverTransportHost)
@@ -314,7 +314,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_04_invalidStamp() throws Exception {
+  public void e_11_invalidStamp() throws Exception {
     doAnswer(invalidStampAnswer(requests, SES_SAK_ENV)).when(clientTransportHost)
         .dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_SAK_REC, environment.partenaire, false))
@@ -342,7 +342,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_04_invalidSkak() throws Exception {
+  public void e_12_invalidSkak() throws Exception {
     doAnswer(invalidSkakAnswer(requests, SES_SAK_ENV)).when(clientTransportHost)
         .dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_SAK_REC, environment.partenaire, false))
@@ -370,7 +370,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_05_success() throws Exception {
+  public void e_13_success() throws Exception {
     doAnswer(interruptAnswer(requests, SES_CLE_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -396,7 +396,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_05_unknownSession() throws Exception {
+  public void e_14_unknownSession() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost).dataRequest(anyString());
     doAnswer(invocation -> responses.poll()).when(clientTransportHost)
         .dataReply();
@@ -407,7 +407,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_05_invalidStamp() throws Exception {
+  public void e_15_invalidStamp() throws Exception {
     doAnswer(interruptAnswer(requests, SES_CLE_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -434,7 +434,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_05_invalidSkak() throws Exception {
+  public void e_16_invalidSkak() throws Exception {
     doAnswer(interruptAnswer(requests, SES_CLE_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -461,7 +461,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_06_success() throws Exception {
+  public void e_17_success() throws Exception {
     doAnswer(interruptAnswer(requests, SES_CLE_ENV, environment.initiatrice, true))
         .when(clientTransportHost).dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_CLE_REC, environment.partenaire, false))
@@ -492,7 +492,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_06_unknownSession() throws Exception {
+  public void e_18_unknownSession() throws Exception {
     doAnswer(normalAnswer(responses)).when(serverTransportHost)
         .dataRequest(anyString());
     doAnswer(invocation -> requests.poll()).when(serverTransportHost)
@@ -505,7 +505,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_06_invalidStamp() throws Exception {
+  public void e_19_invalidStamp() throws Exception {
     doAnswer(invalidStampAnswer(requests, SES_CLE_ENV)).when(clientTransportHost)
         .dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_CLE_REC, environment.partenaire, false))
@@ -537,7 +537,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_06_invalidLegitimacy() throws Exception {
+  public void e_20_invalidLegitimacy() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost).dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_CLE_REC, environment.partenaire, false))
         .when(serverTransportHost)
@@ -568,7 +568,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_07_success() throws Exception {
+  public void e_21_success() throws Exception {
     doAnswer(interruptAnswer(requests, SES_MSG_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -599,7 +599,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_07_unknownSession() throws Exception {
+  public void e_22_unknownSession() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost).dataRequest(anyString());
     doAnswer(invocation -> responses.poll()).when(clientTransportHost)
         .dataReply();
@@ -610,7 +610,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_07_invalidStamp() throws Exception {
+  public void e_23_invalidStamp() throws Exception {
     doAnswer(interruptAnswer(requests, SES_MSG_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -642,7 +642,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_07_invalidSdek() throws Exception {
+  public void e_24_invalidSdek() throws Exception {
     doAnswer(interruptAnswer(requests, SES_MSG_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -674,7 +674,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_08_success() throws Exception {
+  public void e_25_success() throws Exception {
     doAnswer(interruptAnswer(requests, SES_MSG_ENV, environment.initiatrice, true))
         .when(clientTransportHost).dataRequest(anyString());
     doAnswer(normalAnswer(responses)).when(serverTransportHost).dataRequest(anyString());
@@ -703,7 +703,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_08_unknownSession() throws Exception {
+  public void e_26_unknownSession() throws Exception {
     doAnswer(normalAnswer(responses)).when(serverTransportHost)
         .dataRequest(anyString());
     doAnswer(invocation -> requests.poll()).when(serverTransportHost)
@@ -716,7 +716,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_08_invalidStamp() throws Exception {
+  public void e_27_invalidStamp() throws Exception {
     doAnswer(invalidStampAnswer(requests, SES_MSG_ENV)).when(clientTransportHost)
         .dataRequest(anyString());
     doAnswer(normalAnswer(responses)).when(serverTransportHost).dataRequest(anyString());
@@ -746,7 +746,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_09_success() throws Exception {
+  public void e_28_success() throws Exception {
     doAnswer(interruptAnswer(requests, SES_MSG_ENV, environment.initiatrice, true))
         .when(clientTransportHost).dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_MSG_REC, environment.partenaire, false))
@@ -777,7 +777,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_09_unknownSession() throws Exception {
+  public void e_29_unknownSession() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost).dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_MSG_REC, environment.partenaire, false))
         .when(serverTransportHost)
@@ -808,7 +808,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_09_noResponseRequestException() throws Exception {
+  public void e_30_noResponseRequestException() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost).dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_MSG_REC, environment.partenaire, false))
         .when(serverTransportHost)
@@ -839,7 +839,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_10_success() throws Exception {
+  public void e_31_success() throws Exception {
     doAnswer(interruptAnswer(requests, SES_FIN_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -871,7 +871,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_10_unknownSession() throws Exception {
+  public void e_32_unknownSession() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost).dataRequest(anyString());
     doAnswer(invocation -> responses.poll()).when(clientTransportHost)
         .dataReply();
@@ -883,7 +883,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_10_invalidStamp() throws Exception {
+  public void e_33_invalidStamp() throws Exception {
     doAnswer(interruptAnswer(requests, SES_FIN_ENV, environment.initiatrice, false))
         .when(clientTransportHost)
         .dataRequest(anyString());
@@ -920,7 +920,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_11_success() throws Exception {
+  public void e_34_success() throws Exception {
     doAnswer(interruptAnswer(requests, SES_FIN_ENV, environment.initiatrice, true))
         .when(clientTransportHost).dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_FIN_REC, environment.partenaire, false))
@@ -951,7 +951,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_11_unknownSession() throws Exception {
+  public void e_35_unknownSession() throws Exception {
     doAnswer(normalAnswer(responses)).when(serverTransportHost)
         .dataRequest(anyString());
     doAnswer(invocation -> requests.poll()).when(serverTransportHost)
@@ -964,7 +964,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_11_invalidStamp() throws Exception {
+  public void e_36_invalidStamp() throws Exception {
     doAnswer(invalidStampAnswer(requests, SES_FIN_ENV)).when(clientTransportHost)
         .dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_FIN_REC, environment.partenaire, false))
@@ -996,7 +996,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_12_success() throws Exception {
+  public void e_37_success() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost)
         .dataRequest(anyString());
     doAnswer(interruptAnswer(responses, SES_FIN_REC, environment.partenaire, true))
@@ -1027,7 +1027,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_12_unknownSession() throws Exception {
+  public void e_38_unknownSession() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost)
         .dataRequest(anyString());
     doAnswer(invalidSessionAnswer(responses)).when(serverTransportHost)
@@ -1058,7 +1058,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_12_invalidStamp() throws Exception {
+  public void e_39_invalidStamp() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost)
         .dataRequest(anyString());
     doAnswer(invalidStampAnswer(responses, SES_FIN_REC)).when(serverTransportHost)
@@ -1089,7 +1089,7 @@ public class TestSuite {
   }
 
   @Test
-  public void e_12_invalidToken() throws Exception {
+  public void e_40_invalidToken() throws Exception {
     doAnswer(normalAnswer(requests)).when(clientTransportHost)
         .dataRequest(anyString());
     doAnswer(invalidSessionAnswerToken(responses)).when(serverTransportHost)

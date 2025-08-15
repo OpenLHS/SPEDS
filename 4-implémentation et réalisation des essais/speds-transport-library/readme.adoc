@@ -22,14 +22,9 @@ Un service d'API est offert pour la couche supérieure.
 
 *{component-name}* permet d'effectuer les tâches suivantes :
 
-* Effectuer une demande d’échanger des données sous des messages requêtes.
-
-* Confirmer la réponse reçue par l’initiateur de la requête (contient les données que l’initiateur de la requête veut échanger).
-
-* Recevoir la demande d’une requête avec les données échangées par l’initiateur de requête.
-
-* Répondre à un initiateur de requête sous une réponse avec des données à échanger.
-
+* Échanger des données à une autre entité.
+* Recevoir des données d'une autre entité.
+* Démarrer l'écoute de messages spour recevoir des messages d'autres entités de la couche transport.
 * Libérer les ressources utilisées en lien avec le protocole transport lors de l’arrêt des échanges.
 
 [#techno]
@@ -135,39 +130,67 @@ Pour plus de renseignements, consulter la section « <<Construction>> ».
 *TransportClient*
 
 |===
-| Id du processus | Signature impl.               | Comportement
-| S.O.            | void close()                  | Libère les ressources en lien avec le protocole transport.
-| PRO-04          | void dataRequest(String idu)  | Requête d’échange de données
-| PRO-05          | void dataConfirm()            | Confirmer la réception d’une réponse à une requête d’échange de données
+| Id du processus | Signature impl.                  | Comportement
+| S.O.            | void listen()                    | Démarre l'écoute de messages sur le procole transport.
+| S.O.            | void close()                     | Libère les ressources en lien avec le protocole transport.
+| S.O.            | Boolean isPending(String msgId)  | Vérifie si la demande d’échange de données a fait l’objet d’une confirmation.
+| PRO-04          | void request(String idu)         | Demande d’échange de données.
+| PRO-04          | void dataRequest(String idu)     | (Obsolète) Comportement identique à `request`.
+| PRO-05          | void dataConfirm()               | (Obsolète) Ne fait plus rien.
 |===
 
 *TransportServer*
 
 |===
 | Id du processus | Signature impl.               | Comportement
+| S.O.            | void listen()                 | Démarre l'écoute de messages sur le procole transport.
 | S.O.            | void close()                  | Libère les ressources en lien avec le protocole transport.
-| PRO-11          | String dataReply()            | Recevoir une requête d’échange de donnée
+| PRO-11          | String indication()           | Reçoit des données.
+| PRO-11          | String dataReply()            | (Obsolète) Comportement identique à `indication`.
 |===
 
-Étant donné que *{component}* fonctionne de façon synchrone, il est important d'appeler la fonctionne _dataRequest_ pour envoyer le message et
-par la suite la fonction _dataConfirm_ pour recevoir la réponse. Ce processus sera bloquant.
-
-Du côté serveur, il faudra appeler la fonction _dataReply_ pour recevoir et envoyer la réponse.
+[NOTE]
+====
+* Le démarrage de l'écoute du message du protocole se fait automatiquement lors d'un appel `request` ou `indication`.
+* La confirmation d'un accusé de réception de la couche transport  `PRO-05` est maintenant automatiquement géré par l'hôte.
+* La méthode `indication` est bloquante. Tant que des données ne seront pas reçues, la méthode attendra.
+* Les méthodes obsolètes seront supprimées prochainement à une autre version.
+====
 
 *Package factory*
 
 Définit la fabrique des hôtes du protocole de *{component}*.  Un hôte permet d’être un client et un serveur sur le protocole *{component}*. La fabrique permet donc la création d’un hôte respectant des options de configuration nécessaires au bon déroulement du protocole de la couche transport.
 
-*Exemple des options de configuration*
+*Options de configuration sur la version de protocole*
 
-[source, bash]
 ----
 speds.tra.version   - Version du protocole de la couche transport.
 speds.tra.reference - Référence du protocole de la couche transport.
 ----
 
+*Options de configuration sur l'interrogateur*
+
+L'interrogateur assure l'aiguillage des messages reçus de la couche transport en appliquant un traitement adapté à chaque type de message.
+
+----
+speds.tra.poller.maxQueueCapacity - Par défaut, la valeur est 100.
+
+La grandeur maximale de la file bloquante de l'interrogateur où qu'on insère les données reçues.
+Si la grandeur est excédée, l'ajout de données sera bloquante tant que sa capacité ne sera pas plus petite que celle définie en paramètre.
+
+speds.tra.poller.nbThreads - Par défaut, la valeur est 1.
+
+Le nombre de fils d'exécution sur l'interrogateur. 
+
+speds.tra.poller.sleepMs - Par défaut, la valeur est 200.
+
+Temps de pause sur le ou les fils d'exécution de l'interrogateur après chaque lecture de message. 
+Cela permet un répis aux autres fils d'exécution, et que l'interrogateur ne monopolise pas trop le processus en cours d'exécution. 
+----
+
 [#launch]
 == Démarrage
+
 S.O.
 
 == Documentation du code
@@ -182,6 +205,12 @@ Pour générer localement la version *française* de la documentation du code ac
 
 Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
 dossier `build\doc-fr-doxygen\html`.
+
+[#contact]
+== Personnes ressources
+
+* Francis Ouellet : Francis.Ouellet@usherbrooke.ca
+* Jean-François Éthier : JF.Ethier@usherbrooke.ca
 
 [#licence]
 == Copyright et licences
@@ -202,4 +231,3 @@ Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click h
 link:liliqr-licence-english.adoc[English version].
 
 La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
-

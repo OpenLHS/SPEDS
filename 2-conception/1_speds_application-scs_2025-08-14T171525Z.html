@@ -1,0 +1,2902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="Document de conception pour SPEDS Application">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Conception du module « SPEDS - application »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Conception du module « <em>SPEDS - application</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version ,</span>
+<span id="revdate">2025-07-01</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_rôle_du_module">1. Rôle du module</a></li>
+<li><a href="#_modèle_propre_au_module">2. Modèle propre au module</a></li>
+<li><a href="#_mode_de_transmission">3. Mode de transmission</a></li>
+<li><a href="#_type_au_module">4. Type au module</a>
+<ul class="sectlevel2">
+<li><a href="#_type_simple_de_données">4.1. Type simple de données</a></li>
+<li><a href="#_type_complexe_de_données">4.2. Type complexe de données</a>
+<ul class="sectlevel3">
+<li><a href="#_format_dentête_ent_a">4.2.1. Format d’entête (<code>Ent_A</code>)</a></li>
+<li><a href="#_message_pdu">4.2.2. Message (PDU)</a></li>
+<li><a href="#_interface_de_lunité_de_données_du_service_idu">4.2.3. Interface de l&#8217;unité de données du service (IDU)</a></li>
+</ul>
+</li>
+<li><a href="#_type_de_message">4.3. Type de message</a>
+<ul class="sectlevel3">
+<li><a href="#_tache_envoi">4.3.1. TACHE.ENVOI</a></li>
+<li><a href="#_tache_reception">4.3.2. TACHE.RECEPTION</a></li>
+<li><a href="#_fin_envoi">4.3.3. FIN.ENVOI</a></li>
+<li><a href="#_fin_reception">4.3.4. FIN.RECEPTION</a></li>
+<li><a href="#_exception_envoi">4.3.5. EXCEPTION.ENVOI</a></li>
+<li><a href="#_exception_reception">4.3.6. EXCEPTION.RECEPTION</a></li>
+<li><a href="#_data_envoi">4.3.7. DATA.ENVOI</a></li>
+<li><a href="#_data_reception">4.3.8. DATA.RECEPTION</a></li>
+<li><a href="#_statut_envoi">4.3.9. STATUT.ENVOI</a></li>
+<li><a href="#_statut_reception">4.3.10. STATUT.RECEPTION</a></li>
+<li><a href="#_commande_envoi">4.3.11. COMMANDE.ENVOI</a></li>
+<li><a href="#_commande_reception">4.3.12. COMMANDE.RECEPTION</a></li>
+<li><a href="#_pga_fin">4.3.13. PGA.FIN</a></li>
+<li><a href="#_pga_confirmation">4.3.14. PGA.CONFIRMATION</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_hypothèse_du_module">5. Hypothèse du module</a></li>
+<li><a href="#_contrainte_du_module">6. Contrainte du module</a></li>
+<li><a href="#_processus_du_module">7. Processus du module</a>
+<ul class="sectlevel2">
+<li><a href="#_processsus_pour_un_client">7.1. Processsus pour un client</a>
+<ul class="sectlevel3">
+<li><a href="#_pro_1_1_processus_initialise_les_paramètres_du_client">7.1.1. [PRO-1.1] Processus « Initialise les paramètres du client »</a></li>
+<li><a href="#_pro_1_2_processus_demande_déchanger_des_données">7.1.2. [PRO-1.2] Processus « Demande d&#8217;échanger des données »</a></li>
+<li><a href="#_pro_1_3_processus_confirme_léchange_de_données">7.1.3. [PRO-1.3] Processus « Confirme l&#8217;échange de données »</a></li>
+</ul>
+</li>
+<li><a href="#_processus_pour_un_serveur">7.2. Processus pour un serveur</a>
+<ul class="sectlevel3">
+<li><a href="#_pro_2_1_processus_initialise_les_paramètres_du_serveur">7.2.1. [PRO-2.1] Processus « Initialise les paramètres du serveur »</a></li>
+<li><a href="#_pro_2_2_processus_indique_un_échange_de_données">7.2.2. [PRO-2.2] Processus « Indique un échange de données »</a></li>
+<li><a href="#_pro_2_3_processus_répond_à_un_échange_de_données">7.2.3. [PRO-2.3] Processus « Répond à un échange de données »</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_incongruités">8. Incongruités</a></li>
+<li><a href="#_annexes">9. Annexes</a>
+<ul class="sectlevel2">
+<li><a href="#_glossaire">9.1. Glossaire</a></li>
+<li><a href="#InterfaceDataUnit">9.2. <em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a></li>
+<li><a href="#Message">9.3. <em>Protocol Data Unit</em> de la couche application (1)</a></li>
+<li><a href="#TACHE.ENVOI">9.4. <em>TACHE.ENVOI</em></a></li>
+<li><a href="#TACHE.RECEPTION">9.5. <em>TACHE.RECEPTION</em></a></li>
+<li><a href="#FIN.ENVOI">9.6. <em>FIN.ENVOI</em></a></li>
+<li><a href="#FIN.RECEPTION">9.7. <em>FIN.RECEPTION</em></a></li>
+<li><a href="#EXCEPTION.ENVOI">9.8. <em>EXCEPTION.ENVOI</em></a></li>
+<li><a href="#EXCEPTION.RECEPTION">9.9. <em>EXCEPTION.RECEPTION</em></a></li>
+<li><a href="#DATA.ENVOI">9.10. <em>DATA.ENVOI</em></a></li>
+<li><a href="#DATA.RECEPTION">9.11. <em>DATA.RECEPTION</em></a></li>
+<li><a href="#STATUT.ENVOI">9.12. <em>STATUT.ENVOI</em></a></li>
+<li><a href="#STATUT.RECEPTION">9.13. <em>STATUT.RECEPTION</em></a></li>
+<li><a href="#COMMANDE.ENVOI">9.14. <em>COMMANDE.ENVOI</em></a></li>
+<li><a href="#COMMANDE.RECEPTION">9.15. <em>COMMANDE.RECEPTION</em></a></li>
+<li><a href="#PGA.FIN">9.16. <em>PGA.FIN</em></a></li>
+<li><a href="#PGA.CONFIRMATION">9.17. <em>PGA.CONFIRMATION</em></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-02-13 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du spécificateur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-16 13:35</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision de l&#8217;architecte réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-02-13 10:01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur des tests réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-02-13 13:15</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Historique</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Changement important</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception initiale</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ajout des contenu</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 14:47</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Revérifier et corrigé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-14 10:57</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retirer les processus d&#8217;état</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-02-05 09:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ajouter le PGA, source et destination</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-02-05 13:58</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Référence</caption>
+<colgroup>
+<col>
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Consultation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100-P6.puml</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">101-P6.puml</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">102-P6.puml</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">103-P6.puml</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">104-P6.puml</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">105-P6.puml</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">106-P6.puml</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">107-P6.puml</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 10:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1_TacheEnvoi.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2_TacheReception.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-16 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3_FinEnvoi.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-16 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4_FinReception.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5_ExceptionEnvoi.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-16 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6_ExceptionReception.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7_DataEnvoi.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-16 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8_DataReception.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9_StatutEnvoi.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-16 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10_StatutReception.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-16 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11_CommandeEnvoi.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12_CommandeReception.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-16 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">13_PgaConfirmation.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-16 15:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14_PgaFin.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13 15:00</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rôle_du_module">1. Rôle du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le module « <em>SPEDS - application</em> »  est d&#8217;offrir l&#8217;interface utilisateur pour échanger sur un réseau aux services et applications.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_modèle_propre_au_module">2. Modèle propre au module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mode_de_transmission">3. Mode de transmission</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sans connexion avec accusé de réception.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_type_au_module">4. Type au module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_type_simple_de_données">4.1. Type simple de données</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Type simple de donnée</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pgaId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un type décrivant un identifiant de projet de gestion d&#8217;activité.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sourceCode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères respectant le format <code>id</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code de l&#8217;entité agissant comme source</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>destinationCode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères respectant le format <code>id</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code de l&#8217;entité agissant comme destination.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères respectant le format UUID.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un type décrivant un identifiant de message.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un type décrivant le contenu du message SPEDS.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_type_complexe_de_données">4.2. Type complexe de données</h3>
+<div class="sect3">
+<h4 id="_format_dentête_ent_a">4.2.1. Format d’entête (<code>Ent_A</code>)</h4>
+<div class="paragraph">
+<p>Un type décrivant un format d&#8217;entête.
+Ce type est attendu être équivalent à la propriété <code>{header}</code> appartenant au schéma JSON du PDU
+(cf. annexe <a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a>).</p>
+</div>
+<div class="paragraph">
+<p>Le PCI est l&#8217;équivalent de <code>Ent_P</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_message_pdu">4.2.2. Message (PDU)</h4>
+<div class="paragraph">
+<p>Un type décrivant un format de message.
+Ce type est attendu être équivalent au schéma JSON du même objet
+(cf. annexe <a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interface_de_lunité_de_données_du_service_idu">4.2.3. Interface de l&#8217;unité de données du service (IDU)</h4>
+<div class="paragraph">
+<p>Unité d’information transférée en une seule interaction à l’interface de 2 couches, constituée d’information de contrôle d’interface (ICI(N)) et d&#8217;unité de service de données (SDU(N)).</p>
+</div>
+<div class="paragraph">
+<p>(cf. annexe <a href="#InterfaceDataUnit-1-2">[InterfaceDataUnit-1-2]</a>).</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_type_de_message">4.3. Type de message</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>TACHE.ENVOI</code>,</p>
+</li>
+<li>
+<p><code>TACHE.RECEPTION</code>,</p>
+</li>
+<li>
+<p><code>FIN.ENVOI</code>,</p>
+</li>
+<li>
+<p><code>FIN.RECEPTION</code>,</p>
+</li>
+<li>
+<p><code>EXCEPTION.ENVOI</code>,</p>
+</li>
+<li>
+<p><code>EXCEPTION.RECEPTION</code>,</p>
+</li>
+<li>
+<p><code>DATA.ENVOI</code>,</p>
+</li>
+<li>
+<p><code>DATA.RECEPTION</code>,</p>
+</li>
+<li>
+<p><code>STATUT.ENVOI</code>,</p>
+</li>
+<li>
+<p><code>STATUT.RECEPTION</code>,</p>
+</li>
+<li>
+<p><code>COMMANDE.ENVOI</code>,</p>
+</li>
+<li>
+<p><code>COMMANDE.RECEPTION</code>,</p>
+</li>
+<li>
+<p><code>PGA.FIN</code></p>
+</li>
+<li>
+<p><code>PGA.CONFIRMATION</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Pour les messages types ici, ils doivent suivre le schéma JSON suivant de la couche application
+(cf. annexe <a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a>).</p>
+</div>
+<div class="sect3">
+<h4 id="_tache_envoi">4.3.1. TACHE.ENVOI</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant l&#8217;envoi d&#8217;une tâche.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Format du contenu TACHE.ENVOI</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de l&#8217;instance de la tâche (UWi).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_def</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de la définition de la tâche. (UWd)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">inArgs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arguments d&#8217;entrée de la tâche.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">params</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres associés à la tâche.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">command</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Commande relative à la tâche.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#TACHE.ENVOI"><em>TACHE.ENVOI</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tache_reception">4.3.2. TACHE.RECEPTION</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant la réception d&#8217;une tâche.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Format du contenu TACHE.RECEPTION</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de l&#8217;instance de la tâche (UWi).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_def</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de la définition de la tâche. (UWd)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">startTime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Temps auquel la tâche a été démarrée.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#TACHE.RECEPTION"><em>TACHE.RECEPTION</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fin_envoi">4.3.3. FIN.ENVOI</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant la fin d&#8217;une tâche.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Format du contenu FIN.ENVOI</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de l&#8217;instance de la tâche (UWi).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_def</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de la définition de la tâche. (UWd)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">outArgs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arguments de sortie de la tâche.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">finishTime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Temps auquel la tâche a été terminée.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#FIN.ENVOI"><em>FIN.ENVOI</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fin_reception">4.3.4. FIN.RECEPTION</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant la réception de la fin d&#8217;une tâche.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Format du contenu FIN.RECEPTION</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de l&#8217;instance de la tâche (UWi).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#FIN.RECEPTION"><em>FIN.RECEPTION</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exception_envoi">4.3.5. EXCEPTION.ENVOI</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant l&#8217;envoi de la fin d&#8217;une tâche avec exception.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Format du contenu EXCEPTION.ENVOI</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de l&#8217;instance de la tâche (UWi).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_def</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de la définition de la tâche. (UWd)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">raisedException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nom de l&#8217;exception levée.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">finishTime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Temps auquel la tâche a été terminée.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#EXCEPTION.ENVOI"><em>EXCEPTION.ENVOI</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exception_reception">4.3.6. EXCEPTION.RECEPTION</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant la réception de la fin d&#8217;une tâche avec exception.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Format du contenu EXCEPTION.RECEPTION</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de l&#8217;instance de la tâche (UWi).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#EXCEPTION.RECEPTION"><em>EXCEPTION.RECEPTION</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_data_envoi">4.3.7. DATA.ENVOI</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant l&#8217;envoi de données.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Format du contenu DATA.ENVOI</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">transferId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de transfert.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Données transférées.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#DATA.ENVOI"><em>DATA.ENVOI</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_data_reception">4.3.8. DATA.RECEPTION</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant la réception de données.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 12. Format du contenu DATA.RECEPTION</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">transferId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de transfert.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checksum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Empreinte numérique des données. Porte sur le champs <code>data</code> de DATA.ENVOI.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">function</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Méthode de checksum utilisée pour vérifier les données.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#DATA.RECEPTION"><em>DATA.RECEPTION</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_statut_envoi">4.3.9. STATUT.ENVOI</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant l&#8217;envoi d&#8217;un statut.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 13. Format du contenu STATUT.ENVOI</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">status</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Objet UWi.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#STATUT.ENVOI"><em>STATUT.ENVOI</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_statut_reception">4.3.10. STATUT.RECEPTION</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant la réception d&#8217;un statut.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 14. Format du contenu STATUT.RECEPTION</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">status_ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de l&#8217;objet UWi.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">valid</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Statut de validité du statut.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#STATUT.RECEPTION"><em>STATUT.RECEPTION</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_commande_envoi">4.3.11. COMMANDE.ENVOI</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant l&#8217;envoi d&#8217;une commande.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 15. Format du contenu COMMANDE.ENVOI</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">command</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Commande à envoyer.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Rappel que les valeurs possibles pour <code>command</code> sont <code>START</code> ou <code>STOP</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>(cf. annexe <a href="#COMMANDE.ENVOI"><em>COMMANDE.ENVOI</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_commande_reception">4.3.12. COMMANDE.RECEPTION</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant la réception d&#8217;une commande.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 16. Format du contenu COMMANDE.RECEPTION</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">planStatus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UWi sous forme de chaîne de caractères.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#COMMANDE.RECEPTION"><em>COMMANDE.RECEPTION</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pga_fin">4.3.13. PGA.FIN</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant la fin d&#8217;une PGA.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 17. Format du contenu PGA.FIN</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">planStatus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de l&#8217;objet UWi.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#PGA.FIN"><em>PGA.FIN</em></a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pga_confirmation">4.3.14. PGA.CONFIRMATION</h4>
+<div class="paragraph">
+<p>Contenu du message applicatif concernant la confirmation de la fin d&#8217;une PGA.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 18. Format du contenu PGA.CONFIRMATION</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Champs</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">status_ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de l&#8217;objet UWi de statut.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(cf. annexe <a href="#PGA.CONFIRMATION"><em>PGA.CONFIRMATION</em></a>).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèse_du_module">5. Hypothèse du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[HYP-001]
+</td>
+<td class="hdlist2">
+<p>Toute erreur ou exception signalée par la couche inférieure ne sera pas gérée.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contrainte_du_module">6. Contrainte du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[CON-001]
+</td>
+<td class="hdlist2">
+<p>Le format de sérialisation est JSON.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_processus_du_module">7. Processus du module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_processsus_pour_un_client">7.1. Processsus pour un client</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.1] Initialise les paramètres du client
+</td>
+<td class="hdlist2">
+<p>Initialise le client à des paramètres pour assurer son fonctionnement.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.2] Demande d&#8217;échanger des données
+</td>
+<td class="hdlist2">
+<p>Demande d’échanger des données sous une requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.3] Confirme l&#8217;échange de données
+</td>
+<td class="hdlist2">
+<p>Confirme l&#8217;échange de données sous une réponse (contient les données que l&#8217;entité qui a reçu la demande veut échanger).</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_pro_1_1_processus_initialise_les_paramètres_du_client">7.1.1. [PRO-1.1] Processus « Initialise les paramètres du client »</h4>
+<div class="sect4">
+<h5 id="_comportement">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.1.1]
+</td>
+<td class="hdlist2">
+<p>Récupération des paramètres de configuration.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.1.2]
+</td>
+<td class="hdlist2">
+<p>Initialiser les options.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 71.4285%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>init</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "options": {
+      "type": "array",
+      "minItems": 0
+    }
+  },
+  "required": [
+    "options"
+  ],
+  "additionalProperties": false
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>S.O.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_erreur">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pro_1_2_processus_demande_déchanger_des_données">7.1.2. [PRO-1.2] Processus « Demande d&#8217;échanger des données »</h4>
+<div class="sect4">
+<h5 id="_comportement_2">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.2.1]
+</td>
+<td class="hdlist2">
+<p>Récupération <a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a> reçu en entrée.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.2.2]
+</td>
+<td class="hdlist2">
+<p>Sérialisation du message [CON-001].</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.2.3]
+</td>
+<td class="hdlist2">
+<p>Construction l'<a href="#InterfaceDataUnit"><em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.2.3.1]
+</td>
+<td class="hdlist2">
+<p>Construction ICI: code de la source, code de la destination, PGA [PRO-1.2.1].</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.2.3.2]
+</td>
+<td class="hdlist2">
+<p>Construction SDU: message précédemment sérialisé.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.2.4]
+</td>
+<td class="hdlist2">
+<p>La sortie est l&#8217;interface d&#8217;unité de données qui a été précédemment construit à [PRO-1.2.3].</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface_2">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>request</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>pgaId</p>
+</li>
+<li>
+<p>sourceCode</p>
+</li>
+<li>
+<p>destinationCode</p>
+</li>
+<li>
+<p><a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#InterfaceDataUnit"><em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_erreur_2">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pro_1_3_processus_confirme_léchange_de_données">7.1.3. [PRO-1.3] Processus « Confirme l&#8217;échange de données »</h4>
+<div class="sect4">
+<h5 id="_comportement_3">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.3.1]
+</td>
+<td class="hdlist2">
+<p>Construction <a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.3.1.1]
+</td>
+<td class="hdlist2">
+<p>Récupération du ICI et SDU de l'<a href="#InterfaceDataUnit"><em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a> reçue en entrée.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.3.1.2]
+</td>
+<td class="hdlist2">
+<p>Désérialisation du SDU, et doit correspondre à <a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a>. Sinon, erreur: DeserializationException.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.3.1.3]
+</td>
+<td class="hdlist2">
+<p>Vérifier que l&#8217;identifiant du message correspond à un message qui a été précédemment envoyé. Sinon, InvalidPduId.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.3.2]
+</td>
+<td class="hdlist2">
+<p>La sortie est le message qui a été précédemment construit à [PRO-1.3.1].</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface_3">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>confirm</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#InterfaceDataUnit"><em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>pgaId</p>
+</li>
+<li>
+<p>sourceCode</p>
+</li>
+<li>
+<p>destinationCode</p>
+</li>
+<li>
+<p><a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a></p>
+</li>
+</ol>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_erreur_3">Erreur</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">DeserializationException</dt>
+<dd>
+<p>Erreur de désérialisation.</p>
+</dd>
+<dt class="hdlist1">InvalidPduId</dt>
+<dd>
+<p>L&#8217;identifiant de la réponse ne correspond pas à un identifiant d&#8217;une requête précédemment envoyée.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_processus_pour_un_serveur">7.2. Processus pour un serveur</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.1] Initialise les paramètres du serveur
+</td>
+<td class="hdlist2">
+<p>Initialise le serveur à des paramètres pour assurer son fonctionnement.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.2] Indique un échange de données
+</td>
+<td class="hdlist2">
+<p>Reçoit la demande d’une requête avec les données échangées par l’initiateur de requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.3] Répond à un échange de données
+</td>
+<td class="hdlist2">
+<p>Répond à un initiateur de requête sous une réponse avec des données à échanger.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_pro_2_1_processus_initialise_les_paramètres_du_serveur">7.2.1. [PRO-2.1] Processus « Initialise les paramètres du serveur »</h4>
+<div class="sect4">
+<h5 id="_comportement_4">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.1.1]
+</td>
+<td class="hdlist2">
+<p>Récupération des paramêtres de configuration.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.1.2]
+</td>
+<td class="hdlist2">
+<p>Initialiser les options.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface_4">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 71.4285%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>init</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "options": {
+      "type": "array",
+      "minItems": 0
+    }
+  },
+  "required": [
+    "options"
+  ],
+  "additionalProperties": false
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>S.O.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_erreur_4">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pro_2_2_processus_indique_un_échange_de_données">7.2.2. [PRO-2.2] Processus « Indique un échange de données »</h4>
+<div class="sect4">
+<h5 id="_comportement_5">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.2.1]
+</td>
+<td class="hdlist2">
+<p>Construction <a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.2.1.1]
+</td>
+<td class="hdlist2">
+<p>Récupération du ICI et SDU de l'<a href="#InterfaceDataUnit"><em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a> reçue en entrée.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.2.1.2]
+</td>
+<td class="hdlist2">
+<p>Désérialisation du SDU, et doit correspondre à <a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a>. Sinon, erreur: DeserializationException.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.2.2]
+</td>
+<td class="hdlist2">
+<p>La sortie est un message qui a été précédemment construit à [PRO-2.2.1].</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface_5">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>indication</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#InterfaceDataUnit"><em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>pgaId</p>
+</li>
+<li>
+<p>sourceCode</p>
+</li>
+<li>
+<p>destinationCode</p>
+</li>
+<li>
+<p><a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a></p>
+</li>
+</ol>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_erreur_5">Erreur</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">DeserializationException</dt>
+<dd>
+<p>Erreur de désérialisation.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pro_2_3_processus_répond_à_un_échange_de_données">7.2.3. [PRO-2.3] Processus « Répond à un échange de données »</h4>
+<div class="sect4">
+<h5 id="_comportement_6">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.3.1]
+</td>
+<td class="hdlist2">
+<p>Récupération <a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a> reçu en entrée.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.3.2]
+</td>
+<td class="hdlist2">
+<p>Sérialisation du message [CON-001].</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.3.3]
+</td>
+<td class="hdlist2">
+<p>Construction l'<a href="#InterfaceDataUnit"><em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.3.3.1]
+</td>
+<td class="hdlist2">
+<p>Construction ICI: code de la source, code de la destination, et PGA qui sont identiques à [PRO-2.3.1].</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.3.3.2]
+</td>
+<td class="hdlist2">
+<p>Construction SDU: message précédemment sérialisé.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.3.4]
+</td>
+<td class="hdlist2">
+<p>La sortie est l&#8217;interface d&#8217;unité de données qui a été précédemment construit à [PRO-2.3.3].</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface_6">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>response</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>pgaId</p>
+</li>
+<li>
+<p>sourceCode</p>
+</li>
+<li>
+<p>destinationCode</p>
+</li>
+<li>
+<p><a href="#Message"><em>Protocol Data Unit</em> de la couche application (1)</a></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#InterfaceDataUnit"><em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_erreur_6">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">8. Incongruités</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annexes">9. Annexes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_glossaire">9.1. Glossaire</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+Source
+</td>
+<td class="hdlist2">
+<p>L&#8217;entité qui est l&#8217;initiateur de la requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Destination
+</td>
+<td class="hdlist2">
+<p>L&#8217;entité qui reçoit la requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Couche supérieure
+</td>
+<td class="hdlist2">
+<p>La couche de communication qui utilise les services de la couche application.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Couche inférieure
+</td>
+<td class="hdlist2">
+<p>La couche de communication qui offre des services utilisés par la couche application.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+SDU
+</td>
+<td class="hdlist2">
+<p>Unité de données du service.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+ICI
+</td>
+<td class="hdlist2">
+<p>Information de contrôle de l&#8217;interface.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+PDU
+</td>
+<td class="hdlist2">
+<p>Unité de données de protocole.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="InterfaceDataUnit">9.2. <em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</h3>
+<div class="listingblock">
+<div class="title">Format d&#8217;interface d&#8217;unité de données entre la couche supérieure et la couche présentation</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/speds/json/schema/idu/InterfaceDataUnit-1_2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InterfaceDataUnit-1_2 - 2025-07-01T21:30:00-0400",
+  "description": "An agreed way of communication among SPEDS layers Application (1) and Presentation (2).",
+  "type": "object",
+  "properties": {
+    "context": {
+      "description": "The context shared between these two SPEDS layers. This is the ICI (Interface Control Information), i.e. an information passed across an interface to coordinate interactions between two adjacent layers.",
+      "type": "object",
+      "properties": {
+        "PGA": {
+          "description": "The PGA identifier (a Lodad GUID).",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "source_code": {
+          "description": "The source entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "destination_code": {
+          "description": "The destination entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "tracking_number": {
+          "description": "The number used to track the PDU. If the PDU is a response (resp. a confirmation), it should be the tracking number of the corresponding original indication (resp. request).",
+          "type": "string",
+          "format": "uuid"
+        },
+        "options": {
+          "description": "The options shared between the layers.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "PGA",
+        "source_code",
+        "destination_code",
+        "tracking_number",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "message": {
+      "description": "The message shared between these two SPEDS layers. This is the APDU : the PDU (Protocol Data Unit) of the Application layer (1).",
+      "type": "string"
+    }
+  },
+  "required": [
+    "context",
+    "message"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Message">9.3. <em>Protocol Data Unit</em> de la couche application (1)</h3>
+<div class="listingblock">
+<div class="title">Format du message de la couche application</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/speds/json/schema/pdu/ProtocolDataUnit-1-APP.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolDataUnit-1-APP - 2025-04-11T14:59:08-0400",
+  "$defs": {
+    "iri": {
+      "description": "A valid IR according to RFC 3987",
+      "type": "string",
+      "format": "iri"
+    },
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "speds_version": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)(\\.[0-9]+[a-z]*)$"
+    }
+  },
+  "description": "For the Application Layer of SPEDS (Layer 1) : a unit of data which is transferred from one end of a connection to the other with no loss of identity or meaning.",
+  "type": "object",
+  "examples": [
+    {
+      "header": {
+        "msgtype": "TACHE.ENVOI",
+        "id": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+        "parameters": false,
+        "SPEDS": {
+          "version": "6.1.0",
+          "reference": "https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library"
+        }
+      },
+      "content": {
+        "task_ref": "550e8400-e29b-41d4-a716-446655440000",
+        "task_def": "aa30bc32-6d3f-4e0d-a6d7-29659bf37fe4",
+        "inArgs": [
+          {
+            "Name": "validNumber",
+            "Value": "(Value (Number (Token \"1\")))"
+          }
+        ],
+        "params": [],
+        "command": "START"
+      }
+    }
+  ],
+  "properties": {
+    "header": {
+      "description": "The header of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "properties": {
+        "msgtype": {
+          "description": "The type of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "enum": [
+            "TACHE.ENVOI",
+            "TACHE.RECEPTION",
+            "FIN.ENVOI",
+            "FIN.RECEPTION",
+            "EXCEPTION.ENVOI",
+            "EXCEPTION.RECEPTION",
+            "DATA.ENVOI",
+            "DATA.RECEPTION",
+            "STATUT.ENVOI",
+            "STATUT.RECEPTION",
+            "COMMANDE.ENVOI",
+            "COMMANDE.RECEPTION",
+            "PGA.FIN",
+            "PGA.CONFIRMATION"
+          ]
+        },
+        "id": {
+          "description": "The identifier of a SPEDS message. Mandatory in all layers.",
+          "$ref": "#/$defs/uuid"
+        },
+        "parameters": {
+          "description": "The parameters of the Application layer.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        },
+        "SPEDS": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "description": "The version of the SPEDS protocol used for this SDU.",
+              "$ref": "#/$defs/speds_version"
+            },
+            "reference": {
+              "description": "The reference of the SPEDS protocol version used for this SDU.",
+              "$ref": "#/$defs/iri"
+            }
+          },
+          "required": [
+            "version",
+            "reference"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "msgtype",
+        "id",
+        "parameters",
+        "SPEDS"
+      ]
+    },
+    "content": {
+      "description": "The content of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "minProperties": 1,
+      "oneOf": [
+        {
+          "$ref": "../layer/app/101_TacheEnvoi.schema.json"
+        },
+        {
+          "$ref": "../layer/app/101_TacheReception.schema.json"
+        },
+        {
+          "$ref": "../layer/app/102_FinEnvoi.schema.json"
+        },
+        {
+          "$ref": "../layer/app/102_FinReception.schema.json"
+        },
+        {
+          "$ref": "../layer/app/103_ExceptionEnvoi.schema.json"
+        },
+        {
+          "$ref": "../layer/app/103_ExceptionReception.schema.json"
+        },
+        {
+          "$ref": "../layer/app/104_DataEnvoi.schema.json"
+        },
+        {
+          "$ref": "../layer/app/104_DataReception.schema.json"
+        },
+        {
+          "$ref": "../layer/app/105_StatutEnvoi.schema.json"
+        },
+        {
+          "$ref": "../layer/app/105_StatutReception.schema.json"
+        },
+        {
+          "$ref": "../layer/app/106_CommandeEnvoi.schema.json"
+        },
+        {
+          "$ref": "../layer/app/106_CommandeReception.schema.json"
+        },
+        {
+          "$ref": "../layer/app/107_PgaFin.schema.json"
+        },
+        {
+          "$ref": "../layer/app/107_PgaConfirmation.schema.json"
+        }
+      ]
+    }
+  },
+  "required": [
+    "header",
+    "content"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="TACHE.ENVOI">9.4. <em>TACHE.ENVOI</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour un envoi</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/TacheEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TacheEnvoi - 2025-01-13T12:49-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to dispatch a task",
+  "properties": {
+    "task_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "task_def": {
+      "description": "The identifier of the task definition",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "inArgs": {
+      "description": "The input arguments of the task",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Name",
+          "Value"
+        ]
+      }
+    },
+    "params": {
+      "description": "The interface parameters of the task",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Name",
+          "Value"
+        ]
+      }
+    },
+    "command": {
+      "description": "The command associated with the task dispatch",
+      "type": "string",
+      "enum": [
+        "ABORT",
+        "START"
+      ]
+    }
+  },
+  "required": [
+    "task_ref",
+    "task_def",
+    "inArgs",
+    "params",
+    "command"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="TACHE.RECEPTION">9.5. <em>TACHE.RECEPTION</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour une réception</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/TacheReception.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tâche Reception - 2025-01-16T09:45-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    },
+    "timestamp": {
+      "description": "A valid timestamp.",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the reception of a task",
+  "properties": {
+    "task_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "task_def": {
+      "description": "The identifier of the task definition",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "startTime": {
+      "description": "The time at which the task was started",
+      "$ref": "#/$defs/timestamp"
+    }
+  },
+  "required": [
+    "task_ref",
+    "task_def",
+    "startTime"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="FIN.ENVOI">9.6. <em>FIN.ENVOI</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour une fin d&#8217;envoi</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/FinEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FinEnvoi - 2025-01-16T09:45:18-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    },
+    "timestamp": {
+      "description": "A valid timestamp.",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the end of a task",
+  "properties": {
+    "task_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "task_def": {
+      "description": "The identifier of the task definition",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "outArgs": {
+      "description": "The output arguments of the task",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Value": {
+            "type": "string"
+          }
+        },
+        "minItems": 0,
+        "required": [
+          "Name",
+          "Value"
+        ]
+      }
+    },
+    "finishTime": {
+      "description": "The time at which the task was finished",
+      "$ref": "#/$defs/timestamp"
+    }
+  },
+  "required": [
+    "task_ref",
+    "task_def",
+    "outArgs",
+    "finishTime"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="FIN.RECEPTION">9.7. <em>FIN.RECEPTION</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour une réception de fin</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/FinReception.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FinReception - 2025-01-13T13:05-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the end of a task",
+  "properties": {
+    "task_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    }
+  },
+  "required": [
+    "task_ref"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="EXCEPTION.ENVOI">9.8. <em>EXCEPTION.ENVOI</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour une exception d&#8217;envoi</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/ExceptionEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExceptionEnvoi - 2025-01-16T13:09-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    },
+    "timestamp": {
+      "description": "A valid timestamp.",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to complete a task in error",
+  "properties": {
+    "task_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "task_def": {
+      "description": "The identifier of the task definition",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "raisedException": {
+      "description": "The raised exception",
+      "type": "string"
+    },
+    "finishTime": {
+      "description": "The time at which the task was finished",
+      "$ref": "#/$defs/timestamp"
+    }
+  },
+  "required": [
+    "task_ref",
+    "task_def",
+    "raisedException",
+    "finishTime"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="EXCEPTION.RECEPTION">9.9. <em>EXCEPTION.RECEPTION</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour une réception d&#8217;exception</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/ExceptionReception.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExceptionReception - 2025-01-13T13:11-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the reception of a completed task with an exception",
+  "properties": {
+    "task_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    }
+  },
+  "required": [
+    "task_ref"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="DATA.ENVOI">9.10. <em>DATA.ENVOI</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour un envoi de données</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/DataEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DataEnvoi - 2025-01-16T13:14-0500",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to to transfer data",
+  "properties": {
+    "transferId": {
+      "description": "Identifier of the transfer (UUID)",
+      "$ref": "#/$defs/uuid"
+    },
+    "data": {
+      "description": "Transferred data",
+      "type": "string"
+    }
+  },
+  "required": [
+    "transferId",
+    "data"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="DATA.RECEPTION">9.11. <em>DATA.RECEPTION</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour une réception de données</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/DataReception.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DataReception - 2025-01-13T13:14-0500",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the reception of a data transfer",
+  "properties": {
+    "transferId": {
+      "description": "Identifier of the transfer (UUID)",
+      "$ref": "#/$defs/uuid"
+    },
+    "checksum": {
+      "description": "Digital fingerprint of the data. The checksum is applied on the data field of the DataEnvoi message.",
+      "type": "string"
+    },
+    "function": {
+      "description": "Checksum method used to calculate the checksum field.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "transferId",
+    "checksum",
+    "function"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="STATUT.ENVOI">9.12. <em>STATUT.ENVOI</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour un envoi de statut</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/StatutEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "StatutEnvoi - 2024-01-16T13:48-0500",
+  "$defs": {
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to send the status of a given task",
+  "properties": {
+    "status": {
+      "description": "A status (a partial execution trace) represented as a Lodad expression of a UWi (Unit of Work instance)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="STATUT.RECEPTION">9.13. <em>STATUT.RECEPTION</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour une réception de statut</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/StatutReception.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "StatutReception - 2025-01-16T13:52-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the reception of a task",
+  "properties": {
+    "status_ref": {
+      "description": "The identifier of the instance of the sent status (a Unit of Work instance GUID)",
+      "$ref": "#/$defs/lodad_guid"
+    },
+    "valid": {
+      "description": "The validity of the sent status: true means that the status was accepted and saved.",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "status_ref",
+    "valid"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="COMMANDE.ENVOI">9.14. <em>COMMANDE.ENVOI</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour un envoi de commande</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/CommandeEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CommandeEnvoi - 2025-01-13T13:53-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to send a command related to a task",
+  "properties": {
+    "command": {
+      "description": "The command to send",
+      "type": "string",
+      "enum": [
+        "START",
+        "STOP"
+      ]
+    }
+  },
+  "required": [
+    "command"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="COMMANDE.RECEPTION">9.15. <em>COMMANDE.RECEPTION</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour une réception de commande</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/CommandeReception.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CommandeReception - 2025-01-16T13:55-0500",
+  "$defs": {
+  },
+  "type": "object",
+  "description": "The content of an applicative message to confirm the reception of a command",
+  "properties": {
+    "planStatus": {
+      "description": "The partial execution trace of the PGA Plan as a Lodad expression (a Unit of Work instance)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "planStatus"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="PGA.FIN">9.16. <em>PGA.FIN</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour une fin de PGA</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/CommandeEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CommandeEnvoi - 2025-01-16T13:53-0500",
+  "$defs": {
+  },
+  "type": "object",
+  "description": "The content of an applicative message to end a PGA task (plan)",
+  "properties": {
+    "planStatus": {
+      "description": "The complete execution trace of the PGA Plan as a Lodad expression (a Unit of Work instance)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "planStatus"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="PGA.CONFIRMATION">9.17. <em>PGA.CONFIRMATION</em></h3>
+<div class="listingblock">
+<div class="title">Schéma JSON portant sur le format du contenu du message de la couche application pour une confirmation de fin de PGA</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/SPEDS/CommandeEnvoi.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CommandeEnvoi - 2025-01-13T14:01-0500",
+  "$defs": {
+    "lodad_guid": {
+      "description": "A valid Lodad GUID.",
+      "type": "string",
+      "format": "LodadGUID"
+    }
+  },
+  "type": "object",
+  "description": "The content of an applicative message to send a command related to a task",
+  "properties": {
+    "status_ref": {
+      "description": "The identifier of the instance of the task",
+      "$ref": "#/$defs/lodad_guid"
+    }
+  },
+  "required": [
+    "status_ref"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version <br>
+Last updated 2025-07-22 14:19:14 -0400
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>

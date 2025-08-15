@@ -67,7 +67,6 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -172,6 +171,7 @@ public final class ClientSession {
 
   public void sendMessageWithManagedSession(Pidu pidu) throws JsonProcessingException {
     logger.trace(Trace.ENTER_METHOD_1, "pidu", pidu);
+
     // init a session
     SessionId sessionId = new SessionId(UUID.randomUUID());
 
@@ -191,6 +191,7 @@ public final class ClientSession {
         .initiatorIri(initiatorIri)
         .initiatorPubKey(initiatorPubKey)
         .sdek(secretKey)
+        .trackingNumber(pidu.getContext().getTrackingNumber())
         .peerId(pidu.getContext().getDestinationCode())
         .peerIri(peerIri)
         .piduMessage(pidu.getMessage())
@@ -202,8 +203,6 @@ public final class ClientSession {
     // call initSession
     sendPubEnv(pidu, sessionId);
 
-    Optional<Pidu> outPidu = Optional.empty();
-
     while (!pendingResponse.isEmpty()) {
       try {
         ExpandedSidu expandedSidu =
@@ -211,12 +210,7 @@ public final class ClientSession {
         Objects.requireNonNull(expandedSidu);
 
         if (!expandedSidu.equals(poisonPill)) {
-          PiduAndSession msgResponse = handleSession(expandedSidu);
-
-          if (outPidu.isEmpty() && msgResponse != null) {
-            outPidu = Optional.ofNullable(msgResponse.pidu());
-            pidus.add(outPidu.get());
-          }
+          handleSession(expandedSidu);
         } else {
           pendingResponse.clear();
           logger.debug(Debug.VARIABLE_LOGGING_1, "poisonPill", poisonPill);
@@ -229,7 +223,7 @@ public final class ClientSession {
     logger.trace(Trace.EXIT_METHOD_0);
   }
 
-  private PiduAndSession handleSession(ExpandedSidu expandedSidu) throws JsonProcessingException {
+  private void handleSession(ExpandedSidu expandedSidu) throws JsonProcessingException {
     PiduAndSession msgResponse = null;
     switch (expandedSidu.msgType()) {
       case SES_PUB_REC -> sendSkak(expandedSidu);
@@ -253,8 +247,6 @@ public final class ClientSession {
       // Session is done we close
       sendClose(msgResponse);
     }
-
-    return msgResponse;
   }
 
   public void sendPubEnv(Pidu pidu, SessionId sessionId) {
@@ -489,7 +481,6 @@ public final class ClientSession {
       throw new RuntimeException(e);
     }
 
-    session.trackingNumber = siduContext.getTrackingNumber();
     this.sessionInformations.put(session.sessionId, session);
 
     // Transmettre la IDU à la couche inférieur && inscrire qu'on attend une réponse pour
@@ -532,6 +523,7 @@ public final class ClientSession {
         session.trackingNumber,
         false);
     Pidu pidu = new Pidu(contextDto, sesMsgRecDto.getContent());
+    pidus.add(pidu);
 
     PiduAndSession piduAndSession = new PiduAndSession(pidu, session);
     logger.trace(Trace.EXIT_METHOD_1, "piduAndSession", piduAndSession);

@@ -26,12 +26,10 @@ import ca.griis.js2p.gen.speds.transport.api.dto.StampDto;
 import ca.griis.logger.GriisLogger;
 import ca.griis.logger.GriisLoggerFactory;
 import ca.griis.logger.statuscode.Trace;
-import ca.griis.speds.transport.exception.ContentSealException;
-import ca.griis.speds.transport.exception.DeserializationException;
-import ca.griis.speds.transport.exception.HeaderSealException;
-import ca.griis.speds.transport.exception.SerializationException;
 import ca.griis.speds.transport.serializer.SharedObjectMapper;
-import ca.griis.speds.transport.service.server.datatype.DataReplyMessages;
+import ca.griis.speds.transport.service.DataReplyMessages;
+import ca.griis.speds.transport.service.SilentIgnoredException;
+import ca.griis.speds.transport.service.security.StampVerifier;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -63,14 +61,33 @@ import java.util.UUID;
  * @par Tâches
  *      S.O.
  */
-public class ExchangeDataReply {
-  private static final GriisLogger logger =
-      GriisLoggerFactory.getLogger(ExchangeDataReply.class);
+public final class ExchangeDataReply {
+  private static final GriisLogger logger = GriisLoggerFactory.getLogger(ExchangeDataReply.class);
 
-  public static DataReplyMessages dataReplyProcess(InterfaceDataUnit45Dto iduDto,
-      String spedsVersion, String spedsReference) {
-    logger.trace(Trace.ENTER_METHOD_3, "iduDto", iduDto, "spedsVersion", spedsVersion,
-        "spedsReference", spedsReference);
+  private final StampVerifier stampVerfier;
+
+  public ExchangeDataReply() {
+    logger.trace(Trace.ENTER_METHOD_0);
+
+    this.stampVerfier = new StampVerifier();
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Traite la réception d'un message requête de la couche transport.
+   * @param iduDto IDU de la couche inférieure.
+   * @exception SilentIgnoredException Exception silencieuse.
+   * @return Un IDU à la couche supérieure et un à la couche inférieure.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public DataReplyMessages indication(InterfaceDataUnit45Dto iduDto) {
+    logger.trace(Trace.ENTER_METHOD_1, "iduDto", iduDto);
 
     // Récupérer SDU
     final ProtocolDataUnit4TraDto pdu;
@@ -78,7 +95,7 @@ public class ExchangeDataReply {
       pdu = SharedObjectMapper.getInstance().getMapper().readValue(iduDto.getMessage(),
           ProtocolDataUnit4TraDto.class);
     } catch (JsonProcessingException e) {
-      throw new DeserializationException(e.getMessage());
+      throw new SilentIgnoredException(e.getMessage());
     }
 
     // Création du ICI du Idu3-4
@@ -89,13 +106,14 @@ public class ExchangeDataReply {
     final String destinationCode = pdu.getHeader().getDestinationCode();
 
     final Sha512Hashing sha512Hashing = new Sha512Hashing();
-    verifyStamps(pdu, sha512Hashing);
+    stampVerfier.verifyStamps(pdu, sha512Hashing);
 
     // Création du message ACK à envoyé à la couche inférieure
-    final String msgId = pdu.getHeader().getId().toString();
+    final String msgId = (String) pdu.getHeader().getId();
     final Header45Dto headerTraDto =
         new Header45Dto(Header45Dto.Msgtype.TRA_MSG_REC, msgId, sourceCode, destinationCode,
-            new Speds45Dto(spedsVersion, spedsReference));
+            new Speds45Dto(pdu.getHeader().getSpeds().getVersion(),
+                pdu.getHeader().getSpeds().getReference()));
     final String contentResponse = "ACK";
 
     // Créer le sceau de l'entête et du contenu
@@ -103,8 +121,9 @@ public class ExchangeDataReply {
     try {
       headerString = SharedObjectMapper.getInstance().getMapper().writeValueAsString(headerTraDto);
     } catch (JsonProcessingException e) {
-      throw new SerializationException(e.getMessage());
+      throw new SilentIgnoredException(e.getMessage());
     }
+
     final Hash hashHeader = sha512Hashing.hash(headerString.getBytes(StandardCharsets.UTF_8));
     final Hash hashContent = sha512Hashing.hash(contentResponse.getBytes(StandardCharsets.UTF_8));
     final String sealHeaderSdu = hashHeader.asBase64();
@@ -127,7 +146,7 @@ public class ExchangeDataReply {
           new InterfaceDataUnit45Dto(iduContext45, serializedTraMessage);
       idu45Response = SharedObjectMapper.getInstance().getMapper().writeValueAsString(idu45);
     } catch (JsonProcessingException e) {
-      throw new SerializationException(e.getMessage());
+      throw new SilentIgnoredException(e.getMessage());
     }
 
     // Création du tracking number en utilisant le msgId de Transport
@@ -148,7 +167,7 @@ public class ExchangeDataReply {
     try {
       idu34Indication = SharedObjectMapper.getInstance().getMapper().writeValueAsString(idu34);
     } catch (JsonProcessingException e) {
-      throw new SerializationException(e.getMessage());
+      throw new SilentIgnoredException(e.getMessage());
     }
 
     final DataReplyMessages dataReplyMessages = new DataReplyMessages(idu34Indication,
@@ -156,35 +175,5 @@ public class ExchangeDataReply {
 
     logger.trace(Trace.EXIT_METHOD_1, "dataReplyMessages", dataReplyMessages);
     return dataReplyMessages;
-  }
-
-  private static void verifyStamps(ProtocolDataUnit4TraDto sdu, Sha512Hashing sha512Hashing) {
-    logger.trace(Trace.ENTER_METHOD_2, "sdu", sdu, "sha512Hashing", sha512Hashing);
-
-    // Vérification de l'intégrité de l'entête et du contenu
-    final String sduHeader;
-    try {
-      sduHeader = SharedObjectMapper.getInstance().getMapper().writeValueAsString(sdu.getHeader());
-    } catch (JsonProcessingException e) {
-      throw new SerializationException(e.getMessage());
-    }
-
-    // Hasher l'entête et le contenu
-    final Hash headerEncrypt = sha512Hashing.hash(sduHeader.getBytes(StandardCharsets.UTF_8));
-    final Hash contentEncrypt =
-        sha512Hashing.hash(sdu.getContent().getBytes(StandardCharsets.UTF_8));
-    final String sealHeaderSduGenerated = headerEncrypt.asBase64();
-    final String sealContentSduGenerated = contentEncrypt.asBase64();
-
-    // Vérifier l'intégrité de l'entête et du contenu
-    if (!sdu.getStamp().getHeaderSeal().equals(sealHeaderSduGenerated)) {
-      throw new HeaderSealException("Header seal are not the same");
-    }
-
-    if (!sdu.getStamp().getContentSeal().equals(sealContentSduGenerated)) {
-      throw new ContentSealException("Content seal are not the same");
-    }
-
-    logger.trace(Trace.EXIT_METHOD_0);
   }
 }

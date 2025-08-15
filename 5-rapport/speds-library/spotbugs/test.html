@@ -1,0 +1,532 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta charset="UTF-8"/>
+      <title>SpotBugs Report</title>
+      <style type="text/css">
+		.tablerow0 {
+			background: #EEEEEE;
+		}
+
+		.tablerow1 {
+			background: white;
+		}
+
+		.detailrow0 {
+			background: #EEEEEE;
+		}
+
+		.detailrow1 {
+			background: white;
+		}
+
+		.tableheader {
+			background: #b9b9fe;
+			font-size: larger;
+		}
+
+		.tablerow0:hover, .tablerow1:hover {
+			background: #aaffaa;
+		}
+
+		.priority-1 {
+				color: red;
+				font-weight: bold;
+		}
+		.priority-2 {
+				color: orange;
+				font-weight: bold;
+		}
+		.priority-3 {
+				color: green;
+				font-weight: bold;
+		}
+		.priority-4 {
+				color: blue;
+				font-weight: bold;
+		}
+		</style>
+      <script type="text/javascript">
+			function toggleRow(elid) {
+				if (document.getElementById) {
+					element = document.getElementById(elid);
+					if (element) {
+						if (element.style.display == 'none') {
+							element.style.display = 'block';
+							//window.status = 'Toggle on!';
+						} else {
+							element.style.display = 'none';
+							//window.status = 'Toggle off!';
+						}
+					}
+				}
+			}
+		</script>
+   </head>
+   <body>
+      <h1>
+         <a href="https://spotbugs.github.io/">SpotBugs</a> Report</h1>
+      <h2>Project Information</h2>
+      <p>Project: 
+		speds-library (spotbugsTest)</p>
+      <p>SpotBugs version: 4.8.3</p>
+      <p>Code analyzed:</p>
+      <ul>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/java/TestSuite.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/java/ClientCases.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/java/ServerCases$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/java/ClientCases$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/java/ServerCases.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/FullSpedsIT$8.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresLinkSpedsIT$3.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/parallel/NetworkTest.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/parallel/TransportTest.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/parallel/SessionTest.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/parallel/PresentationTest.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/parallel/ApplicationTest.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransNetLinkSpedsIT$2.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransLinkSpedsIT.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresLinkSpedsIT.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransNetLinkSpedsIT$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresLinkSpedsIT$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransNetLinkSpedsIT$4.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransNetLinkSpedsIT.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/FullSpedsIT$7.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppLinkSpedsIT$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/FullSpedsIT$2.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/FullSpedsIT$4.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/bottomup/AppPreSesTraNetLinSpedsIt.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/bottomup/SesTraNetLinSpedsIt.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/bottomup/NetLinSpedsIt.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/bottomup/TraNetLinSpedsIt.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/bottomup/TraNetLinSpedsIt$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/bottomup/PreSesTraNetLinSpedsIt.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/bottomup/LinSpedsIt.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/FullSpedsIT$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransLinkSpedsIT$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/util/DomainProviderUtil.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/util/PresentationDomainProviderUtil.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/util/LinkDomainProviderUtil.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/util/TransportDomainProviderUtil.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/util/SessionDomainProviderUtil.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/util/ApplicationDomainProviderUtil.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/util/TestUtil.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/util/PgaServiceMock.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/util/NetworkDomainProviderUtil.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/util/KeyVar.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransLinkSpedsIT$2.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/FullSpedsIT$5.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/FullSpedsIT$6.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/FullSpedsIT$3.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/FullSpedsIT.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransLinkSpedsIT$4.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransLinkSpedsIT$3.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransNetLinkSpedsIT$5.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/SessionTest.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppLinkSpedsIT.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/memory/AppLinkMemoryLeakIT.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/memory/NetLinkMemoryLeakIT$2.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/memory/NetLinkMemoryLeakIT$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/memory/PresLinkMemoryLeakIT$2.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/memory/PresLinkMemoryLeakIT$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/memory/PresLinkMemoryLeakIT.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/memory/PresLinkMemoryLeakIT$3.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/memory/AppLinkMemoryLeakIT$1.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/memory/NetLinkMemoryLeakIT$3.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/memory/NetLinkMemoryLeakIT.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresTransNetLinkSpedsIT$3.class</li>
+         <li>/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/build/classes/java/test/ca/griis/speds/integration/AppPresLinkSpedsIT$2.class</li>
+      </ul>
+      <p>
+         <br/>
+         <br/>
+      </p>
+      <h2>Metrics</h2>
+      <p>2123 lines of code analyzed,
+	in 64 classes, 
+	in 6 packages.</p>
+      <table width="500" cellpadding="5" cellspacing="2">
+         <tr class="tableheader">
+            <th align="left">Metric</th>
+            <th align="right">Total</th>
+            <th align="right">Density*</th>
+         </tr>
+         <tr class="tablerow0">
+            <td>High Priority Warnings</td>
+            <td align="right">5</td>
+            <td align="right">2.36</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>Medium Priority Warnings</td>
+            <td align="right">8</td>
+            <td align="right">3.77</td>
+         </tr>
+         <tr class="$totalClass">
+            <td>
+               <b>Total Warnings</b>
+            </td>
+            <td align="right">
+               <b>13</b>
+            </td>
+            <td align="right">
+               <b>6.12</b>
+            </td>
+         </tr>
+      </table>
+      <p>
+         <i>(* Defects per Thousand lines of non-commenting source statements)</i>
+      </p>
+      <p>
+         <br/>
+         <br/>
+      </p>
+      <h2>Contents</h2>
+      <ul>
+         <li>
+            <a href="#Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+         </li>
+         <li>
+            <a href="#Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+         </li>
+         <li>
+            <a href="#Warnings_PERFORMANCE">Performance Warnings</a>
+         </li>
+         <li>
+            <a href="#Warnings_STYLE">Dodgy code Warnings</a>
+         </li>
+         <li>
+            <a href="#Details">Details</a>
+         </li>
+      </ul>
+      <h1>Summary</h1>
+      <table width="500" cellpadding="5" cellspacing="2">
+         <tr class="tableheader">
+            <th align="left">Warning Type</th>
+            <th align="right">Number</th>
+         </tr>
+         <tr class="tablerow0">
+            <td>
+               <a href="#Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+            </td>
+            <td align="right">4</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>
+               <a href="#Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+            </td>
+            <td align="right">2</td>
+         </tr>
+         <tr class="tablerow0">
+            <td>
+               <a href="#Warnings_PERFORMANCE">Performance Warnings</a>
+            </td>
+            <td align="right">4</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>
+               <a href="#Warnings_STYLE">Dodgy code Warnings</a>
+            </td>
+            <td align="right">3</td>
+         </tr>
+         <tr class="tablerow0">
+            <td>
+               <b>Total</b>
+            </td>
+            <td align="right">
+               <b>13</b>
+            </td>
+         </tr>
+      </table>
+      <h1>Warnings</h1>
+      <p>Click on a warning row to see full context information.</p>
+      <h2>
+         <a name="Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e184');">
+            <td>
+               <span class="priority-2">Nm</span>
+            </td>
+            <td>The method name ca.griis.speds.integration.bottomup.AppPreSesTraNetLinSpedsIt.AppPreSesNetLinkExchangeTest(InterfaceDataUnit01Dto) doesn't start with a lower case letter</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e184" style="display: none;">
+                  <a href="#NM_METHOD_NAMING_CONVENTION">Bug type NM_METHOD_NAMING_CONVENTION (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.bottomup.AppPreSesTraNetLinSpedsIt<br/>In method ca.griis.speds.integration.bottomup.AppPreSesTraNetLinSpedsIt.AppPreSesNetLinkExchangeTest(InterfaceDataUnit01Dto)<br/>At AppPreSesTraNetLinSpedsIt.java:[lines 53-153]</p>
+            </td>
+         </tr>
+         <tr class="tablerow0" onclick="toggleRow('d1e196');">
+            <td>
+               <span class="priority-2">Nm</span>
+            </td>
+            <td>The method name ca.griis.speds.integration.bottomup.PreSesTraNetLinSpedsIt.PreSesNetLinkExchangeTest(InterfaceDataUnit12Dto) doesn't start with a lower case letter</td>
+         </tr>
+         <tr class="detailrow0">
+            <td/>
+            <td>
+               <p id="d1e196" style="display: none;">
+                  <a href="#NM_METHOD_NAMING_CONVENTION">Bug type NM_METHOD_NAMING_CONVENTION (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.bottomup.PreSesTraNetLinSpedsIt<br/>In method ca.griis.speds.integration.bottomup.PreSesTraNetLinSpedsIt.PreSesNetLinkExchangeTest(InterfaceDataUnit12Dto)<br/>At PreSesTraNetLinSpedsIt.java:[lines 56-155]</p>
+            </td>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e208');">
+            <td>
+               <span class="priority-2">Nm</span>
+            </td>
+            <td>The method name ca.griis.speds.integration.bottomup.SesTraNetLinSpedsIt.SesNetLinkExchangeTest(InterfaceDataUnit23Dto) doesn't start with a lower case letter</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e208" style="display: none;">
+                  <a href="#NM_METHOD_NAMING_CONVENTION">Bug type NM_METHOD_NAMING_CONVENTION (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.bottomup.SesTraNetLinSpedsIt<br/>In method ca.griis.speds.integration.bottomup.SesTraNetLinSpedsIt.SesNetLinkExchangeTest(InterfaceDataUnit23Dto)<br/>At SesTraNetLinSpedsIt.java:[lines 50-154]</p>
+            </td>
+         </tr>
+         <tr class="tablerow0" onclick="toggleRow('d1e288');">
+            <td>
+               <span class="priority-2">RV</span>
+            </td>
+            <td>Exceptional return value of java.util.concurrent.ExecutorService.submit(Callable) ignored in ca.griis.speds.integration.parallel.TransportTest.sendReply()</td>
+         </tr>
+         <tr class="detailrow0">
+            <td/>
+            <td>
+               <p id="d1e288" style="display: none;">
+                  <a href="#RV_RETURN_VALUE_IGNORED_BAD_PRACTICE">Bug type RV_RETURN_VALUE_IGNORED_BAD_PRACTICE (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.parallel.TransportTest<br/>In method ca.griis.speds.integration.parallel.TransportTest.sendReply()<br/>Called method java.util.concurrent.ExecutorService.submit(Callable)<br/>At TransportTest.java:[line 125]</p>
+            </td>
+         </tr>
+      </table>
+      <h2>
+         <a name="Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e303');">
+            <td>
+               <span class="priority-1">MS</span>
+            </td>
+            <td>ca.griis.speds.integration.util.KeyVar.localhostCertRsa isn't final but should be</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e303" style="display: none;">
+                  <a href="#MS_SHOULD_BE_FINAL">Bug type MS_SHOULD_BE_FINAL (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.util.KeyVar<br/>Field ca.griis.speds.integration.util.KeyVar.localhostCertRsa<br/>At KeyVar.java:[line 303]</p>
+            </td>
+         </tr>
+         <tr class="tablerow0" onclick="toggleRow('d1e316');">
+            <td>
+               <span class="priority-1">MS</span>
+            </td>
+            <td>ca.griis.speds.integration.util.KeyVar.localhostPrikeyRsa isn't final but should be</td>
+         </tr>
+         <tr class="detailrow0">
+            <td/>
+            <td>
+               <p id="d1e316" style="display: none;">
+                  <a href="#MS_SHOULD_BE_FINAL">Bug type MS_SHOULD_BE_FINAL (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.util.KeyVar<br/>Field ca.griis.speds.integration.util.KeyVar.localhostPrikeyRsa<br/>At KeyVar.java:[line 266]</p>
+            </td>
+         </tr>
+      </table>
+      <h2>
+         <a name="Warnings_PERFORMANCE">Performance Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e220');">
+            <td>
+               <span class="priority-1">Dm</span>
+            </td>
+            <td>ca.griis.speds.integration.memory.AppLinkMemoryLeakIT.appLinkMemoryLeakTest() forces garbage collection; extremely dubious except in benchmarking code</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e220" style="display: none;">
+                  <a href="#DM_GC">Bug type DM_GC (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.memory.AppLinkMemoryLeakIT<br/>In method ca.griis.speds.integration.memory.AppLinkMemoryLeakIT.appLinkMemoryLeakTest()<br/>At AppLinkMemoryLeakIT.java:[line 171]</p>
+            </td>
+         </tr>
+         <tr class="tablerow0" onclick="toggleRow('d1e250');">
+            <td>
+               <span class="priority-1">Dm</span>
+            </td>
+            <td>ca.griis.speds.integration.memory.NetLinkMemoryLeakIT.netLinkMemoryLeakTest() forces garbage collection; extremely dubious except in benchmarking code</td>
+         </tr>
+         <tr class="detailrow0">
+            <td/>
+            <td>
+               <p id="d1e250" style="display: none;">
+                  <a href="#DM_GC">Bug type DM_GC (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.memory.NetLinkMemoryLeakIT<br/>In method ca.griis.speds.integration.memory.NetLinkMemoryLeakIT.netLinkMemoryLeakTest()<br/>At NetLinkMemoryLeakIT.java:[line 254]</p>
+            </td>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e275');">
+            <td>
+               <span class="priority-1">Dm</span>
+            </td>
+            <td>ca.griis.speds.integration.memory.PresLinkMemoryLeakIT.presLinkMemoryLeakTest() forces garbage collection; extremely dubious except in benchmarking code</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e275" style="display: none;">
+                  <a href="#DM_GC">Bug type DM_GC (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.memory.PresLinkMemoryLeakIT<br/>In method ca.griis.speds.integration.memory.PresLinkMemoryLeakIT.presLinkMemoryLeakTest()<br/>At PresLinkMemoryLeakIT.java:[line 202]</p>
+            </td>
+         </tr>
+         <tr class="tablerow0" onclick="toggleRow('d1e262');">
+            <td>
+               <span class="priority-2">UrF</span>
+            </td>
+            <td>Unread field: ca.griis.speds.integration.memory.NetLinkMemoryLeakIT.linkFactory</td>
+         </tr>
+         <tr class="detailrow0">
+            <td/>
+            <td>
+               <p id="d1e262" style="display: none;">
+                  <a href="#URF_UNREAD_FIELD">Bug type URF_UNREAD_FIELD (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.memory.NetLinkMemoryLeakIT<br/>Field ca.griis.speds.integration.memory.NetLinkMemoryLeakIT.linkFactory<br/>At NetLinkMemoryLeakIT.java:[line 61]</p>
+            </td>
+         </tr>
+      </table>
+      <h2>
+         <a name="Warnings_STYLE">Dodgy code Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e148');">
+            <td>
+               <span class="priority-2">DLS</span>
+            </td>
+            <td>Dead store to receivedIdu34 in ca.griis.speds.integration.AppPresTransLinkSpedsIT.transLinkExchangeJquikTest(InterfaceDataUnit01Dto)</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e148" style="display: none;">
+                  <a href="#DLS_DEAD_LOCAL_STORE">Bug type DLS_DEAD_LOCAL_STORE (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.AppPresTransLinkSpedsIT<br/>In method ca.griis.speds.integration.AppPresTransLinkSpedsIT.transLinkExchangeJquikTest(InterfaceDataUnit01Dto)<br/>Local variable named receivedIdu34<br/>At AppPresTransLinkSpedsIT.java:[line 217]</p>
+            </td>
+         </tr>
+         <tr class="tablerow0" onclick="toggleRow('d1e166');">
+            <td>
+               <span class="priority-2">DLS</span>
+            </td>
+            <td>Dead store to receivedIdu56 in ca.griis.speds.integration.AppPresTransLinkSpedsIT.transLinkExchangeJquikTest(InterfaceDataUnit01Dto)</td>
+         </tr>
+         <tr class="detailrow0">
+            <td/>
+            <td>
+               <p id="d1e166" style="display: none;">
+                  <a href="#DLS_DEAD_LOCAL_STORE">Bug type DLS_DEAD_LOCAL_STORE (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.AppPresTransLinkSpedsIT<br/>In method ca.griis.speds.integration.AppPresTransLinkSpedsIT.transLinkExchangeJquikTest(InterfaceDataUnit01Dto)<br/>Local variable named receivedIdu56<br/>At AppPresTransLinkSpedsIT.java:[line 211]</p>
+            </td>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e232');">
+            <td>
+               <span class="priority-2">DLS</span>
+            </td>
+            <td>Dead store to proxyParams in ca.griis.speds.integration.memory.NetLinkMemoryLeakIT.netLinkMemoryLeakTest()</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e232" style="display: none;">
+                  <a href="#DLS_DEAD_LOCAL_STORE">Bug type DLS_DEAD_LOCAL_STORE (click for details)</a>
+                  <br/>In class ca.griis.speds.integration.memory.NetLinkMemoryLeakIT<br/>In method ca.griis.speds.integration.memory.NetLinkMemoryLeakIT.netLinkMemoryLeakTest()<br/>Local variable named proxyParams<br/>At NetLinkMemoryLeakIT.java:[line 143]</p>
+            </td>
+         </tr>
+      </table>
+      <h1>
+         <a name="Details">Details</a>
+      </h1>
+      <h2>
+         <a name="DLS_DEAD_LOCAL_STORE">DLS_DEAD_LOCAL_STORE: Dead store to local variable</a>
+      </h2>
+
+<p>
+This instruction assigns a value to a local variable,
+but the value is not read or used in any subsequent instruction.
+Often, this indicates an error, because the value computed is never
+used.
+</p>
+<p>
+Note that Sun's javac compiler often generates dead stores for
+final local variables. Because SpotBugs is a bytecode-based tool,
+there is no easy way to eliminate these false positives.
+</p>
+
+    <h2>
+         <a name="DM_GC">DM_GC: Explicit garbage collection; extremely dubious except in benchmarking code</a>
+      </h2>
+
+  <p> Code explicitly invokes garbage collection.
+  Except for specific use in benchmarking, this is very dubious.</p>
+  <p>In the past, situations where people have explicitly invoked
+  the garbage collector in routines such as close or finalize methods
+  has led to huge performance black holes. Garbage collection
+   can be expensive. Any situation that forces hundreds or thousands
+   of garbage collections will bring the machine to a crawl.</p>
+
+    <h2>
+         <a name="MS_SHOULD_BE_FINAL">MS_SHOULD_BE_FINAL: Field isn't final but should be</a>
+      </h2>
+
+   <p>
+This <code>public static</code> or <code>protected static</code> field is not final, and
+could be changed by malicious code or
+        by accident from another package.
+        The field could be made final to avoid
+        this vulnerability.</p>
+
+    <h2>
+         <a name="NM_METHOD_NAMING_CONVENTION">NM_METHOD_NAMING_CONVENTION: Method names should start with a lower case letter</a>
+      </h2>
+
+  <p>
+Methods should be verbs, in mixed case with the first letter lowercase, with the first letter of each internal word capitalized.
+</p>
+
+    <h2>
+         <a name="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE">RV_RETURN_VALUE_IGNORED_BAD_PRACTICE: Method ignores exceptional return value</a>
+      </h2>
+
+   <p> This method returns a value that is not checked. The return value should be checked
+since it can indicate an unusual or unexpected function execution. For
+example, the <code>File.delete()</code> method returns false
+if the file could not be successfully deleted (rather than
+throwing an Exception).
+If you don't check the result, you won't notice if the method invocation
+signals unexpected behavior by returning an atypical return value.
+</p>
+
+    <h2>
+         <a name="URF_UNREAD_FIELD">URF_UNREAD_FIELD: Unread field</a>
+      </h2>
+
+  <p> This field is never read.&nbsp; Consider removing it from the class.</p>
+
+    </body>
+</html>

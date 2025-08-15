@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="Spécification des essais de conceptions (CXS) de SPEDS Network">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification des Essais - « SPEDS - Réseau »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification des Essais -  « <em>SPEDS - Réseau</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v6.2.0,</span>
+<span id="revdate">2025-07-01</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_historique">1. Historique</a></li>
+<li><a href="#_référence">2. Référence</a></li>
+<li><a href="#_contexte_général_des_tests">3. Contexte général des tests</a></li>
+<li><a href="#_éléments_testées">4. Éléments Testées</a></li>
+<li><a href="#_hypothèses">5. Hypothèses</a></li>
+<li><a href="#_données_globales">6. Données globales</a></li>
+<li><a href="#_incongruités">7. Incongruités</a></li>
+<li><a href="#_cas_de_test_pour_les_hôtes">8. Cas de test pour les hôtes</a>
+<ul class="sectlevel2">
+<li><a href="#_liste_des_données">8.1. Liste des données</a></li>
+<li><a href="#CT_PRO-3_01">8.2. [CT_PRO-3_01] Demande d&#8217;un échange de données - Succès</a></li>
+<li><a href="#CT_PRO-4_01">8.3. [CT_PRO-4_01] Confirme l&#8217;échange de données - Succès</a></li>
+<li><a href="#CT_PRO-4_02">8.4. [CT_PRO-4_02] Confirme l&#8217;échange de données - Échec de confirmation sans envoi préalable de requête</a></li>
+<li><a href="#CT_PRO-4_03">8.5. [CT_PRO-4_03] Confirme l&#8217;échange de données - Échec avec un type de message invalide</a></li>
+<li><a href="#CT_PRO-4_04">8.6. [CT_PRO-4_04] Confirme l&#8217;échange de données - Échec avec un certificat d&#8217;authentification invalide</a></li>
+<li><a href="#CT_PRO-4_05">8.7. [CT_PRO-4_05] Confirme l&#8217;échange de données - Échec avec une signature invalide</a></li>
+<li><a href="#CT_PRO-5_01">8.8. [CT_PRO-5_01] Traite l&#8217;échange de données - Succès</a></li>
+<li><a href="#CT_PRO-5_02">8.9. [CT_PRO-5_02] Traite l&#8217;échange de données - Échec avec un type de message invalide</a></li>
+<li><a href="#CT_PRO-5_03">8.10. [CT_PRO-5_03] Traite l&#8217;échange de données - Échec avec un certificat d&#8217;authentification invalide</a></li>
+<li><a href="#CT_PRO-5_04">8.11. [CT_PRO-5_04] Traite l&#8217;échange de données - Échec avec une signature d&#8217;entête invalide</a></li>
+<li><a href="#CT_PRO-5_05">8.12. [CT_PRO-5_05] Traite l&#8217;échange de données - Échec avec une signature de contenu invalide</a></li>
+</ul>
+</li>
+<li><a href="#_essais">9. Essais</a>
+<ul class="sectlevel2">
+<li><a href="#_matrice_de_correspondance_élémentsessais">9.1. Matrice de correspondance Éléments/Essais</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification des essais prête à être révisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-02 13:25</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-02 13:51</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_historique">1. Historique</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 63.6363%;">
+<col style="width: 27.2728%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Modification</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec. des essais initiale</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-17</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec. des essais 2e itération</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-05-26</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec. des essais 3e itération</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-25</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec. des essais 4e itération</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-02</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_référence">2. Référence</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 30%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Consultation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../scs/5_speds_network-scs.adoc">5_speds_network-scs.adoc</a></p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-02</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contexte_général_des_tests">3. Contexte général des tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le présent document a pour objectif de spécifier les essais qui détermineront si l&#8217;implémentation de la couche <code>Réseau</code> respecte la conception définie pour cette même couche.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_éléments_testées">4. Éléments Testées</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3]
+</td>
+<td class="hdlist2">
+<p>Demande d&#8217;échange de données - Requête de la couche supérieure qui démarre un envoi de données</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-4]
+</td>
+<td class="hdlist2">
+<p>Confirme l&#8217;échange de données -  Réception de l&#8217;accusé de réception</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-5]
+</td>
+<td class="hdlist2">
+<p>Traite l&#8217;échange de données -  Réception d&#8217;une demande d&#8217;échange de données ; produit un accusé de réception et achemine le contenu de l&#8217;échange à la couche supérieure.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèses">5. Hypothèses</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_données_globales">6. Données globales</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La Version de SPEDS testée est v6.2.0.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">7. Incongruités</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cas_de_test_pour_les_hôtes">8. Cas de test pour les hôtes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_liste_des_données">8.1. Liste des données</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 71.4285%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idu_4-5</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "context": {
+    "source_iri": "&lt;&lt;ANY-VALID-IRI&gt;&gt;",
+    "destination_iri": "&lt;&lt;ANY-VALID-IRI&gt;&gt;",
+    "tracking_number": "&lt;&lt;ANY-VALID-UUID&gt;&gt;",
+    "options": false
+  },
+  "message": "Protocol Data Unit (PDU) de la couche Transport"
+}</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IDU structurellement valide avec la couche supérieure.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idu_5-6_ENV</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "context": {
+    "destination_iri": "&lt;&lt;ANY-VALID-IRI&gt;&gt;",
+    "tracking_number": "&lt;&lt;ANY-VALID-UUID&gt;&gt;",
+    "options": false
+  },
+  "message": "{\"header\":{\"msgtype\":\"ANY-MSGTYPE\",\"id\":\"&lt;&lt;ANY-VALID-UUID&gt;&gt;\",\"source_iri\":\"&lt;&lt;ANY-VALID-IRI&gt;&gt;\",\"destination_iri\":\"&lt;&lt;ANY-VALID-IRI&gt;&gt;\",\"authentification\":\"&lt;&lt;ANY-VALID-CERTIFICATE-BASE64-VALUE&gt;&gt;\",\"parameters\":false,\"SPEDS\":{\"version\":\"&lt;&lt;version SPEDS&gt;&gt;\",\"reference\":\"&lt;&lt;Reference Protocole&gt;&gt;\"}},\"stamp\":{\"header_seal\":\"&lt;&lt;ANY-BASE64-VALUE&gt;&gt;\",\"content_seal\":\"&lt;&lt;ANY-BASE64-VALUE&gt;&gt;\"},\"content\":\"Protocol Data Unit (PDU) de la couche Transport\"}"
+}</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IDU d&#8217;un envoi structurellement valide vers la couche inférieure.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idu_5-6_REC</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "context": {
+    "destination_iri": "&lt;&lt;ANY-VALID-IRI&gt;&gt;",
+    "tracking_number": "&lt;&lt;ANY-VALID-UUID&gt;&gt;",
+    "options": false
+  },
+  "message": "{\"header\":{\"msgtype\":\"ANY-MSGTYPE\",\"id\":\"&lt;&lt;ANY-VALID-UUID&gt;&gt;\",\"source_iri\":\"&lt;&lt;ANY-VALID-IRI&gt;&gt;\",\"destination_iri\":\"&lt;&lt;ANY-VALID-IRI&gt;&gt;\",\"authentification\":\"&lt;&lt;ANY-VALID-CERTIFICATE-BASE64-VALUE&gt;&gt;\",\"parameters\":false,\"SPEDS\":{\"version\":\"&lt;&lt;version SPEDS&gt;&gt;\",\"reference\":\"&lt;&lt;Reference Protocole&gt;&gt;\"}},\"stamp\":{\"header_seal\":\"&lt;&lt;ANY-BASE64-VALUE&gt;&gt;\",\"content_seal\":\"\"},\"content\":\"\"}"
+}</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IDU d&#8217;une confirmation structurellement valide vers la couche inférieure.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-3_01">8.2. [CT_PRO-3_01] Demande d&#8217;un échange de données - Succès</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une demande d&#8217;échange de données valide provoque un envoi réussi.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<p>idu_4-5</p>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>idu_5-6_ENV</p>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche supérieure <strong>idu_4-5</strong></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>context &#8594; source_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>context &#8594; destination_iri</code> est une <code><a href="https://www.griis.ca/x" class="bare">https://www.griis.ca/x</a></code> où <code>x</code> est un nombre aléatoire</p>
+</li>
+<li>
+<p><code>context &#8594; tracking_number</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>context &#8594; options</code> est <code>false</code></p>
+</li>
+<li>
+<p><code>message</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Attendre 30 secondes</p>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le message <strong>idu_5-6_ENV</strong> a bien été envoyé.</p>
+</li>
+<li>
+<p>Le contexte de <strong>idu_5-6_ENV</strong> est valide</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>context &#8594; destination_iri</code> a la valeur de <strong>idu_4-5</strong> <code>context &#8594; destination_iri</code></p>
+</li>
+<li>
+<p><code>context &#8594; tracking_number</code> a la même valeur que la propriété <code>message &#8594; header &#8594; id</code></p>
+</li>
+<li>
+<p><code>context &#8594; options</code> est <code>false</code></p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Le message de <strong>idu_5-6_ENV</strong> est valide</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.ENV</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; id</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; source_iri</code> a la valeur de <strong>idu_4-5</strong> <code>context &#8594; source_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> a la valeur de <strong>idu_4-5</strong> <code>context &#8594; destination_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> est un certificat valide pour l&#8217;entité de la IRI <code>source_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; parameters</code> est <code>false</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; SPEDS</code> a la version v6.2.0 et la référence <a href="https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library" class="bare">https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library</a></p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> est la valeur de <code>message &#8594; header</code> signé par la clé privée associé au certificat contenu dans le message</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; content_seal</code> est la valeur de <code>message &#8594; content</code> signé par la clé privée associé au certificat contenu dans le message</p>
+</li>
+<li>
+<p><code>message &#8594; content</code> a la valeur de de <strong>idu_4-5</strong> <code>message</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-4_01">8.3. [CT_PRO-4_01] Confirme l&#8217;échange de données - Succès</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une confirmation d&#8217;un envoi valide est traité correctement.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_4-5</strong></p>
+</li>
+<li>
+<p><strong>idu_5-6_REC</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_ENV</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche supérieure <strong>idu_4-5</strong></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>context &#8594; source_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>context &#8594; destination_iri</code> est une <code><a href="https://www.griis.ca/x" class="bare">https://www.griis.ca/x</a></code> où <code>x</code> est un nombre aléatoire</p>
+</li>
+<li>
+<p><code>context &#8594; tracking_number</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>context &#8594; options</code> est <code>false</code></p>
+</li>
+<li>
+<p><code>message</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Attendre que le message <strong>idu_5-6_ENV</strong> soit envoyé à la couche inférieure</p>
+</li>
+<li>
+<p>Conserver la valeur de l&#8217;identifiant de <strong>idu_5-6_ENV</strong></p>
+</li>
+<li>
+<p>Envoyer par la couche inférieure <strong>idu_5-6_REC</strong> où</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; id</code> est la valeur conservée</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.REC</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; source_iri</code> est la valeur de <strong>idu_4-5</strong> <code>context &#8594; source_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> est la valeur de <strong>idu_4-5</strong> <code>context &#8594; destination_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> est un certificat valide pour le destinataire</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat utilisé pour le destinataire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<p>L&#8217;identifiant de <strong>idu_5-6_ENV</strong> n&#8217;est pas dans la <em>Table des identifiants de message en attente</em> et aucune erreur ne survient au bout de trente secondes.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-4_02">8.4. [CT_PRO-4_02] Confirme l&#8217;échange de données - Échec de confirmation sans envoi préalable de requête</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une confirmation erronée non attendue est ignorée.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_4-5</strong></p>
+</li>
+<li>
+<p><strong>idu_5-6_REC</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_ENV</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche supérieure un <strong>idu_4-5</strong></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>context &#8594; source_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>context &#8594; destination_iri</code> est une <code><a href="https://www.griis.ca/x" class="bare">https://www.griis.ca/x</a></code> où <code>x</code> est un nombre aléatoire</p>
+</li>
+<li>
+<p><code>context &#8594; tracking_number</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>context &#8594; options</code> est <code>false</code></p>
+</li>
+<li>
+<p><code>message</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Attendre que le message <strong>idu_5-6_ENV</strong> soit envoyé à la couche inférieure</p>
+</li>
+<li>
+<p>Conserver la valeur de l&#8217;identifiant de <strong>idu_5-6_ENV</strong></p>
+</li>
+<li>
+<p>Envoyer par la couche inférieure <strong>idu_5-6_REC</strong> où</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; id</code> est une valeur différente de celle conservée</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.REC</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; source_iri</code> est la valeur de <strong>idu_4-5</strong> <code>context &#8594; source_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> est la valeur de <strong>idu_4-5</strong> <code>context &#8594; destination_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> est un certificat valide pour le destinataire</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat utilisé pour le destinataire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<p>L&#8217;identifiant de <strong>idu_5-6_ENV</strong> est dans la <em>Table des identifiants de message en attente</em> et aucune erreur ne survient au bout de trente secondes.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-4_03">8.5. [CT_PRO-4_03] Confirme l&#8217;échange de données - Échec avec un type de message invalide</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une confirmation sans le type de message attendu est ignoré</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé<br></p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_4-5</strong></p>
+</li>
+<li>
+<p><strong>idu_5-6_REC</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_ENV</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche supérieure <strong>idu_4-5</strong></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>context &#8594; source_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>context &#8594; destination_iri</code> est une <code><a href="https://www.griis.ca/x" class="bare">https://www.griis.ca/x</a></code> où <code>x</code> est un nombre aléatoire</p>
+</li>
+<li>
+<p><code>context &#8594; tracking_number</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>context &#8594; options</code> est <code>false</code></p>
+</li>
+<li>
+<p><code>message</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Attendre que le message <strong>idu_5-6_ENV</strong> soit envoyé à la couche inférieure</p>
+</li>
+<li>
+<p>Conserver la valeur de l&#8217;identifiant de <strong>idu_5-6_ENV</strong></p>
+</li>
+<li>
+<p>Envoyer par la couche inférieure <strong>idu_5-6_REC</strong> où</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; id</code> est la valeur conservée</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.XYZ</code> où <code>XYZ</code> forme un mot de 3 lettres aléatoire qui n&#8217;est ni <code>ENV</code> ni <code>REC</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; source_iri</code> est la valeur de <strong>idu_4-5</strong> <code>context &#8594; source_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> est la valeur de <strong>idu_4-5</strong> <code>context &#8594; destination_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> est un certificat valide pour le destinataire</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat utilisé pour le destinataire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<p>L&#8217;identifiant de <strong>idu_5-6_ENV</strong> est dans la <em>Table des identifiants de message en attente</em> et aucune erreur ne survient au bout de trente secondes.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-4_04">8.6. [CT_PRO-4_04] Confirme l&#8217;échange de données - Échec avec un certificat d&#8217;authentification invalide</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une confirmation sans certificat valide de l&#8217;envoyeur de la confirmation est ignoré</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé<br></p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_4-5</strong></p>
+</li>
+<li>
+<p><strong>idu_5-6_REC</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_ENV</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche supérieure <strong>idu_4-5</strong></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>context &#8594; source_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>context &#8594; destination_iri</code> est une <code><a href="https://www.griis.ca/x" class="bare">https://www.griis.ca/x</a></code> où <code>x</code> est un nombre aléatoire</p>
+</li>
+<li>
+<p><code>context &#8594; tracking_number</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>context &#8594; options</code> est <code>false</code></p>
+</li>
+<li>
+<p><code>message</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Attendre que le message <strong>idu_5-6_ENV</strong> soit envoyé à la couche inférieure</p>
+</li>
+<li>
+<p>Conserver la valeur de l&#8217;identifiant de <strong>idu_5-6_ENV</strong></p>
+</li>
+<li>
+<p>Envoyer par la couche inférieure <strong>idu_5-6_REC</strong> où</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; id</code> est la valeur conservée</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.REC</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; source_iri</code> est la valeur de <strong>idu_4-5</strong> <code>context &#8594; source_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> est la valeur de <strong>idu_4-5</strong> <code>context &#8594; destination_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> n&#8217;est pas un certificat valide pour le destinataire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<p>L&#8217;identifiant de <strong>idu_5-6_ENV</strong> est dans la <em>Table des identifiants de message en attente</em> et aucune erreur ne survient au bout de trente secondes.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-4_05">8.7. [CT_PRO-4_05] Confirme l&#8217;échange de données - Échec avec une signature invalide</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une confirmation sans signature valide</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé<br></p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_4-5</strong></p>
+</li>
+<li>
+<p><strong>idu_5-6_REC</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_ENV</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche supérieure <strong>idu_4-5</strong></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>context &#8594; source_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>context &#8594; destination_iri</code> est une <code><a href="https://www.griis.ca/x" class="bare">https://www.griis.ca/x</a></code> où <code>x</code> est un nombre aléatoire</p>
+</li>
+<li>
+<p><code>context &#8594; tracking_number</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>context &#8594; options</code> est <code>false</code></p>
+</li>
+<li>
+<p><code>message</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Attendre que le message <strong>idu_5-6_ENV</strong> soit envoyé à la couche inférieure</p>
+</li>
+<li>
+<p>Conserver la valeur de l&#8217;identifiant de <strong>idu_5-6_ENV</strong></p>
+</li>
+<li>
+<p>Envoyer par la couche inférieure <strong>idu_5-6_REC</strong> où</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; id</code> est la valeur conservée</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.REC</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; source_iri</code> est la valeur de <strong>idu_4-5</strong> <code>context &#8594; source_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> est la valeur de <strong>idu_4-5</strong> <code>context &#8594; destination_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> est un certificat valide pour le destinataire</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> n&#8217;est pas la signature de l&#8217;entête du message avec la clé privée correspondante au certificat utilisé pour le destinataire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<p>L&#8217;identifiant de <strong>idu_5-6_ENV</strong> est dans la <em>Table des identifiants de message en attente</em> et aucune erreur ne survient au bout de trente secondes.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-5_01">8.8. [CT_PRO-5_01] Traite l&#8217;échange de données - Succès</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Un envoi valide provoque une réponse valide de la part du destinataire et une transmission du message vers la couche supérieure</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_ENV</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_REC</strong></p>
+</li>
+<li>
+<p><strong>idu_4-5</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche inférieure <strong>idu_5-6_ENV</strong></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.ENV</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; id</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; source_iri</code> est une <code><a href="https://www.griis.ca/x" class="bare">https://www.griis.ca/x</a></code> où <code>x</code> est un nombre aléatoire</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> est un certificat valide de l&#8217;envoyeur (c&#8217;est-à-dire utilisant la IRI <code>source_iri</code>)</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat transmis</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; content_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat transmis</p>
+</li>
+<li>
+<p><code>message &#8594; content</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Attendre 30 secondes</p>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le message <strong>idu_5-6_REC</strong> a bien été envoyé.</p>
+</li>
+<li>
+<p>Le message <strong>idu_5-6_REC</strong> est valide.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Le contexte de <strong>idu_5-6_REC</strong> est valide</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><code>context &#8594; destination_iri</code> a la même valeur que <strong>idu_5-6_ENV</strong> <code>message &#8594; header &#8594; source_iri</code></p>
+</li>
+<li>
+<p><code>context &#8594; tracking_number</code> a la même valeur que <strong>idu_5-6_ENV</strong> <code>context &#8594; tracking_number</code></p>
+</li>
+<li>
+<p><code>context &#8594; options</code> est <code>false</code></p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Le message de <strong>idu_5-6_REC</strong> est valide</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.REC</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; id</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; source_iri</code> a la valeur de <strong>idu_5-6_ENV</strong> <code>message &#8594; header &#8594; source_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> a la valeur de <strong>idu_5-6_ENV</strong> <code>message &#8594; header &#8594; destination_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> est un certificat valide pour l&#8217;entité de la IRI <code>destination_iri</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; parameters</code> est <code>false</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; SPEDS</code> a la version v6.2.0 et la référence <a href="https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library" class="bare">https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library</a></p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> est la valeur de <code>message &#8594; header</code> signé par la clé privée associé au certificat contenu dans le message</p>
+</li>
+<li>
+<p><code>message &#8594; content</code> est la chaîne de caractères vide.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Le message <strong>idu_4-5</strong> a bien été envoyé</p>
+</li>
+<li>
+<p>Le message <strong>idu_4-5</strong> est valide</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Le contexte de <strong>idu_4-5</strong> est valide</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><code>context &#8594; source_iri</code> a la même valeur que <strong>idu_5-6_ENV</strong> <code>message &#8594; header &#8594; source_iri</code></p>
+</li>
+<li>
+<p><code>context &#8594; destination_iri</code> a la même valeur que <strong>idu_5-6_ENV</strong> <code>message &#8594; header &#8594; destination_iri</code></p>
+</li>
+<li>
+<p><code>context &#8594; tracking_number</code> a la même valeur que <strong>idu_5-6_ENV</strong> <code>message &#8594; header &#8594; id</code></p>
+</li>
+<li>
+<p><code>context &#8594; options</code> est <code>false</code></p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Le message de <strong>idu_4-5</strong> est valide</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><code>message</code> a la même valeur que <strong>idu_5-6_ENV</strong> <code>message &#8594; content</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-5_02">8.9. [CT_PRO-5_02] Traite l&#8217;échange de données - Échec avec un type de message invalide</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Un envoi sans le type de message attendu est ignoré</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé<br></p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_ENV</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche inférieure <strong>idu_5-6_ENV</strong> où</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.XYZ</code> où <code>XYZ</code> forme un mot de 3 lettres aléatoire qui n&#8217;est ni <code>ENV</code> ni <code>REC</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; id</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> est un certificat valide de l&#8217;envoyeur (c&#8217;est-à-dire utilisant la IRI <code>source_iri</code>)</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat transmis</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; content_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat transmis</p>
+</li>
+<li>
+<p><code>message &#8594; content</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<p>Au bout de trente secondes, aucun message n&#8217;est transmis et aucune erreur ne survient.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-5_03">8.10. [CT_PRO-5_03] Traite l&#8217;échange de données - Échec avec un certificat d&#8217;authentification invalide</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Un envoi sans certificat valide est ignoré</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé<br></p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_ENV</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche inférieure <strong>idu_5-6_ENV</strong> où</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.ENV</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; id</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> n&#8217;est pas un certificat valide de l&#8217;envoyeur (c&#8217;est-à-dire utilisant la IRI <code>source_iri</code>)</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat transmis</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; content_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat transmis</p>
+</li>
+<li>
+<p><code>message &#8594; content</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<p>Au bout de trente secondes, aucun message n&#8217;est transmis et aucune erreur ne survient.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-5_04">8.11. [CT_PRO-5_04] Traite l&#8217;échange de données - Échec avec une signature d&#8217;entête invalide</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Un envoi sans signature d&#8217;entête valide est ignoré</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé<br></p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_ENV</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche inférieure <strong>idu_5-6_ENV</strong> où</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.ENV</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; id</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> est un certificat valide de l&#8217;envoyeur (c&#8217;est-à-dire utilisant la IRI <code>source_iri</code>)</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> n&#8217;est pas la signature de l&#8217;entête du message avec la clé privée correspondante au certificat transmis</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; content_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat transmis</p>
+</li>
+<li>
+<p><code>message &#8594; content</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<p>Au bout de trente secondes, aucun message n&#8217;est transmis et aucune erreur ne survient.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_PRO-5_05">8.12. [CT_PRO-5_05] Traite l&#8217;échange de données - Échec avec une signature de contenu invalide</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Un envoi sans signature de contenu valide est ignoré</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-001] Le client est initialisé<br></p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>idu_5-6_ENV</strong></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer par la couche inférieure <strong>idu_5-6_ENV</strong> où</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>message &#8594; header &#8594; msgtype</code> est <code>RES.ENV</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; id</code> est un <code>UUID</code></p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; destination_iri</code> est la IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>message &#8594; header &#8594; authentification</code> est un certificat valide de l&#8217;envoyeur (c&#8217;est-à-dire utilisant la IRI <code>source_iri</code>)</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; header_seal</code> est la signature de l&#8217;entête du message avec la clé privée correspondante au certificat transmis</p>
+</li>
+<li>
+<p><code>message &#8594; stamp &#8594; content_seal</code> n&#8217;est pas la signature de l&#8217;entête du message avec la clé privée correspondante au certificat transmis</p>
+</li>
+<li>
+<p><code>message &#8594; content</code> est une chaîne de caractère aléatoire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Vérifier la condition de réussite</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<p>Au bout de trente secondes, aucun message n&#8217;est transmis et aucune erreur ne survient.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_essais">9. Essais</h2>
+<div class="sectionbody">
+<table id="ENV1" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Environnements</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Configuration de la composante pour agir comme un hôte. Le client est initialisé avec les paramètres suivants :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>version</code> : v6.2.0</p>
+</li>
+<li>
+<p><code>reference</code> : <a href="https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library" class="bare">https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library</a></p>
+</li>
+<li>
+<p><code>certificate</code> : un certificat valide pour la IRI de l&#8217;hôte en base-64</p>
+</li>
+<li>
+<p><code>private_key</code> : valeur de clé privée associée au certificat</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>La <em>Table des identifiants de message en attente</em> est vide</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Essais</caption>
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 9.0909%;">
+<col style="width: 54.5454%;">
+<col style="width: 27.2728%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Id.</th>
+<th class="tableblock halign-left valign-top">Env.</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV1">ENV1</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#CT_PRO-3_01">[CT_PRO-3_01] Demande d&#8217;un échange de données - Succès</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-4_01">[CT_PRO-4_01] Confirme l&#8217;échange de données - Succès</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-5_01">[CT_PRO-5_01] Traite l&#8217;échange de données - Succès</a></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le système fonctionne bien lorsque les messages sont valides</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV1">ENV1</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#CT_PRO-4_01">[CT_PRO-4_01] Confirme l&#8217;échange de données - Succès</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-4_02">[CT_PRO-4_02] Confirme l&#8217;échange de données - Échec de confirmation sans envoi préalable de requête</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-4_03">[CT_PRO-4_03] Confirme l&#8217;échange de données - Échec avec un type de message invalide</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-4_04">[CT_PRO-4_04] Confirme l&#8217;échange de données - Échec avec un certificat d&#8217;authentification invalide</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-4_05">[CT_PRO-4_05] Confirme l&#8217;échange de données - Échec avec une signature invalide</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-4_01">[CT_PRO-4_01] Confirme l&#8217;échange de données - Succès</a></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les messages invalides sont ignorés par la source mais ne sont pas bloquant.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV1">ENV1</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#CT_PRO-5_01">[CT_PRO-5_01] Traite l&#8217;échange de données - Succès</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-5_02">[CT_PRO-5_02] Traite l&#8217;échange de données - Échec avec un type de message invalide</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-5_03">[CT_PRO-5_03] Traite l&#8217;échange de données - Échec avec un certificat d&#8217;authentification invalide</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-5_04">[CT_PRO-5_04] Traite l&#8217;échange de données - Échec avec une signature d&#8217;entête invalide</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-5_05">[CT_PRO-5_05] Traite l&#8217;échange de données - Échec avec une signature de contenu invalide</a></p>
+</li>
+<li>
+<p><a href="#CT_PRO-5_01">[CT_PRO-5_01] Traite l&#8217;échange de données - Succès</a></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les messages invalides sont ignorés par le destinataire, mais ne sont pas bloquant.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_matrice_de_correspondance_élémentsessais">9.1. Matrice de correspondance Éléments/Essais</h3>
+<table class="tableblock frame-all grid-all fit-content">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_03</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-3]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-4]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-5]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v6.2.0<br>
+Last updated 2025-07-22 14:19:14 -0400
+</div>
+</div>
+</body>
+</html>

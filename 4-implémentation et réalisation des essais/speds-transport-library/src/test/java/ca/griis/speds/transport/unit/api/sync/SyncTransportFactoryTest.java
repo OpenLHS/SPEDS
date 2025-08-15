@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class SyncTransportFactoryTest {
-  NetworkHost mockNetworkHost;
+  private NetworkHost mockNetworkHost;
 
   @BeforeEach
   public void setUp() throws Exception {

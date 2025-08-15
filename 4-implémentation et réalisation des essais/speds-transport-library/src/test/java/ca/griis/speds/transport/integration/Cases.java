@@ -1,34 +1,31 @@
 package ca.griis.speds.transport.integration;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import ca.griis.cryptography.hash.hashing.Sha512Hashing;
 import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit34Dto;
 import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
 import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
 import ca.griis.js2p.gen.speds.transport.api.dto.Speds45Dto;
+import ca.griis.speds.network.api.NetworkHost;
 import ca.griis.speds.transport.api.TransportHost;
-import ca.griis.speds.transport.exception.ContentSealException;
-import ca.griis.speds.transport.exception.DeserializationException;
-import ca.griis.speds.transport.exception.HeaderSealException;
+import ca.griis.speds.transport.api.sync.ImmutableTransportHost;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.concurrent.*;
 import java.util.function.Supplier;
 
 public class Cases {
-
   // Ce cas de test retourne le messageId nécessaire pour les messages de confirmation.
   public static String ct_pro_04_01(Environment environment) throws JsonProcessingException {
     // Given
     // Validation des antécédents
     String h1 =
-        "CT_PRO-04_01_ZH001 - Le client est disponible dans la variable \"Z001_host\" de l'git sat";
+        "CT_PRO-04_01_ZH001 - Le client est disponible dans la variable \"Z001_host\" de l'environnement";
     TransportHost givenHost = environment.getInput("Z001_host", TransportHost.class);
     assertNotNull(givenHost, h1);
 
@@ -39,6 +36,7 @@ public class Cases {
 
     String h3 =
         "CT_PRO-04_01_ZH003 - L'implémentation fournit le fournisseur de réponse et il est disponible dans la variable \"CT_PRO-04_01_Z002_supplier\" de l'environnement";
+    @SuppressWarnings("unchecked")
     Supplier<String> givenSupplier =
         environment.getInput("CT_PRO-04_01_Z002_supplier", Supplier.class);
     assertNotNull(givenSupplier, h3);
@@ -57,7 +55,7 @@ public class Cases {
         mapper.readValue(givenMsg, InterfaceDataUnit34Dto.class);
 
     // When
-    givenHost.dataRequest(givenMsg);
+    givenHost.request(givenMsg);
 
     // Then
     String actualIduReceived = givenSupplier.get();
@@ -99,28 +97,7 @@ public class Cases {
     return String.valueOf(actualPdu.getHeader().getId());
   }
 
-  public static void ct_pro_04_02(Environment environment) {
-    // Given
-    // Validation des antécédents
-    String h1 =
-        "CT_PRO-04_02_ZH001 - Le client est disponible dans la variable \"Z001_host\" de l'environnement";
-    TransportHost givenHost = environment.getInput("Z001_host", TransportHost.class);
-    assertNotNull(givenHost, h1);
-
-    String h2 =
-        "CT_PRO-04_02_ZH002 - Le message d'envoi initial est disponible dans la variable \"CT_PRO-04_02_E1\" de l'environnement";
-    String givenMsg = environment.getInput("CT_PRO-04_01_E1", String.class);
-    assertNotNull(givenMsg, h2);
-
-    // When
-    DeserializationException actual = assertThrows(DeserializationException.class, () -> {
-      givenHost.dataRequest(givenMsg);
-    });
-    assertNotNull(actual,
-        "Échec attendu; le test valide qu'un élément malformé lance une exception");
-  }
-
-  public static void ct_pro_05_01(Environment environment) {
+  public static void ct_pro_05_01(String messageId, Environment environment) {
     // Given
     // Validation des antécédents
     String h1 =
@@ -138,13 +115,17 @@ public class Cases {
         "CT_PRO-05_01_ZH002 - Un message TRA.MSG.ENV a été envoyé précédemment par l'entité testé";
     assertNotNull(h3);
 
-    // When / Then
-    assertDoesNotThrow(() -> {
-      givenHost.dataConfirm();
-    });
+    ImmutableTransportHost h = (ImmutableTransportHost) givenHost;
+    assertTrue(h.isPending(messageId));
+
+    givenHost.listen();
+
+    await()
+        .atMost(2, TimeUnit.SECONDS)
+        .until(() -> !h.isPending(messageId));
   }
 
-  public static void ct_pro_05_03(Environment environment) {
+  public static void ct_pro_05_03(String messageId, Environment environment) {
     // Given
     // Validation des antécédents
     String h1 =
@@ -158,12 +139,21 @@ public class Cases {
     assertNotNull(givenMsg, h2);
 
     // When
-    HeaderSealException actual = assertThrows(HeaderSealException.class, givenHost::dataConfirm);
 
-    assertNotNull(actual);
+    givenHost.listen();
+
+    ImmutableTransportHost h = (ImmutableTransportHost) givenHost;
+    try {
+      await()
+          .atMost(2, TimeUnit.SECONDS)
+          .until(() -> !h.isPending(messageId));
+    } catch (org.awaitility.core.ConditionTimeoutException ignored) {
+    }
+
+    assertTrue(h.isPending(messageId));
   }
 
-  public static void ct_pro_05_04(Environment environment) {
+  public static void ct_pro_05_04(String messageId, Environment environment) {
     // Given
     // Validation des antécédents
     String h1 =
@@ -177,50 +167,18 @@ public class Cases {
     assertNotNull(givenMsg, h2);
 
     // When
-    ContentSealException actual = assertThrows(ContentSealException.class, givenHost::dataConfirm);
 
-    assertNotNull(actual);
-  }
+    givenHost.listen();
 
-  public static void ct_pro_05_05(Environment environment) {
-    // Given
-    // Validation des antécédents
-    String h1 =
-        "CT_PRO-05_05_ZH001 - Le client est disponible dans la variable \"Z001_host\" de l'environnement";
-    TransportHost givenHost = environment.getInput("Z001_host", TransportHost.class);
-    assertNotNull(givenHost, h1);
+    ImmutableTransportHost h = (ImmutableTransportHost) givenHost;
+    try {
+      await()
+          .atMost(2, TimeUnit.SECONDS)
+          .until(() -> !h.isPending(messageId));
+    } catch (org.awaitility.core.ConditionTimeoutException ignored) {
+    }
 
-    String h2 =
-        "CT_PRO-05_05_ZH002 - Le message d'envoi initial est disponible dans la variable \"CT_PRO-05_05_E1\" de l'environnement";
-    String givenMsg = environment.getInput("CT_PRO-05_05_E1", String.class);
-    assertNotNull(givenMsg, h2);
-
-    // When / Then
-    assertDoesNotThrow(() -> {
-      givenHost.dataConfirm();
-    });
-  }
-
-  // ct_005
-  public static void ct_pro_05_06(Environment environment) {
-    // Given
-    // Validation des antécédents
-    String h1 =
-        "CT_PRO-05_06_ZH001 - Le client est disponible dans la variable \"Z001_host\" de l'environnement";
-    TransportHost givenHost = environment.getInput("Z001_host", TransportHost.class);
-    assertNotNull(givenHost, h1);
-
-    String h2 =
-        "CT_PRO-05_06_ZH002 - Le message d'envoi initial est disponible dans la variable \"CT_PRO-05_06_E1\" de l'environnement";
-    String givenMsg = environment.getInput("CT_PRO-05_06_E1", String.class);
-    assertNotNull(givenMsg, h2);
-
-    // When
-    DeserializationException actual =
-        assertThrows(DeserializationException.class, givenHost::dataConfirm);
-
-    assertNotNull(actual,
-        "Échec attendu; le test valide un élément absent de la conception donc comportement non garanti");
+    assertTrue(h.isPending(messageId));
   }
 
   // ct_006
@@ -239,6 +197,7 @@ public class Cases {
 
     String h3 =
         "CT_PRO-11_01_ZH003 - L'implémentation fournit le fournisseur de réponse et il est disponible dans la variable \"CT_PRO-11_01_Z002_supplier\" de l'environnement";
+    @SuppressWarnings("unchecked")
     Supplier<String> givenSupplier =
         environment.getInput("CT_PRO-11_01_Z002_supplier", Supplier.class);
     assertNotNull(givenSupplier, h3);
@@ -258,7 +217,7 @@ public class Cases {
         mapper.readValue(expectedS2.getMessage(), ProtocolDataUnit4TraDto.class);
 
     // When
-    String c006_s1 = givenHost.dataReply();
+    String c006_s1 = givenHost.indication();
     String c006_s2 = givenSupplier.get();
 
     // Then
@@ -307,7 +266,7 @@ public class Cases {
     // Given
     // Validation des antécédents
     String h1 =
-        "CT_PRO-11_03_ZH001 - Le client est disponible dans la variable \"Z001_host\" de l'git sat";
+        "CT_PRO-11_03_ZH001 - Le client est disponible dans la variable \"Z001_host\" de l'environnement";
     TransportHost givenHost = environment.getInput("Z001_host", TransportHost.class);
     assertNotNull(givenHost, h1);
 
@@ -317,11 +276,16 @@ public class Cases {
     assertNotNull(givenMsg, h2);
 
     // When
-    HeaderSealException actual = assertThrows(HeaderSealException.class, givenHost::dataReply);
+    boolean isNull = false;
+    try {
+      await()
+          .atMost(2, TimeUnit.SECONDS)
+          .until(() -> givenHost.indication() != null);
+    } catch (org.awaitility.core.ConditionTimeoutException ignored) {
+      isNull = true;
+    }
 
-    // Then
-    assertNotNull(actual,
-        "Échec attendu; le test valide un élément absent de la conception donc comportement non garanti");
+    assertTrue(isNull);
   }
 
   // ct_008
@@ -329,7 +293,7 @@ public class Cases {
     // Given
     // Validation des antécédents
     String h1 =
-        "CT_PRO-11_04_ZH001 - Le client est disponible dans la variable \"Z001_host\" de l'git sat";
+        "CT_PRO-11_04_ZH001 - Le client est disponible dans la variable \"Z001_host\" de l'environnement";
     TransportHost givenHost = environment.getInput("Z001_host", TransportHost.class);
     assertNotNull(givenHost, h1);
 
@@ -339,32 +303,150 @@ public class Cases {
     assertNotNull(givenMsg, h2);
 
     // When
-    ContentSealException actual = assertThrows(ContentSealException.class, givenHost::dataReply);
+    boolean isNull = false;
+    try {
+      await()
+          .atMost(2, TimeUnit.SECONDS)
+          .until(() -> givenHost.indication() != null);
+    } catch (org.awaitility.core.ConditionTimeoutException ignored) {
+      isNull = true;
+    }
 
-    // Then
-    assertNotNull(actual,
-        "Échec attendu; le test valide un élément absent de la conception donc comportement non garanti");
+    assertTrue(isNull);
   }
 
-  // ct_009
-  public static void ct_pro_11_05(Environment environment) {
+  public static void ct_gen_01(Environment environment)
+      throws ExecutionException, InterruptedException, JsonProcessingException {
     // Given
+    ExecutorService executor = Executors.newFixedThreadPool(10);
+
     // Validation des antécédents
     String h1 =
-        "CT_PRO-11_05_ZH001 - Le client est disponible dans la variable \"Z001_host\" de l'environnement";
-    TransportHost givenHost = environment.getInput("Z001_host", TransportHost.class);
-    assertNotNull(givenHost, h1);
+        "CT_GEN_01_ZH001 - L'hôte transport A est disponible dans la variable \"Z001_host\" de l'environnement";
+    TransportHost givenAlphaHost = environment.getInput("Z001_host", TransportHost.class);
+    assertNotNull(givenAlphaHost, h1);
 
     String h2 =
-        "CT_PRO-11_05_ZH002 - Le message d'envoi initial est disponible dans la variable \"CT_PRO-11_05_E1\" de l'environnement";
-    String givenMsg = environment.getInput("CT_PRO-11_05_E1", String.class);
-    assertNotNull(givenMsg, h2);
+        "CT_GEN_01_ZH002 - L'hôte transport B est disponible dans la variable \"Z002_host\" de l'environnement";
+    TransportHost givenBetaHost = environment.getInput("Z002_host", TransportHost.class);
+    assertNotNull(givenBetaHost, h2);
 
-    // When
-    DeserializationException actual =
-        assertThrows(DeserializationException.class, givenHost::dataConfirm);
+    String h3 =
+        "CT_GEN_01_ZH003 - Le message d'envoi initial de l'hôte A est disponible dans la variable \"CT_GEN_01_E1\" de l'environnement";
+    String givenAlphaMsg = environment.getInput("CT_GEN_01_E1", String.class);
+    assertNotNull(givenAlphaMsg, h3);
 
-    assertNotNull(actual,
-        "Échec attendu; le test valide un élément absent de la conception donc comportement non garanti");
+    String h4 =
+        "CT_GEN_01_ZH004 - Le message d'envoi initial de l'hôte B est disponible dans la variable \"CT_GEN_01_E2\" de l'environnement";
+    String givenBetaMsg = environment.getInput("CT_GEN_01_E2", String.class);
+    assertNotNull(givenBetaMsg, h4);
+
+    String h5 =
+        "CT_GEN_01_ZH005 - L'implémentation fournit le fournisseur de réponse de l'hôte A et il est disponible dans la variable \"CT_GEN_01_Z003_supplier\" de l'environnement";
+    @SuppressWarnings("unchecked")
+    Supplier<String> givenAlphaSupplier =
+        environment.getInput("CT_GEN_01_Z003_supplier", Supplier.class);
+    assertNotNull(givenAlphaSupplier, h5);
+
+    String h6 =
+        "CT_GEN_01_ZH006 - L'implémentation fournit le fournisseur de réponse de l'hôte A et il est disponible dans la variable \"CT_GEN_01_Z004_supplier\" de l'environnement";
+    @SuppressWarnings("unchecked")
+    Supplier<String> givenBetaSupplier =
+        environment.getInput("CT_GEN_01_Z004_supplier", Supplier.class);
+    assertNotNull(givenBetaSupplier, h6);
+
+    String h7 =
+        "CT_GEN_01_ZH007 - L'objet de mise-en-correspondance est disponible dans la variable \"CT_GEN_01_Z005_mapper\"";
+    ObjectMapper mapper = environment.getInput("CT_GEN_01_Z005_mapper", ObjectMapper.class);
+    assertNotNull(mapper, h7);
+
+    String h8 =
+        "CT_GEN_01_ZH008 - L'hôte réseau A est disponible dans la variable \"Z006_Net_host\" de l'environnement";
+    NetworkHost givenAlphaNetHost = environment.getInput("Z006_Net_host", NetworkHost.class);
+    assertNotNull(givenAlphaNetHost, h8);
+
+    String h9 =
+        "CT_GEN_01_ZH009 - L'hôte réseau B est disponible dans la variable \"Z007_Net_host\" de l'environnement";
+    NetworkHost givenBetaNetHost = environment.getInput("Z007_Net_host", NetworkHost.class);
+    assertNotNull(givenBetaNetHost, h9);
+
+
+    for (int i = 0; i < 10; i++) {
+      // When
+      Callable<String> callableTask = givenBetaHost::indication;
+
+      Callable<String> callableTask2 = givenAlphaHost::indication;
+
+      Callable<Void> callableTask3 = () -> {
+        givenAlphaHost.dataConfirm();
+        return null;
+      };
+
+      Callable<Void> callableTask4 = () -> {
+        givenBetaHost.dataConfirm();
+        return null;
+      };
+
+      Future<String> future = executor.submit(callableTask);
+      Future<String> future2 = executor.submit(callableTask2);
+      Future<Void> future3 = executor.submit(callableTask3);
+      Future<Void> future4 = executor.submit(callableTask4);
+
+
+      givenAlphaHost.request(givenAlphaMsg);
+      String alphaIdu45ToSend = givenAlphaSupplier.get();
+
+      when(givenBetaNetHost.indication()).thenReturn(alphaIdu45ToSend);
+
+
+      givenBetaHost.request(givenBetaMsg);
+      String betaIdu45ToSend = givenBetaSupplier.get();
+
+      when(givenAlphaNetHost.indication()).thenReturn(betaIdu45ToSend);
+
+
+
+      String betaOutMsg = future.get();
+
+      String alphaOutMsg = future2.get();
+
+      future3.get();
+
+      future4.get();
+
+
+      // Then
+      InterfaceDataUnit34Dto expectedOutAlpha =
+          mapper.readValue(givenBetaMsg, InterfaceDataUnit34Dto.class);
+
+      InterfaceDataUnit34Dto expectedOutBeta =
+          mapper.readValue(givenAlphaMsg, InterfaceDataUnit34Dto.class);
+
+      InterfaceDataUnit34Dto actualOutAlpha =
+          mapper.readValue(alphaOutMsg, InterfaceDataUnit34Dto.class);
+
+      InterfaceDataUnit34Dto actualOutBeta =
+          mapper.readValue(betaOutMsg, InterfaceDataUnit34Dto.class);
+
+      assertEquals(expectedOutAlpha.getContext().getSourceIri(),
+          actualOutAlpha.getContext().getSourceIri());
+      assertEquals(expectedOutAlpha.getContext().getDestinationIri(),
+          actualOutAlpha.getContext().getDestinationIri());
+      assertEquals(expectedOutAlpha.getContext().getSourceCode(),
+          actualOutAlpha.getContext().getSourceCode());
+      assertEquals(expectedOutAlpha.getContext().getDestinationCode(),
+          actualOutAlpha.getContext().getDestinationCode());
+      assertEquals(expectedOutAlpha.getMessage(), actualOutAlpha.getMessage());
+
+      assertEquals(expectedOutBeta.getContext().getSourceIri(),
+          actualOutBeta.getContext().getSourceIri());
+      assertEquals(expectedOutBeta.getContext().getDestinationIri(),
+          actualOutBeta.getContext().getDestinationIri());
+      assertEquals(expectedOutBeta.getContext().getSourceCode(),
+          actualOutBeta.getContext().getSourceCode());
+      assertEquals(expectedOutBeta.getContext().getDestinationCode(),
+          actualOutBeta.getContext().getDestinationCode());
+      assertEquals(expectedOutBeta.getMessage(), actualOutBeta.getMessage());
+    }
   }
 }

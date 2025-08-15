@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="Spécification des essais de conceptions (CXS) de SPEDS Application">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification des Essais - SPEDS application</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification des Essais - SPEDS application</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v6.2.0,</span>
+<span id="revdate">2025-07-01</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_historique">1. Historique</a></li>
+<li><a href="#_objectif">2. Objectif</a></li>
+<li><a href="#_éléments_testées">3. Éléments Testées</a>
+<ul class="sectlevel2">
+<li><a href="#_processsus_pour_un_client">3.1. Processsus pour un client</a></li>
+<li><a href="#_processus_pour_un_serveur">3.2. Processus pour un serveur</a></li>
+</ul>
+</li>
+<li><a href="#_hypothèses">4. Hypothèses</a></li>
+<li><a href="#_données_globale">5. Données globale</a></li>
+<li><a href="#_incongruités">6. Incongruités</a></li>
+<li><a href="#_cas_de_test">7. Cas de Test</a>
+<ul class="sectlevel2">
+<li><a href="#_cas_de_test_pour_les_processus_côté_client">7.1. Cas de test pour les processus côté client</a>
+<ul class="sectlevel3">
+<li><a href="#_ct_001_initialise_les_paramètres_du_client_applicatif">7.1.1. [CT_001] Initialise les paramètres du client applicatif</a></li>
+<li><a href="#_ct_006_demande_déchanger_des_données">7.1.2. [CT_006] Demande d&#8217;échanger des données</a></li>
+<li><a href="#_ct_007_confirme_léchange_de_données">7.1.3. [CT_007] Confirme l&#8217;échange de données</a></li>
+<li><a href="#_ct_008_confirme_léchange_de_données_avec_exception_de_désérialisation">7.1.4. [CT_008] Confirme l&#8217;échange de données avec exception de désérialisation</a></li>
+<li><a href="#_ct_009_confirme_léchange_de_données_avec_un_mauvais_identifiant_de_message">7.1.5. [CT_009] Confirme l&#8217;échange de données avec un mauvais identifiant de message</a></li>
+</ul>
+</li>
+<li><a href="#_cas_de_test_pour_les_processus_côté_serveur">7.2. Cas de test pour les processus côté serveur</a>
+<ul class="sectlevel3">
+<li><a href="#_ct_011_initialise_les_paramètres_du_serveur_applicatif">7.2.1. [CT_011] Initialise les paramètres du serveur applicatif</a></li>
+<li><a href="#_ct_016_indique_un_échange_de_données">7.2.2. [CT_016] Indique un échange de données</a></li>
+<li><a href="#_ct_017_indique_un_échange_de_données_avec_une_erreur_de_désérialisation">7.2.3. [CT_017] Indique un échange de données avec une erreur de désérialisation</a></li>
+<li><a href="#_ct_018_répond_à_un_échange_de_données">7.2.4. [CT_018] Répond à un échange de données</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_essais">8. Essais</a>
+<ul class="sectlevel2">
+<li><a href="#_descriptions">8.1. Descriptions</a></li>
+<li><a href="#_matrice_de_correspondance_élémentsessais">8.2. Matrice de correspondance Éléments/Essais</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Date de création: 2024-07-16<br>
+Auteur: Stéphanie St-Cyr</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification des essais prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-03-18 11:15</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-03-18 11:16</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_historique">1. Historique</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 58.3333%;">
+<col style="width: 16.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Modification</th>
+<th class="tableblock halign-left valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Première itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2024-07-16</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Réécriture suite à la nouvelle conception speds 2.0 (P6)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-01-17</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retirer tous les tests sur le stop/start</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-02-06</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ajout d&#8217;une incongruité et des params d&#8217;initialisation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-02-28</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modification essai E19 pour prendre en compte les changements dû à l&#8217;ajout d&#8217;un tracking number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-03-04</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_objectif">2. Objectif</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ce document définit les essais nécessaires pour vérifier et valider l&#8217;interface application effectuant les échanges de messages applicatifs.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_éléments_testées">3. Éléments Testées</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_processsus_pour_un_client">3.1. Processsus pour un client</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.1] Initialise les paramètres du client
+</td>
+<td class="hdlist2">
+<p>Initialise le client à des paramètres pour assurer son fonctionnement.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.2] Démarre/termine le client
+</td>
+<td class="hdlist2">
+<p>Demande au client d&#8217;être prêt à reçevoir ou envoyer des messages, ou ne plus être prêt.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.3] Demande d&#8217;échanger des données
+</td>
+<td class="hdlist2">
+<p>Demande d’échanger des données sous une requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.4] Confirme l&#8217;échange de données
+</td>
+<td class="hdlist2">
+<p>Confirme la réponse reçue par l&#8217;initiateur de la requête (contient les données que l&#8217;initiateur de la requête veut échanger).</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_processus_pour_un_serveur">3.2. Processus pour un serveur</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.1] Initialise les paramètres du serveur
+</td>
+<td class="hdlist2">
+<p>Initialise le serveur à des paramètres pour assurer son fonctionnement.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.2] Démarre/termine le serveur 
+</td>
+<td class="hdlist2">
+<p>Demande au serveur d&#8217;être prêt à reçevoir ou envoyer des messages, ou ne plus être prêt.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.3] Indique un échange de données
+</td>
+<td class="hdlist2">
+<p>Reçoit la demande d’une requête avec les données échangées par l’initiateur de requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.4] Répond à un échange de données
+</td>
+<td class="hdlist2">
+<p>Répond à un initiateur de requête sous une réponse avec des données à échanger.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèses">4. Hypothèses</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[HYP-G-001]</dt>
+<dd>
+<p>À moins d&#8217;indication contraire, les chaines de caractères reçues en entrées sont réputées être valides et correspondre au schéma JSON attendu.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_données_globale">5. Données globale</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Données d&#8217;entrée</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 66.6666%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Données de sortie</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 66.6666%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">6. Incongruités</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[INC-001]
+</td>
+<td class="hdlist2">
+<p>La conception a un modèle de paramètres d&#8217;entrée pour l&#8217;initialisation du client et serveur qui s&#8217;avère impraticable dans la réalité. L&#8217;implémentation et la spec des essais utilisera une syntaxe qui diffère légèrement de la conception.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cas_de_test">7. Cas de Test</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_cas_de_test_pour_les_processus_côté_client">7.1. Cas de test pour les processus côté client</h3>
+<div class="sect3">
+<h4 id="_ct_001_initialise_les_paramètres_du_client_applicatif">7.1.1. [CT_001] Initialise les paramètres du client applicatif</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Demande d&#8217;initialisation des paramètres applicatif réussie.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-G-001]</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  options: {
+    "speds.app.version": "2.0.0",
+    "speds.app.reference": "a reference"
+  }
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">un tableau d&#8217;options comportant la version et référence de speds.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Il n&#8217;y a aucune erreur de produite lorsqu&#8217;on initie l&#8217;initialisation des paramètres du client.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ct_006_demande_déchanger_des_données">7.1.2. [CT_006] Demande d&#8217;échanger des données</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Effectue l&#8217;échange de données sans aucune exception.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>[HYP-005] Le client est initialisé et démarré.</p>
+</li>
+<li>
+<p>[HYP-G-001]</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pgaId</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"736bfe3a-3e9d-4d94-ada5-b69d051bcea3"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sourceCode</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"executor"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destinationCode</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"connector_1"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pdu_App</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "header":{
+    "msgtype":"TACHE.ENVOI",
+    "id":"daffd463-7b1a-424b-b26f-f8ffd1f54a77",
+    "parameters":false,
+    "SPEDS":{"version":"2.0.0", "reference":"a reference"}
+  },
+  "content":"
+    {
+      \"task_ref\":\"26ad7aef-16c2-4ef8-b196-f652026d513c\",
+      \"task_def\":\"11666f67-9680-4903-a91c-9b8ed459962c\",
+      \"inArgs\":[
+        {
+          \"Name\":\"ABCDEFGHIJKLMNOPQ\",
+          \"Value\":\"ABCDEFGHIJKLMNOPQ\"},
+        {
+          \"Name\":\"ABCDEFGHIJKLMNOP\",
+          \"Value\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZABC\"}],
+      \"params\":[],
+      \"command\":\"START\"}"
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Doit correspondre au schéma JSON ProtocolDataUnit-1-APP.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">idu_App</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "context":{"PGA":"736bfe3a-3e9d-4d94-ada5-b69d051bcea3",
+  "source_code":"executor",
+  "destination_code":"connector_1",
+  "options":false},
+  "message":
+    "{\"header\":{
+      \"msgtype\":\"TACHE.ENVOI\",
+      \"id\":\"daffd463-7b1a-424b-b26f-f8ffd1f54a77\",
+      \"parameters\":false,
+      \"SPEDS\":{\"version\":\"2.0.0\",\"reference\":\"a reference\"}},
+      \"content\":\"{
+        \\\"task_ref\\\":\\\"26ad7aef-16c2-4ef8-b196-f652026d513c\\\",
+        \\\"task_def\\\":\\\"11666f67-9680-4903-a91c-9b8ed459962c\\\",
+        \\\"inArgs\\\":[
+          {
+            \\\"Name\\\":\\\"ABCDEFGHIJKLMNOPQ\\\",
+            \\\"Value\\\":\\\"ABCDEFGHIJKLMNOPQ\\\"
+          },
+          {
+            \\\"Name\\\":\\\"ABCDEFGHIJKLMNOP\\\",
+            \\\"Value\\\":\\\"ABCDEFGHIJKLMNOPQRSTUVWXYZABC\\\"
+          }
+        ],
+        \\\"params\\\":[],
+        \\\"command\\\":\\\"START\\\"
+        }\"
+      }"
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Doit correspondre au schéma JSON InterfaceDataUnit-1_2.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>l&#8217;IDU reçu en sortie correspond au idu_App et contient bien le message donné en entrée pPdu_App.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ct_007_confirme_léchange_de_données">7.1.3. [CT_007] Confirme l&#8217;échange de données</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>On reçoit une confirmation d&#8217;échange de données et aucun problème n&#8217;est détecté.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>[HYP-006] Le client est initialisé et démarré</p>
+</li>
+<li>
+<p>[HYP-007] Le cas de test a un numéro de message en mémoire pour émuler une demande d&#8217;échange de données précédente</p>
+</li>
+<li>
+<p>[HYP-G-001]</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iduConfirm</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "context":{
+    "PGA":"736bfe3a-3e9d-4d94-ada5-b69d051bcea3",
+    "source_code":"executor",
+    "destination_code":"connector_1",
+    "options":false
+  },
+  "message":"
+    {\"header\":{
+      \"msgtype\":\"TACHE.RECEPTION\",
+      \"id\":\"daffd463-7b1a-424b-b26f-f8ffd1f54a77\",
+      \"parameters\":false,
+      \"SPEDS\":{\"version\":\"2.0.0\",\"reference\":\"a reference\"}},
+      \"content\":\"{
+        \\\"task_ref\\\":\\\"26ad7aef-16c2-4ef8-b196-f652026d513c\\\",
+        \\\"task_def\\\":\\\"11666f67-9680-4903-a91c-9b8ed459962c\\\",
+        \\\"startTime\\\":1741752000000
+      }\"
+    }"
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Doit correspondre au schéma JSON InterfaceDataUnit-1_2.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pgaId</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"736bfe3a-3e9d-4d94-ada5-b69d051bcea3"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sourceCode</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"executor"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destinationCode</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"connector_1"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pduConfirm</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "header":{
+    "msgtype":"TACHE.RECEPTION",
+    "id":"daffd463-7b1a-424b-b26f-f8ffd1f54a77",
+    "parameters":false,
+    "SPEDS":{"version":"2.0.0","reference":"a reference"}},
+    "content":"{
+      \"task_ref\":\"26ad7aef-16c2-4ef8-b196-f652026d513c\",
+      \"task_def\":\"11666f67-9680-4903-a91c-9b8ed459962c\",
+      \"startTime\":1741752000000
+   }"
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Doit suivre le schéma ProtocolDataUnit-1-APP.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>La confirmation reçue correspond à un envoi de message précédent (id du header) et ne génère aucune exception. Le message de confirmation (confirmA) compris dans l&#8217;entrée IduConfirm est bien retourné.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ct_008_confirme_léchange_de_données_avec_exception_de_désérialisation">7.1.4. [CT_008] Confirme l&#8217;échange de données avec exception de désérialisation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>On reçoit une erreur de désérialisation lors de l&#8217;envoi d&#8217;un message ne correspondant à aucun des types de messages attendus.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-008] Le client est initialisé et démarré.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iduConfirm</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "context":{
+    "PGA":"736bfe3a-3e9d-4d94-ada5-b69d051bcea3",
+    "source_code":"executor",
+    "destination_code":"connector_1",
+    "options":false
+  },
+  "message":"
+    {\"header\":{
+      \"msgtype\":\"TYPE.INEXISTENT\",
+      \"id\":\"daffd463-7b1a-424b-b26f-f8ffd1f54a77\",
+      \"parameters\":false,
+      \"SPEDS\":{\"version\":\"2.0.0\",\"reference\":\"a reference\"}},
+      \"content\":\"{
+        \\\"task_ref\\\":\\\"26ad7aef-16c2-4ef8-b196-f652026d513c\\\",
+        \\\"task_def\\\":\\\"11666f67-9680-4903-a91c-9b8ed459962c\\\",
+        \\\"startTime\\\":1741752000000
+      }\"
+    }"
+}</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Pour provoquer une erreur de désérialisation, on peut aussi changer l&#8217;orthographe de n&#8217;importe lequel des champs.
+</td>
+</tr>
+</table>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ne correspond pas tout à fait au schéma InterfaceDataUnit-1_2.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exception</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DeserializationException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Une erreur de désérialisation est lancée lorsqu&#8217;un message comme iduConfirmDE est reçu.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ct_009_confirme_léchange_de_données_avec_un_mauvais_identifiant_de_message">7.1.5. [CT_009] Confirme l&#8217;échange de données avec un mauvais identifiant de message</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>On reçoit une erreur lorsque le message de confirmation reçu ne correspond à aucun message précédemment envoyé.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Hypothèse::.
+. [HYP-009] Le client est initialisé et démarré
+. [HYP-010] Le cas de test n&#8217;a aucun numéro de message en mémoire pour émuler une demande d&#8217;échange de données précédente.
+. [HYP-G-001]</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iduConfirm</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "context":{
+    "PGA":"736bfe3a-3e9d-4d94-ada5-b69d051bcea3",
+    "source_code":"executor",
+    "destination_code":"connector_1",
+    "options":false
+  },
+  "message":"
+    {\"header\":{
+      \"msgtype\":\"TACHE.RECEPTION\",
+      \"id\":\"236bfe3a-3e9d-4d94-ada5-b69d051bcea3\",
+      \"parameters\":false,
+      \"SPEDS\":{\"version\":\"2.0.0\",\"reference\":\"a reference\"}},
+      \"content\":\"{
+        \\\"task_ref\\\":\\\"26ad7aef-16c2-4ef8-b196-f652026d513c\\\",
+        \\\"task_def\\\":\\\"11666f67-9680-4903-a91c-9b8ed459962c\\\",
+        \\\"startTime\\\":1741752000000
+      }\"
+    }"
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Doit correspondre au schéma JSON InterfaceDataUnit-1_2, mais avec un mauvais numéro de message.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exception</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InvalidPduIdException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Lorsque l&#8217;identifiant du message <em>iduConfirmPduIdE</em> ne correspond à aucun des messages envoyés précédement, alors on reçoit une exception InvalidPduId.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_pour_les_processus_côté_serveur">7.2. Cas de test pour les processus côté serveur</h3>
+<div class="sect3">
+<h4 id="_ct_011_initialise_les_paramètres_du_serveur_applicatif">7.2.1. [CT_011] Initialise les paramètres du serveur applicatif</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Demande d&#8217;initialisation des paramètres applicatif réussie.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+</dl>
+</div>
+<div class="dlist HYP-G-001">
+<dl>
+<dt>Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  options: {
+    "speds.app.version": "2.0.0",
+    "speds.app.reference": "a reference"
+  }
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">un tableau d&#8217;options comportant la version et référence de speds.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Il n&#8217;y a aucune erreur de produite lorsqu&#8217;on initie l&#8217;initialisation des paramètres du serveur.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ct_016_indique_un_échange_de_données">7.2.2. [CT_016] Indique un échange de données</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>On reçoit une indication d&#8217;un message et aucun problème n&#8217;est détecté.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>[HYP-016] Le serveur est initialisé.</p>
+</li>
+<li>
+<p>[HYP-G-001]</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iduIndication</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "context":{
+    "PGA":"736bfe3a-3e9d-4d94-ada5-b69d051bcea3",
+    "source_code":"connector_1",
+    "destination_code":"executor",
+    "tracking_number":"a714866d-f28f-41e8-bb29-0116c2599d2a",
+    "options":false},
+  "message":"{
+    \"header\":{
+      \"msgtype\":\"FIN.ENVOI\",
+      \"id\":\"a714866d-f28f-41e8-bb29-0116c2599d2a\",
+      \"parameters\":false,
+      \"SPEDS\":{\"version\":\"2.0.0\",\"reference\":\"a reference\"}},
+    \"content\":\"{
+      \\\"task_ref\\\":\\\"26ad7aef-16c2-4ef8-b196-f652026d513c\\\",
+      \\\"task_def\\\":\\\"11666f67-9680-4903-a91c-9b8ed459962c\\\",
+      \\\"outArgs\\\":[],
+      \\\"finishTime\\\":1741752000000}\"
+  }"
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Doit correspondre au schéma JSON InterfaceDataUnit-1_2.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pgaId</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"736bfe3a-3e9d-4d94-ada5-b69d051bcea3"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sourceCode</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"connector_1"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destinationCode</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"executor"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">indicationMsg</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "header":{
+    "msgtype":"FIN.ENVOI",
+    "id":"a714866d-f28f-41e8-bb29-0116c2599d2a",
+    "parameters":false,
+    "SPEDS":{"version":"2.0.0","reference":"a reference"}},
+    "content":"{
+      \"task_ref\":\"26ad7aef-16c2-4ef8-b196-f652026d513c\",
+      \"task_def\":\"11666f67-9680-4903-a91c-9b8ed459962c\",
+      \"outArgs\":[],
+      \"finishTime\":1741752000000
+    }"
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Doit correspondre à ProtocolDataUnit-1-APP.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>Le message reçu (indicationMsg) lors d&#8217;une indication correspond celui désérialisé et passé en entrée dans IduIndication.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ct_017_indique_un_échange_de_données_avec_une_erreur_de_désérialisation">7.2.3. [CT_017] Indique un échange de données avec une erreur de désérialisation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>On reçoit une erreur de désérialisation lors de l&#8217;indication' d&#8217;un message qui ne correspond à aucun des types de messages attendus.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>[HYP-017] Le serveur est initialisé et démarré.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IduConfirmDE</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "context":{
+    "PGA":"736bfe3a-3e9d-4d94-ada5-b69d051bcea3",
+    "source_code":"connector_1",
+    "destination_code":"executor",
+    "tracking_number":"a714866d-f28f-41e8-bb29-0116c2599d2a",
+    "options":false},
+  "message":"{
+    \"header\":{
+      \"msgtype\":\"TYPE.INEXISTENT\",
+      \"id\":\"a714866d-f28f-41e8-bb29-0116c2599d2a\",
+      \"parameters\":false,
+      \"SPEDS\":{\"version\":\"2.0.0\",\"reference\":\"a reference\"}},
+    \"content\":\"{
+      \\\"task_ref\\\":\\\"26ad7aef-16c2-4ef8-b196-f652026d513c\\\",
+      \\\"task_def\\\":\\\"11666f67-9680-4903-a91c-9b8ed459962c\\\",
+      \\\"outArgs\\\":[],
+      \\\"finishTime\\\":1741752000000}\"
+  }"
+}</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Pour provoquer une erreur de désérialisation, on peut aussi changer l&#8217;orthographe de n&#8217;importe lequel des champs.
+</td>
+</tr>
+</table>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ne doit pas correspondre en totalité au schéma JSON InterfaceDataUnit-1_2.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">exception</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DeserializationException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>une exception de désérialisation est reçue.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ct_018_répond_à_un_échange_de_données">7.2.4. [CT_018] Répond à un échange de données</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Envoi du message réponse reçu sans aucun problème.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>[HYP-018] Le serveur est initialisé.</p>
+</li>
+<li>
+<p>[HYP-019] Le serveur a reçu un <code>indicate</code> avant ce <code>response</code>.</p>
+</li>
+<li>
+<p>[HYP-G-001]</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pgaId</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"736bfe3a-3e9d-4d94-ada5-b69d051bcea3"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sourceCode</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"connector_1"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destinationCode</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"executor"</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">responseMsg</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "header":{
+    "msgtype":"FIN.RECEPTION",
+    "id":"a714866d-f28f-41e8-bb29-0116c2599d2a",
+    "parameters":false,
+    "SPEDS":{"version":"2.0.0","reference":"a reference"}},
+   "content":"{\"task_ref\":\"26ad7aef-16c2-4ef8-b196-f652026d513c\"}"
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Doit correspondre au schéma JSON ProtocolDataUnit-1-APP.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 75%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iduResponse</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>{
+  "context":{
+    "PGA":"736bfe3a-3e9d-4d94-ada5-b69d051bcea3",
+    "source_code":"connector_1",
+    "destination_code":"executor",
+    "tracking_number":"a714866d-f28f-41e8-bb29-0116c2599d2a",
+    "options":false},
+    "message":"{
+      \"header\":{
+        \"msgtype\":\"FIN.RECEPTION\",
+        \"id\":\"a714866d-f28f-41e8-bb29-0116c2599d2a\",
+        \"parameters\":false,
+        \"SPEDS\":{\"version\":\"2.0.0\",\"reference\":\"a reference\"}},
+        \"content\":\"{
+          \\\"task_ref\\\":\\\"26ad7aef-16c2-4ef8-b196-f652026d513c\\\"}\"
+    }"
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Doit correspondre au schéma JSON InterfaceDataUnit-1_2.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<p>On reçoit bien l'<em>iduResponse</em>, bien formé, en sortie.</p>
+</dd>
+<dt class="hdlist1">NOTE</dt>
+<dd>
+<p>Dans cette réponse, le tracking number doit correspondre à celui précédemment reçu dans l' <code>indication</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_essais">8. Essais</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_descriptions">8.1. Descriptions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initialisation du client applicatif</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_001, CT_006</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initialise et envoit d&#8217;un message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Client est initialisé</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_001, CT_006, CT_007</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Envoi d&#8217;un message et reçoit une confirmation de réception</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E9</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Client est initialisé</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_001, CT_008</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reçoit une confirmation mal formulée qui engendre une erreur de désérialisation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_001, CT_009</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reçoit une confirmation avec un mauvais numéro de message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_011</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initialisation du serveur applicatif</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E17</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serveur initialisé</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_011, CT_016</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reçoit une indication et la transmet sans problème</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E18</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serveur initialisé</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_011, CT_017</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reçoit une indication et lance une erreur de désérialisation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E19</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serveur initialisé</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_011, CT_016, CT_018</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reçoit une réponse à une échange de donnée et retransmet sans problème.  Cette réponse correspond à un envoi précédent.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_matrice_de_correspondance_élémentsessais">8.2. Matrice de correspondance Éléments/Essais</h3>
+<table class="tableblock frame-all grid-all fit-content">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E9</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E17</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E18</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E19</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_006</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_007</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_008</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_009</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_011</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_016</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_017</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_018</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v6.2.0<br>
+Last updated 2025-07-22 14:19:14 -0400
+</div>
+</div>
+</body>
+</html>

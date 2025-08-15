@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpedsFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.api.factory</a> &gt; <span class="el_source">SpedsFactory.java</span></div><h1>SpedsFactory.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe SpedsFactory.
+ * @brief @~english Contains description of SpedsFactory class.
+ */
+
+package ca.griis.speds.api.factory;
+
+import ca.griis.js2p.gen.speds.application.api.dto.InitInParamsDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.application.api.ApplicationFactory;
+import ca.griis.speds.application.api.ApplicationHost;
+import ca.griis.speds.application.api.sync.SyncApplicationFactory;
+import ca.griis.speds.application.serializer.SharedObjectMapper;
+import ca.griis.speds.session.api.PgaService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      Factory method design pattern
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre une fabrique d'entités du protocole SPEDS.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-04-07 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SpedsFactory {
+<span class="fc" id="L56">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(SpedsFactory.class);</span>
+
+  private final ObjectMapper mapper;
+  private final ApplicationFactory factory;
+
+<span class="fc" id="L61">  public SpedsFactory(PgaService pgaService) {</span>
+<span class="fc" id="L62">    logger.trace(Trace.ENTER_METHOD_1, &quot;pgaService&quot;, pgaService);</span>
+
+<span class="fc" id="L64">    this.factory = new SyncApplicationFactory(pgaService);</span>
+<span class="fc" id="L65">    this.mapper = SharedObjectMapper.getInstance().getMapper();</span>
+<span class="fc" id="L66">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Construit un hôte du protocole SPEDS.
+   * @param parameters Les paramètres de l'hôte des couches.
+   * @return L'interface hôte du protocole SPEDS.
+   */
+  public ApplicationHost init(InitInParamsDto parameters) throws JsonProcessingException {
+<span class="fc" id="L79">    logger.trace(Trace.ENTER_METHOD_1, &quot;parameters&quot;, parameters);</span>
+
+<span class="fc" id="L81">    String params = mapper.writeValueAsString(parameters);</span>
+<span class="fc" id="L82">    ApplicationHost host = init(params);</span>
+
+<span class="fc" id="L84">    logger.trace(Trace.EXIT_METHOD_1, &quot;host&quot;, host);</span>
+<span class="fc" id="L85">    return host;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Construit un hôte du protocole SPEDS.
+   * @param parameters Les paramètres de l'hôte des couches.
+   * @return L'interface hôte du protocole SPEDS.
+   */
+  public ApplicationHost init(String parameters) {
+<span class="fc" id="L99">    logger.trace(Trace.ENTER_METHOD_1, &quot;parameters&quot;, parameters);</span>
+
+<span class="fc" id="L101">    ApplicationHost host = factory.init(parameters);</span>
+
+<span class="fc" id="L103">    logger.trace(Trace.EXIT_METHOD_1, &quot;host&quot;, host);</span>
+<span class="fc" id="L104">    return host;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -26,10 +26,8 @@ import ca.griis.js2p.gen.speds.transport.api.dto.StampDto;
 import ca.griis.logger.GriisLogger;
 import ca.griis.logger.GriisLoggerFactory;
 import ca.griis.logger.statuscode.Trace;
-import ca.griis.speds.transport.exception.DeserializationException;
-import ca.griis.speds.transport.exception.SerializationException;
 import ca.griis.speds.transport.serializer.SharedObjectMapper;
-import ca.griis.speds.transport.service.identification.IdentifierGenerator;
+import ca.griis.speds.transport.service.IdentifierGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
@@ -62,51 +60,65 @@ import java.util.UUID;
  * @par Tâches
  *      S.O.
  */
-public class ExchangeDataRequest {
-<span class="fc" id="L66">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(ExchangeDataRequest.class);</span>
+public final class ExchangeDataRequest {
+<span class="fc" id="L64">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(ExchangeDataRequest.class);</span>
 
   private final IdentifierGenerator identifierGenerator;
+  private final Set&lt;String&gt; pendingMessagesId;
 
-<span class="fc" id="L70">  public ExchangeDataRequest(IdentifierGenerator identifierGenerator) {</span>
-<span class="fc" id="L71">    logger.trace(Trace.ENTER_METHOD_1, &quot;identifierGenerator&quot;, identifierGenerator);</span>
-<span class="fc" id="L72">    this.identifierGenerator = identifierGenerator;</span>
-<span class="fc" id="L73">  }</span>
+  public ExchangeDataRequest(IdentifierGenerator identifierGenerator,
+<span class="fc" id="L70">      Set&lt;String&gt; pendingMessagesId) {</span>
+<span class="fc" id="L71">    logger.trace(Trace.ENTER_METHOD_2, &quot;identifierGenerator&quot;, identifierGenerator,</span>
+        &quot;pendingMessagesId&quot;,
+        pendingMessagesId);
+<span class="fc" id="L74">    this.identifierGenerator = identifierGenerator;</span>
+<span class="fc" id="L75">    this.pendingMessagesId = pendingMessagesId;</span>
+<span class="fc" id="L76">  }</span>
 
-  public String dataRequestProcess(String idu, String spedsVersion, String spedsReference,
-      Set&lt;String&gt; sentMessagesId) {
-<span class="fc" id="L77">    logger.trace(Trace.ENTER_METHOD_4, &quot;idu&quot;, idu, &quot;spedsVersion&quot;, spedsVersion, &quot;spedsReference&quot;,</span>
-        spedsReference, &quot;sentMessagesId&quot;, sentMessagesId);
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Traite l'envoi d'un message requête de la couche transport.
+   * @param idu IDU de la couche supérieure en chaîne de caractères.
+   * @param spedsVersion Version de SPEDS.
+   * @param spedsReference Référence &lt;a SPEDS.
+   * @return IDU de la couche inférrieure en chaîne de caractères à transmettre.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public String request(String idu, String spedsVersion, String spedsReference)
+      throws JsonProcessingException {
+<span class="fc" id="L95">    logger.trace(Trace.ENTER_METHOD_3, &quot;idu&quot;, idu, &quot;spedsVersion&quot;, spedsVersion, &quot;spedsReference&quot;,</span>
+        spedsReference);
 
-
-    final InterfaceDataUnit34Dto iduDto;
-    try {
-<span class="fc" id="L83">      iduDto = SharedObjectMapper.getInstance().getMapper().readValue(idu,</span>
-          InterfaceDataUnit34Dto.class);
-<span class="fc" id="L85">    } catch (JsonProcessingException e) {</span>
-<span class="fc" id="L86">      throw new DeserializationException(e.getMessage());</span>
-<span class="fc" id="L87">    }</span>
+    final InterfaceDataUnit34Dto iduDto =
+<span class="fc" id="L99">        SharedObjectMapper.getInstance().getMapper().readValue(idu, InterfaceDataUnit34Dto.class);</span>
 
     // Récupérer le ICI et SDU de l'idu-3-4
-<span class="fc" id="L90">    final Context34Dto ici34 = iduDto.getContext();</span>
-<span class="fc" id="L91">    final String sduSes = iduDto.getMessage();</span>
-<span class="fc" id="L92">    final String traId = this.identifierGenerator.generateId();</span>
-<span class="fc" id="L93">    sentMessagesId.add(traId);</span>
+<span class="fc" id="L102">    final Context34Dto ici34 = iduDto.getContext();</span>
+<span class="fc" id="L103">    final String sduSes = iduDto.getMessage();</span>
+<span class="fc" id="L104">    final String traId = identifierGenerator.generateId();</span>
+<span class="fc" id="L105">    pendingMessagesId.add(traId);</span>
 
     // Création de l'ici à transmettre à la couche inférieur
-<span class="fc" id="L96">    final Context45Dto context = new Context45Dto(ici34.getSourceIri(),</span>
-<span class="fc" id="L97">        ici34.getDestinationIri(), UUID.fromString(traId), Boolean.FALSE);</span>
+<span class="fc" id="L108">    final Context45Dto context = new Context45Dto(ici34.getSourceIri(),</span>
+<span class="fc" id="L109">        ici34.getDestinationIri(), UUID.fromString(traId), Boolean.FALSE);</span>
 
     // Création du sceau d'intégrité du sdu reçu
-<span class="fc" id="L100">    final Sha512Hashing sha512Hashing = new Sha512Hashing();</span>
-<span class="fc" id="L101">    final Hash hashSdu = sha512Hashing.hash(sduSes.getBytes(StandardCharsets.UTF_8));</span>
-<span class="fc" id="L102">    final String sealContentSdu = hashSdu.asBase64();</span>
+<span class="fc" id="L112">    final Sha512Hashing sha512Hashing = new Sha512Hashing();</span>
+<span class="fc" id="L113">    final Hash hashSdu = sha512Hashing.hash(sduSes.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L114">    final String sealContentSdu = hashSdu.asBase64();</span>
 
     // Construire le l'entête du message transport
-<span class="fc" id="L105">    final String sourceCode = iduDto.getContext().getSourceCode();</span>
-<span class="fc" id="L106">    final String destinationCode = iduDto.getContext().getDestinationCode();</span>
-<span class="fc" id="L107">    final Speds45Dto speds = new Speds45Dto(spedsVersion, spedsReference);</span>
+<span class="fc" id="L117">    final String sourceCode = iduDto.getContext().getSourceCode();</span>
+<span class="fc" id="L118">    final String destinationCode = iduDto.getContext().getDestinationCode();</span>
+<span class="fc" id="L119">    final Speds45Dto speds = new Speds45Dto(spedsVersion, spedsReference);</span>
 
-<span class="fc" id="L109">    final Header45Dto traMsgHeader = new Header45Dto(</span>
+<span class="fc" id="L121">    final Header45Dto traMsgHeader = new Header45Dto(</span>
         Header45Dto.Msgtype.TRA_MSG_ENV,
         traId,
         sourceCode,
@@ -114,40 +126,25 @@ public class ExchangeDataRequest {
         speds);
 
     // Création du sceau d'intégrité de l'entête du traMsgEnv
-    final String traMsgHeaderSerialized;
-    try {
-      traMsgHeaderSerialized =
-<span class="fc" id="L120">          SharedObjectMapper.getInstance().getMapper().writeValueAsString(traMsgHeader);</span>
-<span class="nc" id="L121">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L122">      throw new SerializationException(e.getMessage());</span>
-<span class="fc" id="L123">    }</span>
-<span class="fc" id="L124">    final Hash traHeader =</span>
-<span class="fc" id="L125">        sha512Hashing.hash(traMsgHeaderSerialized.getBytes(StandardCharsets.UTF_8));</span>
-<span class="fc" id="L126">    final String sealheaderSdu = traHeader.asBase64();</span>
-<span class="fc" id="L127">    final StampDto traStamp = new StampDto(sealheaderSdu, sealContentSdu);</span>
+    final String traMsgHeaderSerialized =
+<span class="fc" id="L130">        SharedObjectMapper.getInstance().getMapper().writeValueAsString(traMsgHeader);</span>
+<span class="fc" id="L131">    final Hash traHeader =</span>
+<span class="fc" id="L132">        sha512Hashing.hash(traMsgHeaderSerialized.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L133">    final String sealheaderSdu = traHeader.asBase64();</span>
+<span class="fc" id="L134">    final StampDto traStamp = new StampDto(sealheaderSdu, sealContentSdu);</span>
 
     // Création du message Transport
-<span class="fc" id="L130">    final ProtocolDataUnit4TraDto traMsgEnv =</span>
+<span class="fc" id="L137">    final ProtocolDataUnit4TraDto traMsgEnv =</span>
         new ProtocolDataUnit4TraDto(traMsgHeader, traStamp, sduSes);
-    final String serialTraMessage;
-    try {
-<span class="fc" id="L134">      serialTraMessage = SharedObjectMapper.getInstance().getMapper().writeValueAsString(traMsgEnv);</span>
-<span class="nc" id="L135">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L136">      throw new SerializationException(e.getMessage());</span>
-<span class="fc" id="L137">    }</span>
-
-<span class="fc" id="L139">    final InterfaceDataUnit45Dto networkIduConstruct =</span>
+    final String serialTraMessage =
+<span class="fc" id="L140">        SharedObjectMapper.getInstance().getMapper().writeValueAsString(traMsgEnv);</span>
+<span class="fc" id="L141">    final InterfaceDataUnit45Dto networkIduConstruct =</span>
         new InterfaceDataUnit45Dto(context, serialTraMessage);
-    final String networkIdu;
-    try {
-      networkIdu =
-<span class="fc" id="L144">          SharedObjectMapper.getInstance().getMapper().writeValueAsString(networkIduConstruct);</span>
-<span class="nc" id="L145">    } catch (JsonProcessingException e) {</span>
-<span class="nc" id="L146">      throw new SerializationException(e.getMessage());</span>
-<span class="fc" id="L147">    }</span>
+    final String networkIdu =
+<span class="fc" id="L144">        SharedObjectMapper.getInstance().getMapper().writeValueAsString(networkIduConstruct);</span>
 
-<span class="fc" id="L149">    logger.trace(Trace.EXIT_METHOD_1, &quot;networkIdu&quot;, networkIdu);</span>
-<span class="fc" id="L150">    return networkIdu;</span>
+<span class="fc" id="L146">    logger.trace(Trace.EXIT_METHOD_1, &quot;networkIdu&quot;, networkIdu);</span>
+<span class="fc" id="L147">    return networkIdu;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

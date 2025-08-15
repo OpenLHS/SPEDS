@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ContentToAppIduConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.api.converter</a> &gt; <span class="el_source">ContentToAppIduConverter.java</span></div><h1>ContentToAppIduConverter.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe ContentToAppIduConverter.
+ * @brief @~english Contains description of ContentToAppIduConverter class.
+ */
+
+package ca.griis.speds.api.converter;
+
+import ca.griis.js2p.gen.speds.application.api.dto.CommandeEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.CommandeReceptionDto;
+import ca.griis.js2p.gen.speds.application.api.dto.ContextDto;
+import ca.griis.js2p.gen.speds.application.api.dto.DataEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.DataReceptionDto;
+import ca.griis.js2p.gen.speds.application.api.dto.ExceptionEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.ExceptionReceptionDto;
+import ca.griis.js2p.gen.speds.application.api.dto.FinEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.FinReceptionDto;
+import ca.griis.js2p.gen.speds.application.api.dto.HeaderDto;
+import ca.griis.js2p.gen.speds.application.api.dto.InterfaceDataUnit01Dto;
+import ca.griis.js2p.gen.speds.application.api.dto.PgaConfirmationDto;
+import ca.griis.js2p.gen.speds.application.api.dto.PgaFinDto;
+import ca.griis.js2p.gen.speds.application.api.dto.ProtocolDataUnit1APPDto;
+import ca.griis.js2p.gen.speds.application.api.dto.SPEDSDto;
+import ca.griis.js2p.gen.speds.application.api.dto.StatutEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.StatutReceptionDto;
+import ca.griis.js2p.gen.speds.application.api.dto.TacheEnvoiDto;
+import ca.griis.js2p.gen.speds.application.api.dto.TacheReceptionDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.Serializable;
+import java.util.UUID;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Définit un convertisseur de contenu de message du protocole SPEDS en une unité de
+ *        travail d'interface venant de la couche application.
+ * @par Détails
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-04-07 [FO] - Première ébauche.&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ContentToAppIduConverter implements ContentConverter&lt;InterfaceDataUnit01Dto&gt; {
+  private final ObjectMapper mapper;
+  private final String version;
+  private final String reference;
+
+<span class="fc" id="L73">  public ContentToAppIduConverter(ObjectMapper mapper, String version, String reference) {</span>
+<span class="fc" id="L74">    this.mapper = mapper;</span>
+<span class="fc" id="L75">    this.version = version;</span>
+<span class="fc" id="L76">    this.reference = reference;</span>
+<span class="fc" id="L77">  }</span>
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, TacheEnvoiDto content) throws JsonProcessingException {
+<span class="fc" id="L82">    InterfaceDataUnit01Dto idu =</span>
+<span class="fc" id="L83">        convert(pgaId, sourceCode, destinationCode, msgId, HeaderDto.Msgtype.TACHE_ENVOI, content);</span>
+<span class="fc" id="L84">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, TacheReceptionDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L91">    InterfaceDataUnit01Dto idu = convert(pgaId, sourceCode, destinationCode, msgId,</span>
+        HeaderDto.Msgtype.TACHE_RECEPTION, content);
+<span class="fc" id="L93">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, FinEnvoiDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L100">    InterfaceDataUnit01Dto idu =</span>
+<span class="fc" id="L101">        convert(pgaId, sourceCode, destinationCode, msgId, HeaderDto.Msgtype.FIN_ENVOI, content);</span>
+<span class="fc" id="L102">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, FinReceptionDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L109">    InterfaceDataUnit01Dto idu = convert(pgaId, sourceCode, destinationCode, msgId,</span>
+        HeaderDto.Msgtype.FIN_RECEPTION, content);
+<span class="fc" id="L111">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, ExceptionEnvoiDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L118">    InterfaceDataUnit01Dto idu = convert(pgaId, sourceCode, destinationCode, msgId,</span>
+        HeaderDto.Msgtype.EXCEPTION_ENVOI, content);
+<span class="fc" id="L120">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, ExceptionReceptionDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L127">    InterfaceDataUnit01Dto idu = convert(pgaId, sourceCode, destinationCode, msgId,</span>
+        HeaderDto.Msgtype.EXCEPTION_RECEPTION, content);
+<span class="fc" id="L129">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, DataEnvoiDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L136">    InterfaceDataUnit01Dto idu =</span>
+<span class="fc" id="L137">        convert(pgaId, sourceCode, destinationCode, msgId, HeaderDto.Msgtype.DATA_ENVOI, content);</span>
+<span class="fc" id="L138">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, DataReceptionDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L145">    InterfaceDataUnit01Dto idu = convert(pgaId, sourceCode, destinationCode, msgId,</span>
+        HeaderDto.Msgtype.DATA_RECEPTION, content);
+<span class="fc" id="L147">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, StatutEnvoiDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L154">    InterfaceDataUnit01Dto idu =</span>
+<span class="fc" id="L155">        convert(pgaId, sourceCode, destinationCode, msgId, HeaderDto.Msgtype.STATUT_ENVOI, content);</span>
+<span class="fc" id="L156">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, StatutReceptionDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L163">    InterfaceDataUnit01Dto idu = convert(pgaId, sourceCode, destinationCode, msgId,</span>
+        HeaderDto.Msgtype.STATUT_RECEPTION, content);
+<span class="fc" id="L165">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, CommandeEnvoiDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L172">    InterfaceDataUnit01Dto idu = convert(pgaId, sourceCode, destinationCode, msgId,</span>
+        HeaderDto.Msgtype.COMMANDE_ENVOI, content);
+<span class="fc" id="L174">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, CommandeReceptionDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L181">    InterfaceDataUnit01Dto idu = convert(pgaId, sourceCode, destinationCode, msgId,</span>
+        HeaderDto.Msgtype.COMMANDE_RECEPTION, content);
+<span class="fc" id="L183">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, PgaFinDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L190">    InterfaceDataUnit01Dto idu =</span>
+<span class="fc" id="L191">        convert(pgaId, sourceCode, destinationCode, msgId, HeaderDto.Msgtype.PGA_FIN, content);</span>
+<span class="fc" id="L192">    return idu;</span>
+  }
+
+  @Override
+  public InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, PgaConfirmationDto content)
+      throws JsonProcessingException {
+<span class="fc" id="L199">    InterfaceDataUnit01Dto idu = convert(pgaId, sourceCode, destinationCode, msgId,</span>
+        HeaderDto.Msgtype.PGA_CONFIRMATION, content);
+<span class="fc" id="L201">    return idu;</span>
+  }
+
+  protected InterfaceDataUnit01Dto convert(String pgaId, String sourceCode, String destinationCode,
+      UUID msgId, HeaderDto.Msgtype type, Serializable content) throws JsonProcessingException {
+<span class="fc" id="L206">    final String serializedContent = mapper.writeValueAsString(content);</span>
+<span class="fc" id="L207">    ProtocolDataUnit1APPDto pdu = new ProtocolDataUnit1APPDto(</span>
+        new HeaderDto(
+            type,
+            msgId,
+<span class="fc" id="L211">            false,</span>
+            new SPEDSDto(version, reference)),
+        serializedContent);
+
+<span class="fc" id="L215">    final String message = mapper.writeValueAsString(pdu);</span>
+<span class="fc" id="L216">    final ContextDto context = new ContextDto(</span>
+        pgaId,
+        sourceCode,
+        destinationCode,
+        msgId,
+        Boolean.FALSE);
+<span class="fc" id="L222">    InterfaceDataUnit01Dto idu = new InterfaceDataUnit01Dto(context, message);</span>
+<span class="fc" id="L223">    return idu;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

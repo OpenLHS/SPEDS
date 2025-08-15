@@ -23,8 +23,7 @@ import ca.griis.speds.transport.api.TransportFactory;
 import ca.griis.speds.transport.api.TransportHost;
 import ca.griis.speds.transport.exception.ParameterException;
 import ca.griis.speds.transport.serializer.SharedObjectMapper;
-import ca.griis.speds.transport.service.identification.IdentifierGenerator;
-import ca.griis.speds.transport.service.message.PollingManager;
+import ca.griis.speds.transport.service.IdentifierGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Optional;
 import java.util.UUID;
@@ -96,12 +95,17 @@ public class SyncTransportFactory implements TransportFactory {
             "SPEDS reference is missing in the initialization parameters.");
       }
 
+      final Integer pollerMaxQueueCapacity =
+          (Integer) params.getOptions().getOrDefault("speds.tra.poller.maxQueueCapacity", 100);
+      final Integer pollerNbThreads =
+          (Integer) params.getOptions().getOrDefault("speds.tra.poller.nbThreads", 1);
+      final Integer pollerSleepMs =
+          (Integer) params.getOptions().getOrDefault("speds.tra.poller.sleepMs", 200);
+
       final NetworkHost host = Optional.ofNullable(initNetworkHost(parameters))
           .orElseThrow(() -> new ParameterException("Host is null."));
-
-      traHost =
-          new ImmutableTransportHost(host, spedsVersion, spedsReference, new PollingManager(host),
-              identifierGenerator);
+      traHost = new ImmutableTransportHost(host, spedsVersion, spedsReference, identifierGenerator,
+          pollerMaxQueueCapacity, pollerNbThreads, pollerSleepMs);
     } catch (JsonProcessingException e) {
       throw new ParameterException("Cannot read initialization parameters" + e.getMessage());
     }

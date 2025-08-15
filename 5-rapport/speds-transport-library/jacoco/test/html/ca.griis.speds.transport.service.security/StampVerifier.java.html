@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StampVerifier.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.service.security</a> &gt; <span class="el_source">StampVerifier.java</span></div><h1>StampVerifier.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe StampVerifier.
+ * @brief @~english Implementation of the StampVerifier class.
+ */
+
+package ca.griis.speds.transport.service.security;
+
+import ca.griis.cryptography.hash.entity.Hash;
+import ca.griis.cryptography.hash.hashing.Sha512Hashing;
+import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.transport.serializer.SharedObjectMapper;
+import ca.griis.speds.transport.service.SilentIgnoredException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.nio.charset.StandardCharsets;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Vérie des sceaux d'un message transport.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-08-08 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L54">public final class StampVerifier {</span>
+<span class="fc" id="L55">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(StampVerifier.class);</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Vérifie les sceaux d'un message transport.
+   * @param pdu Message de la couche transport.
+   * @param ha512Hashing Fonction de hachage.
+   * @exception SilentIgnoredException En cas qu'un PDU ou le sceau est invalide.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public void verifyStamps(ProtocolDataUnit4TraDto pdu, Sha512Hashing hashing) {
+<span class="fc" id="L72">    logger.trace(Trace.ENTER_METHOD_2, &quot;pdu&quot;, pdu, &quot;hashing&quot;, hashing);</span>
+
+    // Vérification de l'intégrité de l'entête et du contenu
+    final String sduHeader;
+    try {
+<span class="fc" id="L77">      sduHeader = SharedObjectMapper.getInstance().getMapper().writeValueAsString(pdu.getHeader());</span>
+<span class="nc" id="L78">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L79">      throw new SilentIgnoredException(e.getMessage());</span>
+<span class="fc" id="L80">    }</span>
+
+    // Hasher l'entête et le contenu
+<span class="fc" id="L83">    final Hash headerEncrypt = hashing.hash(sduHeader.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L84">    final Hash contentEncrypt =</span>
+<span class="fc" id="L85">        hashing.hash(pdu.getContent().getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L86">    final String sealHeaderSduGenerated = headerEncrypt.asBase64();</span>
+<span class="fc" id="L87">    final String sealContentSduGenerated = contentEncrypt.asBase64();</span>
+
+    // Vérifier l'intégrité de l'entête et du contenu
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    if (!pdu.getStamp().getHeaderSeal().equals(sealHeaderSduGenerated)) {</span>
+<span class="fc" id="L91">      throw new SilentIgnoredException(&quot;Header seal are not the same&quot;);</span>
+    }
+
+<span class="fc bfc" id="L94" title="All 2 branches covered.">    if (!pdu.getStamp().getContentSeal().equals(sealContentSduGenerated)) {</span>
+<span class="fc" id="L95">      throw new SilentIgnoredException(&quot;Content seal are not the same&quot;);</span>
+    }
+
+<span class="fc" id="L98">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L99">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

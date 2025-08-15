@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="Spécification des exigences logicielles (SRS) de SPEDS">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification logicielle du module « SPEDS »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification logicielle du module « <em>SPEDS</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v6.3.0,</span>
+<span id="revdate">2025-07-28</span>
+<br><span id="revremark">2025-07-29T14:08:38-0400</span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_généralités_et_présentations">1. Généralités et présentations</a>
+<ul class="sectlevel2">
+<li><a href="#_format_dune_unité_de_données_transférée_entre_chaque_couche">1.1. Format d&#8217;une unité de données transférée entre chaque couche.</a></li>
+<li><a href="#_conventions_de_notations">1.2. Conventions de notations</a></li>
+<li><a href="#_sécurité_et_sérialisation_des_messages">1.3. Sécurité et sérialisation des messages</a>
+<ul class="sectlevel3">
+<li><a href="#_primitives_de_cryptographie">1.3.1. Primitives de cryptographie</a></li>
+<li><a href="#_sérialisation">1.3.2. Sérialisation</a></li>
+</ul>
+</li>
+<li><a href="#_terminologie">1.4. Terminologie</a>
+<ul class="sectlevel3">
+<li><a href="#_convention_de_notation_pour_les_types_de_messages">1.4.1. Convention de notation pour les types de messages</a></li>
+<li><a href="#_réponse">1.4.2. Réponse</a></li>
+<li><a href="#_unité_de_données">1.4.3. Unité de données</a></li>
+</ul>
+</li>
+<li><a href="#_utilisation_dun_numéro_de_suivi_entre_les_couches">1.5. Utilisation d&#8217;un numéro de suivi entre les couches</a></li>
+</ul>
+</li>
+<li><a href="#_spécifications_globale">2. Spécifications globale</a>
+<ul class="sectlevel2">
+<li><a href="#_hypothèses">2.1. Hypothèses</a></li>
+<li><a href="#_contraintes">2.2. Contraintes</a>
+<ul class="sectlevel3">
+<li><a href="#_conception_catégorie_co">2.2.1. Conception (catégorie <code>CO</code>)</a></li>
+<li><a href="#_performance_catégorie_pe">2.2.2. Performance (catégorie <code>PE</code>)</a></li>
+<li><a href="#_convivialité_catégorie_us">2.2.3. Convivialité (catégorie <code>US</code>)</a></li>
+<li><a href="#_commerciale_catégorie_cm">2.2.4. Commerciale (catégorie <code>CM</code>)</a></li>
+</ul>
+</li>
+<li><a href="#_exigences">2.3. Exigences</a></li>
+</ul>
+</li>
+<li><a href="#_spécifications_par_couche">3. Spécifications par couche</a>
+<ul class="sectlevel2">
+<li><a href="#_spécification_de_la_couche_application">3.1. Spécification de la couche Application</a>
+<ul class="sectlevel3">
+<li><a href="#_responsabilité">3.1.1. Responsabilité</a></li>
+<li><a href="#_interfaces">3.1.2. Interfaces</a></li>
+<li><a href="#_format_des_messages_pour_la_couche_application">3.1.3. Format des messages pour la couche application</a></li>
+<li><a href="#_schéma_json_des_communications">3.1.4. Schéma JSON des communications</a></li>
+<li><a href="#_diagramme_de_séquence_de_messages">3.1.5. Diagramme de séquence de messages</a></li>
+</ul>
+</li>
+<li><a href="#_spécification_de_la_couche_présentation">3.2. Spécification de la couche Présentation</a>
+<ul class="sectlevel3">
+<li><a href="#_responsabilité_2">3.2.1. Responsabilité</a></li>
+<li><a href="#_interfaces_2">3.2.2. Interfaces</a></li>
+<li><a href="#_format_des_messages_pour_la_couche_présentation">3.2.3. Format des messages pour la couche présentation</a></li>
+<li><a href="#_schéma_json_des_communications_2">3.2.4. Schéma JSON des communications</a></li>
+<li><a href="#_diagramme_de_séquence_de_message">3.2.5. Diagramme de séquence de message</a></li>
+</ul>
+</li>
+<li><a href="#_spécification_de_la_couche_session">3.3. Spécification de la couche Session</a>
+<ul class="sectlevel3">
+<li><a href="#_responsabilité_3">3.3.1. Responsabilité</a></li>
+<li><a href="#_interfaces_3">3.3.2. Interfaces</a></li>
+<li><a href="#_format_des_messages_pour_la_couche_session">3.3.3. Format des messages pour la couche session</a></li>
+<li><a href="#_schéma_json_des_communications_3">3.3.4. Schéma JSON des communications</a></li>
+<li><a href="#_diagramme_de_séquence_de_message_2">3.3.5. Diagramme de séquence de message</a></li>
+</ul>
+</li>
+<li><a href="#_spécification_de_la_couche_transport">3.4. Spécification de la couche Transport</a>
+<ul class="sectlevel3">
+<li><a href="#_responsabilité_4">3.4.1. Responsabilité</a></li>
+<li><a href="#_interfaces_4">3.4.2. Interfaces</a></li>
+<li><a href="#_format_des_messages_pour_la_couche_transport">3.4.3. Format des messages pour la couche transport</a></li>
+<li><a href="#_schéma_json_des_communications_4">3.4.4. Schéma JSON des communications</a></li>
+<li><a href="#_diagramme_de_séquence_de_message_3">3.4.5. Diagramme de séquence de message</a></li>
+<li><a href="#_système_de_fenêtrage">3.4.6. Système de fenêtrage</a></li>
+</ul>
+</li>
+<li><a href="#_spécification_de_la_couche_réseau">3.5. Spécification de la couche Réseau</a>
+<ul class="sectlevel3">
+<li><a href="#_responsabilité_5">3.5.1. Responsabilité</a></li>
+<li><a href="#_interfaces_5">3.5.2. Interfaces</a></li>
+<li><a href="#_format_des_messages_pour_la_couche_réseau">3.5.3. Format des messages pour la couche réseau</a></li>
+<li><a href="#_schéma_json_des_communications_5">3.5.4. Schéma JSON des communications</a></li>
+<li><a href="#_diagramme_de_séquence_de_message_4">3.5.5. Diagramme de séquence de message</a></li>
+</ul>
+</li>
+<li><a href="#_spécification_de_la_couche_liaison">3.6. Spécification de la couche Liaison</a>
+<ul class="sectlevel3">
+<li><a href="#_responsabilités">3.6.1. Responsabilités</a></li>
+<li><a href="#_interfaces_6">3.6.2. Interfaces</a></li>
+<li><a href="#_schéma_json_des_communications_6">3.6.3. Schéma JSON des communications</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 12.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-left valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification prête à réviser</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-07-29T14:08:38-0400 v6.3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du responsable</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Historique</caption>
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 63.6363%;">
+<col style="width: 9.0909%;">
+<col style="width: 18.1819%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Changement important</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">v6.0.0</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Version stable</p>
+</div></div></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2024-12-17</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">v6.1.0</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ajout du numéro de suivi</p>
+</div></div></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-02-12</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">v6.2.0</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Restructuration des annexes<br>
+            Schémas JSON revues<br>
+            Ajout de détail dans les uml<br>
+            Ajout de précision et d&#8217;informations</p>
+</div></div></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">v6.3.0</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ajout exigences :<br>
+            gestion des entités sous 1 adresse &amp; 1 code<br>
+            gestion de multiples entités<br>
+            gestion de réception de message concurrent</p>
+</div></div></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-29</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_généralités_et_présentations">1. Généralités et présentations</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_format_dune_unité_de_données_transférée_entre_chaque_couche">1.1. Format d&#8217;une unité de données transférée entre chaque couche.</h3>
+<div class="paragraph">
+<p>Chaque couche définit le contexte et le message transférés pour son interface avec la couche supérieur et inférieur. Il peut y avoir zéro ou plusieurs interfaces.</p>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;une unité de données</div>
+<div class="content">
+<pre>{ "context" : object
+, "message" : string
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_conventions_de_notations">1.2. Conventions de notations</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La notation <em>@K(X)</em> indique le chiffrement avec la clé symétrique <em>K</em> du contenu <em>X</em>.</p>
+</li>
+<li>
+<p>La notation <em>@@K(X)</em> indique le déchiffrement avec la clé symétrique <em>K</em> du contenu <em>X</em>.</p>
+</li>
+<li>
+<p>La notation <em>enc(X, PuK)</em> indique le chiffrement asymétrique du contenu <em>X</em> avec la clé publique <em>PuK</em>.</p>
+</li>
+<li>
+<p>La notation <em>enc(X, C)</em>, où <em>C</em> est un code d&#8217;une composante,
+indique le chiffrement asymétrique du contenu <em>X</em> avec la clé publique de <em>C</em>.</p>
+</li>
+<li>
+<p>La notation <em>dec(X, PK)</em> indique le déchiffrement asymétrique du contenu <em>X</em> avec la clé privée <em>PK</em>.</p>
+</li>
+<li>
+<p>La notation <em>dec(X, C)</em>, où <em>C</em> est un code d&#8217;une composante,
+indique le déchiffrement asymétrique du contenu <em>X</em> avec la clé privée de <em>C</em>.</p>
+</li>
+<li>
+<p>La notation <em>sig(X, PK)</em> indique la signature (le chiffrement asymétrique) du contenu <em>X</em> avec la clé privée <em>PK</em>.</p>
+</li>
+<li>
+<p>La notation <em>sig(X, C)</em>, où <em>C</em> est un code d&#8217;une composante,
+indique la signature (le chiffrement asymétrique) du contenu <em>X</em> avec la clé privée de <em>C</em>.</p>
+</li>
+<li>
+<p>La notation <em>ver(X, PuK)</em> indique la vérification (le chiffrement asymétrique) du contenu <em>X</em> avec la clé publique <em>PuK</em>.</p>
+</li>
+<li>
+<p>La notation <em>ver(X, C)</em>, où <em>C</em> est un code d&#8217;une composante,
+indique la vérification (le chiffrement asymétrique) du contenu <em>X</em> avec la clé publique de <em>C</em>.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Une signature numérique utilisant un algorithme de chiffrement asymétrique (comme RSA) implique l&#8217;utilisation d&#8217;une empreinte (ou « haché ») du contenu signé.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sécurité_et_sérialisation_des_messages">1.3. Sécurité et sérialisation des messages</h3>
+<div class="sect3">
+<h4 id="_primitives_de_cryptographie">1.3.1. Primitives de cryptographie</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Couche Application (1)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>S.O.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Couche Présentation (2)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>l’algorithme de chiffrement utilisé est AES256-GCM .</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Couche Session (3)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>la fonction de hachage utilisé est SHA-512 ;</p>
+</li>
+<li>
+<p>l’algorithme de chiffrement symétrique utilisé est aes256-gcm ;</p>
+</li>
+<li>
+<p>l’algorithme de chiffrement asymétrique utilisé est RSA avec une taille des clés de 4096 bits ;</p>
+</li>
+<li>
+<p>l’algorithme de signature utilisé est RSA avec une taille des clés de 4096 bits ;</p>
+</li>
+<li>
+<p>l’algorithme d’accord de clé utilisé est la méthode de Diffie-Hellman avec la courbe elliptique 25519 ;</p>
+</li>
+<li>
+<p>le format des certificats utilisé est X.509 .</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Couche Transport (4)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>La fonction de hachage est SHA-512.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Couche Réseau (5)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>la fonction de hachage utilisé est SHA-512 ;</p>
+</li>
+<li>
+<p>l’algorithme de signature utilisé est RSA avec une taille des clés de 4096 bits ;</p>
+</li>
+<li>
+<p>le format des certificats utilisé est X.509 .</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Couche Liaison (6)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>S.O.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sérialisation">1.3.2. Sérialisation</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Les objets sont sérialisés en JSON. Un schéma JSON défini alors les structures des objets JSON.</p>
+</li>
+<li>
+<p>Les chaînes d&#8217;octets (<em>bytestring</em>) sont encodés dans les objets JSON en base64 en utilisant le jeu de caractère UTF-8.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_terminologie">1.4. Terminologie</h3>
+<div class="sect3">
+<h4 id="_convention_de_notation_pour_les_types_de_messages">1.4.1. Convention de notation pour les types de messages</h4>
+<div class="paragraph">
+<p>Les types de messages de la couche Application (couche 1) sont des chaînes de caractères composées de deux parties : la première indique la catégorie de message et sont attachés au protocole utilisé ; la deuxième indique si le message est un envoi de message (<code>ENVOI</code>) ou une réception de réponse (<code>RECEPTION</code>). Dans les autres couches, la décomposition de la chaîne de caractères composant le type est sur le modèle <code>MMM.CCC.TTT</code> où <code>MMM</code> caractérise la couche (p.e. <code>TRA</code>), <code>TTT</code> caractérise l&#8217;envoi du message (<code>ENV</code>) ou la réception d&#8217;une réponse (<code>REC</code>) et <code>CCC</code> est une partie optionnelle donnant une indication supplémentaire sur la catégorie du message.
+Ainsi,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TACHE.ENVOI</code> est un message de la couche application qui envoie (<code>ENVOI</code>) une attribution de tâche (<code>TACHE</code>) ;</p>
+</li>
+<li>
+<p><code>SES.MSG.ENV</code> est un message de la couche session (<code>SES</code>) qui envoie (<code>ENV</code>) le message principal (<code>MSG</code>), c&#8217;est-à-dire le colis transmis par la couche supérieure ;</p>
+</li>
+<li>
+<p><code>RES.REC</code> est un message de la couche réseau (<code>RES</code>) qui correspond à la réception d&#8217;une réponse (<code>REC</code>).</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Il y a une exception pour le message de la couche Application de type <code>PGA.FIN</code> (resp. <code>PGA.CONFIRMATION</code>) qui correspond à un envoi de message (resp. une réception de réponse).
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_réponse">1.4.2. Réponse</h4>
+<div class="paragraph">
+<p>Entre deux entités <em>S</em> et <em>D</em>, pour une couche spécifique, un message est <em>une réponse entre entités</em> si le contenu répond à un envoi de l&#8217;autre entité. Puisque <em>S</em> initie l&#8217;envoi, la réponse est fourni par <em>D</em>.</p>
+</div>
+<div class="paragraph">
+<p>Au sein d&#8217;une même entité, entre deux couches, un message est <em>une réponse intercouche</em> si, pour le protocole, il est défini comme la réponse à une transmission entre ses couches. Ce n&#8217;est pas le contenu qui définit la qualité de réponse.</p>
+</div>
+<div class="paragraph">
+<p>Le terme <em>réponse</em> peut être utilisé seul si le contexte du texte permet de discerner entre les deux types de réponses.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_unité_de_données">1.4.3. Unité de données</h4>
+<div class="paragraph">
+<p>Les échanges entre les entités se font à l&#8217;aide des unités de données de service (<code>SDU</code>). Au niveau de chaque couche de protocole, la <code>SDU</code> de la couche supérieure est encapsulée avec de l&#8217;information de contrôle du protocole (<code>PCI</code>) pour fournir l&#8217;unité de données du protocole (<code>PDU</code>) qui sera envoyées et traitées par la couche du même niveau de l&#8217;entité distante. Pour transmettre les <code>PCU</code> entre les couches, ces dernières sont accompagnée de leur information de contrôle de l&#8217;interface (<code>ICI</code>). Entre les couches, ce sont donc des unités de données d&#8217;interface (<code>IDU</code>) qui sont échangées.</p>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col>
+</colgroup>
+<tr>
+<td class="hdlist1">
+[IDU]
+</td>
+<td class="hdlist2">
+<p>Unité de données d&#8217;interface constituée d&#8217;une <code>ICI</code> et d&#8217;un <code>PDU</code>. La notation \((n)\)<code>IDU</code> dénote la <code>IDU</code> de la couche de niveau \((n)\).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[ICI]
+</td>
+<td class="hdlist2">
+<p>Information de contrôle de l&#8217;interface. Correspond à la valeur de la propriété <code>context</code> d&#8217;une IDU. La notation \((n)\)<code>ICI</code> dénote la <code>ICI</code> de la couche de niveau \((n)\).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PDU]
+</td>
+<td class="hdlist2">
+<p>Unité de données du protocole. Correspond à la valeur de la propriété <code>message</code> d&#8217;une IDU. La notation \((n)\)<code>PDU</code> dénote la <code>PDU</code> de la couche de niveau \((n)\).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PCI]
+</td>
+<td class="hdlist2">
+<p>Information de contrôle du protocole. Correspond à la combinaison des valeurs de la propriété <code>header</code> et de l&#8217;éventuelle propriété <code>stamp</code> d&#8217;une PDU. La notation \((n)\)<code>PCI</code> dénote la <code>PCI</code> de la couche de niveau \((n)\).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[SDU]
+</td>
+<td class="hdlist2">
+<p>Unité de données du service. Correspond à la valeur de la propriété <code>content</code> d&#8217;une PDU. La notation \((n)\)<code>SDU</code> dénote la <code>SDU</code> de la couche de niveau \((n)\).</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Les couches peuvent être identifiées par une lettre ou un chiffre  :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>A</code> pour Application</p>
+</li>
+<li>
+<p><code>P</code> pour Présentation</p>
+</li>
+<li>
+<p><code>S</code> pour Session</p>
+</li>
+<li>
+<p><code>T</code> pour Transport</p>
+</li>
+<li>
+<p><code>N</code> pour Network</p>
+</li>
+<li>
+<p><code>L</code> pour (Data)Link</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>En général, on retrouve les relations suivantes :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Pour une transmission d&#8217;une \((n)\)<code>SDU</code> par une \((n)\)<code>IDU</code> vers une couche \(n+1\) :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>\((n)\)<code>PDU</code> \(=\) \((n)\)<code>PCI</code> + \((n)\)<code>SDU</code></p>
+</li>
+<li>
+<p>\((n)\)<code>IDU</code> \(=\) \((n)\)<code>ICI</code> + \((n)\)<code>PDU</code></p>
+</li>
+<li>
+<p>Dans ce cas, si la couche \(n+1\) veut retransmettre le colis reçu<br>
+\((n+1)\)<code>SDU</code> \(=\) \((n)\)<code>PDU</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Pour une transmission d&#8217;une \((n)\)<code>SDU</code> par une \((n)\)<code>IDU</code> vers une couche \(n-1\) :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>\((n)\)<code>PDU</code> \(=\) \((n)\)<code>SDU</code></p>
+</li>
+<li>
+<p>\((n-1)\)<code>IDU</code> \(=\) \((n-1)\)<code>ICI</code> + \((n)\)<code>PDU</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_utilisation_dun_numéro_de_suivi_entre_les_couches">1.5. Utilisation d&#8217;un numéro de suivi entre les couches</h3>
+<div class="paragraph">
+<p>Pour permettre un suivi qui permet d&#8217;assurer le lien entre messages et les réponses, un numéro de suivi est utilisé dans les <code>IDU</code> de chaque couche.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Un numéro de suivi (<code>tracking_number</code>) est un <code>UUID</code>.</p>
+</li>
+<li>
+<p>Une <code>IDU</code> utilisant une primitive de service <code>confirmation</code> devrait utiliser le même numéro de suivi que la <code>IDU</code> utilisant une primitive de service <code>request</code> à laquelle elle répond (qu&#8217;elle confirme).</p>
+</li>
+<li>
+<p>Une <code>IDU</code> utilisant une primitive de service <code>response</code> devrait utiliser le même numéro de suivi que la <code>IDU</code> utilisant une primitive de service <code>indication</code> à laquelle elle répond.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spécifications_globale">2. Spécifications globale</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_hypothèses">2.1. Hypothèses</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>[HYP-GE-01] Les communications sont dans le cadre de projets.</p>
+</li>
+<li>
+<p>[HYP-GE-02] Les projets définissent les entités pouvant communiquer entre elles.</p>
+</li>
+<li>
+<p>[HYP-GE-03] Les projets définissent les identités (un code) des entités concernées par le projet.</p>
+</li>
+<li>
+<p>[HYP-GE-04] Les projets définissent les adresses joignables (un IRI) des entités concernées par le projet.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_contraintes">2.2. Contraintes</h3>
+<div class="sect3">
+<h4 id="_conception_catégorie_co">2.2.1. Conception (catégorie <code>CO</code>)</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_performance_catégorie_pe">2.2.2. Performance (catégorie <code>PE</code>)</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_convivialité_catégorie_us">2.2.3. Convivialité (catégorie <code>US</code>)</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_commerciale_catégorie_cm">2.2.4. Commerciale (catégorie <code>CM</code>)</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exigences">2.3. Exigences</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>[EX-GE-01] Le protocole doit gérer les communications entre des entités identifiées chacune par un unique code.</p>
+</li>
+<li>
+<p>[EX-GE-02] Le protocole doit gérer les communications entre des entités joignables chacune à un unique IRI.</p>
+</li>
+<li>
+<p>[EX-GE-03] Le protocole doit gérer les communications entrantes et sortantes de façon concurrente.</p>
+</li>
+<li>
+<p>[EX-GE-04] Le protocole doit gérer les communications avec plusieurs entités distantes de façon concurrente.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spécifications_par_couche">3. Spécifications par couche</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_spécification_de_la_couche_application">3.1. Spécification de la couche Application</h3>
+<div class="sect3">
+<h4 id="_responsabilité">3.1.1. Responsabilité</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La couche Application doit initier l&#8217;envoi  entre source et destinataire d&#8217;un message initié par la source ainsi que de la réponse générée par le destinataire.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interfaces">3.1.2. Interfaces</h4>
+<div class="sect4">
+<h5 id="_couche_supérieure">Couche supérieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un contenu définissant un message en provenance des entités sous la forme d&#8217;une chaîne de caractère décrivant un objet JSON accompagné de son type et du code de son destinataire. Le format du contenu est défini dans les diagrammes de protocole de 101 à 107 avec le type qui doit l&#8217;accompagner. Ce contenu est accompagné de l&#8217;identifiant du PGA en cours, de l&#8217;identifiant de la source et de l&#8217;identifiant du destinataire.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un contenu sous la forme d&#8217;une chaîne de caractère décrivant un objet JSON transmis à l&#8217;hôte. Ce contenu définit un message pour l&#8217;entité qui doit être traité. Ce contenu est accompagné de l&#8217;identifiant du PGA en cours, de l&#8217;identifiant de la source et de l&#8217;identifiant du destinataire.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_couche_inférieure">Couche inférieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un message en provenance de la couche Présentation avec un contexte indiquant le code de source, le code du destinataire, un numéro de suivi de l&#8217;envoi et l&#8217;identifiant du PGA. Le message doit respecter le format standard (décrit après) sinon le message est ignoré.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un message pour la couche Présentation accompagné d&#8217;un contexte indiquant le code de la source, le code du destinataire, un numéro de suivi de l&#8217;envoi et l&#8217;identifiant du PGA. Le message doit respecter le format standard (décrit après). Lorsque le message est une réponse intercouche, le numéro de suivi du message réponse devrait correspondre avec le numéro de suivi du message auquel il répond.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche inférieure</div>
+<div class="content">
+<pre>{ "source_code": string
+, "destination_code": string
+, "PGA": string
+, "tracking_number": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_format_des_messages_pour_la_couche_application">3.1.3. Format des messages pour la couche application</h4>
+<div class="paragraph">
+<p>Un message est une chaîne de caractère représentant un objet JSON. Le format de l&#8217;objet JSON est défini comme suit.</p>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;un message</div>
+<div class="content">
+<pre>{ "header" : object
+, "content" : object
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;une entête</div>
+<div class="content">
+<pre>{ "msgtype" : string
+, "id" : string
+, "SPEDS" : { "version" : "V6.2.0"
+            , "reference" : "https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library"
+            }
+, "parameters" : object (actuellement : false)
+}</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_types">Types</h5>
+<div class="paragraph">
+<p>La chaîne de caractères représentant le type du message est l&#8217;une des suivantes.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TACHE.ENVOI</code></p>
+</li>
+<li>
+<p><code>TACHE.RECEPTION</code></p>
+</li>
+<li>
+<p><code>FIN.ENVOI</code></p>
+</li>
+<li>
+<p><code>FIN.RECEPTION</code></p>
+</li>
+<li>
+<p><code>EXCEPTION.ENVOI</code></p>
+</li>
+<li>
+<p><code>EXCEPTION.RECEPTION</code></p>
+</li>
+<li>
+<p><code>DATA.ENVOI</code></p>
+</li>
+<li>
+<p><code>DATA.RECEPTION</code></p>
+</li>
+<li>
+<p><code>STATUT.ENVOI</code></p>
+</li>
+<li>
+<p><code>STATUT.RECEPTION</code></p>
+</li>
+<li>
+<p><code>COMMANDE.ENVOI</code></p>
+</li>
+<li>
+<p><code>COMMANDE.RECEPTION</code></p>
+</li>
+<li>
+<p><code>PGA.FIN</code></p>
+</li>
+<li>
+<p><code>PGA.CONFIRMATION</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_numéro_du_message_id">Numéro du message (<code>id</code>)</h5>
+<div class="paragraph">
+<p>Le numéro d&#8217;identification du message est un numéro généré unique (<code>uuid</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_schéma_json_des_communications">3.1.4. Schéma JSON des communications</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-1_2.schema.json">schéma JSON de la IDU</a> de la couche Application (<code>AIDU</code>).</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/ProtocolDataUnit-1-APP.schema.json">schéma JSON de la PDU</a> de la couche Application (<code>APDU</code>).</p>
+</li>
+<li>
+<p>Les <code>ASDU</code> utilisés pour les types</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="includes/jsonSchema/101_TacheEnvoi.schema.json">TACHE.ENVOI</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/101_TacheReception.schema.json">TACHE.RECEPTION</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/102_FinEnvoi.schema.json">FIN.ENVOI</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/102_FinReception.schema.json">FIN.RECEPTION</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/103_ExceptionEnvoi.schema.json">EXCEPTION.ENVOI</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/103_ExceptionReception.schema.json">EXCEPTION.RECEPTION</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/104_DataEnvoi.schema.json">DATA.ENVOI</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/104_DataReception.schema.json">DATA.RECEPTION</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/105_StatutEnvoi.schema.json">STATUT.ENVOI</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/105_StatutReception.schema.json">STATUT.RECEPTION</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/106_CommandeEnvoi.schema.json">COMMANDE.ENVOI</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/106_CommandeReception.schema.json">COMMANDE.RECEPTION</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/107_PgaFin.schema.json">PGA.FIN</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/107_PgaConfirmation.schema.json">PGA.CONFIRMATION</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="echangeAPP.svg" alt="echangeAPP" width="257" height="163">
+</div>
+<div class="title">Figure 1. Modèle des échanges entre les couches et les entités</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_diagramme_de_séquence_de_messages">3.1.5. Diagramme de séquence de messages</h4>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P100.svg" alt="P100" width="869" height="902">
+</div>
+</div>
+<details>
+<summary class="title">Diagramme UML du protocole 101</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P101.svg" alt="P101" width="495" height="634">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 102</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P102.svg" alt="P102" width="460" height="533">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 103</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P103.svg" alt="P103" width="517" height="533">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 104</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P104.svg" alt="P104" width="537" height="553">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 105</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P105.svg" alt="P105" width="517" height="492">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 106</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P106.svg" alt="P106" width="650" height="472">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 107</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P107.svg" alt="P107" width="453" height="472">
+</div>
+</div>
+</div>
+</details>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spécification_de_la_couche_présentation">3.2. Spécification de la couche Présentation</h3>
+<div class="sect3">
+<h4 id="_responsabilité_2">3.2.1. Responsabilité</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La couche Présentation doit gérer le chiffrement et le déchiffrement des messages avec un algorithme de chiffrement symétrique.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interfaces_2">3.2.2. Interfaces</h4>
+<div class="sect4">
+<h5 id="_couche_supérieure_2">Couche supérieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un contenu (chaîne de caractère) en provenance d&#8217;une couche Application et un contexte indiquant le code de la source, le code du destinataire, un numéro de suivi de l&#8217;envoi et l&#8217;identifiant du PGA.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un message de la couche Application (chaîne de caractère décrivant un objet JSON) et son contexte indiquant le code de la source, le code du destinataire, un numéro de suivi de l&#8217;envoi et l&#8217;identifiant du PGA. Lorsque le message est une réponse intercouche, le numéro de suivi du message réponse devrait correspondre avec le numéro de suivi du message auquel il répond.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche supérieure</div>
+<div class="content">
+<pre>{ "source_code": string
+, "destination_code": string
+, "PGA": string
+, "tracking_number": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_couche_inférieure_2">Couche inférieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un message en provenance de la couche Session avec un contexte indiquant le code de la source, le code du destinataire, l&#8217;identifiant du PGA, un numéro de suivi de l&#8217;envoi et la clé de chiffrement utilisée (SDEK). Le message doit respecter le format standard (décrit après) sinon le message est ignoré.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un message pour la couche Session  accompagné d&#8217;un contexte indiquant le code de la source, le code du destinataire, l&#8217;identifiant du PGA, un numéro de suivi de l&#8217;envoi et la clé de chiffrement utilisé (SDEK). Le message doit respecter le format standard (décrit après).  Lorsque le message est une réponse intercouche, le numéro de suivi du message réponse devrait correspondre avec le numéro de suivi du message auquel il répond.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche inférieure</div>
+<div class="content">
+<pre>{ "SDEK": string
+, "source_code": string
+, "destination_code": string
+, "PGA": string
+, "tracking_number": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_format_des_messages_pour_la_couche_présentation">3.2.3. Format des messages pour la couche présentation</h4>
+<div class="paragraph">
+<p>Un message est une chaîne de caractère représentant un objet JSON. Le format de l&#8217;objet JSON est défini comme suit.</p>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;un message</div>
+<div class="content">
+<pre>{ "header" : object
+, "content" : string
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;une entête</div>
+<div class="content">
+<pre>{ "msgtype" : string
+, "id" : string
+, "SPEDS" : { "version" : "v6.3.0"
+            , "reference" : "https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library"
+            }
+, "parameters" : object (actuellement : false)
+}</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_types_2">Types</h5>
+<div class="paragraph">
+<p>La chaîne de caractères représentant le type du message est l&#8217;une des suivantes.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>PRE.MSG.ENV</code></p>
+</li>
+<li>
+<p><code>PRE.MSG.REC</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_numéro_du_message_id_2">Numéro du message (<code>id</code>)</h5>
+<div class="paragraph">
+<p>Le numéro d&#8217;identification du message est un numéro généré unique (<code>uuid</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_schéma_json_des_communications_2">3.2.4. Schéma JSON des communications</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-1_2.schema.json">schéma JSON de la IDU</a> de la couche Application (<code>AIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-2_3.schema.json">schéma JSON de la IDU</a> de la couche Présentation (<code>PIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/ProtocolDataUnit-2-PRE.schema.json">schéma JSON de la PDU</a> de la couche Présentation (<code>PPDU</code>).</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/echangePRE.svg" alt="echangePRE" width="257" height="275">
+</div>
+<div class="title">Figure 2. Modèle des échanges entre les couches et les entités</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_diagramme_de_séquence_de_message">3.2.5. Diagramme de séquence de message</h4>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P200.svg" alt="P200" width="1210" height="1649">
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spécification_de_la_couche_session">3.3. Spécification de la couche Session</h3>
+<div class="sect3">
+<h4 id="_responsabilité_3">3.3.1. Responsabilité</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La couche Session doit s&#8217;occuper de l&#8217;établissement, la gestion et la terminaison des sessions.</p>
+</li>
+<li>
+<p>La couche Session doit garantir l&#8217;authentification des participants.</p>
+</li>
+<li>
+<p>La couche Session doit pouvoir reprendre une session en d&#8217;interruption (p.ex. panne et restauration de service etc.).</p>
+</li>
+<li>
+<p>La couche Session doit gérer les cas où le transport (via la couche Transport) échoue.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/warning.png" alt="Warning">
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Les deux derniers points ne sont pas encore assuré.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Les éléments de reprise sont disponibles (état d&#8217;une session), mais les points de synchronisation ne sont pas encore défini.</p>
+</li>
+<li>
+<p>Présentement, les erreurs de la couche de Transport provoquent l&#8217;interruption de la communication et la fin de toute communication pour un PGA particulier.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interfaces_3">3.3.2. Interfaces</h4>
+<div class="sect4">
+<h5 id="_couche_supérieure_3">Couche supérieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un message en provenance de la couche Présentation avec un contexte indiquant le code de la source, le code du destinataire, l&#8217;identifiant du PGA, un numéro de suivi de l&#8217;envoi et la clé de chiffrement utilisée (SDEK). Le message doit respecter le format standard (décrit après) sinon le message est ignoré.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un message pour la couche Présentation accompagné d&#8217;un contexte indiquant le code de la source, le code du destinataire, l&#8217;identifiant du PGA, un numéro de suivi de l&#8217;envoi et la clé de chiffrement utilisé (SDEK). Le message doit respecter le format standard (décrit après).  Lorsque le message est une réponse intercouche, le numéro de suivi du message réponse devrait correspondre avec le numéro de suivi du message auquel il répond.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche supérieure</div>
+<div class="content">
+<pre>{ "SDEK": string
+, "source_code": string
+, "destination_code": string
+, "PGA": string
+, "tracking_number": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_couche_inférieure_3">Couche inférieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un message en provenance de la couche Transport avec un contexte indiquant, un numéro de suivi de l&#8217;envoi, le code de la source, le code du destinataire, l&#8217;adresse (IRI) de la source et l&#8217;adresse (IRI) du destinataire.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un message pour la couche Transport (chaîne de caractère décrivant un objet JSON) avec son contexte indiquant, un numéro de suivi de l&#8217;envoi, le code de la source, le code du destinataire. Lorsque le message est une réponse intercouche, le numéro de suivi du message réponse devrait correspondre avec le numéro de suivi du message auquel il répond.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche inférieure</div>
+<div class="content">
+<pre>{ "source_code": string
+, "destination_code": string
+, "source_iri": string
+, "destination_iri": string
+, "tracking_number": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_format_des_messages_pour_la_couche_session">3.3.3. Format des messages pour la couche session</h4>
+<div class="paragraph">
+<p>Un message est une chaîne de caractère représentant un objet JSON. Le format de l&#8217;objet JSON est défini comme suit.</p>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;un message (temporaire – en attente d&#8217;un schema)</div>
+<div class="content">
+<pre>{ "header" : object
+, "stamp" : string
+, "content" : string
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;une entête  (temporaire – en attente d&#8217;un schema)</div>
+<div class="content">
+<pre>{ "msgtype" : string
+, "id" : string
+, "SPEDS" : { "version" : "v6.3.0"
+            , "reference" : "https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library"
+            }
+, "parameters" : object (actuellement : false)
+}</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_types_3">Types</h5>
+<div class="paragraph">
+<p>La chaîne de caractères représentant le type du message est l&#8217;une des suivantes.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SES.PUB.ENV</code></p>
+</li>
+<li>
+<p><code>SES.PUB.REC</code></p>
+</li>
+<li>
+<p><code>SES.CLE.ENV</code></p>
+</li>
+<li>
+<p><code>SES.CLE.REC</code></p>
+</li>
+<li>
+<p><code>SES.SAK.ENV</code></p>
+</li>
+<li>
+<p><code>SES.SAK.REC</code></p>
+</li>
+<li>
+<p><code>SES.MSG.ENV</code></p>
+</li>
+<li>
+<p><code>SES.MSG.REC</code></p>
+</li>
+<li>
+<p><code>SES.FIN.ENV</code></p>
+</li>
+<li>
+<p><code>SES.FIN.REC</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_numéro_du_message_id_3">Numéro du message (<code>id</code>)</h5>
+<div class="paragraph">
+<p>Le numéro d&#8217;identification du message est un numéro généré unique (<code>uuid</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_schéma_json_des_communications_3">3.3.4. Schéma JSON des communications</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-2_3.schema.json">schéma JSON de la IDU</a> de la couche Présentation (<code>PIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-3_4.schema.json">schéma JSON de la IDU</a> de la couche Session (<code>SIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/ProtocolDataUnit-3-SES.schema.json">schéma JSON de la PDU</a> de la couche Session(<code>SPDU</code>).</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/echangeSES.svg" alt="echangeSES" width="257" height="275">
+</div>
+<div class="title">Figure 3. Modèle des échanges entre les couches et les entités</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_diagramme_de_séquence_de_message_2">3.3.5. Diagramme de séquence de message</h4>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P300.svg" alt="P300" width="1175" height="6904">
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spécification_de_la_couche_transport">3.4. Spécification de la couche Transport</h3>
+<div class="sect3">
+<h4 id="_responsabilité_4">3.4.1. Responsabilité</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La couche Transport doit gérer le transport de bout en bout entre une source (identifiée par son code et sa IRI) et un destinataire. C&#8217;est-à-dire que la couche assure</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>la garantie de l&#8217;intégrité des transmissions ;</p>
+</li>
+<li>
+<p>l&#8217;absence de perte de message (fiabilité), qui comprend</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>la confirmation de la réception par l&#8217;entité ciblée,</p>
+</li>
+<li>
+<p>la répétition des envois au besoin,</p>
+</li>
+<li>
+<p>la gestion des répétitions (un message n&#8217;est transmis pour traitement qu&#8217;une fois à la couche supérieure) ;</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/warning.png" alt="Warning">
+</td>
+<td class="content">
+Le système de fenêtrage n&#8217;est pas implémenté dans la version v6.2.0 de SPEDS. Ceci implique que les trois derniers points (<strong>1.b.ii</strong> et <strong>1.b.iii</strong>) ne sont pas gérés actuellement.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interfaces_4">3.4.2. Interfaces</h4>
+<div class="sect4">
+<h5 id="_couche_supérieure_4">Couche supérieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un message en provenance de la couche Session avec un contexte indiquant, un numéro de suivi de l&#8217;envoi, le code de la source, le code du destinataire, l&#8217;adresse (IRI) de la source et l&#8217;adresse (IRI) du destinataire.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un message pour la couche Session (chaîne de caractère décrivant un objet JSON) avec son contexte indiquant, un numéro de suivi de l&#8217;envoi, le code de la source, le code du destinataire. Lorsque le message est une réponse intercouche, le numéro de suivi du message réponse devrait correspondre avec le numéro de suivi du message auquel il répond.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche supérieure</div>
+<div class="content">
+<pre>{ "source_code": string
+, "destination_code": string
+, "source_iri": string
+, "destination_iri": string
+, "tracking_number": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_couche_inférieure_4">Couche inférieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un message en provenance de la couche Réseau. Le message doit respecter le format standard (décrit après) sinon le message est ignoré.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un message pour la couche Réseau avec son contexte indiquant, un numéro de suivi de l&#8217;envoi, l&#8217;adresse (IRI) de la source et l&#8217;adresse (IRI) du destinataire. Le contenu définit un message réseau. Lorsque le message est une réponse intercouche, le numéro de suivi du message réponse devrait correspondre avec le numéro de suivi du message auquel il répond.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche inférieure</div>
+<div class="content">
+<pre>{ "source_iri": string
+, "destination_iri": string
+, "tracking_number": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_format_des_messages_pour_la_couche_transport">3.4.3. Format des messages pour la couche transport</h4>
+<div class="paragraph">
+<p>Un message est une chaîne de caractère représentant un objet JSON. Le format de l&#8217;objet JSON est défini comme suit.</p>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;un message</div>
+<div class="content">
+<pre>{ "header" : object
+, "stamp" : object
+, "content" : object ou string
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">format du timbre des sceaux d&#8217;intégrité</div>
+<div class="content">
+<pre>{ "header_seal" : string
+, "content_seal" : string
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;un entête</div>
+<div class="content">
+<pre>{ "msgtype" : string
+, "id" : object ou string
+, "source_code": string
+, "destination_code": string
+, "parameters": object
+, "SPEDS" : { "version" : "v6.3.0"
+            , "reference" : "https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library"
+            }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Les paramètres (<code>parameters</code>):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>PFE pour la source ou PFA pour le destinataire.</p>
+</li>
+<li>
+<p>Si une entente est en cours (<code>"active": true</code>), la période de validité des paramètres.</p>
+</li>
+<li>
+<p>Si une négociation est en cours (<code>"active": false</code>), la période de la négociation de l&#8217;entente.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">format des paramètres possibles</div>
+<div class="content">
+<pre>{ "PFE": { "DMR": number
+         , "DME": number
+         , "TFE": number
+         }
+, "PFA": { "DRC": number
+         , "DMT": number
+         , "TFA": number
+         }
+, "agreement": { "active": boolean
+               , "start": date-time
+               , "duration": duration
+               }
+}</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_types_de_message">Types de message</h5>
+<div class="paragraph">
+<p>La chaîne de caractères représentant le type du message est l&#8217;une des suivantes.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TRA.INF.ENV</code></p>
+</li>
+<li>
+<p><code>TRA.INF.REC</code></p>
+</li>
+<li>
+<p><code>TRA.MSG.ENV</code></p>
+</li>
+<li>
+<p><code>TRA.MSG.REC</code></p>
+</li>
+<li>
+<p><code>TRA.FIN.ENV</code></p>
+</li>
+<li>
+<p><code>TRA.FIN.REC</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_numéro_du_message_id_4">Numéro du message (<code>id</code>)</h5>
+<div class="paragraph">
+<p>Dans le cas des transmissions de messages (type de message <code>TRA.MSG</code>),
+l&#8217;identificateur du message est une paire de valeurs générées et
+composée d&#8217;un numéro de message (<em>ME#</em>) et d&#8217;un numéro de répétition (<em>MR#</em>);
+autrement l&#8217;identificateur est un numéro généré de façon unique (<code>uuid</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_schéma_json_des_communications_4">3.4.4. Schéma JSON des communications</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-3_4.schema.json">schéma JSON de la IDU</a> de la couche Session (<code>SIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-4_5.schema.json">schéma JSON de la IDU</a> de la couche Transport (<code>TIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/ProtocolDataUnit-4-TRA.schema.json">schéma JSON de la PDU</a> de la couche Transport (<code>TPDU</code>).</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/echangeTRA.svg" alt="echangeTRA" width="259" height="275">
+</div>
+<div class="title">Figure 4. Modèle des échanges entre les couches et les entités</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_diagramme_de_séquence_de_message_3">3.4.5. Diagramme de séquence de message</h4>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P400.svg" alt="P400" width="1157" height="1998">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_système_de_fenêtrage">3.4.6. Système de fenêtrage</h4>
+<div class="sect4">
+<h5 id="_états_du_module">États du module</h5>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Les inégalités sont à considérer dans l&#8217;anneau \(\mathbb{Z}/n\mathbb{Z}\) où \(n = ppcm(TFE, TFA)\).
+</td>
+</tr>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_état_en_tant_que_source">État en tant que source</h6>
+<div class="paragraph">
+<p>Chaque entité utilisant une couche transport doit conserver pour chaque destinataire potentiel (déterminé par son IRI), les informations suivantes :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>PFE+ : les paramètres de la fenêtre d&#8217;envoi augmentés</p>
+<div class="ulist">
+<ul>
+<li>
+<p>PFE : les paramètres de la fenêtre d&#8217;envoi</p>
+<div class="ulist">
+<ul>
+<li>
+<p>DMR : le dernier numéro de message d&#8217;une série de messages répondus</p>
+</li>
+<li>
+<p>DME : le dernier numéro de message d&#8217;une série de messages envoyés</p>
+</li>
+<li>
+<p>TFE : la taille de la fenêtre d&#8217;envoi, c&#8217;est-à-dire le nombre de messages pouvant être envoyé avant de recevoir leurs réponses</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Mémorisation des numéros de messages répondus supérieurs ou égales à DMR+1 (et inférieurs ou égales à DME)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Période de validité d&#8217;une entente \(\Delta\)</p>
+</li>
+<li>
+<p>Période de validité d&#8217;une négociation \(\delta\)</p>
+</li>
+<li>
+<p>Activation d&#8217;une négociation</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_état_en_tant_que_destinataire">État en tant que destinataire</h6>
+<div class="paragraph">
+<p>L&#8217;entité doit aussi conserver pour chaque source potentielle (déterminé par son IRI), les informations suivantes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>PFA+ : les paramètres de la fenêtre d&#8217;acceptation augmentés</p>
+<div class="ulist">
+<ul>
+<li>
+<p>PFA : les paramètres de la fenêtre d&#8217;acceptation</p>
+<div class="ulist">
+<ul>
+<li>
+<p>DRC : le dernier numéro de message d&#8217;une série de messages dont la réponse a été confirmée</p>
+</li>
+<li>
+<p>DMT : le dernier numéro de message d&#8217;une série de messages traités</p>
+</li>
+<li>
+<p>TFA : la taille de la fenêtre d&#8217;acceptation, c&#8217;est-à-dire le nombre de messages pouvant être traité en attente de voir leur réponse confirmée par la source</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Mémorisation des numéros de messages traités supérieurs ou égales à DMT+1 (et inférieurs ou égales à DRC+TFA)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Période de validité d&#8217;une entente \(\Delta\)</p>
+</li>
+<li>
+<p>Période de validité d&#8217;une négociation \(\delta\)</p>
+</li>
+<li>
+<p>Activation d&#8217;une négociation</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_considération_sur_la_concurrence">Considération sur la concurrence</h6>
+<div class="paragraph">
+<p>Il est important que toutes procédures qui débutent mettent en place un verrou sur les états (en tant que source ou destinataire) afin d&#8217;assurer que aucune situation de compétition (<em>race condition</em>) ne surviennent. L&#8217;état est considéré comme une section critique.</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_détermination_des_durées">Détermination des durées</h6>
+<div class="paragraph">
+<p>Supposons que \(\delta_d\) soit la durée impartie avant d&#8217;envoyer une répétition à un message non répondu. Soit <em>R#</em> le nombre de répétitions avant de considérer que l&#8217;envoi d&#8217;un message a échoué définitivement.</p>
+</div>
+<div class="paragraph">
+<p>La durée de la validité d&#8217;une entente \(\Delta_d\) devrait être supérieur à \(\delta_d R\#\).</p>
+</div>
+<div class="paragraph">
+<p>Le nombre de répétitions consécutives d&#8217;une négociation <em>r#</em> devrait être inférieur strictement à <em>R#</em>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Pour SPEDS 6.0 :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>\(\delta_d = 3s\)</p>
+</li>
+<li>
+<p>\(R\# = 10\)</p>
+</li>
+<li>
+<p>\(r\# = 5\)</p>
+</li>
+<li>
+<p>\(\Delta_d = \delta_d R\# = 30s\)</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_invariant">Invariant</h6>
+<div class="ulist">
+<ul>
+<li>
+<p><em>DMR ≤ DME ≤ DMR + TFE</em></p>
+</li>
+<li>
+<p>Au moment d&#8217;un envoi (y compris une répétition), <em>ME#</em> vérifie que <em>ME# ≤ DME</em>.</p>
+</li>
+<li>
+<p><em>DRC ≤ DMT ≤ DRC + TFA</em></p>
+</li>
+<li>
+<p><em>DMT ≥ DMR</em></p>
+</li>
+<li>
+<p><em>DMR ≥ DRC</em></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_les_opérations_sur_les_états">Les opérations sur les états</h6>
+<div class="ulist">
+<ul>
+<li>
+<p>Soit \({x}\) un entier, \(\overline{x}\) est le représentant de \({x}\) dans l&#8217;anneau \(\mathbb{Z}/n\mathbb{Z}\) où \(n = ppcm(TFE, TFA)\).<br>
+C&#8217;est-à-dire que \(0 \leq \overline{x} \leq n\) et \(\exists k. k\in\mathbb{Z} \land x = \overline{x} + k n\).</p>
+</li>
+<li>
+<p>Un numéro <em>m</em> est dans la fenêtre d&#8217;envoi si et seulement si<br>
+\(0 &lt; \overline{(m-DMR)} \leq TFE\)</p>
+</li>
+<li>
+<p>Un numéro <em>m</em> est dans la fenêtre d&#8217;acceptation si et seulement si<br>
+\(0 &lt; \overline{(m-DRC)} \leq TFA\)</p>
+</li>
+<li>
+<p>Mise à jour des PFE+ avec les PFA</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Si le <em>DMT &gt; DMR</em> alors <em>DMR = DMT</em></p>
+</li>
+<li>
+<p>Réajuster les numéros de messages répondus mémorisés</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Mise à jour des PFA+ avec les PFE</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Si le <em>DMR &gt; DRC</em> alors <em>DRC = DMR</em></p>
+</li>
+<li>
+<p>Réajuster les numéros de messages traités mémorisés</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Ajustement des PFE+ après un message répondu</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Réajuster les numéros de messages répondus mémorisés</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Ajustement des PFA+ après un message traité</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Réajuster les numéros de messages traités mémorisés</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Être dans la période de validité d&#8217;une entente</p>
+</li>
+<li>
+<p>Être dans la période de validité d&#8217;une négociation</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_comportement">Comportement</h5>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+De façon périodique, l&#8217;entité doit vérifier pour chaque source et chaque destinataire avec qui il communique si la période de validité d&#8217;entente est dépassée, c&#8217;est-à-dire si le temps écoulé depuis \(\Delta_m\) dépasse deux fois \(\Delta_d\). Dans ce cas, les paramètres correspondants (les PFE+ ou les PFA+) peuvent être réinitialisés.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_source_transport_dun_message">Source : transport d&#8217;un message</h6>
+<div class="dlist">
+<div class="title">Procédure déclenchée par la couche supérieure</div>
+<dl>
+<dt class="hdlist1">[Procédure 1 : Envoi d&#8217;un message avec en option un <em><strong>MS#</strong> = (ME#, MR#)</em> défini]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si une entente est en cours</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Si le message n&#8217;a pas de <em><strong>MS#</strong></em>, calculer le numéro de message <em>ME#</em> à partir de DME; <em>MR#=1</em></p>
+</li>
+<li>
+<p>Transmettre le message <strong>MS#</strong> avec les PFE et une nouvelle période de validité d&#8217;entente \(\Delta'\) à la couche inférieure</p>
+</li>
+<li>
+<p>Démarrer un timer de \(\delta_d\) qui déclenche l&#8217;envoi d&#8217;une répétition de <em><strong>MS#</strong></em><br>
+(Procédure 2)</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Envoyer une demande d&#8217;information<br>
+(Procédure 3)</p>
+</li>
+<li>
+<p>Démarrer un timer de \(\delta_d\) qui déclenche l&#8217;envoi du message<br>
+(Procédure 1)</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">Procédures internes</div>
+<dl>
+<dt class="hdlist1">[Procédure 2 : Envoi d&#8217;une répétition de <em><strong>MS#</strong> = (ME#, MR#)</em>]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si une entente est en cours</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Si les PFE+ indiquent que la réponse est hors de la fenêtre d&#8217;envoi ou que le message <em>ME#</em> est marqué comme répondu, il n&#8217;y a pas de répétition à envoyer</p>
+</li>
+<li>
+<p>Si le nombre de répétitions maximum est atteint, une erreur est transmise à la couche supérieure &#8658; <strong>Déclenchement d&#8217;une erreur</strong></p>
+</li>
+<li>
+<p>Sinon envoyer le message avec le nouveau numéro de répétition
+avec <em><strong>MS#'</strong> = (ME#, MR#+1)</em><br>
+(Procédure 1)</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Envoyer une demande d&#8217;information<br>
+(Procédure 3)</p>
+</li>
+<li>
+<p>Démarrer un timer de \(\delta_d\) qui déclenche l&#8217;envoi d&#8217;une répétition de <em><strong>MS#</strong></em><br>
+(Procédure 2)</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">[Procédure 3 : Envoi d&#8217;une demande d&#8217;information (négociation)]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si une négociation est en cours, ignorer la demande</p>
+</li>
+<li>
+<p>Si le nombre de demandes d&#8217;information consécutives a atteint son maximum, une erreur est transmise à la couche supérieure &#8658; <strong>Déclenchement d&#8217;une erreur</strong></p>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Définir une nouvelle période de validité de négociation \(\delta'\)</p>
+</li>
+<li>
+<p>Transmettre la demande d&#8217;information avec les PFE et la période \(\delta'\) à la couche inférieure</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><code>"active": false</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">Procédures déclenchées par la couche inférieure</div>
+<dl>
+<dt class="hdlist1">[Procédure 4 : Réception d&#8217;une réponse <em><strong>MS#</strong> = (ME#, MR#)</em>]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si l&#8217;entête n&#8217;est pas intègre, ignorer la réponse</p>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Mettre à jour les PFE+ avec les PFA envoyés</p>
+</li>
+<li>
+<p>Si les PFE+ indiquent que la réponse est hors de la fenêtre d&#8217;envoi ou que le message <em>ME#</em> est marqué comme répondu, ignorer la réponse</p>
+</li>
+<li>
+<p>Sinon mettre à jour la période de validité de l&#8217;entente \(\Delta\) du message, si celle-ci termine après la période en cours</p>
+</li>
+<li>
+<p>Si la réponse est intègre et est "ACK", considérer que l&#8217;envoi <em><strong>MS#</strong></em> est un succès, c&#8217;est-à-dire</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><em>ME#</em> est considéré comme répondu</p>
+</li>
+<li>
+<p>Ajuster les PFE+ si nécessaire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon, ignorer la réponse</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">[Procédure 5 : Réception d&#8217;information]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si l&#8217;entête n&#8217;est pas intègre, l&#8217;information est ignorée</p>
+</li>
+<li>
+<p>Sinon si une négociation est en cours et que cette information est la réponse à la demande d&#8217;information</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Terminer la négociation en cours.</p>
+</li>
+<li>
+<p>Réinitialiser le nombre de demandes d&#8217;information consécutive à 0.</p>
+</li>
+<li>
+<p>Initialiser l&#8217;entente selon les paramètres du destinataire, c&#8217;est-à-dire</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Si l&#8217;information indique qu&#8217;une entente est en cours</p>
+<div class="olist upperalpha">
+<ol class="upperalpha" type="A">
+<li>
+<p>Récupérer les derniers PFE utilisés</p>
+</li>
+<li>
+<p>Mettre à jour les PFE+ avec les PFA envoyés</p>
+</li>
+<li>
+<p>Mettre à jour la période de validité de l&#8217;entente \(\Delta\) du message</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist upperalpha">
+<ol class="upperalpha" type="A">
+<li>
+<p>Réinitialiser les PFE avec les valeurs par défaut.</p>
+</li>
+<li>
+<p>Définir (modifier) la durée de validité de l&#8217;entente par le \(\Delta\) de la réponse.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon l&#8217;information est ignorée</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_destinataire">Destinataire</h6>
+<div class="dlist">
+<div class="title">Procédures déclenchées par la couche inférieure</div>
+<dl>
+<dt class="hdlist1">[Procédure 1 : Réception d&#8217;un message]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si l&#8217;entête n&#8217;est pas intègre, ignorer le message</p>
+</li>
+<li>
+<p>Si aucune entente n&#8217;est en cours, ignorer le message</p>
+</li>
+<li>
+<p>Sinon si le message n&#8217;est pas dans la fenêtre d&#8217;acceptation, ignorer le message</p>
+</li>
+<li>
+<p>Sinon si le contenu du message n&#8217;est pas intègre, transmettre une réponse "NAK" avec les PFA et la période de validité de l&#8217;entente en cours \(\Delta\)</p>
+</li>
+<li>
+<p>Sinon, si le message est considéré comme traité</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Transmettre une réponse "ACK" avec les PFA et la période de validité de l&#8217;entente en cours \(\Delta\)</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Considérer le message comme traité et ajuster les PFA+ en conséquence</p>
+</li>
+<li>
+<p>Transmettre le contenu du message à la couche supérieure</p>
+</li>
+<li>
+<p>Transmettre une réponse "ACK" avec les PFA et la période de validité de l&#8217;entente en cours \(\Delta\)</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">[Procédure 2 : Réception d&#8217;une demande d&#8217;information]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si l&#8217;entête n&#8217;est pas intègre, ignorer la demande</p>
+</li>
+<li>
+<p>Si le destinataire est en période de négociation, ignorer la demande</p>
+</li>
+<li>
+<p>Sinon définir la période de négociation avec \(\delta\)</p>
+</li>
+<li>
+<p>Si une entente est en cours</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Transmettre la réponse avec les PFA et la période de validité de l&#8217;entente en cours \(\Delta\)</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><code>"active": true</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Réinitialiser les PFA+</p>
+</li>
+<li>
+<p>Définir une nouvelle période de validité d&#8217;entente \(\Delta'\)</p>
+</li>
+<li>
+<p>Transmettre la réponse avec les PFA et la période de validité de l&#8217;entente en cours \(\Delta'\)</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><code>"active": false</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spécification_de_la_couche_réseau">3.5. Spécification de la couche Réseau</h3>
+<div class="sect3">
+<h4 id="_responsabilité_5">3.5.1. Responsabilité</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La couche Réseau doit garantir l&#8217;envoi entre chaque nœud pour parcourir un chemin entre la source (identifié par sa IRI) et le destinataire (identifié par sa IRI).</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interfaces_5">3.5.2. Interfaces</h4>
+<div class="sect4">
+<h5 id="_couche_supérieure_5">Couche supérieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un message en provenance de la couche Transport avec un contexte indiquant, un numéro de suivi de l&#8217;envoi, l&#8217;adresse (IRI) de la source initiale du contenu et l&#8217;adresse (IRI) du destinataire final du contenu.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un message pour la couche Transport (chaîne de caractère décrivant un objet JSON) avec un contexte indiquant, un numéro de suivi de l&#8217;envoi, l&#8217;adresse (IRI) de la source initiale du contenu et l&#8217;adresse (IRI) du destinataire final du contenu. Lorsque le message est une réponse intercouche, le numéro de suivi du message réponse devrait correspondre avec le numéro de suivi du message auquel il répond.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche supérieure</div>
+<div class="content">
+<pre>{ "source_iri": string
+, "destination_iri": string
+, "tracking_number": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_couche_inférieure_5">Couche inférieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un message en provenance de la couche Liaison avec un contexte indiquant l&#8217;adresse (IRI) du nœud où il doit être transmis et un numéro de suivi de l&#8217;envoi. Le message doit respecter le format standard (décrit après) sinon le message est ignoré.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un message pour la couche Liaison avec un contexte indiquant l&#8217;adresse (IRI) du nœud où il doit être transmis et un numéro de suivi de l&#8217;envoi. Lorsque le message est une réponse intercouche, le numéro de suivi du message réponse devrait correspondre avec le numéro de suivi du message auquel il répond.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche inférieure</div>
+<div class="content">
+<pre>{ "destination_iri" : string
+, "tracking_number": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_format_des_messages_pour_la_couche_réseau">3.5.3. Format des messages pour la couche réseau</h4>
+<div class="paragraph">
+<p>Un message est une chaîne de caractère représentant un objet JSON. Le format de l&#8217;objet JSON est défini comme suit.</p>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;un message</div>
+<div class="content">
+<pre>{ "header" : object
+, "stamp" : object
+, "content" : object ou string
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">format du timbre des sceaux d&#8217;authentification</div>
+<div class="content">
+<pre>{ "header_seal" : string
+, "content_seal" : string
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;une entête</div>
+<div class="content">
+<pre>{ "msgtype" : string
+, "id" : object
+, "source_iri": string
+, "destination_iri": string
+, "authentification": string
+, "parameters": object (actuellement : false)
+, "SPEDS" : { "version" : "v6.3.0"
+            , "reference" : "https://depot.griis.usherbrooke.ca/documentations/product-asciidoc-documentation/-/tree/main/speds-line/speds-library"
+            }
+}</pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_types_4">Types</h5>
+<div class="paragraph">
+<p>La chaîne de caractères représentant le type du message est l&#8217;une des suivantes.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>RES.ENV</code></p>
+</li>
+<li>
+<p><code>RES.REC</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_numéro_du_message_id_5">Numéro du message (<code>id</code>)</h5>
+<div class="paragraph">
+<p>Le numéro d&#8217;identification du message est un numéro généré unique (<code>uuid</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_schéma_json_des_communications_5">3.5.4. Schéma JSON des communications</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-4_5.schema.json">schéma JSON de la IDU</a> de la couche Transport (<code>TIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-5_6.schema.json">schéma JSON de la IDU</a> de la couche Réseau (<code>NIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/ProtocolDataUnit-5-NET.schema.json">schéma JSON de la PDU</a> de la couche Réseau (<code>NPDU</code>).</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/echangeNET.svg" alt="echangeNET" width="260" height="275">
+</div>
+<div class="title">Figure 5. Modèle des échanges entre les couches et les entités</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_diagramme_de_séquence_de_message_4">3.5.5. Diagramme de séquence de message</h4>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/P500.svg" alt="P500" width="1166" height="3437">
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spécification_de_la_couche_liaison">3.6. Spécification de la couche Liaison</h3>
+<div class="sect3">
+<h4 id="_responsabilités">3.6.1. Responsabilités</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La couche Liaison doit transmettre le paquet reçu à un destinataire (désigné par <code>destination_iri</code>) en suivant un protocole établi.</p>
+</li>
+<li>
+<p>Pour v6.3.0, la couche Liaison ne devrait utiliser que le protocole HTTPS.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interfaces_6">3.6.2. Interfaces</h4>
+<div class="sect4">
+<h5 id="_couche_supérieure_6">Couche supérieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un message en provenance de la couche Réseau avec un contexte indiquant, un numéro de suivi de l&#8217;envoi, l&#8217;adresse (IRI) du nœud <em>N</em> destinataire et des éventuelles options.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>un message pour la couche Réseau (chaîne de caractère décrivant un objet JSON) avec un contexte indiquant, un numéro de suivi de l&#8217;envoi, l&#8217;adresse (IRI) du destinataire (c&#8217;est-à-dire le nœud actuel) et des éventuelles options. Lorsque le message est une réponse intercouche, le numéro de suivi du message réponse devrait correspondre avec le numéro de suivi du message auquel il répond.</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche supérieure</div>
+<div class="content">
+<pre>{ "destination_iri" : false
+, "tracking_number": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_couche_inférieure_6">Couche inférieure</h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[entrant]</dt>
+<dd>
+<p>un message reçu pour la couche réseau selon un protocole disponible.</p>
+</dd>
+<dt class="hdlist1">[sortant]</dt>
+<dd>
+<p>le message envoyé selon le protocole sélectionné au nœud <em>N</em>.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_schéma_json_des_communications_6">3.6.3. Schéma JSON des communications</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-5_6.schema.json">schéma JSON de la IDU</a> de la couche Réseau (<code>NIDU</code>).</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./includes/echangeLIA.svg" alt="echangeLIA" width="316" height="162">
+</div>
+<div class="title">Figure 6. Modèle des échanges entre les couches et les entités</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v6.3.0<br>
+Last updated 2025-08-14 11:17:03 -0400
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd" version="6.51.0" timestamp="2025-08-15T09:13:42.232">
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/test/java/ca/griis/speds/integration/AppPresTransLinkSpedsIT.java">
+<violation beginline="54" endline="54" begincolumn="22" endcolumn="33" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration" class="AppPresTransLinkSpedsIT" method="setupJquik" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+<violation beginline="55" endline="55" begincolumn="23" endcolumn="34" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration" class="AppPresTransLinkSpedsIT" method="setupJquik" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+<violation beginline="56" endline="56" begincolumn="23" endcolumn="34" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration" class="AppPresTransLinkSpedsIT" method="setupJquik" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+<violation beginline="211" endline="211" begincolumn="14" endcolumn="26" rule="UnusedLocalVariable" ruleset="Best Practices" package="ca.griis.speds.integration" class="AppPresTransLinkSpedsIT" method="transLinkExchangeJquikTest" variable="receivedIdu56" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'receivedIdu56'.
+</violation>
+<violation beginline="217" endline="217" begincolumn="14" endcolumn="26" rule="UnusedLocalVariable" ruleset="Best Practices" package="ca.griis.speds.integration" class="AppPresTransLinkSpedsIT" method="transLinkExchangeJquikTest" variable="receivedIdu34" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'receivedIdu34'.
+</violation>
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/test/java/ca/griis/speds/integration/AppPresTransNetLinkSpedsIT.java">
+<violation beginline="48" endline="48" begincolumn="22" endcolumn="33" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration" class="AppPresTransNetLinkSpedsIT" method="setup" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+<violation beginline="49" endline="49" begincolumn="23" endcolumn="34" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration" class="AppPresTransNetLinkSpedsIT" method="setup" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+<violation beginline="140" endline="140" begincolumn="38" endcolumn="48" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration" class="AppPresTransNetLinkSpedsIT" method="netLinkExchangeTest" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.spy' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+<violation beginline="174" endline="174" begincolumn="38" endcolumn="48" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration" class="AppPresTransNetLinkSpedsIT" method="netLinkExchangeTest" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.spy' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/test/java/ca/griis/speds/integration/memory/AppLinkMemoryLeakIT.java">
+<violation beginline="44" endline="44" begincolumn="22" endcolumn="33" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration.memory" class="AppLinkMemoryLeakIT" method="setup" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+<violation beginline="45" endline="45" begincolumn="28" endcolumn="39" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration.memory" class="AppLinkMemoryLeakIT" method="setup" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/test/java/ca/griis/speds/integration/memory/NetLinkMemoryLeakIT.java">
+<violation beginline="51" endline="51" begincolumn="22" endcolumn="33" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration.memory" class="NetLinkMemoryLeakIT" method="setup" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+<violation beginline="52" endline="52" begincolumn="23" endcolumn="34" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration.memory" class="NetLinkMemoryLeakIT" method="setup" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+<violation beginline="122" endline="122" begincolumn="20" endcolumn="30" rule="UnusedLocalVariable" ruleset="Best Practices" package="ca.griis.speds.integration.memory" class="NetLinkMemoryLeakIT" method="netLinkMemoryLeakTest" variable="proxyParams" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'proxyParams'.
+</violation>
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/test/java/ca/griis/speds/integration/memory/PresLinkMemoryLeakIT.java">
+<violation beginline="47" endline="47" begincolumn="22" endcolumn="33" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration.memory" class="PresLinkMemoryLeakIT" method="setup" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+<violation beginline="48" endline="48" begincolumn="23" endcolumn="34" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration.memory" class="PresLinkMemoryLeakIT" method="setup" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'Mockito.mock' due to existing static import 'org.mockito.Mockito.*'
+</violation>
+</file>
+<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-library/src/test/java/ca/griis/speds/integration/util/TestUtil.java">
+<violation beginline="46" endline="46" begincolumn="11" endcolumn="64" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration.util" class="TestUtil" method="buildIdu01" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'ca.griis.js2p.gen.speds.application.api.dto.ContextDto' due to existing import 'ca.griis.js2p.gen.speds.application.api.dto.*'
+</violation>
+<violation beginline="47" endline="47" begincolumn="13" endcolumn="66" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration.util" class="TestUtil" method="buildIdu01" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'ca.griis.js2p.gen.speds.application.api.dto.ContextDto' due to existing import 'ca.griis.js2p.gen.speds.application.api.dto.*'
+</violation>
+<violation beginline="90" endline="90" begincolumn="13" endcolumn="66" rule="UnnecessaryFullyQualifiedName" ruleset="Code Style" package="ca.griis.speds.integration.util" class="TestUtil" method="transformIdu56ToIdu12" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname" priority="4">
+Unnecessary use of fully qualified name 'ca.griis.js2p.gen.speds.application.api.dto.ContextDto' due to existing import 'ca.griis.js2p.gen.speds.application.api.dto.*'
+</violation>
+</file>
+</pmd>

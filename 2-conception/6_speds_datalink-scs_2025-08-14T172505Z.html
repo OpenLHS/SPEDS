@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="Document de conception pour SPEDS Liaison">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Conception du module « SPEDS - Liaison »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Conception du module « <em>SPEDS - Liaison</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version ,</span>
+<span id="revdate">2025-07-01</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_rôle_du_module">1. Rôle du module</a></li>
+<li><a href="#_implémentation_du_module">2. Implémentation du module</a></li>
+<li><a href="#_modèle_propre_au_module">3. Modèle propre au module</a>
+<ul class="sectlevel2">
+<li><a href="#_table_des_numéros_de_suivi">3.1. Table des numéros de suivi</a></li>
+</ul>
+</li>
+<li><a href="#_mode_de_transmission">4. Mode de transmission</a></li>
+<li><a href="#_type_au_module">5. Type au module</a>
+<ul class="sectlevel2">
+<li><a href="#_type_simple_de_donnée">5.1. Type simple de donnée</a></li>
+<li><a href="#_type_complexe_de_donnée">5.2. Type complexe de donnée</a></li>
+</ul>
+</li>
+<li><a href="#_hypothèse_du_module">6. Hypothèse du module</a></li>
+<li><a href="#_contrainte_du_module">7. Contrainte du module</a></li>
+<li><a href="#_processus_du_module">8. Processus du module</a>
+<ul class="sectlevel2">
+<li><a href="#_pro_2_processus_demande_déchanger_des_données">8.1. [PRO-2] Processus « Demande d&#8217;échanger des données »</a></li>
+<li><a href="#_pro_3_processus_confirme_léchange_de_données">8.2. [PRO-3] Processus « Confirme l&#8217;échange de données »</a></li>
+<li><a href="#_pro_4_processus_indique_léchange_de_données">8.3. [PRO-4] Processus « Indique l&#8217;échange de données »</a></li>
+<li><a href="#_pro_5_processus_répond_à_un_échange_de_données">8.4. [PRO-5] Processus « Répond à un échange de données »</a></li>
+</ul>
+</li>
+<li><a href="#_incongruités">9. Incongruités</a></li>
+<li><a href="#_annexes">10. Annexes</a>
+<ul class="sectlevel2">
+<li><a href="#Sous-module-communication">10.1. Sous-module de communication</a></li>
+<li><a href="#_glossaire">10.2. Glossaire</a></li>
+<li><a href="#InterfaceDataUnit-5-6">10.3. <em>Interface Data Unit</em> entre la couche réseau (5) et la couche liaison (6)</a></li>
+<li><a href="#_informations_supplémentaires">10.4. Informations supplémentaires</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 55.5555%;">
+<col style="width: 11.1111%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-20 14:05</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du spécificateur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">AS</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-20 14:15</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur des tests réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-28 14:11</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Historique</caption>
+<colgroup>
+<col style="width: 55.5555%;">
+<col style="width: 11.1111%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Changement important</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception initiale</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2024-12-10</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception It2</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-04-30</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception It3</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-20</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Référence</caption>
+<colgroup>
+<col>
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Consultation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5_speds_network-srs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-04-30</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">gabarit-conception-bibliothèque.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2024-12-10</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rôle_du_module">1. Rôle du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le <code>SPEDS - Liaison</code> est une implémentation de la couche liaison dans le cadre du protocole <code>Speds</code>. Il est responsable d&#8217;envoyer ou recevoir des données sous un protocole de communication connu et existant.</p>
+</div>
+<div class="paragraph">
+<p>Dans le cadre de <code>Speds</code>, la couche liaison est la dernière couche avant la couche physique. Comme <code>Speds</code> se place en surcouche de protocole de communication existant, la couche physique en question est le protocole sous-jacent.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implémentation_du_module">2. Implémentation du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le module <code>SPEDS - Liaison</code> est implementé par le produit <code>`speds-link`</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_modèle_propre_au_module">3. Modèle propre au module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_table_des_numéros_de_suivi">3.1. Table des numéros de suivi</h3>
+<div class="paragraph">
+<p>Une table de numéros de suivi met en correspondance le <em>numéro de suivi</em> (un <code>uuid</code>) reçu par une requête de transmettre un contenu et le numéro <em>identifiant du message</em> (un <code>uuid</code>) transmettant le contenu.</p>
+</div>
+<div class="paragraph">
+<p>Il existe deux tables : une table des numéros de suivi <strong>entrant</strong> (pour les messages provenant de la couche supérieure) et une table des numéros de suivi <strong>sortant</strong> (pour les messages provenant de liaison et transmis à la couche supérieure).</p>
+</div>
+<div class="paragraph">
+<p>Propriétés:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Une requête venant de la couche supérieure devrait mémoriser un <em>numéro de suivi</em> dans la table des numéros de suivi <strong>entrant</strong>.</p>
+</li>
+<li>
+<p>Une confirmation envoyée à la couche supérieure devrait récupérer le <em>numéro de suivi</em> dans la table des numéros de suivi <strong>entrant</strong>.</p>
+</li>
+<li>
+<p>Une indication envoyée à la couche supérieure devrait mémoriser un <em>numéro de suivi</em> dans la table des numéros de suivi <strong>sortant</strong>.</p>
+</li>
+<li>
+<p>Une réponse venant de la couche supérieure devrait récupérer le <em>numéro de suivi</em> dans la table des numéros de suivi <strong>sortant</strong>.</p>
+</li>
+<li>
+<p>Il est attendu qu&#8217;une récupération va avec une suppression de l&#8217;entrée.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mode_de_transmission">4. Mode de transmission</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sans connexion avec accusé de réception.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_type_au_module">5. Type au module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_type_simple_de_donnée">5.1. Type simple de donnée</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Type simple de donnée</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destinationIri</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères représentant l&#8217;IRI du destinataire.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">protocol</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères représentant le protocole de communication à utiliser.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">protocolMessageContent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères représentant le contenu du message récupéré à l&#8217;aide du protocole de communication utilisé (SDU).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">certificate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères sous l&#8217;encodage Base64</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères représentant le certificat avec la clé publique de l&#8217;entité.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">privateKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères sous l&#8217;encodage Base64</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères représentant la clé privée associée à clé publique.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_type_complexe_de_donnée">5.2. Type complexe de donnée</h3>
+<div class="sect3">
+<h4 id="_interface_de_lunité_de_données_du_service_idu">5.2.1. Interface de l&#8217;unité de données du service (IDU)</h4>
+<div class="paragraph">
+<p>Unité d’information transférée en une seule interaction à l’interface de 2 couches, constituée d’information de contrôle d’interface (ICI(N)) et d&#8217;unité de service de données (SDU(N)).</p>
+</div>
+<div class="paragraph">
+<p>(cf. annexe <a href="#InterfaceDataUnit-5-6"><em>Interface Data Unit</em> entre la couche réseau (5) et la couche liaison (6)</a>)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèse_du_module">6. Hypothèse du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contrainte_du_module">7. Contrainte du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[CON-003]
+</td>
+<td class="hdlist2">
+<p>Le module doit minimalement fournir un sous-module de communication sous le protocole HTTPS.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-004]
+</td>
+<td class="hdlist2">
+<p>Le module doit gérer le parallélisme et la concurrence.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-005]
+</td>
+<td class="hdlist2">
+<p>Le format de sérialisation est JSON.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-006]
+</td>
+<td class="hdlist2">
+<p>Les paramètres obligatoires d&#8217;initialisation doivent être conservés lorsque reçu de la couche supérieure.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-007]
+</td>
+<td class="hdlist2">
+<p>L&#8217;implémentation du sous-module de communication doit être découplé du module de liaison SPEDS pour faciliter la modularité.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_processus_du_module">8. Processus du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2] Demande d&#8217;échanger des données
+</td>
+<td class="hdlist2">
+<p>Demande d’échanger des données sous une requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3] Confirme l&#8217;échange de données
+</td>
+<td class="hdlist2">
+<p>Confirme l&#8217;échange de données sous une réponse (contient les données que l&#8217;entité qui a reçu la demande veut échanger).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-4] Indique un échange de données
+</td>
+<td class="hdlist2">
+<p>Reçoit la demande d’une requête avec les données échangées par l’initiateur de requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-5] Répond à un échange de données
+</td>
+<td class="hdlist2">
+<p>Répond à un initiateur de requête sous une réponse avec des données à échanger.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_pro_2_processus_demande_déchanger_des_données">8.1. [PRO-2] Processus « Demande d&#8217;échanger des données »</h3>
+<div class="sect3">
+<h4 id="_comportement">8.1.1. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.1]
+</td>
+<td class="hdlist2">
+<p>Vérification de l&#8217;interface d&#8217;unité de données.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Récupération du ICI et PDU de l&#8217;InterfaceDataUnit-5_6 reçue en entrée.</p>
+</li>
+<li>
+<p>Vérification que l&#8217;adresse du destinataire est présente et est un IRI valide. Si la prémisse est fausse, l&#8217;exception 'VerificationException' est retournée.</p>
+</li>
+<li>
+<p>de la présence du PDU (contenu du message). Si la prémisse est fausse, l&#8217;exception 'VerificationException' est retournée.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.2]
+</td>
+<td class="hdlist2">
+<p>Mémoriser le <em>numéro de suivi</em> obtenu de l&#8217;IDU avec le <em>numéro identifiant du message</em> transmis dans la <a href="#_table_des_numéros_de_suivi">Table des numéros de suivi</a> <strong>entrant</strong>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.3]
+</td>
+<td class="hdlist2">
+<p>Délègue au sous-module de communication d&#8217;échanger le SDU (contenu de message). En cas de problème, l&#8217;exception <code>ProtocolException</code> est retournée.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+250620 BF : Les vérifications ne sont pas utiles de cette façon. Si le schéma est respecté (format de l&#8217;entrée) les deux conditions sont vraies.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interface">8.1.2. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>request</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>InterfaceDataUnit-5-6</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>protocolMessageContent</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur">8.1.3. Erreur</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">VerificationException</dt>
+<dd>
+<p>Lors d&#8217;une erreur de vérification.</p>
+</dd>
+<dt class="hdlist1">ProtocolException</dt>
+<dd>
+<p>Lorsqu&#8217;une erreur est levée par le sous-module de communication.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pro_3_processus_confirme_léchange_de_données">8.2. [PRO-3] Processus « Confirme l&#8217;échange de données »</h3>
+<div class="sect3">
+<h4 id="_comportement_2">8.2.1. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.1]
+</td>
+<td class="hdlist2">
+<p>Récupération du contenu du message par le sous-module de communication sous le format d&#8217;une chaîne de caractères.
+En cas de problème, l&#8217;exception <code>ProtocolException</code> est retournée.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.2]
+</td>
+<td class="hdlist2">
+<p>Construction l&#8217;InterfaceDataUnit-5_6.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Construction PDU: la chaîne de caractères récupérée à [PRO-3.1].</p>
+</li>
+<li>
+<p>Construction ICI</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>l&#8217;IRI de la destination récupéré à [PRO-3.1].</p>
+</li>
+<li>
+<p>Récupérer le <em>numéro de suivi</em> à utiliser dans l&#8217;ICI avec le <em>numéro identifiant du message</em> reçu dans la <a href="#_table_des_numéros_de_suivi">Table des numéros de suivi</a> <strong>entrant</strong> et supprimer l&#8217;entrée.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.3]
+</td>
+<td class="hdlist2">
+<p>Transmettre l&#8217;IDU à la couche supérieure</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Le comportement du sous-module de communication du processus 'confirm' pourrait être naïvement identique à 'indication'. Mais, il serait préférable plutôt d&#8217;utiliser la mécanique de réponse du protocole spécifié. Pour plus de détails, voir <a href="#Sous-module-communication">Sous-module de communication</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interface_2">8.2.2. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>confirm</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>protocolMessageContent</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>InterfaceDataUnit-5-6</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_2">8.2.3. Erreur</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">ProtocolException</dt>
+<dd>
+<p>Lorsqu&#8217;une erreur est levée par le sous-module de communication.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pro_4_processus_indique_léchange_de_données">8.3. [PRO-4] Processus « Indique l&#8217;échange de données »</h3>
+<div class="sect3">
+<h4 id="_comportement_3">8.3.1. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-4.1]
+</td>
+<td class="hdlist2">
+<p>Récupération du contenu du message par le sous-module de communication sous le format d&#8217;une chaîne de caractères.
+En cas de problème, l&#8217;exception 'ProtocolException' est retournée.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-4.2]
+</td>
+<td class="hdlist2">
+<p>Construction l&#8217;InterfaceDataUnit-5_6.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Construction PDU: la chaîne de caractères récupérée à [PRO-4.1].</p>
+</li>
+<li>
+<p>Construction ICI:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>l&#8217;IRI de la destination récupérée à [PRO-4.1].</p>
+</li>
+<li>
+<p>générer un numéro de suivi (<code>uuid</code>).</p>
+</li>
+<li>
+<p>Mémoriser le <em>numéro de suivi</em>  avec le <em>numéro identifiant</em> du PDU transmis dans la <a href="#_table_des_numéros_de_suivi">Table des numéros de suivi</a> <strong>sortant</strong>.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-4.3]
+</td>
+<td class="hdlist2">
+<p>La sortie est l&#8217;InterfaceDataUnit-5_6 qui a été précédemment construit à [PRO-4.2].</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interface_3">8.3.2. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>indication</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>protocolMessageContent</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>InterfaceDataUnit-5-6</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_3">8.3.3. Erreur</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">ProtocolException</dt>
+<dd>
+<p>Lorsqu&#8217;une erreur est levée par le sous-module de communication.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pro_5_processus_répond_à_un_échange_de_données">8.4. [PRO-5] Processus « Répond à un échange de données »</h3>
+<div class="sect3">
+<h4 id="_comportement_4">8.4.1. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-5.1]
+</td>
+<td class="hdlist2">
+<p>Vérification de l&#8217;interface d&#8217;unité de données.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Récupération du ICI et PDU de l&#8217;InterfaceDataUnit-5_6 reçue en entrée.</p>
+</li>
+<li>
+<p>Vérification que l&#8217;adresse du destinataire est présente et est un IRI valide. Si la prémisse est fausse, l&#8217;exception 'VerificationException' est retournée.</p>
+</li>
+<li>
+<p>de la présence du PDU (contenu du message). Si la prémisse est fausse, l&#8217;exception 'VerificationException' est retournée.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-5.2]
+</td>
+<td class="hdlist2">
+<p>Supprimer l&#8217;entrée correspondant au <em>numéro de suivi</em> utilisé dans l&#8217;ICI dans la <a href="#_table_des_numéros_de_suivi">Table des numéros de suivi</a> <strong>sortant</strong>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-5.3]
+</td>
+<td class="hdlist2">
+<p>Délègue au sous-module de communication d&#8217;échanger le SDU (contenu de message). En cas de problème, l&#8217;exception <code>ProtocolException</code> est retournée.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+250620 BF : Les vérifications ne sont pas utiles de cette façon. Si le schéma est respecté (format de l&#8217;entrée) les deux conditions sont vraies. Une vérification pertinente pourrait par contre être l&#8217;attente d&#8217;une réponse (avec le numéro de suivi).
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interface_4">8.4.2. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>response</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>InterfaceDataUnit-5-6</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>protocolMessageContent</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_4">8.4.3. Erreur</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">VerificationException</dt>
+<dd>
+<p>Lors d&#8217;une erreur de vérification.</p>
+</dd>
+<dt class="hdlist1">ProtocolException</dt>
+<dd>
+<p>Lorsqu&#8217;une erreur est levée par le sous-module de communication.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">9. Incongruités</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. matrice de dépendances</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">source / destination</th>
+<th class="tableblock halign-left valign-top">vers_modules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-2.1</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-2.2</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-3</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-3.1</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-3.2</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-3.3</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-4</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-4.1</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-4.2</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-4.3</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-5</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">PRO-5.1</p></th>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annexes">10. Annexes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="Sous-module-communication">10.1. Sous-module de communication</h3>
+<div class="sect3">
+<h4 id="_protocole">10.1.1. Protocole</h4>
+<div class="paragraph">
+<p>Les choix technologiques du module de sous-communication sont définis à son implémentation comme défini à la contrainte [CON-001].</p>
+</div>
+<div class="paragraph">
+<p>Plusieurs points sont à prendre en considération en ce qui concerne l&#8217;implémentation du sous-module sur un protocole précis :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>D&#8217;être standard et connu (HTTPS, TCP, UDP, etc)</p>
+</li>
+<li>
+<p>De distinguer de façon très claire et nette l&#8217;entité cliente et serveur, et que ceux-ci utilisent des <code>sockets</code> différents</p>
+</li>
+<li>
+<p>Qu&#8217;un <code>socket</code> client envoie un message (requête), mais qu&#8217;il peut recevoir une réponse</p>
+</li>
+<li>
+<p>Qu&#8217;un <code>socket</code> serveur reçoit un message (requête), mais qu&#8217;il peut envoyer une réponse</p>
+</li>
+<li>
+<p>D&#8217;exiger que tout message envoyé par un <code>socket</code> client (requête) nécessite une réponse. Sinon, il y a une erreur levée sur le <code>socket</code>.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>C&#8217;est le cas actuel pour le protocole HTTP ou HTTPS</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_en_lien_avec_les_socket">10.1.2. Comportement en lien avec les <code>socket</code></h4>
+<div class="paragraph">
+<p>Le comportement des primitives de services attendus généralement sur les <code>sockets</code> serait :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>request</code></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Envoi d&#8217;une requête sur le <code>socket</code> client.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><code>indication</code></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Réception d&#8217;une requête sur le <code>socket</code> serveur.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><code>response</code></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Envoi d&#8217;une réponse sur le <code>socket</code> serveur.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><code>confirm</code></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Réception d&#8217;une réponse sur le <code>socket</code> client.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Cette approche est généralement la plus optimale dans la majorité des cas.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Dans le cas qu&#8217;on n&#8217;utilise pas la mécanique de réponse sur les <code>sockets</code> :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>response</code></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Est identique à <code>request</code>.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><code>confirm</code></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Est identique à <code>indication</code>.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Cette approche est problématique dans le cas d&#8217;HTTPS, car elle oblige deux requêtes et deux réponses (non utilisées) pour échanger des données au lieu d&#8217;une requête et une réponse.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_glossaire">10.2. Glossaire</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+Source
+</td>
+<td class="hdlist2">
+<p>L&#8217;entité qui est l&#8217;initiateur de la requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Destination
+</td>
+<td class="hdlist2">
+<p>L&#8217;entité qui reçoit la requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Couche inférieure
+</td>
+<td class="hdlist2">
+<p>La couche de communication qui offre des services utilisés par la couche liaison.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Couche supérieure
+</td>
+<td class="hdlist2">
+<p>La couche de communication qui utilise les services de la couche liaison.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+SDU
+</td>
+<td class="hdlist2">
+<p>Unité de données du service.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+ICI
+</td>
+<td class="hdlist2">
+<p>Information de contrôle de l&#8217;interface.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+PDU
+</td>
+<td class="hdlist2">
+<p>Unité de données de protocole.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="InterfaceDataUnit-5-6">10.3. <em>Interface Data Unit</em> entre la couche réseau (5) et la couche liaison (6)</h3>
+<div class="listingblock">
+<div class="title">Format d&#8217;interface d&#8217;unité de données entre la couche supérieure et la couche liaison</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://griis.ca/speds/json/schema/idu/InterfaceDataUnit-5_6.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InterfaceDataUnit-5_6 - 2025-04-10T14:02:15-0400",
+  "description": "An agreed way of communication among SPEDS layers Network (5) and (Data)Link (6).",
+  "type": "object",
+  "properties": {
+    "context": {
+      "description": "The context shared between these two SPEDS layers. This is the ICI (Interface Control Information), i.e. an information passed across an interface to coordinate interactions between two adjacent layers.",
+      "type": "object",
+      "properties": {
+        "destination_iri": {
+          "description": "The destination node IRI (according to RFC3987).",
+          "type": "string",
+          "format": "iri"
+        },
+        "tracking_number": {
+          "description": "The number used to track the SDU. If the SDU is a response (resp. a confirmation), it should be the tracking number of the corresponding original indication (resp. request).",
+          "type": "string",
+          "format": "uuid"
+        },
+        "options": {
+          "description": "The options shared between the layers.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "destination_iri",
+        "tracking_number",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "message": {
+      "description": "The message shared between these two SPEDS layers. This is the SDU (Service Data Unit) of the Network layer (5).",
+      "type": "string"
+    }
+  },
+  "required": [
+    "context",
+    "message"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_informations_supplémentaires">10.4. Informations supplémentaires</h3>
+<div class="paragraph">
+<p>Voir les autres schémas JSON pour plus de détails dans le dossier du document SRS.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version <br>
+Last updated 2025-07-22 14:19:14 -0400
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>

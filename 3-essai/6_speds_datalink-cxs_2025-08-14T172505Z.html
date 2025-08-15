@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="description" content="Spécification des essais de conceptions (CXS) de SPEDS Liaison">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification des Essais - « SPEDS - Liaison »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification des Essais - « <em>SPEDS - Liaison</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v6.3.0,</span>
+<span id="revdate">2025-07-01</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_objectif">1. Objectif</a></li>
+<li><a href="#_éléments_testés">2. Éléments Testés</a>
+<ul class="sectlevel2">
+<li><a href="#_hypothèses">2.1. Hypothèses</a></li>
+<li><a href="#_données_globales">2.2. Données globales</a></li>
+<li><a href="#_incongruités">2.3. Incongruités</a></li>
+<li><a href="#_cas_de_test">2.4. Cas de Test</a>
+<ul class="sectlevel3">
+<li><a href="#_cas_de_test_5_echec_de_lenvoi_dune_demande_déchange_de_données_avec_iri_destinataire_invalide">2.4.1. Cas de Test 5 - Echec de l&#8217;envoi d&#8217;une demande d&#8217;échange de données avec iri destinataire invalide</a></li>
+<li><a href="#_cas_de_test_6_echec_de_lenvoi_dune_demande_déchange_de_données_avec_adresse_destinataire_absente">2.4.2. Cas de Test 6 - Echec de l&#8217;envoi d&#8217;une demande d&#8217;échange de données avec adresse destinataire absente</a></li>
+<li><a href="#_cas_de_test_7_echec_de_lenvoi_dune_demande_déchange_de_données_avec_contenu_sdu_absent">2.4.3. Cas de Test 7 - Echec de l&#8217;envoi d&#8217;une demande d&#8217;échange de données avec contenu SDU absent</a></li>
+<li><a href="#_cas_de_test_8_envoi_réussi_dune_demande_déchange_de_données_valide">2.4.4. Cas de Test 8 - Envoi réussi d&#8217;une demande d&#8217;échange de données valide</a></li>
+<li><a href="#_cas_de_test_9_echec_envoi_dune_réponse_déchange_de_données_avec_iri_destinataire_invalide">2.4.5. Cas de Test 9 - Echec Envoi d&#8217;une réponse d&#8217;échange de données avec iri destinataire invalide</a></li>
+<li><a href="#_cas_de_test_10_echec_envoi_dune_réponse_déchange_de_données_avec_adresse_destinataire_absente">2.4.6. Cas de Test 10 - Echec Envoi d&#8217;une réponse d&#8217;échange de données avec adresse destinataire absente</a></li>
+<li><a href="#_cas_de_test_11_echec_envoi_dune_réponse_déchange_de_données_avec_contenu_sdu_absente">2.4.7. Cas de Test 11 - Echec Envoi d&#8217;une Réponse d&#8217;échange de données avec contenu SDU absente</a></li>
+<li><a href="#_cas_de_test_12_envoi_réussi_dune_réponse_déchange_de_données_valide">2.4.8. Cas de Test 12 - Envoi réussi d&#8217;une réponse d&#8217;échange de données valide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_essais">3. Essais</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Document prêt à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-20 14:21</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-05-29 14:30</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Historique</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Changement important</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception initiale</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-21</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 2: retrait du init</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-05-21</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 3</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-20</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Référence</caption>
+<colgroup>
+<col>
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Consultation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">speds-line\speds-library\6_speds_datalink\scs\6_speds_datalink-scs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-21</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">handler-line\handler-lock-service\cxs\handler_lock-cxs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-21</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">handler-line\handler-core-library\cxs\handler_core-cxs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-21</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0-documentation-tool\gabarit\Specification_des_essais_de_conception\gabarit.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-22</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6_speds_datalink-scs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-05-28</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_objectif">1. Objectif</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ce document définit les essais nécessaires pour vérifier et valider le fonctionnement de la couche liaison du protocole de communication SPEDS.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Ce document ne respecte pas le gabarit. Étant donné la simplicité des essais et le fait que le gabarit est en instance de mise à jour, la mise à jour de ce document pour ce conformer au gabarit a été reportée à la prochaine itération.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_éléments_testés">2. Éléments Testés</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 30%;">
+<col style="width: 30%;">
+<col style="width: 30%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Élément à tester</th>
+<th class="tableblock halign-left valign-top">Étapes du test</th>
+<th class="tableblock halign-left valign-top">Éléments de la conception associée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph line-through">
+<p><a id="T01"></a>T01</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph line-through">
+<p>Vérifier l&#8217;initialisation de l&#8217;entité</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic line-through">
+<ol class="arabic">
+<li>
+<p>Envoyer en entrée une map de données paramètres de configuration ;</p>
+</li>
+<li>
+<p>En cas d&#8217;exception, comparer avec l&#8217;exception attendue le cas échéant.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph line-through">
+<p>PRO-1</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="T02"></a>T02</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Vérifier la demande d&#8217;échange de données</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer une valeur de donnée <code>InterfaceDataUnit-5-6</code> en entrée d&#8217;une demande d&#8217;échange de données par le client ;</p>
+</li>
+<li>
+<p>En cas d&#8217;exception, comparer avec l&#8217;exception attendue le cas échéant.</p>
+</li>
+<li>
+<p>Sinon récevoir la valeur de donnée <code>InterfaceDataUnit-5-6</code> en sortie au travers une indication côté serveur ;</p>
+</li>
+<li>
+<p>Comparer la donnée récupérée avec celle attendue le cas échéant.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>PRO-2, PRO-4</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="T03"></a>T03</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Vérifier la Réponse d&#8217;échange de données</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Envoyer une valeur de donnée <code>InterfaceDataUnit-5-6</code> en entrée d&#8217;une réponse d&#8217;échange de données par le serveur ;</p>
+</li>
+<li>
+<p>En cas d&#8217;exception, comparer avec l&#8217;exception attendue le cas échéant.</p>
+</li>
+<li>
+<p>Sinon recevoir la valeur de donnée <code>InterfaceDataUnit-5-6</code> en sortie au travers une confirmation côté client ;</p>
+</li>
+<li>
+<p>Comparer la donnée récupérée avec celle attendue le cas échéant.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>PRO-5, PRO-3</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_hypothèses">2.1. Hypothèses</h3>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_données_globales">2.2. Données globales</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Données globales</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="DG_valid_idu5-6"></a>DG_valid_idu5-6</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="literalblock">
+<div class="content">
+<pre>{
+  "context": {
+    "destination_iri": &lt;&lt;ANY-VALID-IRI&gt;&gt;,
+    "tracking_number": &lt;&lt;ANY-VALID-UUID&gt;&gt;,
+    "options": false
+  },
+  "message": "This is the message."
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> valide</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="DG_idu5-6_invalid_iri"></a>DG_idu5-6_invalid_iri</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="literalblock">
+<div class="content">
+<pre>{
+  "context": {
+    "destination_iri": "INVALID-IRI",
+    "tracking_number": &lt;&lt;ANY-VALID-UUID&gt;&gt;,
+    "options": false
+  },
+  "message": "This is the message."
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> avec IRI de destinataire en format invalide.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="DG_idu5-6_absent_iri"></a>DG_idu5-6_absent_iri</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="literalblock">
+<div class="content">
+<pre>{
+  "message": "This is the message."
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> avec IRI de destinataire absente.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="DG_idu5-6_empty_iri"></a>DG_idu5-6_empty_iri</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="literalblock">
+<div class="content">
+<pre>{
+  "context": {
+    "destination_iri": "",
+    "tracking_number": &lt;&lt;ANY-VALID-UUID&gt;&gt;,
+    "options": false
+  },
+  "message": "This is the message."
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> avec iri destinataire vide</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="DG_idu5-6_absent_sdu"></a>DG_idu5-6_absent_sdu</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="literalblock">
+<div class="content">
+<pre>{
+  "context": {
+    "destination_iri": &lt;&lt;ANY-VALID-IRI&gt;&gt;,
+    "tracking_number": &lt;&lt;ANY-VALID-UUID&gt;&gt;,
+    "options": false
+  }
+}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> avec message SDU absent.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_incongruités">2.3. Incongruités</h3>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test">2.4. Cas de Test</h3>
+<div class="sect3">
+<h4 id="_cas_de_test_5_echec_de_lenvoi_dune_demande_déchange_de_données_avec_iri_destinataire_invalide">2.4.1. Cas de Test 5 - Echec de l&#8217;envoi d&#8217;une demande d&#8217;échange de données avec iri destinataire invalide</h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Données d&#8217;entrée pour C05</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C05_E01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#DG_idu5-6_invalid_iri">[DG_idu5-6_invalid_iri]</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> avec IRI de destinataire invalide.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Données de sortie pour C05</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C05_S01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Exception de type <code>VerificationException</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception soulevée lors d&#8217;une erreur de vérification.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Cas de test</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Test</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="C05"></a>C05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#T02">[T02]</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Une exception <code>VerificationException</code> est lévée.</p>
+</li>
+<li>
+<p>Aucune donnée n&#8217;est réçue à l&#8217;indication côté serveur.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_cas_de_test_6_echec_de_lenvoi_dune_demande_déchange_de_données_avec_adresse_destinataire_absente">2.4.2. Cas de Test 6 - Echec de l&#8217;envoi d&#8217;une demande d&#8217;échange de données avec adresse destinataire absente</h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Données d&#8217;entrée pour C07</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C06_E01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#DG_idu5-6_absent_iri">[DG_idu5-6_absent_iri]</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> avec IRI de destinataire absente.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Données de sortie pour C06</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C06_S01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Exception de type <code>VerificationException</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception soulevée lors d&#8217;une erreur de vérification.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Cas de test</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Test</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="C06"></a>C06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#T02">[T02]</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Une exception <code>VerificationException</code> est lévée.</p>
+</li>
+<li>
+<p>Aucune donnée n&#8217;est réçue à l&#8217;indication côté serveur.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_cas_de_test_7_echec_de_lenvoi_dune_demande_déchange_de_données_avec_contenu_sdu_absent">2.4.3. Cas de Test 7 - Echec de l&#8217;envoi d&#8217;une demande d&#8217;échange de données avec contenu SDU absent</h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Données d&#8217;entrée pour C07</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C07_E01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#DG_idu5-6_absent_sdu">[DG_idu5-6_absent_sdu]</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> avec message SDU absent.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 12. Données de sortie pour C07</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C07_S01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Exception de type <code>VerificationException</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception soulevée lors d&#8217;une erreur de vérification.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 13. Cas de test</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Test</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="C07"></a>C07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#T02">[T02]</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Une exception <code>VerificationException</code> est lévée.</p>
+</li>
+<li>
+<p>Aucune donnée n&#8217;est réçue à l&#8217;indication côté serveur.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_cas_de_test_8_envoi_réussi_dune_demande_déchange_de_données_valide">2.4.4. Cas de Test 8 - Envoi réussi d&#8217;une demande d&#8217;échange de données valide</h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 14. Données d&#8217;entrée pour C08</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C08_E01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#DG_valid_idu5-6">[DG_valid_idu5-6]</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> valide.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 15. Données de sortie pour C08</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C08_S01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#DG_valid_idu5-6">[DG_valid_idu5-6]</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> réçue à l&#8217;indication côté serveur.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 16. Cas de test</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Test</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="C08"></a>C08</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#T02">[T02]</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La donnée JSON <code>InterfaceDataUnit-5-6</code> réçue à l&#8217;indication côté serveur est identique à celle envoyée dans la demande du client.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_cas_de_test_9_echec_envoi_dune_réponse_déchange_de_données_avec_iri_destinataire_invalide">2.4.5. Cas de Test 9 - Echec Envoi d&#8217;une réponse d&#8217;échange de données avec iri destinataire invalide</h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 17. Données d&#8217;entrée pour C09</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C09_E01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#DG_idu5-6_invalid_iri">[DG_idu5-6_invalid_iri]</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> avec IRI de destinataire invalide.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 18. Données de sortie pour C09</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C09_S01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Exception de type <code>VerificationException</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception soulevée lors d&#8217;une erreur de vérification.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 19. Cas de test</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Test</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="C09"></a>C09</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#T03">[T03]</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Une exception <code>VerificationException</code> est lévée.</p>
+</li>
+<li>
+<p>Aucune donnée n&#8217;est réçue à la confirmation côté client.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_cas_de_test_10_echec_envoi_dune_réponse_déchange_de_données_avec_adresse_destinataire_absente">2.4.6. Cas de Test 10 - Echec Envoi d&#8217;une réponse d&#8217;échange de données avec adresse destinataire absente</h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 20. Données d&#8217;entrée pour C10</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C10_E01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#DG_idu5-6_absent_iri">[DG_idu5-6_absent_iri]</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> avec IRI de destinataire absente.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 21. Données de sortie pour C10</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C10_S01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Exception de type <code>VerificationException</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception soulevée lors d&#8217;une erreur de vérification.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 22. Cas de test</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Test</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="C10"></a>C10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#T03">[T03]</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Une exception <code>VerificationException</code> est lévée.</p>
+</li>
+<li>
+<p>Aucune donnée n&#8217;est réçue à la confirmation côté client.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_cas_de_test_11_echec_envoi_dune_réponse_déchange_de_données_avec_contenu_sdu_absente">2.4.7. Cas de Test 11 - Echec Envoi d&#8217;une Réponse d&#8217;échange de données avec contenu SDU absente</h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 23. Données d&#8217;entrée pour C11</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C11_E01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#DG_idu5-6_absent_sdu">[DG_idu5-6_absent_sdu]</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> avec message SDU absente.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 24. Données de sortie pour C11</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C11_S01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Exception de type <code>VerificationException</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exception soulevée lors d&#8217;une erreur de vérification.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 25. Cas de test</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Test</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="C11"></a>C11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#T03">[T03]</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Une exception <code>VerificationException</code> est lévée.</p>
+</li>
+<li>
+<p>Aucune donnée n&#8217;est reçue à la confirmation côté client.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_cas_de_test_12_envoi_réussi_dune_réponse_déchange_de_données_valide">2.4.8. Cas de Test 12 - Envoi réussi d&#8217;une réponse d&#8217;échange de données valide</h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 26. Données d&#8217;entrée pour C12</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C12_E01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#DG_valid_idu5-6">[DG_valid_idu5-6]</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> valide.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 27. Données de sortie pour C12</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C12_S01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#DG_valid_idu5-6">[DG_valid_idu5-6]</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Donnée JSON <code>InterfaceDataUnit-5-6</code> réçue à la confirmation côté client.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 28. Cas de test</caption>
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 44.4444%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Test</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="C12"></a>C12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#T03">[T03]</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La donnée JSON InterfaceDataUnit-5-6 reçue à la confirmation côté client comporte un numéro de suivi .</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_essais">3. Essais</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 29. Environnements</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="ENV2"></a>ENV2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>L&#8217;entité est initialisée.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="ENV3"></a>ENV3</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>L&#8217;entité est initialisée et le serveur a reçu une demande du client.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 30. Essais</caption>
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 37.5%;">
+<col style="width: 12.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Descriptif</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="E02"></a>E02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV2">[ENV2]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#C05">[C05]</a>, <a href="#C06">[C06]</a>, <a href="#C07">[C07]</a>, <a href="#C08">[C08]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifier que l&#8217;envoi d&#8217;une demande d&#8217;échange de données échoue avec une iri de destinataire invalide, une adresse destinataire absente ou un contenu SDU absent.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="E03"></a>E03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV3">[ENV3]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#C12">[C12]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifier la Réception d&#8217;une Confirmation d&#8217;échange de données valide.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="E04"></a>E04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV3">[ENV3]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#C09">[C09]</a>, <a href="#C10">[C10]</a>, <a href="#C11">[C11]</a>, <a href="#C12">[C12]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifier que l&#8217;envoi d&#8217;une réponse d&#8217;échange de données échoue avec une iri de destinateur invalide, une adresse destinataire absente ou un contenu SDU absent.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all fit-content">
+<caption class="title">Table 31. Matrice de correspondance Éléments/Essais</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#E02">[E02]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#E03">[E03]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#E04">[E04]</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#T02">[T02]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#T03">[T03]</a></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v6.3.0<br>
+Last updated 2025-08-14 11:17:03 -0400
+</div>
+</div>
+</body>
+</html>

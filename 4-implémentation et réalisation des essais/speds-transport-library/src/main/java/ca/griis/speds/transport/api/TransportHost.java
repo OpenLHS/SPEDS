@@ -47,6 +47,22 @@ public interface TransportHost extends TransportClient, TransportServer {
    * @exception «exception name» «Exception description»
    * @return «Return description»
    *
+   * @brief @~french Démarre l'écoute de messages si l'écoute n'est pas encore démarré.
+   * 
+   * @note 2025-08-08 [FO] - Le démarrage se fait automatiquement lors de l'appel d'une demande ou
+   *       réception de données sur l'hôte.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  void listen();
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
    * @brief @~french Désalloue les ressources.
    *
    * @par Tâches

@@ -23,8 +23,7 @@ import ca.griis.speds.transport.api.TransportFactory;
 import ca.griis.speds.transport.api.TransportHost;
 import ca.griis.speds.transport.exception.ParameterException;
 import ca.griis.speds.transport.serializer.SharedObjectMapper;
-import ca.griis.speds.transport.service.identification.IdentifierGenerator;
-import ca.griis.speds.transport.service.message.PollingManager;
+import ca.griis.speds.transport.service.IdentifierGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Optional;
 import java.util.UUID;
@@ -57,67 +56,72 @@ import java.util.UUID;
  *      S.O.
  */
 public class SyncTransportFactory implements TransportFactory {
-<span class="fc" id="L60">  private static final GriisLogger logger =</span>
-<span class="fc" id="L61">      GriisLoggerFactory.getLogger(SyncTransportFactory.class);</span>
+<span class="fc" id="L59">  private static final GriisLogger logger =</span>
+<span class="fc" id="L60">      GriisLoggerFactory.getLogger(SyncTransportFactory.class);</span>
 
   private final SyncNetworkFactory networkFactory;
   private final IdentifierGenerator identifierGenerator;
 
   public SyncTransportFactory() {
-<span class="fc" id="L67">    this(() -&gt; UUID.randomUUID().toString());</span>
-<span class="fc" id="L68">    logger.trace(Trace.ENTER_METHOD_0);</span>
-<span class="fc" id="L69">  }</span>
+<span class="fc" id="L66">    this(() -&gt; UUID.randomUUID().toString());</span>
+<span class="fc" id="L67">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L68">  }</span>
 
-<span class="fc" id="L71">  public SyncTransportFactory(IdentifierGenerator identifierGenerator) {</span>
-<span class="fc" id="L72">    logger.trace(Trace.ENTER_METHOD_1, &quot;identifierGenerator&quot;, identifierGenerator);</span>
-<span class="fc" id="L73">    this.networkFactory = new SyncNetworkFactory();</span>
-<span class="fc" id="L74">    this.identifierGenerator = identifierGenerator;</span>
-<span class="fc" id="L75">  }</span>
+<span class="fc" id="L70">  public SyncTransportFactory(IdentifierGenerator identifierGenerator) {</span>
+<span class="fc" id="L71">    logger.trace(Trace.ENTER_METHOD_1, &quot;identifierGenerator&quot;, identifierGenerator);</span>
+<span class="fc" id="L72">    this.networkFactory = new SyncNetworkFactory();</span>
+<span class="fc" id="L73">    this.identifierGenerator = identifierGenerator;</span>
+<span class="fc" id="L74">  }</span>
 
   @Override
   public TransportHost init(String parameters) throws ParameterException {
-<span class="fc" id="L79">    logger.trace(Trace.ENTER_METHOD_1, &quot;parmeters&quot;, parameters);</span>
+<span class="fc" id="L78">    logger.trace(Trace.ENTER_METHOD_1, &quot;parmeters&quot;, parameters);</span>
 
     final ImmutableTransportHost traHost;
     try {
       final InitInParamsDto params =
-<span class="fc" id="L84">          SharedObjectMapper.getInstance().getMapper().readValue(parameters, InitInParamsDto.class);</span>
+<span class="fc" id="L83">          SharedObjectMapper.getInstance().getMapper().readValue(parameters, InitInParamsDto.class);</span>
 
-<span class="fc" id="L86">      final String spedsVersion = (String) params.getOptions().get(&quot;speds.tra.version&quot;);</span>
-<span class="fc" id="L87">      final String spedsReference = (String) params.getOptions().get(&quot;speds.tra.reference&quot;);</span>
+<span class="fc" id="L85">      final String spedsVersion = (String) params.getOptions().get(&quot;speds.tra.version&quot;);</span>
+<span class="fc" id="L86">      final String spedsReference = (String) params.getOptions().get(&quot;speds.tra.reference&quot;);</span>
 
-<span class="fc bfc" id="L89" title="All 2 branches covered.">      if (spedsVersion == null) {</span>
-<span class="fc" id="L90">        throw new ParameterException(</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">      if (spedsVersion == null) {</span>
+<span class="fc" id="L89">        throw new ParameterException(</span>
             &quot;SPEDS version is missing in the initialization parameters.&quot;);
       }
 
-<span class="fc bfc" id="L94" title="All 2 branches covered.">      if (spedsReference == null) {</span>
-<span class="fc" id="L95">        throw new ParameterException(</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">      if (spedsReference == null) {</span>
+<span class="fc" id="L94">        throw new ParameterException(</span>
             &quot;SPEDS reference is missing in the initialization parameters.&quot;);
       }
 
-<span class="fc" id="L99">      final NetworkHost host = Optional.ofNullable(initNetworkHost(parameters))</span>
-<span class="pc" id="L100">          .orElseThrow(() -&gt; new ParameterException(&quot;Host is null.&quot;));</span>
+<span class="fc" id="L98">      final Integer pollerMaxQueueCapacity =</span>
+<span class="fc" id="L99">          (Integer) params.getOptions().getOrDefault(&quot;speds.tra.poller.maxQueueCapacity&quot;, 100);</span>
+<span class="fc" id="L100">      final Integer pollerNbThreads =</span>
+<span class="fc" id="L101">          (Integer) params.getOptions().getOrDefault(&quot;speds.tra.poller.nbThreads&quot;, 1);</span>
+<span class="fc" id="L102">      final Integer pollerSleepMs =</span>
+<span class="fc" id="L103">          (Integer) params.getOptions().getOrDefault(&quot;speds.tra.poller.sleepMs&quot;, 200);</span>
 
-<span class="fc" id="L102">      traHost =</span>
-          new ImmutableTransportHost(host, spedsVersion, spedsReference, new PollingManager(host),
-              identifierGenerator);
-<span class="fc" id="L105">    } catch (JsonProcessingException e) {</span>
-<span class="fc" id="L106">      throw new ParameterException(&quot;Cannot read initialization parameters&quot; + e.getMessage());</span>
-<span class="fc" id="L107">    }</span>
+<span class="fc" id="L105">      final NetworkHost host = Optional.ofNullable(initNetworkHost(parameters))</span>
+<span class="pc" id="L106">          .orElseThrow(() -&gt; new ParameterException(&quot;Host is null.&quot;));</span>
+<span class="fc" id="L107">      traHost = new ImmutableTransportHost(host, spedsVersion, spedsReference, identifierGenerator,</span>
+          pollerMaxQueueCapacity, pollerNbThreads, pollerSleepMs);
+<span class="fc" id="L109">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L110">      throw new ParameterException(&quot;Cannot read initialization parameters&quot; + e.getMessage());</span>
+<span class="fc" id="L111">    }</span>
 
-<span class="fc" id="L109">    logger.trace(Trace.EXIT_METHOD_1, &quot;traHost&quot;, traHost);</span>
-<span class="fc" id="L110">    return traHost;</span>
+<span class="fc" id="L113">    logger.trace(Trace.EXIT_METHOD_1, &quot;traHost&quot;, traHost);</span>
+<span class="fc" id="L114">    return traHost;</span>
   }
 
   @Override
   public NetworkHost initNetworkHost(String parameters) throws ParameterException {
-<span class="fc" id="L115">    logger.trace(Trace.ENTER_METHOD_1, &quot;parameters&quot;, parameters);</span>
+<span class="fc" id="L119">    logger.trace(Trace.ENTER_METHOD_1, &quot;parameters&quot;, parameters);</span>
 
-<span class="fc" id="L117">    final NetworkHost networkHost = networkFactory.initHost(parameters);</span>
+<span class="fc" id="L121">    final NetworkHost networkHost = networkFactory.initHost(parameters);</span>
 
-<span class="fc" id="L119">    logger.trace(Trace.EXIT_METHOD_1, &quot;networkHost&quot;, networkHost);</span>
-<span class="fc" id="L120">    return networkHost;</span>
+<span class="fc" id="L123">    logger.trace(Trace.EXIT_METHOD_1, &quot;networkHost&quot;, networkHost);</span>
+<span class="fc" id="L124">    return networkHost;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

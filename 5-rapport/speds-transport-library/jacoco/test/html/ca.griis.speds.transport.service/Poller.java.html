@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Poller.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.service</a> &gt; <span class="el_source">Poller.java</span></div><h1>Poller.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe Poller.
+ * @brief @~english Poller class implementation.
+ */
+
+package ca.griis.speds.transport.service;
+
+import ca.griis.js2p.gen.speds.transport.api.dto.Header45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Debug;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.api.NetworkHost;
+import ca.griis.speds.transport.serializer.SharedObjectMapper;
+import ca.griis.speds.transport.service.client.ExchangeDataConfirmation;
+import ca.griis.speds.transport.service.server.ExchangeDataReply;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Traite les messages reçus de la couche transport.
+ * @par Détails
+ *      Respecte l'architecture de producteur/consommateur.
+ * 
+ *      Le producteur est un ou des fils d'exécution qui récupère des messages via la couche réseau,
+ *      et traitent ceux-ci en fonction du type de message transport. Quand il y a des données à
+ *      échanger avec le consommateur, il les ajoute à une file bloquante.
+ * 
+ *      Le consommateur est celui qui récupère les données, et c'est celui consomme la file de
+ *      données bloquantes. Quand il n'y pas de données, il attend d'en reçevoir.
+ * 
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-20 [FO] - Seconde refactorisation majeure&lt;br&gt;
+ *      2025-06-20 [FO] - Refactorisation majeure&lt;br&gt;
+ *      2025-05-14 [CB] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class Poller implements AutoCloseable {
+<span class="fc" id="L74">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(Poller.class);</span>
+
+<span class="fc" id="L76">  private static final DataReplyMessages poisonPill = new DataReplyMessages(&quot;&quot;, &quot;&quot;);</span>
+
+  private final LinkedBlockingQueue&lt;DataReplyMessages&gt; data;
+  private final NetworkHost networkHost;
+  private final ExecutorService service;
+  private final AtomicBoolean alreadyStarted;
+  private final AtomicBoolean closed;
+  private final ExchangeDataReply indication;
+  private final ExchangeDataConfirmation confirm;
+  private final Integer sleepMs;
+
+  public Poller(NetworkHost networkHost, ExchangeDataReply indication,
+      ExchangeDataConfirmation confirm, Integer maxQueueCapacity, Integer nbThreads,
+<span class="fc" id="L89">      Integer sleepMs) {</span>
+<span class="fc" id="L90">    logger.trace(Trace.ENTER_METHOD_6, &quot;networkHost&quot;, networkHost, &quot;indication&quot;, indication,</span>
+        &quot;confirm&quot;, confirm, &quot;maxQueueCapacity&quot;, maxQueueCapacity, &quot;nbThreads&quot;, nbThreads, &quot;sleepMs&quot;,
+        sleepMs);
+
+<span class="fc" id="L94">    this.data = new LinkedBlockingQueue&lt;&gt;(maxQueueCapacity);</span>
+<span class="fc" id="L95">    this.networkHost = networkHost;</span>
+<span class="fc" id="L96">    this.service = Executors.newFixedThreadPool(nbThreads);</span>
+<span class="fc" id="L97">    this.alreadyStarted = new AtomicBoolean(false);</span>
+<span class="fc" id="L98">    this.closed = new AtomicBoolean(false);</span>
+<span class="fc" id="L99">    this.indication = indication;</span>
+<span class="fc" id="L100">    this.confirm = confirm;</span>
+<span class="fc" id="L101">    this.sleepMs = sleepMs;</span>
+<span class="fc" id="L102">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L106">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L108">    closed.set(true);</span>
+
+    try {
+<span class="fc" id="L111">      networkHost.close();</span>
+<span class="nc" id="L112">    } catch (Exception ex) {</span>
+<span class="nc" id="L113">      logger.error(Error.GENERIC_ERROR, ex);</span>
+<span class="fc" id="L114">    }</span>
+
+<span class="fc" id="L116">    shutdown();</span>
+
+<span class="fc" id="L118">    data.clear();</span>
+
+    try {
+<span class="fc" id="L121">      data.put(poisonPill);</span>
+<span class="nc" id="L122">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L123">      Thread.currentThread().interrupt();</span>
+<span class="fc" id="L124">    }</span>
+
+<span class="fc" id="L126">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L127">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Consomme une donnée.
+   * @param queue Le file bloquante de données.
+   * @exception RuntimeException En cas d'une erreur d'interruption.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public DataReplyMessages poll() {
+<span class="fc" id="L143">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L145">    start();</span>
+
+<span class="fc" id="L147">    DataReplyMessages result = null;</span>
+    try {
+<span class="fc" id="L149">      result = data.take();</span>
+<span class="fc" id="L150">    } catch (InterruptedException e) {</span>
+<span class="fc" id="L151">      Thread.currentThread().interrupt();</span>
+<span class="fc" id="L152">    }</span>
+
+<span class="fc bfc" id="L154" title="All 2 branches covered.">    if (result == null) {</span>
+<span class="fc" id="L155">      throw new IllegalStateException(&quot;BlockingQueue returned null, which should be impossible&quot;);</span>
+    }
+
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">    if (result.equals(poisonPill)) {</span>
+<span class="nc" id="L159">      throw new RuntimeException(&quot;Poison pill&quot;);</span>
+    }
+
+<span class="fc" id="L162">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L163">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french DÉmarre le traitement les messages de la couche transport reçus.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public void start() {
+<span class="fc bfc" id="L178" title="All 2 branches covered.">    if (alreadyStarted.compareAndSet(false, true)) {</span>
+<span class="fc" id="L179">      service.execute(() -&gt; {</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        while (closed.get() == false) {</span>
+          try {
+<span class="fc" id="L182">            String idu = networkHost.indication();</span>
+
+<span class="fc bfc" id="L184" title="All 2 branches covered.">            if (StringUtils.isNotEmpty(idu)) {</span>
+              try {
+<span class="fc" id="L186">                final InterfaceDataUnit45Dto receivedIdu = SharedObjectMapper.getInstance()</span>
+<span class="fc" id="L187">                    .getMapper().readValue(idu, InterfaceDataUnit45Dto.class);</span>
+
+<span class="fc" id="L189">                final String pdu = receivedIdu.getMessage();</span>
+                final ProtocolDataUnit4TraDto receivedPdu =
+<span class="fc" id="L191">                    SharedObjectMapper.getInstance().getMapper()</span>
+<span class="fc" id="L192">                        .readValue(pdu, ProtocolDataUnit4TraDto.class);</span>
+<span class="fc" id="L193">                final Header45Dto receivedHeader = receivedPdu.getHeader();</span>
+<span class="fc" id="L194">                final Header45Dto.Msgtype msgType = receivedHeader.getMsgtype();</span>
+
+<span class="fc bfc" id="L196" title="All 2 branches covered.">                if (msgType.equals(Header45Dto.Msgtype.TRA_MSG_ENV)) {</span>
+<span class="fc" id="L197">                  DataReplyMessages result = indication.indication(receivedIdu);</span>
+<span class="fc" id="L198">                  data.put(result);</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">                } else if (msgType.equals(Header45Dto.Msgtype.TRA_MSG_REC)) {</span>
+<span class="fc" id="L200">                  confirm.confirm(receivedIdu);</span>
+                } else {
+<span class="nc" id="L202">                  logger.error(Error.IGNORED_ERROR,</span>
+<span class="nc" id="L203">                      &quot;PDU with this message type is ignored: &quot; + receivedHeader.getId());</span>
+                }
+<span class="fc" id="L205">              } catch (SilentIgnoredException ex) {</span>
+<span class="fc" id="L206">                logger.error(Error.IGNORED_ERROR, ex);</span>
+<span class="nc" id="L207">              } catch (JsonProcessingException | InterruptedException ex) {</span>
+<span class="nc" id="L208">                logger.error(Error.IGNORED_ERROR, ex);</span>
+<span class="fc" id="L209">              }</span>
+            }
+
+<span class="fc" id="L212">            sleep();</span>
+<span class="nc" id="L213">          } catch (Exception ex) {</span>
+<span class="nc" id="L214">            logger.error(Error.IGNORED_ERROR, ex);</span>
+<span class="pc" id="L215">          }</span>
+        }
+<span class="fc" id="L217">      });</span>
+    }
+<span class="fc" id="L219">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Suspendre le producteur.
+   *
+   * @note 2025-06-20 - Cela est discutable, mais cela permet de laisser du répis aux autres fils
+   *       d'exécution.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  protected void sleep() {
+<span class="fc" id="L236">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+    try {
+<span class="fc" id="L239">      Thread.sleep(sleepMs);</span>
+<span class="nc" id="L240">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L241">      Thread.currentThread().interrupt();</span>
+<span class="fc" id="L242">    }</span>
+
+<span class="fc" id="L244">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L245">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Désalloue le producteur non bloquant.
+   *
+   * @note 2024-02-20 - Comment correctement gérer l'exception d'interruption durant la
+   *       désallocation du service d'exécution:
+   *       https://www.baeldung.com/java-executor-wait-for-threads
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  protected void shutdown() {
+<span class="fc" id="L263">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L265">    service.shutdown();</span>
+    try {
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">      if (!service.awaitTermination(5, TimeUnit.SECONDS)) {</span>
+<span class="nc" id="L268">        service.shutdownNow();</span>
+      }
+<span class="nc" id="L270">    } catch (InterruptedException e) {</span>
+<span class="nc" id="L271">      logger.debug(Debug.VARIABLE_LOGGING_1, &quot;e&quot;, e);</span>
+
+<span class="nc" id="L273">      service.shutdownNow();</span>
+
+<span class="nc" id="L275">      Thread.currentThread().interrupt();</span>
+<span class="fc" id="L276">    }</span>
+
+<span class="fc" id="L278">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L279">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
