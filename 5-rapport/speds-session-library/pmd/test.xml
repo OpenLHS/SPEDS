@@ -1,3 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd" version="6.51.0" timestamp="2025-08-15T09:13:21.636">
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd" version="6.51.0" timestamp="2026-05-22T15:24:09.939">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\test\java\ca\griis\speds\session\integration\Cases.java">
+<violation beginline="79" endline="2735" begincolumn="8" endcolumn="1" rule="CyclomaticComplexity" ruleset="Design" package="ca.griis.speds.session.integration" class="Cases" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The class 'Cases' has a total cyclomatic complexity of 123 (highest 18).
+</violation>
+<violation beginline="90" endline="244" begincolumn="17" endcolumn="3" rule="CyclomaticComplexity" ruleset="Design" package="ca.griis.speds.session.integration" class="Cases" method="ct_01" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'ct_01(Environment, Scenario, Initiator)' has a cyclomatic complexity of 11.
+</violation>
+<violation beginline="246" endline="424" begincolumn="17" endcolumn="3" rule="CyclomaticComplexity" ruleset="Design" package="ca.griis.speds.session.integration" class="Cases" method="ct_02" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'ct_02(Environment, Scenario, String)' has a cyclomatic complexity of 10.
+</violation>
+<violation beginline="426" endline="610" begincolumn="17" endcolumn="3" rule="CyclomaticComplexity" ruleset="Design" package="ca.griis.speds.session.integration" class="Cases" method="ct_03" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'ct_03(Environment, Scenario, String, Initiator)' has a cyclomatic complexity of 17.
+</violation>
+<violation beginline="800" endline="1032" begincolumn="17" endcolumn="3" rule="CyclomaticComplexity" ruleset="Design" package="ca.griis.speds.session.integration" class="Cases" method="ct_05" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'ct_05(Environment, Scenario, String, Initiator)' has a cyclomatic complexity of 16.
+</violation>
+<violation beginline="1251" endline="1488" begincolumn="17" endcolumn="3" rule="CyclomaticComplexity" ruleset="Design" package="ca.griis.speds.session.integration" class="Cases" method="ct_07" externalInfoUrl="https://pmd.github.io/pmd-6.51.0/pmd_rules_java_design.html#cyclomaticcomplexity" priority="3">
+The method 'ct_07(Environment, Scenario, String, Initiator)' has a cyclomatic complexity of 18.
+</violation>
+</file>
 </pmd>

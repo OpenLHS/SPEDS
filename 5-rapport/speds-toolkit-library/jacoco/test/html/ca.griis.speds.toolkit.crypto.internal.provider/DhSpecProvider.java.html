@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DhSpecProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-toolkit-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.toolkit.crypto.internal.provider</a> &gt; <span class="el_source">DhSpecProvider.java</span></div><h1>DhSpecProvider.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe DhSpecProvider.
+ * @brief @~english Contains description of DhSpecProvider class.
+ */
+
+package ca.griis.speds.toolkit.crypto.internal.provider;
+
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.AlgorithmCategory;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SpedsLayer;
+import ca.griis.security.api.SecurityService;
+import ca.griis.security.api.domain.spec.SecuritySpec;
+import ca.griis.speds.toolkit.crypto.internal.converter.facade.spec.DhGenAlgo;
+import ca.griis.speds.toolkit.crypto.internal.converter.facade.spec.DhSpecGenConverter;
+import ca.griis.speds.toolkit.crypto.internal.reader.CipherSuiteDtoReader;
+import java.util.Optional;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre de génèrer une spéfication d'algorithme de Diffie-Hellman.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-12-03 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class DhSpecProvider extends SpecBaseProvider {
+  DhSpecProvider(SecurityService facade, CipherSuiteDtoReader reader) {
+<span class="fc" id="L54">    super(facade, reader);</span>
+<span class="fc" id="L55">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Génère une spéfication d'algorithme de Diffie-Hellman à partir d'une couche de
+   *        protocole.
+   * @param spedsLayer La couche de protocole de SPEDS.
+   * @return Spéfication d'algorithme de Diffie-Hellman si possible.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public Optional&lt;SecuritySpec&gt; getSpec(SpedsLayer spedsLayer) {
+<span class="fc" id="L72">    var profile = reader.getSecurityProfile(spedsLayer, AlgorithmCategory.DH);</span>
+<span class="fc" id="L73">    Optional&lt;SecuritySpec&gt; spec = super.getSpec(AlgorithmCategory.DH, profile, false);</span>
+
+<span class="fc bfc" id="L75" title="All 2 branches covered.">    if (spec.isEmpty()) {</span>
+<span class="fc" id="L76">      var dhAlgo = reader.getSecurityAlgo(spedsLayer, AlgorithmCategory.DH);</span>
+<span class="fc" id="L77">      var symmAlgo = reader.getSecurityAlgo(spedsLayer, AlgorithmCategory.SYMM);</span>
+<span class="pc bpc" id="L78" title="2 of 4 branches missed.">      if (dhAlgo.isPresent() &amp;&amp; symmAlgo.isPresent()) {</span>
+<span class="fc" id="L79">        var dhGenAlgo = new DhGenAlgo(dhAlgo.get(), symmAlgo.get());</span>
+<span class="fc" id="L80">        spec = Optional.of(new DhSpecGenConverter().apply(dhGenAlgo));</span>
+      }
+    }
+
+<span class="fc" id="L84">    return spec;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

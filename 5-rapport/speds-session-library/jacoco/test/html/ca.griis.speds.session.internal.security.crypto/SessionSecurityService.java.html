@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SessionSecurityService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.security.crypto</a> &gt; <span class="el_source">SessionSecurityService.java</span></div><h1>SessionSecurityService.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SessionSecurityService.
+ * @brief @~english Implementation of the SessionSecurityService class.
+ */
+
+package ca.griis.speds.session.internal.security.crypto;
+
+import static ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SpedsLayer.SESSION;
+
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.AlgorithmCategory;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.exception.ParameterException;
+import ca.griis.speds.session.internal.security.CertificatePrivateKeysEntry;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import java.util.UUID;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre un service de sécurité utilisé par la couche session et qui utilise
+ *        speds-toolkit directement.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-03-13 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SessionSecurityService {
+<span class="fc" id="L73">  private static final GriisLogger logger =</span>
+<span class="fc" id="L74">      GriisLoggerFactory.getLogger(SessionSecurityService.class);</span>
+
+  private final CryptographyService cryptographyService;
+
+<span class="fc" id="L78">  public SessionSecurityService(CryptographyService cryptographyService) {</span>
+<span class="fc" id="L79">    this.cryptographyService = cryptographyService;</span>
+<span class="fc" id="L80">  }</span>
+
+  public CertificatePrivateKeysEntry getCertificatePrivateKey(String certificatePem,
+      String privateKeyPem) throws ParameterException {
+    final Certificate certificate;
+    final PrivateKey privateKey;
+<span class="fc" id="L86">    byte[] encoded = new byte[0];</span>
+    try {
+<span class="fc" id="L88">      final CertificateFactory cf = CertificateFactory.getInstance(&quot;X.509&quot;);</span>
+<span class="fc" id="L89">      certificate = cf.generateCertificate(</span>
+<span class="fc" id="L90">          new ByteArrayInputStream(Base64.getDecoder().decode(certificatePem)));</span>
+
+<span class="fc" id="L92">      encoded = Base64.getDecoder().decode(privateKeyPem);</span>
+<span class="fc" id="L93">      final KeyFactory keyFactory = KeyFactory.getInstance(&quot;RSA&quot;);</span>
+<span class="fc" id="L94">      final PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);</span>
+<span class="fc" id="L95">      privateKey = keyFactory.generatePrivate(keySpec);</span>
+<span class="nc" id="L96">    } catch (CertificateException | InvalidKeySpecException | NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L97">      final String exception =</span>
+          &quot;Problems encountered while importing Session certificate and private key: &quot;
+<span class="nc" id="L99">              + e.getMessage();</span>
+<span class="nc" id="L100">      throw new ParameterException(exception);</span>
+    } finally {
+<span class="fc" id="L102">      SessionKeyDestroyer.destroy(encoded);</span>
+    }
+
+<span class="fc" id="L105">    final CertificatePrivateKeysEntry certificatePrivateKeyEntry =</span>
+        new CertificatePrivateKeysEntry(certificate, privateKey);
+<span class="fc" id="L107">    logger.trace(Trace.EXIT_METHOD_1, &quot;certificatePrivateKeyEntry&quot;, certificatePrivateKeyEntry);</span>
+<span class="fc" id="L108">    return certificatePrivateKeyEntry;</span>
+  }
+
+  public PublicKey base64ToPublicKey(String base64PublicKey)
+      throws NoSuchAlgorithmException, InvalidKeySpecException {
+<span class="fc" id="L113">    byte[] keyBytes = Base64.getDecoder().decode(base64PublicKey);</span>
+<span class="fc" id="L114">    X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);</span>
+<span class="fc" id="L115">    var algo = cryptographyService.getAlgorithm(SESSION, AlgorithmCategory.ASYM);</span>
+
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">    if (!algo.contains(&quot;RSA&quot;)) {</span>
+<span class="nc" id="L118">      throw new NoSuchAlgorithmException(</span>
+          algo + &quot;Impossible to create a public key from this algo: &quot; + algo);
+    }
+    /**
+     * @note 2026-03-10 - Seulement RSA est disonible pour un chiffrement asymétrique avec la
+     *       bibliothèque de speds-toolkit.
+     */
+<span class="fc" id="L125">    KeyFactory keyFactory = KeyFactory.getInstance(&quot;RSA&quot;);</span>
+<span class="fc" id="L126">    return keyFactory.generatePublic(spec);</span>
+  }
+
+  public SecretKey base64ToSecretKey(String base64Key) {
+<span class="fc" id="L130">    String algo = cryptographyService.getAlgorithm(SESSION, AlgorithmCategory.SYMM);</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">    if (!algo.contains(&quot;AES&quot;)) {</span>
+<span class="nc" id="L132">      throw new RuntimeException(&quot;Unsupported algo for secret key creation&quot;);</span>
+    }
+
+<span class="fc" id="L135">    byte[] keyBytes = Base64.getDecoder().decode(base64Key);</span>
+<span class="fc" id="L136">    SecretKey key = new SecretKeySpec(keyBytes, 0, keyBytes.length, &quot;AES&quot;);</span>
+<span class="fc" id="L137">    SessionKeyDestroyer.destroy(keyBytes);</span>
+
+<span class="fc" id="L139">    return key;</span>
+  }
+
+  public PublicKey convertToDhPublicKey(String base64PublicKey)
+      throws NoSuchAlgorithmException, InvalidKeySpecException {
+<span class="fc" id="L144">    String algo = cryptographyService.getAlgorithm(SESSION, AlgorithmCategory.DH);</span>
+<span class="fc" id="L145">    final byte[] publicBytes = Base64.getDecoder().decode(base64PublicKey);</span>
+<span class="fc" id="L146">    final X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicBytes);</span>
+<span class="fc" id="L147">    final KeyFactory keyFactory = KeyFactory.getInstance(algo);</span>
+
+<span class="fc" id="L149">    PublicKey publicKey = keyFactory.generatePublic(keySpec);</span>
+<span class="fc" id="L150">    return publicKey;</span>
+  }
+
+  public Boolean verifyStamp(byte[] stamp, byte[] data, SecretKey secretKey) {
+<span class="fc" id="L154">    Boolean result = false;</span>
+
+    try {
+<span class="fc" id="L157">      final byte[] hashValue = cryptographyService.hash(SESSION, data);</span>
+<span class="fc" id="L158">      final byte[] decryptedStamp = cryptographyService.decryptSymmetric(SESSION, secretKey, stamp);</span>
+<span class="fc" id="L159">      result = MessageDigest.isEqual(hashValue, decryptedStamp);</span>
+<span class="fc" id="L160">    } catch (Exception ex) {</span>
+<span class="fc" id="L161">      logger.error(Error.IGNORED_ERROR, ex);</span>
+<span class="fc" id="L162">    }</span>
+
+<span class="fc" id="L164">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L165">    return result;</span>
+  }
+
+  public Boolean verifyToken(UUID token, SecretKey secretKey, String data) {
+<span class="fc" id="L169">    logger.trace(Trace.ENTER_METHOD_3, &quot;token&quot;, token, &quot;secretKey&quot;, secretKey, &quot;data&quot;, data);</span>
+
+<span class="fc" id="L171">    Boolean result = false;</span>
+
+    try {
+<span class="fc" id="L174">      final byte[] tokenByte = token.toString().getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L175">      final byte[] tokenToValidate =</span>
+<span class="fc" id="L176">          cryptographyService.decryptSymmetric(SESSION, secretKey,</span>
+<span class="fc" id="L177">              Base64.getDecoder().decode(data));</span>
+<span class="fc" id="L178">      result = MessageDigest.isEqual(tokenToValidate, tokenByte);</span>
+<span class="fc" id="L179">    } catch (Exception ex) {</span>
+<span class="fc" id="L180">      logger.error(Error.IGNORED_ERROR, ex);</span>
+<span class="fc" id="L181">    }</span>
+
+<span class="fc" id="L183">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L184">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

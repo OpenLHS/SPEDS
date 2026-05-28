@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Spécification des essais de conceptions (CXS) de SPEDS Transport">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification des Essais - « SPEDS transport »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification des Essais -  « <em>SPEDS transport</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_historique">1. Historique</a></li>
+<li><a href="#_référence">2. Référence</a></li>
+<li><a href="#_contexte_général_des_tests">3. Contexte général des tests</a></li>
+<li><a href="#_éléments_testées">4. Éléments Testées</a></li>
+<li><a href="#_hypothèse">5. Hypothèse</a></li>
+<li><a href="#_données_globales">6. Données globales</a></li>
+<li><a href="#_incongruités">7. Incongruités</a></li>
+<li><a href="#_cas_de_test">8. Cas de Test</a>
+<ul class="sectlevel2">
+<li><a href="#_cas_de_test_pour_les_processus_du_côté_client">8.1. Cas de test pour les processus du côté client</a>
+<ul class="sectlevel3">
+<li><a href="#CT_01">8.1.1. [CT_01] Envoi réussi d&#8217;une demande de requête d&#8217;échange des données</a></li>
+<li><a href="#CT_02">8.1.2. [CT_02] Échec de l&#8217;envoi d&#8217;une demande de requête d&#8217;échange des données</a></li>
+<li><a href="#CT_03">8.1.3. [CT_03] Réception d&#8217;une réponse d&#8217;échange de données avec MessageId inconnu</a></li>
+<li><a href="#CT_04">8.1.4. [CT_04] Réception d&#8217;une réponse d&#8217;échange de données avec sceau d&#8217;entête invalide</a></li>
+</ul>
+</li>
+<li><a href="#_cas_de_test_pour_les_processus_du_côté_serveur">8.2. Cas de test pour les processus du côté serveur</a>
+<ul class="sectlevel3">
+<li><a href="#CT_05">8.2.1. [CT_05] Échec de réception : intégrité de l&#8217;entête est invalide</a></li>
+<li><a href="#CT_06">8.2.2. [CT_06] Échec de réception: intégrité du contenu invalide</a></li>
+<li><a href="#CT_07">8.2.3. [CT_07] Réponse à un échange : MessageId attendu</a></li>
+<li><a href="#CT_08">8.2.4. [CT_08] Réponse à un échange : MessageId non attendu</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_essais">9. Essais</a>
+<ul class="sectlevel2">
+<li><a href="#_descriptions">9.1. Descriptions</a></li>
+</ul>
+</li>
+<li><a href="#_matrice_de_correspondance_élémentsessais">10. Matrice de correspondance Éléments/Essais</a></li>
+<li><a href="#_annexe">11. Annexe</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec essai prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">AS</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-03-04 13:46</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-03-04 13:53</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_historique">1. Historique</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 58.3333%;">
+<col style="width: 16.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Modification</th>
+<th class="tableblock halign-left valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1ère itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-02-17</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2ème itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-05-22</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3ème itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-06-05</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4ème itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-06-20</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5ème itération<br>
+Retrait des essais portants sur le modèle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-06-25</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6ème itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-08-05</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7ème itération <br>
+Simplification de la couche</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-12-12</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7ème itération<br>
+reprise de tâche (speds v7)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2026-02-10</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8ème itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2026-02-25</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9ème itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2026-03-04</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_référence">2. Référence</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col>
+<col style="width: 12%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Consultation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4-speds-transport-scs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-03-04</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contexte_général_des_tests">3. Contexte général des tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ce document définit les essais nécessaires pour vérifier et valider les échanges des interfaces de la couche transport.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_éléments_testées">4. Éléments Testées</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[PRO-01] Demande d’échanger des données</dt>
+<dd>
+<p>Demande d&#8217;échanger des données sous une requête.</p>
+</dd>
+<dt class="hdlist1">[PRO-02] Traite une réponse d’échange de données</dt>
+<dd>
+<p>Traite une réponse sous une indication.</p>
+</dd>
+<dt class="hdlist1">[PRO-03] Traite l&#8217;échange de données</dt>
+<dd>
+<p>Traite la demande d&#8217;échange de données, valide celle-ci. Quand celle-ci est valide, le receveur de données rapporte (indique) les données.</p>
+</dd>
+<dt class="hdlist1">[PRO-04] Répond à un échange de données</dt>
+<dd>
+<p>Répond à l&#8217;échange de données traitée.</p>
+</dd>
+<dt class="hdlist1">[PRO-05] Confirme l’échange de données</dt>
+<dd>
+<p>Confirme l&#8217;échange de données.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèse">5. Hypothèse</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[HYP-01]
+</td>
+<td class="hdlist2">
+<p>Il n&#8217;y a aucune entrave à la communication pour les messages transmis sur la couche transport.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[HYP-02]
+</td>
+<td class="hdlist2">
+<p>À moins d’indication contraire, les chaînes de caractères reçues en entrées sont réputées être valides et correspondre au schéma JSON attendu.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_données_globales">6. Données globales</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Initialisation d&#8217;une entité</strong> <a id="init_entity"></a></p>
+</div>
+<div class="paragraph">
+<p>Nécessite:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Les valeurs pour SPEDS fournit par l&#8217;environnement où une version de SPEDS et une référence de SPEDS.</p>
+</li>
+</ul>
+</div>
+<div id="version_speds" class="dlist">
+<dl>
+<dt class="hdlist1">Version SPEDS</dt>
+<dd>
+<p>Une même valeur paramétrable pour tous les cas de tests.</p>
+</dd>
+</dl>
+</div>
+<div id="ref_speds" class="dlist">
+<dl>
+<dt class="hdlist1">Réference SPEDS</dt>
+<dd>
+<p>Une même valeur paramétrable pour tous les cas de tests.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">7. Incongruités</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cas_de_test">8. Cas de Test</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_cas_de_test_pour_les_processus_du_côté_client">8.1. Cas de test pour les processus du côté client</h3>
+<div class="sect3">
+<h4 id="CT_01">8.1.1. [CT_01] Envoi réussi d&#8217;une demande de requête d&#8217;échange des données</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Envoi réussi d&#8217;une demande d&#8217;échange de données valide.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_01_E1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {Any string}
+    "destination_code": {Any string}
+    "source_iri": {Any iri}
+    "destination_iri": {Any iri}
+    "service": {transfer}
+    "service_primitive": {request}
+  "message": {Any string}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-3-4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_01_E2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {CT_01_E1_source_code}
+    "destination_code": {CT_01_E1_destination_code}
+    "source_iri": {CT_01_E1_source_iri}
+    "destination_iri": {CT_01_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": {confirm}
+  "message": {SUCCEED}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_01_E3</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {Any iri}
+    "destination_iri": {Any iri}
+    "service": {transfer}
+    "service_primitive": {indication}
+"message":
+    "header":
+        "msgtype": "TRA.MSG.REC"
+        "id": {CT_01-S1_message→header→id}
+        "source_code": {Any code}
+        "destination_code": {Any code}
+        "SPEDS":
+            "version": {version_speds}
+            "reference": {ref_speds}
+    "stamp":
+        "header_seal": {header_seal_valid}
+        "content_seal": {content_seal_valid}
+    "content": {Any String}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_01_S1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {CT_01_E1_source_iri}
+    "destination_iri": {CT_01_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": {request}
+"message":
+    "header":
+        "msgtype": "TRA.MSG.ENV"
+        "id": {Any uuid}
+        "source_code": {CT_01_E1_source_code}
+        "destination_code": {CT_01_E1_destination_code}
+        "SPEDS":
+            "version": {version_speds}
+            "reference": {ref_speds}
+    "stamp":
+        "header_seal": {header_seal_valid}
+        "content_seal": {content_seal_valid}
+    "content": {CT_01_E1_message}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_01_S2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {CT_01_E3_source_code}
+    "destination_code": {CT_01_E3_destination_code}
+    "source_iri": {CT_01_E3_source_iri}
+    "destination_iri": {CT_01_E3_destination_iri}
+    "service": {transfer}
+    "service_primitive": {confirm}
+  "message": {SUCCEED}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-3-4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_01_S3</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {CT_01_E3_source_iri}
+    "destination_iri": {CT_01_E3_destination_iri}
+    "service": {transfer}
+    "service_primitive": {response}
+  "message": "SUCCEED"</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel du processus "[PRO-01] Processus Demande d&#8217;échanger des données" avec <code>CT_01_E1</code></p>
+</li>
+<li>
+<p>Appel du processus "[PRO-05] Confirme l&#8217;échange de données" avec <code>CT_01_E2</code></p>
+</li>
+<li>
+<p>Appel du processus "[PRO-02] Traite une réponse d&#8217;échange de données" avec <code>CT_01_E3</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Critères de succès</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Transmission reussite de <code>CT_01_S1</code> dans un délai <code>T_max</code>.</p>
+</li>
+<li>
+<p>Transmission reussite de <code>CT_01_S2</code> dans un délai <code>T_max</code> avec un message <code>SUCCEED</code>.</p>
+</li>
+<li>
+<p>Transmission reussite de <code>CT_01_S3</code> dans un délai <code>T_max</code> avec un message <code>SUCCEED</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="CT_02">8.1.2. [CT_02] Échec de l&#8217;envoi d&#8217;une demande de requête d&#8217;échange des données</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Échec de l&#8217;envoi d&#8217;une demande d&#8217;échange de données, la couche inférieure confirme un échec.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_02_E1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {Any string}
+    "destination_code": {Any string}
+    "source_iri": {Any iri}
+    "destination_iri": {Any iri}
+    "service": {transfer}
+    "service_primitive": {request}
+  "message": {Any string}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-3-4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_02_E2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {CT_02_E1_source_code}
+    "destination_code": {CT_02_E1_destination_code}
+    "source_iri": {CT_02_E1_source_iri}
+    "destination_iri": {CT_02_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": {confirm}
+  "message": {FAILED: _raison de l'échec_}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_02_S1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {CT_01_E1_source_iri}
+    "destination_iri": {CT_01_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": {request}
+"message":
+    "header":
+        "msgtype": "TRA.MSG.ENV"
+        "id": {Any uuid}
+        "source_code": {CT_01_E1_source_code}
+        "destination_code": {CT_01_E1_destination_code}
+        "SPEDS":
+            "version": {version_speds}
+            "reference": {ref_speds}
+    "stamp":
+        "header_seal": {header_seal_valid}
+        "content_seal": {content_seal_valid}
+    "content": {CT_01_E1_message}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_02_S2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {CT_02_E1_source_code}
+    "destination_code": {CT_02_E1_destination_code}
+    "source_iri": {CT_02_E1_source_iri}
+    "destination_iri": {CT_02_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": {confirm}
+  "message": {FAILED: _raison de l'échec_}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-3-4</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel du processus "[PRO-01] Processus Demande d&#8217;échanger des données" avec <code>CT_02_E1</code></p>
+</li>
+<li>
+<p>Appel du processus "[PRO-05] Confirme l&#8217;échange de données" avec <code>CT_02_E2</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Critères de succès</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Transmission reussite de <code>CT_02_S1</code> dans un délai <code>T_max</code>.</p>
+</li>
+<li>
+<p>Transmission reussite de <code>CT_02_S2</code> dans un délai <code>T_max</code> avec un message <code>FAILED: <em>raison de l&#8217;échec</em></code>.</p>
+</li>
+<li>
+<p>Le processus s&#8217;arrête après l&#8217;envoi du <code>CT_02_S2</code></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="CT_03">8.1.3. [CT_03] Réception d&#8217;une réponse d&#8217;échange de données avec MessageId inconnu</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;une réponse d&#8217;échange non attendu (id inconnu), et envoi d&#8217;un accusé FAILED à la couche inférieure.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_03_E1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {Any iri}
+    "destination_iri": {Any iri}
+    "service": {transfer}
+    "service_primitive": {indication}
+"message":
+    "header":
+        "msgtype": "TRA.MSG.REC"
+        "id": {Any uuid}
+        "source_code": {Any code}
+        "destination_code": {Any code}
+        "SPEDS":
+            "version": {version_speds}
+            "reference": {ref_speds}
+    "stamp":
+        "header_seal": {header_seal_valid}
+        "content_seal": {content_seal_valid}
+    "content": {Any String}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_03_S1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {CT_03_E1_source_code}
+    "destination_code": {CT_03_E1_destination_code}
+    "source_iri": {CT_03_E1_source_iri}
+    "destination_iri": {CT_03_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": {response}
+  "message": {FAILED: _raison de l'échec_}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel du processus "[PRO-02] Traite une réponse d&#8217;échange de données" avec <code>CT_03_E1</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Critères de succès</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Transmission reussite de <code>CT_03_S1</code> dans un délai <code>T_max</code> avec un message <code>FAILED: <em>raison de l&#8217;échec</em></code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="CT_04">8.1.4. [CT_04] Réception d&#8217;une réponse d&#8217;échange de données avec sceau d&#8217;entête invalide</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;une réponse d&#8217;échange attendu mais la vérification du champ <code>header_seal</code> échoue.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_04_E1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {Any string}
+    "destination_code": {Any string}
+    "source_iri": {Any iri}
+    "destination_iri": {Any iri}
+    "service": {transfer}
+    "service_primitive": "request"
+"message": {Any string}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-3-4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_04_E2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {CT_04_E1_source_iri}
+    "destination_iri": {CT_04_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": "indication"
+"message":
+    "header":
+        "msgtype": "TRA.MSG.REC"
+        "id": {CT_04_S1_message-&gt;header-&gt;id}
+        "source_code": {Any code}
+        "destination_code": {Any code}
+        "SPEDS":
+            "version": {version_speds}
+            "reference": {ref_speds}
+    "stamp":
+        "header_seal": {header_seal_invalid}
+        "content_seal": {content_seal_valid}
+    "content": {Any string}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_04_S1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {CT_04_E1_source_iri}
+    "destination_iri": {CT_04_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": "request"
+"message":
+    "header":
+        "msgtype": "TRA.MSG.ENV"
+        "id": {Any uuid}
+        "source_code": {CT_04_E1_source_code}
+        "destination_code": {CT_04_E1_destination_code}
+        "SPEDS":
+            "version": {version_speds}
+            "reference": {ref_speds}
+    "stamp":
+        "header_seal": {header_seal_valid}
+        "content_seal": {content_seal_valid}
+    "content": {CT_04_E1_message}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_04_S2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {CT_04_E2_source_iri}
+    "destination_iri": {CT_04_E2_destination_iri}
+    "service": {transfer}
+    "service_primitive": "response"
+"message": "FAILED: _raison de l'échec_"</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel du processus "[PRO-01] Processus Demande d&#8217;échanger des données" avec <code>CT_04_E1</code></p>
+</li>
+<li>
+<p>Appel du processus "[PRO-02] Traite une réponse d&#8217;échange de données" avec <code>CT_04_E2</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Critères de succès</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Transmission reussite de <code>CT_04_S2</code> dans un délai <code>T_max</code> avec un message <code>FAILED: <em>raison de l&#8217;échec</em></code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_pour_les_processus_du_côté_serveur">8.2. Cas de test pour les processus du côté serveur</h3>
+<div class="sect3">
+<h4 id="CT_05">8.2.1. [CT_05] Échec de réception : intégrité de l&#8217;entête est invalide</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;une indication d&#8217;échange attendu mais la vérification du champ <code>header_seal</code> échoue.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_05_E1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {Any iri}
+    "destination_iri": {Any iri}
+    "service": {transfer}
+    "service_primitive": {indication}
+"message":
+    "header":
+        "msgtype": "TRA.MSG.ENV"
+        "id": {Any uuid}
+        "source_code": {Any code}
+        "destination_code": {Any code}
+        "SPEDS":
+            "version": {version_speds}
+            "reference": {ref_speds}
+    "stamp":
+        "header_seal": {header_seal_invalid}
+        "content_seal": {content_seal_valid}
+    "content": {Any String}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_05_S1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {CT_05_E1_source_iri}
+    "destination_iri": {CT_05_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": {response}
+  "message": {FAILED: _raison de l'échec_}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel du processus "[PRO-03] Processus Traite l&#8217;échanger des données" avec <code>CT_05_E1</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Critères de succès</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Transmission reussite de <code>CT_05_S1</code> dans un délai <code>T_max</code> avec un message <code>FAILED: <em>raison de l&#8217;échec</em></code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="CT_06">8.2.2. [CT_06] Échec de réception: intégrité du contenu invalide</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;une indication d&#8217;échange <code>TRA.MSG.ENV</code> avec un <code>content_seal</code> invalide.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_06_E1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {Any iri}
+    "destination_iri": {Any iri}
+    "service": {transfer}
+    "service_primitive": {indication}
+"message":
+    "header":
+        "msgtype": "TRA.MSG.ENV"
+        "id": {Any uuid}
+        "source_code": {Any code}
+        "destination_code": {Any code}
+        "SPEDS":
+            "version": {version_speds}
+            "reference": {ref_speds}
+    "stamp":
+        "header_seal": {header_seal_valid}
+        "content_seal": {content_seal_invalid}
+    "content": {Any String}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_06_S1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {CT_06_E1_source_iri}
+    "destination_iri": {CT_06_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": {response}
+  "message": {FAILED: _raison de l'échec_}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel du processus "[PRO-03] Processus Traite l&#8217;échanger des données" avec <code>CT_06_E1</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Critères de succès</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Transmission reussite de <code>CT_06_S1</code> dans un délai <code>T_max</code> avec un message <code>FAILED: <em>raison de l&#8217;échec</em></code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="CT_07">8.2.3. [CT_07] Réponse à un échange : MessageId attendu</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>La couche supérieure envoie une réponse pour un message dont l&#8217;identifiant est attendus.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_07_E1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {Any iri}
+    "destination_iri": {Any iri}
+    "service": {transfer}
+    "service_primitive": {indication}
+"message":
+    "header":
+        "msgtype": "TRA.MSG.ENV"
+        "id": {Any uuid}
+        "source_code": {Any code}
+        "destination_code": {Any code}
+        "SPEDS":
+            "version": {version_speds}
+            "reference": {ref_speds}
+    "stamp":
+        "header_seal": {header_seal_valid}
+        "content_seal": {content_seal_valid}
+    "content": {Any content}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_07_E2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {Any string}
+    "destination_code": {Any string}
+    "source_iri": {Any iri}
+    "destination_iri": {Any iri}
+    "service": {transfer}
+    "service_primitive": {response}
+  "message": {SUCCEED}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-3-4</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_07_E3</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {Any string}
+    "destination_iri": {Any string}
+    "service": {transfer}
+    "service_primitive": {confirm}
+  "message": {SUCCEED}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-4-5</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_07_S1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {CT_07_E1_source_code}
+    "destination_code": {CT_07_E1_destination_code}
+    "source_iri": {CT_07_E1_source_iri}
+    "destination_iri": {CT_07_E1_destination_iri}
+     "service": {transfer}
+    "service_primitive": {response}
+  "message": {SUCCEED}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-4-5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_07_S2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {CT_07_E1_source_iri}
+    "destination_iri": {CT_07_E1_destination_iri}
+    "service": {transfer}
+    "service_primitive": {indication}
+"message":{CT_07_E1_message}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-3-4</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_07_S3</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_iri": {destination_iri}
+    "destination_iri": {source_iri}
+    "service": {transfer}
+    "service_primitive": {request}
+"message":
+    "header":
+        "msgtype": "TRA.MSG.REC"
+        "id": {CT_07_E1.message-&gt;header-&gt;id}
+        "source_code": {CT_07_E1_source_code}
+        "destination_code": {CT_07_E1_destination_code}
+        "SPEDS":
+            "version": {version_speds}
+            "reference": {ref_speds}
+    "stamp":
+        "header_seal": {header_seal_valid}
+        "content_seal": {content_seal_valid}
+    "content": {}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-4-5</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel du processus "[PRO-03] Processus Traite l&#8217;échanger des données" avec <code>CT_07_E1</code></p>
+</li>
+<li>
+<p>Appel du processus "[PRO-04] Processus Répond à un échange de données" avec <code>CT_07_E2</code></p>
+</li>
+<li>
+<p>Appel du processus "[PRO-05] Processus Confirme l&#8217;échange de données" avec <code>CT_07_E3</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Critères de succès</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Transmission reussite de <code>CT_07_S1</code> dans un délai <code>T_max</code> avec un message <code>SUCCEED</code>.</p>
+</li>
+<li>
+<p>Transmission reussite de <code>CT_07_S2</code> dans un délai <code>T_max</code>.</p>
+</li>
+<li>
+<p>Transmission reussite de <code>CT_07_S3</code> dans un délai <code>T_max</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="CT_08">8.2.4. [CT_08] Réponse à un échange : MessageId non attendu</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>La couche supérieure envoie une réponse qui n’est pas attendue.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_08_E1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>"context":
+    "source_code": {Any string}
+    "destination_code": {Any string}
+    "source_iri": {Any iri}
+    "destination_iri": {Any iri}
+    "service": {transfer}
+    "service_primitive": {response}
+    "message": {SUCCEED}</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-3-4</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>S.O</p>
+</dd>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<p>.Appel du processus "[PRO-04] Processus Répond à un échange de données" avec <code>CT_08_E1</code></p>
+</dd>
+<dt class="hdlist1">Critères de succès</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune <code>InterfaceDataUnit-4-5</code> n’est transmise à la couche inférieure pendant <code>T_max</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_essais">9. Essais</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Environnements</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Configuration d’une entité côté client</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV2</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Configuration d’une entité côté serveur</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_descriptions">9.1. Descriptions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Table 3. Essais</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[CT_01] Envoi réussi d&#8217;une demande de requête d&#8217;échange des données<br></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Vérifie, coté client, la demande d&#8217;envoi, la confirmation et la réception de réponse.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[CT_06] Échec de réception: intégrité du contenu invalide<br>
+[CT_07] Réponse à un échange : MessageId attendu</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Vérifie, côté serveur, réception et validation d&#8217;une demande d&#8217;échange de donnée et répondre à cette demande.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[CT_01]Envoi réussi d&#8217;une demande de requête d&#8217;échange des données<br>
+[CT_03] Réception d&#8217;une réponse d&#8217;échange de données avec MessageId inconnu</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Vérifie, côté client, la gestion des cas où un <code>MessageId</code> non mémorisé est reçu.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[CT_02] Échec de l&#8217;envoi d&#8217;une demande de requête d&#8217;échange des données</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Vérifie, côté client, le cas où la couche inférieure confirme un échec d’envoi.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[CT_04] Réception d&#8217;une réponse d&#8217;échange de données avec sceau d&#8217;entête invalide<br></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Vérifie, côté client, un sceau d’entête invalide.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[CT_05] Échec de réception : intégrité de l&#8217;entête est invalide</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Vérifie, côté serveur, un sceau d’entête invalide.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[CT_06] Échec de réception : intégrité de contenu est invalide</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Vérifie, côté serveur, un sceau de contenu invalide.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_08</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[CT_08] Réponse à un échange : MessageId non attendu</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Vérifie, côté serveur, Message non attendu.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_matrice_de_correspondance_élémentsessais">10. Matrice de correspondance Éléments/Essais</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3336%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">E_01</th>
+<th class="tableblock halign-left valign-top">E_02</th>
+<th class="tableblock halign-left valign-top">E_03</th>
+<th class="tableblock halign-left valign-top">E_04</th>
+<th class="tableblock halign-left valign-top">E_05</th>
+<th class="tableblock halign-left valign-top">E_06</th>
+<th class="tableblock halign-left valign-top">E_07</th>
+<th class="tableblock halign-left valign-top">E_08</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-03</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-04</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annexe">11. Annexe</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:50:50 -0400
+</div>
+</div>
+</body>
+</html>

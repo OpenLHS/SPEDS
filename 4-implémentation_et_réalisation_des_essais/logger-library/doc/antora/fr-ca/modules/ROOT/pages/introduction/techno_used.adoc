@@ -1,0 +1,6 @@
+= Technologies utilisées
+// Paramètres
+:idprefix:
+:idseparator: -
+
+include::ROOT:partial$other/techno.adoc[]

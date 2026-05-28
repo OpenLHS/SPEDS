@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransferResponseHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-presentation-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.presentation.internal.handler</a> &gt; <span class="el_source">TransferResponseHandler.java</span></div><h1>TransferResponseHandler.java</h1><pre class="source lang-java linenums">package ca.griis.speds.presentation.internal.handler;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.presentation.api.dto.Context12Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.Context23Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.InterfaceDataUnit12Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.InterfaceDataUnit23Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.ServicePrimitive;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.presentation.entity.PresentationTracking;
+import ca.griis.speds.presentation.entity.TrackingInformation;
+import ca.griis.speds.presentation.internal.security.SecretKeyDestroyer;
+import ca.griis.speds.presentation.internal.serialization.SharedObjectMapper;
+import ca.griis.speds.session.api.SessionHost;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
+import javax.crypto.SecretKey;
+
+public final class TransferResponseHandler {
+<span class="fc" id="L27">  private static final GriisLogger logger = getLogger(TransferResponseHandler.class);</span>
+
+  private final SessionHost host;
+  private final ConcurrentMap&lt;PresentationTracking, TrackingInformation&gt; serverTracking;
+
+  public TransferResponseHandler(SessionHost host,
+<span class="fc" id="L33">      ConcurrentMap&lt;PresentationTracking, TrackingInformation&gt; serverTracking) {</span>
+<span class="fc" id="L34">    this.host = host;</span>
+<span class="fc" id="L35">    this.serverTracking = serverTracking;</span>
+<span class="fc" id="L36">  }</span>
+
+  public Optional&lt;String&gt; handle(InterfaceDataUnit12Dto idu) throws JsonProcessingException {
+<span class="fc" id="L39">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L41">    Context12Dto ici = idu.getContext();</span>
+<span class="fc" id="L42">    Object options = ici.getOptions();</span>
+
+<span class="fc" id="L44">    String tn = &quot;&quot;;</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">    if (options instanceof Map&lt;?, ?&gt; map) {</span>
+<span class="fc" id="L46">      tn = map.get(&quot;TN&quot;).toString();</span>
+    }
+<span class="fc" id="L48">    UUID trackingNumber = UUID.fromString(tn);</span>
+
+<span class="fc" id="L50">    final TrackingInformation trackingInfo =</span>
+<span class="fc" id="L51">        serverTracking.remove(new PresentationTracking(trackingNumber));</span>
+<span class="fc" id="L52">    final UUID sessionTracking = trackingInfo.sessionTracking();</span>
+
+<span class="fc" id="L54">    final Map&lt;String, Object&gt; responseOptions = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L55">    responseOptions.put(&quot;TN&quot;, sessionTracking);</span>
+
+<span class="fc" id="L57">    SecretKey secretKey = trackingInfo.sdek();</span>
+<span class="fc" id="L58">    byte[] keyBytes = secretKey.getEncoded();</span>
+<span class="fc" id="L59">    String serialKey = Base64.getEncoder().encodeToString(keyBytes);</span>
+
+<span class="fc" id="L61">    SecretKeyDestroyer.destroy(keyBytes);</span>
+<span class="fc" id="L62">    SecretKeyDestroyer.destroy(secretKey);</span>
+
+<span class="fc" id="L64">    Context23Dto context = new Context23Dto(</span>
+<span class="fc" id="L65">        ici.getPga(),</span>
+<span class="fc" id="L66">        ici.getSourceCode(),</span>
+<span class="fc" id="L67">        ici.getDestinationCode(),</span>
+        serialKey,
+        &quot;transfer&quot;,
+        ServicePrimitive.RESPONSE,
+        responseOptions);
+
+<span class="fc" id="L73">    String sdu = idu.getMessage();</span>
+<span class="fc" id="L74">    InterfaceDataUnit23Dto sidu = new InterfaceDataUnit23Dto(context, sdu);</span>
+<span class="fc" id="L75">    String stringIdu = SharedObjectMapper.getInstance().getMapper().writeValueAsString(sidu);</span>
+<span class="fc" id="L76">    host.submitIdu(stringIdu);</span>
+
+<span class="fc" id="L78">    Optional&lt;String&gt; result = Optional.empty();</span>
+<span class="fc" id="L79">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

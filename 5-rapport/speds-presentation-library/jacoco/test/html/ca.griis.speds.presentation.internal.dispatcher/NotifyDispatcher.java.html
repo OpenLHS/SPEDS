@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotifyDispatcher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-presentation-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.presentation.internal.dispatcher</a> &gt; <span class="el_source">NotifyDispatcher.java</span></div><h1>NotifyDispatcher.java</h1><pre class="source lang-java linenums">package ca.griis.speds.presentation.internal.dispatcher;
+
+import static ca.griis.logger.statuscode.Error.IGNORED_ERROR;
+
+import ca.griis.js2p.gen.speds.presentation.api.dto.Context23Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.InterfaceDataUnit23Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.ServicePrimitive;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.presentation.entity.PresentationTracking;
+import ca.griis.speds.presentation.entity.TrackingInformation;
+import ca.griis.speds.presentation.internal.handler.TransferIndicationHandler;
+import ca.griis.speds.session.api.SessionHost;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentMap;
+
+public final class NotifyDispatcher {
+<span class="fc" id="L21">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(NotifyDispatcher.class);</span>
+
+  private final TransferIndicationHandler transferIndicationHandler;
+
+  public NotifyDispatcher(CryptographyService service, SessionHost host,
+<span class="fc" id="L26">      ConcurrentMap&lt;PresentationTracking, TrackingInformation&gt; serverTracking) {</span>
+<span class="fc" id="L27">    this.transferIndicationHandler = new TransferIndicationHandler(service, host, serverTracking);</span>
+<span class="fc" id="L28">  }</span>
+
+  public Optional&lt;String&gt; handle(InterfaceDataUnit23Dto idu) {
+<span class="fc" id="L31">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L33">    Optional&lt;String&gt; preIdu = Optional.empty();</span>
+
+    try {
+<span class="fc" id="L36">      final Context23Dto context = idu.getContext();</span>
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">      if (!context.getService().equals(&quot;transfer&quot;)) {</span>
+<span class="fc" id="L39">        final var ex = new RuntimeException(&quot;FAILED: Unknown primitive service&quot;);</span>
+<span class="fc" id="L40">        logger.error(IGNORED_ERROR, ex);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">      } else if (context.getServicePrimitive() == ServicePrimitive.INDICATION) {</span>
+<span class="fc" id="L42">        preIdu = transferIndicationHandler.handle(idu);</span>
+      } else {
+<span class="fc" id="L44">        final var ex = new RuntimeException(&quot;FAILED: Unknown primitive service&quot;);</span>
+<span class="fc" id="L45">        logger.error(IGNORED_ERROR, ex);</span>
+      }
+<span class="nc" id="L47">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L48">      logger.error(IGNORED_ERROR, e);</span>
+<span class="fc" id="L49">    }</span>
+
+<span class="fc" id="L51">    logger.trace(Trace.EXIT_METHOD_1, &quot;preIdu&quot;, preIdu);</span>
+<span class="fc" id="L52">    return preIdu;</span>
+
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,6 @@
+= Présentation
+// Paramètres
+:idprefix:
+:idseparator: -
+
+include::ROOT:partial$other/overview-component.adoc[]

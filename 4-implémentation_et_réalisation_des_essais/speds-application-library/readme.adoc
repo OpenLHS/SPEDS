@@ -1,0 +1,225 @@
+// Settings
+:idprefix:
+:idseparator: -
+:component-name: speds-application-library
+:component: SPEDS
+
+= {component-name}
+
+[#summary]
+== Sommaire
+
+La *{component-name}* implémente la couche application du protocole d'échange *{component}* utilisé pour les
+communications entre les différents sous-systèmes utilisant DadaGem.
+
+[#overview]
+== Présentation
+
+Le rôle de *{component-name}* est d’offrir une couche de services de protocole pour échanger des messages applicatifs via des services et applications.
+
+*{component-name}* permet d'effectuer les tâches suivantes :
+
+* Effectuer une demande d’une délégation d'un message.
+
+* Confirmer la prise en charge d'une délégation.
+
+* Recevoir une indication de réception d'un message.
+
+* Répondre à la réception d'un message.
+
+[#techno]
+== Technologies utilisées
+
+* Languages utilisés :
+** Java
+
+* Les API utilisés :
+** speds-presentation-library
+
+* Les applications tierces :
+** speds-toolkit-library
+
+
+[#prerequisite]
+== Préalable
+
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* logiciels prérequis :
+** S.O.
+
+* composants GRIIS prérequis
+** `speds-toolkit-library`
+** `logger-library`
+** `speds-presentation-library`
+
+* systèmes
+** Multi-plateforme
+
+* matériels prérequis :
+** S.O.
+
+* Autres :
+** `jsonschema2pojo`
+
+
+[#build]
+== Construction
+
+Pour construire la *{component-name}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la *{component-name}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-application-library:${version}"
+}
+----
+
+La *{component-name}* peut être déclarée en utilisant
+ `ca.griis:speds-application-library`.
+
+Pour développer directement sur la *{component-name}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+ Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+=== Interface de programmation
+
+==== Module api
+
+*ApplicationClient*
+
+[%header, cols="3*"]
+|===
+| Id du processus
+| Signature impl.
+| Comportement
+
+| PRO-1, PRO-2
+| CompletableFuture<ApplicationInterface> submit(ApplicationInterface applicationInterface)
+|
+*Entrée* : +
+Interface de données avec l'utilisateur de la couche. +
+*Comportement*: +
+Soumet le traitement de l’interface de données qui respecte le service de transfert et
+la primitive de requête. +
+*Sortie* : +
+La sortie, après le calcul de traitement (get), sera une interface de données de confirmation.
+
+| S.O.
+| void close()
+| Efface les mémorisations en lien avec le protocole application.
+|===
+
+*ApplicationServer*
+
+[%header, cols="3*"]
+|===
+| Id du processus
+| Signature impl.
+| Comportement
+
+| PRO-03
+| CompletableFuture<ApplicationInterface> notify(ApplicationInterface applicationInterface)
+|
+Notifie l'utilisateur de la couche qu'un interface de données doit lui être transmis. +
+L'interface notifiée est une interface de données qui respecte le service transfert et la primitive indication.
+
+| S.O.          
+| void notifyException(Exception exception);
+| Notifie une exception à l'utilisateur de la couche supérieure.
+
+| S.O
+| void close()
+| Efface les mémorisations en lien avec le protocole application.
+|===
+
+*Classe ApplicationFactory*
+
+Définit la fabrique des hôtes du protocole de SPEDS au niveau de la couche application.
+
+. La fabrique permet:
+.. d'initialiser la création d'un hôte avec:
+... un dictionnaire d'options de configuration sous une chaîne de caractères respectant le format JSON.
+... Une instance de la classe qui implémente `HostEvent` et qui recevra les `IDU`.
+
+*Exemple des options de configuration*
+
+[source, bash]
+----
+speds.app.version   - Version du protocole de la couche application.
+speds.app.reference - Référence du protocole de la couche application.
+----
+
+[#launch]
+== Démarrage
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{component-name}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+include::copyright.adoc[]
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
+

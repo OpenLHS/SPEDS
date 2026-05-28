@@ -1,0 +1,10 @@
+logger-griis:
+   locale: en_CA
+logging:
+   pattern:
+        console: '%-120.120([%thread] | %highlight(%-5level) | %cyan(%logger{15}) | %M\(%line\)) | %msg %n'
+        file: '%-80([%thread] | %-5level | %logger{15} | %M\(%line\)) | %msg %n'
+   level:
+      root: TRACE
+      ca.griis.pars3: TRACE
+   file: application.log

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransportPduChecker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.internal.checker</a> &gt; <span class="el_source">TransportPduChecker.java</span></div><h1>TransportPduChecker.java</h1><pre class="source lang-java linenums">package ca.griis.speds.transport.internal.checker;
+
+import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Info;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import ca.griis.speds.transport.internal.security.StampVerifier;
+
+/**
+ * &quot;Description brève du composant (classe, interface, ...)&quot;
+ *
+ * &lt;h3&gt;Historique&lt;/h3&gt;
+ * &lt;p&gt;
+ * XXXX-XX-XX [AS] - Implémentation initiale&lt;br&gt;
+ * &lt;/p&gt;
+ *
+ * &lt;h3&gt;Tâches&lt;/h3&gt;
+ * S.O.
+ *
+ * @author [AS] ameni.souid@usherbrooke.ca
+ * @since
+ */
+public final class TransportPduChecker {
+<span class="fc" id="L25">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(TransportPduChecker.class);</span>
+
+  private final StampVerifier stampVerifier;
+
+<span class="fc" id="L29">  public TransportPduChecker(CryptographyService service) {</span>
+<span class="fc" id="L30">    this.stampVerifier = new StampVerifier(service);</span>
+<span class="fc" id="L31">  }</span>
+
+  public PduCheckerResult check(String entityCode, ProtocolDataUnit4TraDto pdu) {
+    PduCheckerResult result;
+<span class="fc bfc" id="L35" title="All 2 branches covered.">    if (!stampVerifier.verifyHeader(pdu)) {</span>
+<span class="fc" id="L36">      result = new PduCheckerResult(false, &quot;FAILED: Header seal are not the same&quot;);</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">    } else if (!stampVerifier.verifyContent(pdu)) {</span>
+<span class="fc" id="L38">      result = new PduCheckerResult(false, &quot;FAILED: Content seal are not the same&quot;);</span>
+    } else {
+<span class="fc" id="L40">      result = new PduCheckerResult(true, &quot;SUCCEED&quot;);</span>
+    }
+
+<span class="fc" id="L43">    logger.info(Info.VARIABLE_LOGGING_5,</span>
+        &quot;entityCode&quot;, entityCode,
+<span class="fc" id="L45">        &quot;msgId&quot;, pdu.getHeader().getId(),</span>
+<span class="fc" id="L46">        &quot;msgType&quot;, pdu.getHeader().getMsgtype(),</span>
+<span class="fc" id="L47">        &quot;check&quot;, result.isValid(),</span>
+<span class="fc" id="L48">        &quot;message&quot;, result.message());</span>
+
+<span class="fc" id="L50">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

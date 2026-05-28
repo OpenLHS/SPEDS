@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CertificatePrivateKeysEntry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.security</a> &gt; <span class="el_source">CertificatePrivateKeysEntry.java</span></div><h1>CertificatePrivateKeysEntry.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe CertificatePrivateKeysEntry.
+ * @brief @~english «File description»
+ */
+
+package ca.griis.speds.session.internal.security;
+
+import ca.griis.speds.session.internal.security.crypto.SessionKeyDestroyer;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Certificat associé à une clé privée.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-03-06 [JM] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class CertificatePrivateKeysEntry {
+  private final Certificate certificate;
+  private final PrivateKey privateKey;
+
+<span class="fc" id="L51">  public CertificatePrivateKeysEntry(Certificate certificate, PrivateKey privateKey) {</span>
+<span class="fc" id="L52">    this.certificate = certificate;</span>
+<span class="fc" id="L53">    this.privateKey = privateKey;</span>
+<span class="fc" id="L54">  }</span>
+
+  public Certificate getCertficate() {
+<span class="fc" id="L57">    return this.certificate;</span>
+  }
+
+  public PrivateKey getPrivateKey() {
+<span class="fc" id="L61">    return this.privateKey;</span>
+  }
+
+  public void cleanUp() {
+<span class="fc" id="L65">    SessionKeyDestroyer.destroy(privateKey);</span>
+<span class="fc" id="L66">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

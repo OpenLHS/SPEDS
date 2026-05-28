@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpedsConfigItemDtoReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-toolkit-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.toolkit.crypto.internal.reader</a> &gt; <span class="el_source">SpedsConfigItemDtoReader.java</span></div><h1>SpedsConfigItemDtoReader.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe SpedsConfigItemDtoReader.
+ * @brief @~english Contains description of SpedsConfigItemDtoReader class.
+ */
+
+package ca.griis.speds.toolkit.crypto.internal.reader;
+
+import ca.griis.js2p.gen.speds.toolkit.api.dto.CiphersuiteDto;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.AlgorithmCategory;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SpedsLayer;
+import java.util.Optional;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre une lecture d'un élément de la suite cryptographique.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-12-03 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L49">public class SpedsConfigItemDtoReader {</span>
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french «Description de la fonction»
+   * @param layer Couche de protocole.
+   * @param category Catégorie d'algorithme.
+   * @param cipherSuite Un élément de la suite cryptographique.
+   * @return Si disponible, retourne l'élément de la configuration.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public Optional&lt;SpedsConfigItemDto&gt; getSpedsConfigItemDto(
+      SpedsLayer layer, AlgorithmCategory category, CiphersuiteDto cipherSuite) {
+<span class="fc" id="L67">    Optional&lt;SpedsConfigItemDto&gt; result = cipherSuite.getSpedsProfile().stream()</span>
+<span class="fc bfc" id="L68" title="All 4 branches covered.">        .filter(x -&gt; x.getSpedsLayer() == layer &amp;&amp; x.getAlgorithmCategory() == category)</span>
+<span class="fc" id="L69">        .findFirst();</span>
+<span class="fc" id="L70">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

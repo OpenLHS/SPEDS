@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HostStartupContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.domain</a> &gt; <span class="el_source">HostStartupContext.java</span></div><h1>HostStartupContext.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HostStartupContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.domain</a> &gt; <span class="el_source">HostStartupContext.java</span></div><h1>HostStartupContext.java</h1><pre class="source lang-java linenums">/**
  * @file
  *
  * @copyright @@GRIIS_COPYRIGHT@@
@@ -13,13 +13,18 @@
 
 package ca.griis.speds.session.internal.domain;
 
-import ca.griis.cryptography.asymmetric.keypair.CertificatePrivateKeysEntry;
-import ca.griis.js2p.gen.speds.session.api.dto.SPEDSDto;
-import ca.griis.speds.session.api.PgaService;
+import ca.griis.js2p.gen.speds.session.api.dto.VersionDto;
+import ca.griis.speds.session.api.SessionHostEvent;
 import ca.griis.speds.session.api.contract.IdentifierGenerator;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.security.CertificatePrivateKeysEntry;
+import ca.griis.speds.session.internal.security.authorization.AuthorizationService;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
 import ca.griis.speds.transport.api.TransportHost;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.Duration;
+import com.github.benmanes.caffeine.cache.Cache;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @brief @~english «Brief component description (class, interface, ...)»
@@ -48,12 +53,35 @@ import java.time.Duration;
  * @par Tâches
  *      S.O.
  */
-<span class="pc" id="L51">public record HostStartupContext (TransportHost transportHost, ObjectMapper sharedMapper,</span>
-    PgaService pgaService, SPEDSDto spedsDto,
+<span class="pc" id="L56">public record HostStartupContext (</span>
+    TransportHost transportHost,
+    ObjectMapper sharedMapper,
+    AuthorizationService projectService,
+    VersionDto version,
     CertificatePrivateKeysEntry hostKeys,
     IdentifierGenerator identifierGenerator,
-    Duration serverPollingInterval,
-    Duration responseTimeout) {
+    CryptographyService cryptographyService,
+    Cache&lt;SessionId, SessionInformation&gt; sessions,
+    Cache&lt;UUID, PendingMessage&gt; pendingMessage,
+    SessionHostEvent hostEventConsumer,
+    ExecutorService executor,
+    Integer transportConfirmationTimeout) {
 
+  public void cleanUp() {
+<span class="fc" id="L71">    closePreservingSessionStates();</span>
+<span class="fc" id="L72">    clearSessionStates();</span>
+<span class="fc" id="L73">  }</span>
+
+  public void closePreservingSessionStates() {
+<span class="fc" id="L76">    executor.shutdown();</span>
+<span class="fc" id="L77">    transportHost.close();</span>
+<span class="fc" id="L78">    pendingMessage.invalidateAll();</span>
+<span class="fc" id="L79">    pendingMessage.cleanUp();</span>
+<span class="fc" id="L80">  }</span>
+
+  public void clearSessionStates() {
+<span class="fc" id="L83">    sessions.cleanUp();</span>
+<span class="fc" id="L84">    hostKeys.cleanUp();</span>
+<span class="fc" id="L85">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

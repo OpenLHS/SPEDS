@@ -1,0 +1,341 @@
+
+// Settings
+:idprefix:
+:idseparator: -
+:component-name: speds-session-library
+
+= {component-name}
+
+[#summary]
+== Sommaire
+
+La librairie {component-name} implémente la couche session du protocole de communication SPEDS pour les échanges entre les différents sous-systèmes utilisant DadaGem.
+
+[#overview]
+== Présentation
+
+Le rôle de *{component-name}* est d'échanger des messages session entre les sous-systèmes à partir des interfaces établies avec les couches supérieures et inférieures.
+Ceci implique la création de messages session et les réponses à ces messages.
+
+Un service d'API est offert pour la couche supérieure.
+
+{component-name} permet d'effectuer les tâches suivantes :
+
+* Effectuer une requête de délégation d'échange de données;
+* Confirmer la délégation d'une requête d'échange de données;
+* Recevoir des notifications comprenant des données échangées ;
+* Répondre à un initiateur de requête;
+* Libérer les ressources utilisées en lien avec le protocole session lors de l'arrêt des échanges
+
+[#techno]
+== Technologies utilisées
+
+* Languages utilisés :
+** Java
+
+* Les API utilisés :
+** `speds-toolkit-library`
+** `speds-link-library`
+
+* Bibliothèque(s) tierce(s) :
+** `jsonschema2pojo`
+** `guava`
+** `caffeine`
+
+[#prerequisite]
+== Préalable
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* logiciels prérequis :
+** S.O.
+
+* composants GRIIS prérequis
+** `logger-library`
+** `speds-toolkit-library`
+** `speds-link-library`
+
+* systèmes
+** S.O.
+
+* matériels prérequis :
+** S.O.
+
+* Autres :
+** `jsonschema2pojo`
+** `guava`
+** `reactor-netty`
+** `caffeine`
+
+[#build]
+== Construction
+
+Pour construire la librairie *{component-name}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+[#compile]
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+[#install]
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la librairie *{component-name}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-session-library:${version}"
+}
+----
+
+La librairie *{component-name}* peut être déclarée en utilisant
+`ca.griis:speds-session-library`.
+
+Pour développer directement sur la librairie *{component-name}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+=== Littérature
+
+*CompletableFuture*
+
+CompletableFuture est une classe permettant de gérer des tâches de calcul asynchrones. Elle offre une grande flexibilité en rendant possible l’exécution non bloquante des calculs.
+
+https://www.baeldung.com/java-completablefuture
+
+[source, gradle]
+----
+// Quelques exemples en Java
+
+var future = CompletableFuture.runAsync(() -> {..., executor);
+var future = CompletableFuture.completedFuture(out);
+----
+
+=== Interface de programmation
+
+==== Module dto
+
+Définit les interfaces qui sont échangés entre services ou le protocole de la couche session. 
+
+==== Module api
+
+*SessionHost*
+
+Interface permettant de définir et d’exposer les opérations d’un hôte de la couche session à un utilisateur.
+
+|===
+| Id du processus |Signature impl. | Comportement
+
+| PRO-1, PRO-2, PRO-13
+| CompletableFuture<Optional<String>> submitIdu(String idu)
+|
+
+*Entrée* : + 
+Interface d'unité de données fournie par l'utilisateur de la couche. +
+*Comportement*:  +
+Soumet le traitement de l’interface d'unité de données (présentation et session) qui respecte le service de transfert et 
+les primitives de requête ou de réponse. +
+
+*Sortie* : + 
+La sortie, après le calcul de traitement (get) d'une requête sera une interface d'unité de données de confirmation. + 
+La sortie, après le calcul de traitement (get) d'une réponse sera une option vide.
+
+| S.O.
+| void close()
+| Désalloue toutes les ressources sur la couche de protocole.
+
+| S.O.
+| void closePreservingSessionStates
+| Désalloue les ressources sur la couche de protocole en préservant les sessions.
+
+| S.O.
+| void clearSessionStates
+| Nettoie toutes les sessions.
+|===
+
+===== Détails sur `CompletableFuture<Optional<String>> submitIdu(String idu)`
+
+Dans le cas qu'on soumet une réponse, celle-ci doit être associée à une indication de message préalablement émise.
+
+Ainsi, l’interface de l’unité de données reçue en entrée dans le cadre d’une réponse de transfert doit contenir un élément clé-valeur, dont le format respecte une structure de type dictionnaire (map).
+
+Ce dictionnaire doit comporter une clé nommée `TN`, dont la valeur correspond à l’identifiant d’un message précédemment reçu via une indication de message.
+
+_Représentation des options d'une interface d'unité de données 45 lors d'une réponse de réception de données en Java._
+----
+var options = Map.of("TN", "184fa9a3-f967-4a98-9d8f-57152e7cbe64");
+----
+
+*SessionHostEvent*
+
+Interface qui permet à une classe qui utilise la couche session de se faire notifier des événements.
+
+* L’utilisateur de la couche session qui souhaite écouter les événements doit définir une classe implémentant l’interface `SessionHostEvent`.
+
+|===
+| Id du processus | Signature impl.             | Comportement
+
+| PRO-3, PRO-4, PRO-5, PRO-6, PRO-7, PRO-8, PRO-9, PRO-10, PRO-11, PRO-12
+| void notifyIdu(String idu)
+| 
+Notifie l'interface d'unité de données construit par l'hôte de la couche session et qui veut notifier à la couche utilisatrice. + 
+L'interface notifiée est une interface d'unité de données (session et transport) qui respecte le service transfert et la primitive indication. +
+
+
+| S.O.          
+| void notifyException(Exception exception);
+| Notifie une exception à l'utilisateur de la couche session.
+
+| S.O.
+|  void notifyInitiatorSessionTerminatedSuccessfully(SessionId sessionId)
+|  Notifie quand un session a été terminée avec succès sur l'initiateur de la session.
+
+| S.O.
+| void notifyPeerSessionTerminatedSuccessfully(SessionId sessionId)
+| Notifie quand un session a été terminée avec succès sur le partenaire de la session.
+
+|===
+
+===== Détails sur `void notifyIdu(String idu)`
+
+Cette interface comporte un champs options qui contient un élément clé-valeur et dont le format respecte une structure de type dictionnaire (map).
+Ce dictionnaire comporte une clé nommée `TN`, dont la valeur correspond à l’identifiant d’un message reçu.
+
+_Représentation des options d'une interface d'unité de données 45 lors d'une indication de message en Java._
+----
+var options = Map.of("TN", "184fa9a3-f967-4a98-9d8f-57152e7cbe64");
+----
+
+*NetworkHostFactory*
+
+Définit la fabrique des hôtes du protocole de SPEDS au niveau de la couche session.
+
+. La fabrique permet:
+.. d'initialiser un `CryptographyService` - service cryptographique de `speds-toolkit-library`.
+.. d'initialiser un `ProjectService` - service de projet de `speds-toolkit-library`.
+.. d'initialiser la création d'un hôte avec:
+... un dictionnaire d'options de configuration sous une chaîne de caractères respectant le format JSON.
+... une instance de la classe qui implémente `HostEvent` et qui recevra les `IDU`.
+
+*Exemple des options de configuration de la couche session :*
+
+[source, bash]
+----
+- Version du protocole de la couche session.
+speds.ses.version
+
+- Référence du protocole de la couche session.
+speds.ses.reference
+
+- Certificat contenant la clé publique de l'entité utilisant la couche session.
+speds.ses.cert
+
+- Clé privée associée au certificat de l'entité utilisant la couche session.
+speds.ses.private.key
+
+- Le nombre de fils d'exécution utilisés pour le parallélisme de la couche session.
+- Par défaut, la valeur est 8.
+
+speds.ses.threads
+
+- Durée maximale d’inactivité (en minutes) pendant laquelle une session associée à un numéro de session reste valide ; au-delà de ce délai sans activité, la session expire automatiquement.
+- Par défaut, la valeur est 10.
+
+speds.ses.timeout.minutes
+
+- Période maximale qu'une requête de message peut recevoir une confirmation en minutes. Sinon, cette fenêtre de temps expire après ce temps en minutes.
+- Par défaut, la valeur est 10.
+
+speds.ses.confirm.window.minutes
+
+
+- Période maximale qu'une indication de message peut recevoir une réponse en minutes. Sinon, cette fenêtre de temps expire après ce temps en minutes.
+- Par défaut, la valeur est 10.
+
+speds.ses.response.window.minutes
+
+
+- Délai d'attente maximal en secondes que l'hôte transport utilisé par la couche session attend la confirmation associée à un envoi de données (requête).
+- Par défaut, la valeur est 60.
+
+speds.ses.transport.confirm.timeout.seconds
+----
+
+[#launch]
+== Démarrage
+
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{component-name}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#contact]
+== Personnes ressources
+
+* Francis Ouellet : Francis.Ouellet@usherbrooke.ca
+* Charles Beaudette : Charles.Beaudette@usherbrooke.ca
+* Jean-François Éthier : JF.Ethier@usherbrooke.ca
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].

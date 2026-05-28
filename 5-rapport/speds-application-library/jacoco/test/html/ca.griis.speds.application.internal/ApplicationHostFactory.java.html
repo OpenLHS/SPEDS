@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationHostFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-application-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.application.internal</a> &gt; <span class="el_source">ApplicationHostFactory.java</span></div><h1>ApplicationHostFactory.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe SyncApplicationFactory.
+ * @brief @~english Contains description of SyncApplicationFactory class.
+ */
+
+package ca.griis.speds.application.internal;
+
+import ca.griis.js2p.gen.speds.application.api.dto.InitInParamsDto;
+import ca.griis.js2p.gen.speds.application.api.dto.VersionDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.application.api.ApplicationFactory;
+import ca.griis.speds.application.api.ApplicationHost;
+import ca.griis.speds.application.api.ApplicationHostEvent;
+import ca.griis.speds.application.api.exception.ParameterException;
+import ca.griis.speds.application.internal.handler.ApplicationEventHandler;
+import ca.griis.speds.application.internal.verification.InterfaceChecker;
+import ca.griis.speds.application.serializer.SharedObjectMapper;
+import ca.griis.speds.presentation.api.PresentationHost;
+import ca.griis.speds.presentation.api.PresentationHostEvent;
+import ca.griis.speds.presentation.api.PresentationHostFactory;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import ca.griis.speds.toolkit.project.ProjectService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      Factory method design pattern
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre une fabrique d'entités nécessaires à la couche application
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-11 [SSC] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class ApplicationHostFactory implements ApplicationFactory {
+<span class="fc" id="L65">  private static final GriisLogger logger =</span>
+<span class="fc" id="L66">      GriisLoggerFactory.getLogger(ApplicationHostFactory.class);</span>
+
+  private final ProjectService projectService;
+  private final PresentationHostFactory presentationHostFactory;
+
+  public ApplicationHostFactory(CryptographyService cryptographyService,
+<span class="fc" id="L72">      ProjectService projectService) {</span>
+<span class="fc" id="L73">    logger.trace(Trace.ENTER_METHOD_2, &quot;cryptographyService&quot;, cryptographyService,</span>
+        &quot;projectService&quot;, projectService);
+<span class="fc" id="L75">    this.projectService = projectService;</span>
+<span class="fc" id="L76">    this.presentationHostFactory = new PresentationHostFactory(projectService, cryptographyService);</span>
+<span class="fc" id="L77">  }</span>
+
+  @Override
+  public ApplicationHost init(String parameters, ApplicationHostEvent consumer,
+      InterfaceChecker interfaceChecker) {
+<span class="fc" id="L82">    logger.trace(Trace.ENTER_METHOD_3, &quot;parameters&quot;, parameters, &quot;consumer&quot;, consumer,</span>
+        &quot;interfaceChecker&quot;, interfaceChecker);
+
+    final InitInParamsDto params;
+    try {
+<span class="fc" id="L87">      params = SharedObjectMapper.getInstance().getMapper().readValue(parameters,</span>
+<span class="fc" id="L88">          new TypeReference&lt;InitInParamsDto&gt;() {});</span>
+
+<span class="fc" id="L90">      final String spedsVersion = (String) params.getOptions().get(&quot;speds.app.version&quot;);</span>
+<span class="fc" id="L91">      final String spedsReference = (String) params.getOptions().get(&quot;speds.app.reference&quot;);</span>
+
+<span class="fc bfc" id="L93" title="All 4 branches covered.">      if (spedsVersion == null || spedsReference == null) {</span>
+<span class="fc" id="L94">        throw new ParameterException(</span>
+            &quot;SPEDS version or reference is missing in the initialization parameters. &quot;
+                + &quot;spedsVersion=&quot; + spedsVersion + &quot; spedsReference=&quot; + spedsReference);
+      }
+
+<span class="fc" id="L99">      final ApplicationEventHandler handler = new ApplicationEventHandler();</span>
+<span class="fc" id="L100">      final PresentationHost host = initPresentationHost(parameters, handler);</span>
+<span class="fc" id="L101">      final ApplicationHost appHost =</span>
+          new ImmutableApplicationHost(host, consumer, this.projectService,
+              new VersionDto(spedsVersion, spedsReference), interfaceChecker);
+<span class="fc" id="L104">      handler.register(appHost);</span>
+
+<span class="fc" id="L106">      logger.trace(Trace.EXIT_METHOD_1, &quot;appHost&quot;, appHost);</span>
+<span class="fc" id="L107">      return appHost;</span>
+<span class="fc" id="L108">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L109">      logger.error(Error.GENERIC_ERROR, e);</span>
+<span class="fc" id="L110">      throw new ParameterException(&quot;Cannot read initialization parameters&quot;);</span>
+    }
+  }
+
+  @Override
+  public PresentationHost initPresentationHost(String parameters, PresentationHostEvent consumer) {
+<span class="fc" id="L116">    logger.trace(Trace.ENTER_METHOD_1, &quot;parameters&quot;, parameters);</span>
+
+<span class="fc" id="L118">    final PresentationHost presHost = presentationHostFactory.initHost(parameters, consumer);</span>
+
+<span class="fc" id="L120">    logger.trace(Trace.EXIT_METHOD_1, &quot;presentationHost&quot;, presHost);</span>
+<span class="fc" id="L121">    return presHost;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

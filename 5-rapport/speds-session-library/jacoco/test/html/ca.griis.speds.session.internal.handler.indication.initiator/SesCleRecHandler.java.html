@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SesCleRecHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.handler.indication.initiator</a> &gt; <span class="el_source">SesCleRecHandler.java</span></div><h1>SesCleRecHandler.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SesCleRecHandler.
+ * @brief @~english Implementation of the SesCleRecHandler class.
+ */
+
+package ca.griis.speds.session.internal.handler.indication.initiator;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.session.api.dto.cle.SesCleRecDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.internal.contract.MsgType;
+import ca.griis.speds.session.internal.domain.ExpandedSidu;
+import ca.griis.speds.session.internal.domain.HostStartupContext;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.handler.indication.MessageHandler;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.security.crypto.SessionSecurityService;
+import ca.griis.speds.session.internal.transport.TransportHostAdapter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation du gestionnaire de message Ses.Cle.Rec
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-06-29 [MD] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SesCleRecHandler implements MessageHandler {
+<span class="fc" id="L65">  private static final GriisLogger logger = getLogger(SesCleRecHandler.class);</span>
+
+  private final SessionSecurityService securityService;
+  private final ObjectMapper mapper;
+  private final Map&lt;SessionId, SessionInformation&gt; sessionInfo;
+  private final InitiatorEvent initiatorEvent;
+  private final TransportHostAdapter transportHost;
+
+<span class="fc" id="L73">  public SesCleRecHandler(HostStartupContext ctx, InitiatorEvent initiatorEvent) {</span>
+<span class="fc" id="L74">    this.mapper = ctx.sharedMapper();</span>
+<span class="fc" id="L75">    this.sessionInfo = ctx.sessions().asMap();</span>
+<span class="fc" id="L76">    this.initiatorEvent = initiatorEvent;</span>
+<span class="fc" id="L77">    this.securityService = new SessionSecurityService(ctx.cryptographyService());</span>
+<span class="fc" id="L78">    this.transportHost = new TransportHostAdapter(ctx);</span>
+<span class="fc" id="L79">  }</span>
+
+  @Override
+  public MsgType getHandledType() {
+<span class="fc" id="L83">    return MsgType.SES_CLE_REC;</span>
+  }
+
+  @Override
+  public Optional&lt;String&gt; handle(ExpandedSidu message) {
+<span class="fc" id="L88">    logger.trace(Trace.ENTER_METHOD_1, &quot;message&quot;, message);</span>
+
+    /**
+     * @note 2026-04-28 - Le code de destination ici dans l'IDU représente le code de l'initiateur
+     *       de la session Pour plus détails, voir la spécification du protocole de la couche
+     *       session.
+     */
+<span class="fc" id="L95">    final var entityCode = message.sidu().getContext().getDestinationCode();</span>
+<span class="fc" id="L96">    SessionId sessionId = null;</span>
+
+    try {
+<span class="fc" id="L99">      final SesCleRecDto sesCleRecDto =</span>
+<span class="fc" id="L100">          mapper.readValue((String) message.spdu().getContent(), SesCleRecDto.class);</span>
+<span class="fc" id="L101">      sessionId = new SessionId(sesCleRecDto.getSession());</span>
+<span class="fc" id="L102">      final var validatedSession = Optional.ofNullable(sessionInfo.get(sessionId));</span>
+
+<span class="fc bfc" id="L104" title="All 2 branches covered.">      if (validatedSession.isPresent()) {</span>
+<span class="fc" id="L105">        final var code = message.sidu().getContext().getSourceCode();</span>
+
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (validatedSession.get().peerId().equals(code)) {</span>
+<span class="fc" id="L108">          final SessionInformation sessionInformation = validatedSession.get();</span>
+<span class="fc" id="L109">          final Boolean verifyStamp =</span>
+<span class="fc" id="L110">              securityService.verifyStamp(</span>
+<span class="fc" id="L111">                  Base64.getDecoder().decode(message.spdu().getStamp()),</span>
+<span class="fc" id="L112">                  ((String) message.spdu().getContent()).getBytes(StandardCharsets.UTF_8),</span>
+<span class="fc" id="L113">                  sessionInformation.skak());</span>
+
+<span class="fc bfc" id="L115" title="All 2 branches covered.">          if (verifyStamp) {</span>
+<span class="fc" id="L116">            final Boolean validToken =</span>
+<span class="fc" id="L117">                securityService.verifyToken(sessionInformation.token(), sessionInformation.sdek(),</span>
+<span class="fc" id="L118">                    sesCleRecDto.getContent());</span>
+
+<span class="fc bfc" id="L120" title="All 2 branches covered.">            if (validToken) {</span>
+<span class="fc" id="L121">              transportHost.response(entityCode, sessionId, message, &quot;SUCCEED&quot;);</span>
+
+<span class="fc" id="L123">              initiatorEvent.notifyCleRec(message);</span>
+            } else {
+<span class="fc" id="L125">              transportHost.response(entityCode, sessionId, message, &quot;FAILED: TokenException&quot;);</span>
+            }
+<span class="fc" id="L127">          } else {</span>
+<span class="fc" id="L128">            transportHost.response(entityCode, sessionId, message, &quot;FAILED: AuthenticateException&quot;);</span>
+          }
+<span class="fc" id="L130">        } else {</span>
+<span class="nc" id="L131">          transportHost.response(entityCode, sessionId, message,</span>
+              &quot;FAILED: The code from the IDU does not match the peer ID&quot;);
+        }
+<span class="fc" id="L134">      } else {</span>
+<span class="fc" id="L135">        transportHost.response(entityCode, sessionId, message, &quot;FAILED: UnknownSessionException&quot;);</span>
+      }
+<span class="nc" id="L137">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L138">      logger.error(Error.GENERIC_ERROR, e);</span>
+
+<span class="nc" id="L140">      transportHost.response(entityCode, sessionId, message, &quot;FAILED: Cannot read SES.CLE.REC&quot;);</span>
+<span class="fc" id="L141">    }</span>
+
+<span class="fc" id="L143">    Optional&lt;String&gt; result = Optional.empty();</span>
+<span class="fc" id="L144">    logger.trace(Trace.ENTER_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L145">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

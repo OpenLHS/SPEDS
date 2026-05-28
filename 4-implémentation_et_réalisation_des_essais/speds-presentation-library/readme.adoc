@@ -1,0 +1,243 @@
+// Settings
+:idprefix:
+:idseparator: -
+:component-name: speds-presentation-library
+:component: SPEDS
+
+= {component-name}
+
+[#summary]
+== Sommaire
+
+La *{component-name}* implémente la couche présentation du protocole d'échange *{component}* utilisé pour les
+communications entre les différents sous-systèmes utilisant DadaGem.
+
+[#overview]
+== Présentation
+
+Le rôle de *{component-name}* est de recevoir des messages des couches inférieure et supérieure, de valider et respecter le format attendu et d'envoyer les message conformément au format attendu.
+
+Un service d'API est offert pour la couche supérieur.
+
+*{component-name}* permet d'effectuer les tâches suivantes :
+
+* Effectuer une demande d’échanger des données sous une requête.
+
+* Confirmer la réponse reçue par l’initiateur de la requête (contient les données que l’initiateur de la requête veut échanger).
+
+* Recevoir la demande d’une requête avec les données échangées par l’initiateur de requête.
+
+* Répondre à un initiateur de requête sous une réponse avec des données à échanger.
+
+* Efface les mémorisation en lien avec le protocole présentation.
+
+[#techno]
+== Technologies utilisées
+
+* Languages utilisés :
+** Java
+
+* Les API utilisés :
+** speds-session-library
+
+* les applications tièces :
+** speds-toolkit-library
+
+[#prerequisite]
+== Préalable
+
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* logiciels prérequis :
+** S.O.
+
+* composants GRIIS prérequis
+** `speds-toolkit-library`
+** `logger-library`
+** `speds-session-library`
+
+* systèmes
+** Multi-plateforme
+
+* matériels prérequis :
+** S.O.
+
+* Autres :
+** `jsonschema2pojo`
+
+[#build]
+== Construction
+
+Pour construire *{component-name}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la *{component-name}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-presentation-library:${version}"
+}
+----
+
+La *{component-name}* peut être déclarée en utilisant
+ `ca.griis:speds-presentation-library`.
+
+Pour développer directement sur la *{component-name}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+ Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+=== Littérature
+
+*CompletableFuture*
+
+CompletableFuture est une classe permettant de gérer des tâches de calcul asynchrones. Elle offre une grande flexibilité en rendant possible l’exécution non bloquante des calculs.
+
+https://www.baeldung.com/java-completablefuture
+
+[source, gradle]
+----
+// Quelques exemples en Java
+
+var future = CompletableFuture.runAsync(() -> {..., executor);
+var future = CompletableFuture.completedFuture(out);
+----
+
+=== Interface de programmation
+
+==== Module api
+
+*PresentationHost*
+
+|===
+| Identidiants de processus | Signature impl. | Comportement
+
+| PRO-1, PRO-2, PRO-4
+| CompletableFuture<Optional<String>> submitIdu(String idu)
+|
+
+*Entrée* : +
+Interface d'unité de données fournie par l'utilisateur de la couche. +
+*Comportement*:  +
+Soumet le traitement de l’interface d'unité de données (application et présentation) qui respecte le service de transfert et
+les primitives de requête ou de réponse - (PRO-1, PRO-4). +
+*Sortie* : +
+PRO-1, la sortie, après le calcul de traitement (get), sera une interface d'unité de données de confirmation si il y a un parcours exceptionnel. +
+PRO-4, la sortie, après le calcul de traitement (get), sera une option vide.
+
+
+| S.O.
+| void close()
+| Efface les mémorisations en lien avec le protocole présentation.
+|===
+
+*HostEvent*
+
+|===
+| Id du processus | Signature impl.             | Comportement
+
+| PRO-3
+| void notifyIdu(String idu)
+|
+Notifie l'interface d'unité de données construit par l'hôte de la couche réseau et qui veut notifier à la couche utilisatrice. +
+L'interface notifiée est une interface d'unité de données (application et présentation) qui respecte le service transfert et la primitive indication.
+
+| S.O.          
+| void notifyException(Exception exception);
+| Notifie une exception à l'utilisateur de la couche supérieure.
+
+|===
+
+*Classe PresentationFactory*
+
+Définit la fabrique des hôtes du protocole de SPEDS au niveau de la couche réseau.
+
+. La fabrique permet:
+.. d'initialiser la création d'un hôte avec:
+... un dictionnaire d'options de configuration sous une chaîne de caractères respectant le format JSON.
+... une instance de la classe qui implémente `HostEvent` et qui recevra les `IDU`.
+
+*Exemple des options de configuration*
+
+[source, bash]
+----
+speds.pre.version   - Version du protocole de la couche présentation.
+speds.pre.reference - Référence du protocole de la couche présentation.
+----
+
+[#launch]
+== Démarrage
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{component-name}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
+

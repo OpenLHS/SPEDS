@@ -1,131 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="9.3">
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/ClientSession.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\api\contract\IdentifierGenerator.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/seal/SealVerifier.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\api\exception\InvalidTokenException.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/seal/SealCreator.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\api\exception\ParameterException.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/ServerSession.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\api\SessionFactory.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/crypto/KeyAgreement.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\api\SessionHost.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/service/serializer/SharedObjectMapper.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\api\SessionHostEvent.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/processing/Poller.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\api\SessionHostFactory.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/processing/SilentIgnoreException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\contract\MsgType.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/processing/MessageDispatcher.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\contract\Options.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/util/KeyMapping.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\contract\Pidu.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/util/KeyAlgorithm.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\contract\PiduContext.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/model/PendingIndication.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\contract\Sidu.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/model/PendingConfirmation.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\contract\SiduContext.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/model/SessionInformation.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\contract\Spdu.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/domain/SkakWithPubKey.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\contract\SpduHeader.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/domain/SessionId.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\dispatcher\notify\EntityNotifyDispatcher.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/domain/ExpandedSidu.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\dispatcher\notify\InitiatorNotifyDispatcher.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/domain/HostStartupContext.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\dispatcher\notify\PeerNotifyDispatcher.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/domain/PiduAndSession.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\dispatcher\SessionNotifyDispatcher.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/Pidu.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\dispatcher\SessionSubmitDispatcher.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/Sidu.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\dispatcher\submit\InitiatorSubmitDispatcher.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/SesPubEnvDto.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\dispatcher\submit\PeerSubmitDispatcher.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/Spdu.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\domain\ExpandedSessionSidu.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/SiduContext.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\domain\ExpandedSidu.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/Options.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\domain\HostStartupContext.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/PiduContext.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\domain\PendingConfirmation.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/MsgType.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\domain\PendingMessage.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/contract/SpduHeader.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\domain\PendingResponse.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/MessageHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\domain\PiduAndSession.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/SesFinEnvHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\domain\SessionId.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/PeerHandlerRegistry.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\domain\SkakWithPubKey.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/SesPubEnvHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\event\SessionEventHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/SesMsgEnvHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\HandlerRegistry.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/SesCleEnvHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\initiator\InitiatorEvent.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/peer/SesSakEnvHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\initiator\InitiatorHandlerRegistry.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/HandlerRegistry.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\initiator\SesCleRecHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/SesCleRecHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\initiator\SesFinRecHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/SesMsgRecHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\initiator\SesMsgRecHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/SesPubRecHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\initiator\SesPubRecHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/SesSakRecHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\initiator\SesSakRecHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/SesFinRecHandler.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\MessageHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/internal/handler/initiator/InitiatorHandlerRegistry.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\peer\PeerHandlerRegistry.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/GetIriException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\peer\SesCleEnvHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/VerifyException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\peer\SesFinEnvHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/ParameterException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\peer\SesMsgEnvHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/KeyAgreementException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\peer\SesPubEnvHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/CipherException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\indication\peer\SesSakEnvHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/InvalidTrackingNumberException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\request\SesCleRequestHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/GetPublicKeyException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\request\SesDelegateRequestHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/NoResponseRequestException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\request\SesFinRequestHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/InvalidTokenException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\request\SesMsgRequestHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/DeserializationException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\request\SesPubRequestHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/exception/SessionTerminaisonFailedException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\request\SesSakRequestHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/SessionHost.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\handler\response\SesTransferResponseHandler.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/sync/ImmutableSessionHost.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\host\ImmutableSessionHost.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/sync/SyncSessionFactory.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\model\PendingIndication.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/sync/ImmutableSessionFactory.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\model\SessionInformation.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/sync/ImmutableSessionServer.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\security\authorization\AuthorizationService.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/sync/ImmutableSessionClient.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\security\CertificatePrivateKeysEntry.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/PgaService.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\security\crypto\SessionKeyDestroyer.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/SessionClient.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\security\crypto\SessionSecurityService.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/contract/IdentifierGenerator.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\serializer\SharedObjectMapper.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/SessionFactory.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\sync\PendingConfirmationException.java">
 </file>
-<file name="/home/local/USHERBROOKE/beam1922/Git/produits/speds-line/speds-session-library/src/main/java/ca/griis/speds/session/api/SessionServer.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\sync\PendingConfirmationRegistry.java">
+</file>
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-session-library\src\main\java\ca\griis\speds\session\internal\transport\TransportHostAdapter.java">
 </file>
 </checkstyle>

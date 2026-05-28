@@ -1,0 +1,49 @@
+
+{
+  "$id": "https://griis.ca/speds/json/schema/v7.0.0/toolkit/ciphersuite.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cipher suite (2025-12-27T10:00:00-0500)",
+  "type": "object",
+  "description": "Security configuration - Cipher suite for SPEDS",
+  "$defs": {
+    "spedsLayer": {
+      "type": "string",
+      "description": "The speds layer",
+      "enum": ["APPLICATION", "PRESENTATION", "SESSION", "TRANSPORT", "NETWORK", "LINK"]
+    },
+    "algorithmCategory": {
+      "type": "string",
+      "description": "The algorithm category",
+      "enum": ["HASH", "SYMM", "ASYM", "DH", "SIGN"]
+    },
+    "securityProfile": {
+      "type": "string",
+      "description": "The security profile",
+      "enum": ["STRONG", "EFFICIENT"]
+    },
+    "spedsConfigItem": {
+      "type": "object",
+      "description": "Flexible SPEDS configuration item",
+      "required": ["spedsLayer", "algorithmCategory"],
+      "properties": {
+        "spedsLayer": { "$ref": "#/$defs/spedsLayer" },
+        "algorithmCategory": { "$ref": "#/$defs/algorithmCategory" },
+        "securityProfile": { "$ref": "#/$defs/securityProfile" },
+        "securityAlgorithm": {
+          "type": "string",
+          "description": "The security algorithm name"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "spedsProfile": {
+      "type": "array",
+      "description": "Actual SPEDS security profile",
+      "items": { "$ref": "#/$defs/spedsConfigItem" }
+    }
+  },
+  "required": ["spedsProfile"],
+  "additionalProperties": false
+}

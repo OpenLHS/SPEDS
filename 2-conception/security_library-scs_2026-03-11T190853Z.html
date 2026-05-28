@@ -1,0 +1,3018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Conception du module - Bibliothèque de sécurité">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Conception du module « Bibliothèque de sécurité »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Conception du module « <em>Bibliothèque de sécurité</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v1,</span>
+<span id="revdate">2026-03-01</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_rôle_du_module">1. Rôle du module</a></li>
+<li><a href="#_définition">2. Définition</a></li>
+<li><a href="#modele">3. Modèle propre au module</a></li>
+<li><a href="#_type_au_module">4. Type au module</a>
+<ul class="sectlevel2">
+<li><a href="#_type_simple_de_donnée">4.1. Type simple de donnée</a></li>
+<li><a href="#_type_complexe_de_donnée">4.2. Type complexe de donnée</a></li>
+<li><a href="#_type_de_message">4.3. Type de message</a></li>
+</ul>
+</li>
+<li><a href="#_contrainte_du_module">5. Contrainte du module</a></li>
+<li><a href="#_hypothèse_du_module">6. Hypothèse du module</a></li>
+<li><a href="#_processus_du_module">7. Processus du module</a>
+<ul class="sectlevel2">
+<li><a href="#_processus_pour_le_service_de_sécurité">7.1. Processus pour le service de sécurité</a>
+<ul class="sectlevel3">
+<li><a href="#_spécification_des_algorithmes_de_sécurité">7.1.1. Spécification des algorithmes de sécurité</a>
+<ul class="sectlevel4">
+<li><a href="#_pro_spec_01_processus_récupère_les_spécifications_de_sécurité">[PRO-SPEC-01] Processus « Récupère les spécifications de sécurité »</a></li>
+</ul>
+</li>
+<li><a href="#_fonction_de_hachage">7.1.2. Fonction de hachage</a>
+<ul class="sectlevel4">
+<li><a href="#_pro_sym_hash_01_processus_génère_une_empreinte_numérique">[PRO-SYM-HASH-01] Processus « Génère une empreinte numérique »</a></li>
+<li><a href="#_pro_sym_hash_02_processus_vérifie_une_empreinte_numérique">[PRO-SYM-HASH-02] Processus « Vérifie une empreinte numérique »</a></li>
+</ul>
+</li>
+<li><a href="#_symétrique_chiffrementdéchiffrement">7.1.3. Symétrique - Chiffrement/Déchiffrement</a>
+<ul class="sectlevel4">
+<li><a href="#_pro_sym_cipher_01_processus_génère_une_clé_secrète">[PRO-SYM-CIPHER-01] Processus « Génère une clé secrète »</a></li>
+<li><a href="#_pro_sym_cipher_02_processus_chiffre_des_données">[PRO-SYM-CIPHER-02] Processus « Chiffre des données »</a></li>
+<li><a href="#_pro_sym_cipher_03_processus_déchiffre_des_données">[PRO-SYM-CIPHER-03] Processus « Déchiffre des données »</a></li>
+</ul>
+</li>
+<li><a href="#_asymétrique_générateur_de_clés">7.1.4. Asymétrique - Générateur de clés</a>
+<ul class="sectlevel4">
+<li><a href="#_pro_asym_gen_01_processus_génère_une_paire_de_clés">[PRO-ASYM-GEN-01] Processus « Génère une paire de clés »</a></li>
+</ul>
+</li>
+<li><a href="#_asymétrique_chiffrementdéchiffrement">7.1.5. Asymétrique - Chiffrement/Déchiffrement</a>
+<ul class="sectlevel4">
+<li><a href="#_pro_asym_cipher_01_processus_chiffre_des_données">[PRO-ASYM-CIPHER-01] Processus « Chiffre des données »</a></li>
+<li><a href="#_pro_asym_cipher_02_processus_déchiffre_des_données">[PRO-ASYM-CIPHER-02] Processus « Déchiffre des données »</a></li>
+</ul>
+</li>
+<li><a href="#_asymétrique_échange_de_clé_établissement_de_clé">7.1.6. Asymétrique - Échange de clé (établissement de clé)</a>
+<ul class="sectlevel4">
+<li><a href="#_pro_asym_ke_01_processus_génère_une_clé_secrète">[PRO-ASYM-KE-01] Processus « Génère une clé secrète »</a></li>
+</ul>
+</li>
+<li><a href="#_asymétrique_signature_numérique">7.1.7. Asymétrique - Signature numérique</a>
+<ul class="sectlevel4">
+<li><a href="#_pro_asym_sig_01_processus_génère_une_signature_numérique">[PRO-ASYM-SIG-01] Processus « Génère une signature numérique »</a></li>
+<li><a href="#_pro_asym_sig_02_processus_vérifie_une_signature_numérique">[PRO-ASYM-SIG-02] Processus « Vérifie une signature numérique »</a></li>
+</ul>
+</li>
+<li><a href="#_asymétrique_certificat">7.1.8. Asymétrique - Certificat</a>
+<ul class="sectlevel4">
+<li><a href="#_pro_asym_crt_01_processus_vérifie_la_validité_temporelle_dun_certificat">[PRO-ASYM-CRT-01] Processus « Vérifie la validité temporelle d&#8217;un certificat »</a></li>
+<li><a href="#_pro_asym_crt_02_processus_vérifie_la_signature_numérique_dun_certificat">[PRO-ASYM-CRT-02] Processus « Vérifie la signature numérique d&#8217;un certificat »</a></li>
+<li><a href="#_pro_asym_crt_03_processus_vérifie_la_chaîne_de_certification">[PRO-ASYM-CRT-03] Processus « Vérifie la chaîne de certification »</a></li>
+<li><a href="#_pro_asym_crt_04_processus_vérifie_les_extensions_du_certificat">[PRO-ASYM-CRT-04] Processus « Vérifie les extensions du certificat »</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_incongruités">8. Incongruités</a></li>
+<li><a href="#_matrice_de_spécification">9. Matrice de spécification</a></li>
+<li><a href="#_matrice_de_dépendances">10. Matrice de dépendances</a></li>
+<li><a href="#_annexes">11. Annexes</a>
+<ul class="sectlevel2">
+<li><a href="#_java_sécurité">11.1. Java Sécurité</a>
+<ul class="sectlevel3">
+<li><a href="#_type">11.1.1. Type</a></li>
+<li><a href="#_concurrence">11.1.2. Concurrence</a></li>
+</ul>
+</li>
+<li><a href="#_liens">11.2. Liens</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-10-29 10:48</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du spécificateur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-10-30T14:28</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur des tests réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-11-05 11:32</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Historique</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Changement important</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception initiale</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-10-29 10:48</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Référence</caption>
+<colgroup>
+<col>
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Consultation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">S.O.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rôle_du_module">1. Rôle du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le rôle du module « <em>Bibliothèque de sécurité</em> » est d&#8217;offrir des services de sécurité qui respectent les recommandations actuelles et
+qui permettent de remplir des objectifs de sécurité classiquement assurés par des moyens cryptographiques,
+tels que la confidentialité, l’intégrité et l’authentification.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_définition">2. Définition</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Primitive cryptographique </dt>
+<dd>
+<p>Une primitive cryptographique est un algorithme utilisé en cryptographie pour garantir et atteindre des objectifs de sécurité.</p>
+</dd>
+<dt class="hdlist1">Mécanisme cryptographique </dt>
+<dd>
+<p>Un mécanisme cryptographique est généralement construit sur une ou plusieurs primtives cryptographique. Cela comprend les mécanismes asymétriques et symétriques, les valeurs aléatoires, et les mécanismes de valeurs uniques.</p>
+</dd>
+<dt class="hdlist1">Mécanisme symétrique </dt>
+<dd>
+<p>Un mécanisme de chiffrement symétrique, la clé de chiffrement est la même que la clé de déchiffrement. Une telle clé est qualifiée de clé secrète et sa confidentialité doit être assurée.</p>
+</dd>
+<dt class="hdlist1">Mécanisme asymétrique </dt>
+<dd>
+<p>Un mécanisme cryptographique est dit asymétrique lorsque les clés utilisées par les entités ne se déduisent pas toutes les unes des autres. Usuellement, on regroupe les clés en biclé, constitués d’une clé privée, qui est attribuée à une entité précise et dont la confidentialité doit être assurée, et d’une clé publique, qui peut être diffusée mais dont l’intégrité doit être assurée.</p>
+</dd>
+<dt class="hdlist1">Nom d&#8217;un algorithme d&#8217;une primitive cryptographique</dt>
+<dd>
+<p>Le nom standardisé de l&#8217;algorithme cryptographique. Parmi les exemples les plus courants, on peut citer <code>AES</code>, <code>RSA</code>, etc.</p>
+</dd>
+<dt class="hdlist1">Paramètres d&#8217;un algorithme cryptographique </dt>
+<dd>
+<p>Les valeurs spécifiques qui configurent l&#8217;algorithme d&#8217;une primitive cryptographique.</p>
+</dd>
+<dt class="hdlist1">Spécification d&#8217;un algorithme d&#8217;une primitive cryptographique </dt>
+<dd>
+<p>Le nom d&#8217;un algorithme d&#8217;une primitive cryptographique et ses paramètres.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="modele">3. Modèle propre au module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_type_au_module">4. Type au module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_type_simple_de_donnée">4.1. Type simple de donnée</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Types simples généraux</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="strongest"></a> <code>Strongest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant du profil de sécurité fort</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="efficient"></a> <code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant du profil de sécurité efficace</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="securityProfile"></a> <code>SecurityProfile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code> ou <code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type de profil de sécurité</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="SecuritySpecId"></a> <code>SecuritySpecId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de spécification de sécurité</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="securityProfileSpec"></a> <code>SecurityProfileSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SecuritySpecId</code> et <code>SecuritySpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification de sécurité d&#8217;un profil</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="securityProfileSpecs"></a> <code>SecurityProfileSpecs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plusieurs <code>SecurityProfileSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plusieurs spécifications de sécurité d&#8217;un profil</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="keyBitLength"></a> <code>KeyBitLength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Longueur d&#8217;une clé en bits</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="tagBitLength"></a> <code>TagBitLength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Longueur du tag d’authentification en bits</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="ivBitLength"></a> <code>IvBitLength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Longueur du vecteur d&#8217;initialisation en bits</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="trailerField"></a> <code>TrailerField</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indique la fin des données à signer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="bitstrength"></a> <code>BitStrength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La mesure du nombre d’opérations nécessaires pour compromettre un algorithme ou un système cryptographique. Cela signifie qu’un attaquant doit effectuer en moyenne 2ⁿ opérations pour le casser.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="publicExponent"></a> <code>PublicExponent</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exposant publique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="capacity"></a> <code>Capacity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PR_AND_RESEED</code>, <code>RESEED_ONLY</code> ou <code>NONE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Capacité de résistance de prédiction, et (ou) la réinjection d&#8217;entropie</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="saltBitLength"></a> <code>SaltBitLength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Longueur d&#8217;un salage en bits</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="bytes"></a> <code>Bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tableau d&#8217;octets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tableau d&#8217;octets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="iv"></a> <code>Iv</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vecteur d&#8217;initialisation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="digest"></a> <code>Digest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Empreinte numérique résultant d&#8217;une fonction de hachage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="digitalSignature"></a> <code>DigitalSignature</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Signature numérique résultant d&#8217;une fonction de signature</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="pEncodingValue"></a> <code>PEncodingValue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bytes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètre d&#8217;encodage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="key"></a> <code>Key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Format défini par Java Sécurité</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clé cryptographique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="secretKey"></a> <code>SecretKey</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Format défini par Java Sécurité</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clé symétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="publicKey"></a> <code>PublicKey</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Format défini par Java Sécurité</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clé publique asymétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="privateKey"></a> <code>PrivateKey</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Format défini par Java Sécurité</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clé privée asymétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="keyPair"></a> <code>KeyPair</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Format défini par Java Sécurité</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une clé publique et une clé privée</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Certificat</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="x509Certificate"></a> <code>X509Certificate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Format défini par Java Sécurité</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Certificat numérique <code>X.509</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="rootCertificates"></a> <code>RootCertificates</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un ou plusieurs <code>X509Certificate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Certificats numériques racines <code>X.509</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="intermediateCertificates"></a> <code>IntermediateCertificates</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zéro ou plusieurs <code>X509Certificate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Certificats numériques intermédiaires <code>X.509</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="revocationVerif"></a> <code>RevocationVerif</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CRL</code> ou <code>OCSP</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Énumération de l&#8217;approche pour vérifier la révocation d&#8217;un certificat</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="certificateKeyUsage"></a> <code>CertificateKeyUsage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0 = <code>digitalSignature</code>,<br>
+    1 = <code>nonRepudiation</code>,<br>
+    2 = <code>keyEncipherment</code>,<br>
+    3 = <code>dataEncipherment</code>,<br>
+    4 = <code>keyAgreement</code>,<br>
+    5 = <code>keyCertSign</code>,<br>
+    6 = <code>cRLSign</code>,<br>
+    7 = <code>encipherOnly</code>, ou<br>
+    8 = <code>decipherOnly</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Énumération d&#8217;un usage sur un certificat.<br>
+  <br>
+   Pour plus de détails :  <a href="https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3" class="bare">https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.3</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="certificateKeyUsages"></a> <code>CertificateKeyUsages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zéro ou plusieurs <code>CertificateKeyUsage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Usages de clés sur un certificat</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Nom des algorithmes cryptographiques</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Algorithme</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="csprngAlgo"></a> <code>CsprngAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DRBG</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithme de générateur de valeurs aléatoires</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="symKeyGenAlgo"></a> <code>SymKeyGenAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AES</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithme de création d&#8217;une clé pour le chiffrement symétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="asymKeyPairGenAlgo"></a> <code>AsymKeyPairGenAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RSA</code>, <code>Ed25519</code> ou <code>X25519</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithme de création d&#8217;une paire de clés pour chiffrement asymétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="symCipherAlgo"></a> <code>SymCipherAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AES/GCM/NoPadding</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithme de chiffrement symétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="asymCipherAlgo"></a> <code>AsymCipherAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RSA/ECB/OAEPWithSHA-256AndMGF1Padding</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithme de chiffrement asymétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="mgfAlgo"></a> <code>MgfAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MGF1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fonction de génération de masque</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="keyAgreementAlgo"></a> <code>KeyAgreementAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>X25519</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithme d&#8217;échange de clé</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="hashAlgo"></a> <code>HashAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHA-256</code> ou <code>SHA-512</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithme de hachage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="hashMgfAlgo"></a> <code>HashMgfAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHA-256</code> ou <code>SHA-512</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fonction de hachage sur une fonction de génération de masque</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="signatureAlgo"></a> <code>SignatureAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RSASSA-PSS</code> ou <code>Ed25519</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithme de signature</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="certificateAlgo"></a> <code>CertificateAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PKIX</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithme de certificat</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_type_complexe_de_donnée">4.2. Type complexe de donnée</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Paramètres cryptographiques</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Algorithme</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="csprngParam"></a> <code>CsprngParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BitStrength</code> et <code>Capacity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres du générateur de valeurs aléatoires</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="symKeyGenParam"></a> <code>SymKeyGenParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyBitLength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres de création de clé symétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="rsaKeyGenParam"></a> <code>RsaKeyGenParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyBitLength</code> et <code>PublicExponent</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres du générateur de clés RSA</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="namedParam"></a> <code>NamedParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Ed25519</code> ou <code>X25519</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres du générateur de clés elliptiques</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="keyAgreementParam"></a> <code>KeyAgreementParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HashAlgo</code> et <code>KeyBitLength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres d&#8217;échange de clé</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="gcmParam"></a> <code>GcmParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TagBitLength</code> et <code>IvBitLength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres du mode GCM du mode d&#8217;opération galois</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="pssParam"></a> <code>PssParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HashAlgo</code>, <code>MgfAlgo</code>, <code>HashMgfAlgo</code>, <code>SaltBitLength</code> et <code>TrailerField</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres du mode <code>PSS</code> <code>(RSA Signature Scheme with Probabilistic Signature)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="oaepParam"></a> <code>OaepParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HashAlgo</code>, <code>MgfAlgo</code>, <code>HashMgfAlgo</code> et <code>PEncodingValue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres du mode <code>OAEP</code> <code>(Optimal Asymmetric Encryption Padding)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="pkixParam"></a> <code>PkixParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RevocationVerif</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres du vérificateur de certificat</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Spécification cryptographique</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Spécification</th>
+<th class="tableblock halign-left valign-top">Algorithme et paramètre</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="csprngSpec"></a> <code>CsprngSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CsprngAlgo</code> et <code>CsprngParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification du générateur cryptographique de valeurs aléatoires</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="hashFnSpec"></a> <code>HashFnSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HashAlgo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification de la fonction de hachage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="symKeyGenSpec"></a> <code>SymKeyGenSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SymKeyGenAlgo</code> et <code>SymKeyGenParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification du générateur de clé symétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="symCipherSpec"></a> <code>SymCipherSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SymChipherAlgo</code> et <code>GcmParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification du chiffreur/déchiffreur symétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="asymKeyPairGenSpec"></a> <code>AsymKeyPairGenSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AsymKeyPairGenAlgo</code> et (<code>RsaKeyGenParam</code> ou <code>NamedParam</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification du générateur de paire de clés asymétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="asymCipherSpec"></a> <code>AsymCipherSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AsymChipherAlgo</code> et <code>OaepParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification du chiffreur/déchiffreur asymétrique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="signatureFnSpec"></a> <code>SignatureFnSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SignatureAlgo</code> et (<code>RsaKeyGenParam</code> ou <code>NamedParam</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification de la fonction de signature numérique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="keyAgreementFnSpec"></a> <code>KeyAgreementFnSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyAgreementAlgo</code> et <code>KeyAgreementParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification de la fonction d&#8217;échange de clé</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="certificateVerifSpec"></a> <code>CertificateVerifSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CertificateAlgo</code> et <code>PkixParam</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification du vérificateur de certificat numérique</p></td>
+</tr>
+</tbody>
+</table>
+<table id="security-specs-profiles" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Spécifications de sécurité du profil fort et efficace</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant de profil<br>
+  <code>SecurityProfile</code></th>
+<th class="tableblock halign-left valign-top">Identifiant de spécification<br>
+  <code>SecuritySpecId</code></th>
+<th class="tableblock halign-left valign-top">Spécification<br>
+  <code>SecuritySpec</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CSPRNG</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CsprngSpec</code> =  (<br>
+  &#160; <code>CsprngAlgo</code> = <code>DRBG</code>,<br>
+  &#160; <code>CsprngParam</code> = (<code>BitStrength</code> = <code>256</code> et <code>Capacity</code> = <code>PR_AND_RESEED</code>)<br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CSPRNG</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CsprngSpec</code> =  (<br>
+  &#160; <code>CsprngAlgo</code> = <code>DRBG</code>,<br>
+  &#160; <code>CsprngParam</code> = (<code>BitStrength</code> = <code>128</code> et <code>Capacity</code> = <code>PR_AND_RESEED</code>)<br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Hashing</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HashFnSpec</code> =  (<br>
+  &#160; <code>HashAlgo</code> = <code>SHA-512</code><br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Hashing</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HashFnSpec</code> =  (<br>
+  &#160; <code>HashAlgo</code> = <code>SHA-256</code><br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AES-Gen</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SymKeyGenSpec</code> =  (<br>
+  &#160; <code>SymKeyGenAlgo</code> = <code>AES</code>,<br>
+  &#160; <code>SymKeyGenParam</code> = (<code>KeyBitLength</code> = <code>256</code>)<br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AES-Gen</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SymKeyGenSpec</code> =  (<br>
+  &#160; <code>SymKeyGenAlgo</code> = <code>AES</code>,<br>
+  &#160; <code>SymKeyGenParam</code> = (<code>KeyBitLength</code> = <code>128</code>)<br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code> et <code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AES-GCM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SymCipherSpec</code> =  (<br>
+  &#160; <code>SymChipherAlgo</code> = <code>AES/GCM/NoPadding</code>,<br>
+  &#160; <code>GcmParam</code> = (<code>TagBitLength</code> = <code>128</code> , <code>IvBitLength</code> = <code>96</code>) <br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RSA-Encipherment-Signature-Gen</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AsymKeyPairGenSpec</code> =  (<br>
+  &#160; <code>AsymKeyPairGenAlgo</code> = <code>RSA</code>,<br>
+  &#160; <code>RsaKeyGenParam</code> = (<code>KeyBitLength</code> = <code>4096</code>, <code>PublicExponent</code> = <code>65537</code>)<br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RSA-Encipherment-Signature-Gen</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AsymKeyPairGenSpec</code> =  (<br>
+  &#160; <code>AsymKeyPairGenAlgo</code> = <code>RSA</code>,<br>
+  &#160; <code>RsaKeyGenParam</code> = (<code>KeyBitLength</code> = <code>2048</code>, <code>PublicExponent</code> = <code>65537</code>)<br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code> et <code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>25519-Signature-Gen</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AsymKeyPairGenSpec</code> =  (<br>
+  &#160; <code>AsymKeyPairGenAlgo</code> = <code>Ed25519</code>,<br>
+  &#160; <code>NamedParam</code> = <code>Ed25519</code><br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code> et <code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>25519-DH-Gen</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AsymKeyPairGenSpec</code> =  (<br>
+  &#160; <code>AsymKeyPairGenAlgo</code> = <code>X25519</code>,<br>
+  &#160; <code>NamedParam</code> = <code>X25519</code><br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RSA-Encipherment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AsymCipherSpec</code> =  (<br>
+  &#160; <code>AsymCipherAlgo</code> = <code>RSA/ECB/OAEPWithSHA-256AndMGF1Padding</code>,<br>
+  &#160; <code>OaepParam</code> = (<code>HashAlgo</code> = <code>SHA-512</code>, <code>MgfAlgo</code> = <code>MGF1</code>, <code>HashMgfAlgo</code> = <code>SHA-512</code> et <code>PEncodingValue</code> = vide)<br>
+  )</p>
+<p class="tableblock">La contradiction que l&#8217;algorithme <code>SHA-256</code> est défini dans l&#8217;algorithme <code>AsymCipherAlgo</code> et le <code>OaepParam</code> est <code>SHA-512</code> est dû à une contrainte et une particularité du JDK de Java. Ici, les paramètres <code>OaepParam</code> sont ceux priorisés et appliqués.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RSA-Encipherment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AsymCipherSpec</code> =  (<br>
+  &#160; <code>AsymCipherAlgo</code> = <code>RSA/ECB/OAEPWithSHA-256AndMGF1Padding</code>,<br>
+  &#160; <code>OaepParam</code> = (<code>HashAlgo</code> = <code>SHA-256</code>, <code>MgfAlgo</code> = <code>MGF1</code>, <code>HashMgfAlgo</code> = <code>SHA-256</code> et <code>PEncodingValue</code> = vide) <br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>25519-DH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyAgreementFnSpec</code> =  (<br>
+  &#160; <code>KeyAgreementAlgo</code> = <code>X25519</code>,<br>
+  &#160; <code>KeyAgreementParam</code> = (<code>HashAlgo</code> = <code>SHA-256</code>, <code>KeyBitLength</code> = <code>256</code>) <br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>25519-DH</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyAgreementFnSpec</code> =  (<br>
+  &#160; <code>KeyAgreementAlgo</code> = <code>X25519</code>,<br>
+  &#160; <code>KeyAgreementParam</code> = (<code>HashAlgo</code> = <code>SHA-256</code>, <code>KeyBitLength</code> = <code>128</code>) <br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RSA-Signature</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SignatureFnSpec</code> =  (<br>
+  &#160; <code>SignatureAlgo</code> = <code>RSASSA-PSS</code>,<br>
+  &#160; <code>PssParam</code> = (<code>HashAlgo</code> = <code>SHA-512</code>, <code>MgfAlgo</code> = <code>MGF1</code>, <code>HashMgfAlgo</code> = <code>SHA-512</code>, <code>SaltBitLength</code> = <code>64</code> et <code>TrailerField</code> = <code>1</code>) <br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RSA-Signature</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SignatureFnSpec</code> =  (<br>
+  &#160; <code>SignatureAlgo</code> = <code>RSASSA-PSS</code>,<br>
+  &#160; <code>PssParam</code> = (<code>HashAlgo</code> = <code>SHA-256</code>, <code>MgfAlgo</code> = <code>MGF1</code>, <code>HashMgfAlgo</code> = <code>SHA-256</code>, <code>SaltBitLength</code> = <code>32</code> et <code>TrailerField</code> = <code>1</code>) <br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code> et <code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>25519-Signature</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SignatureFnSpec</code> =  (<br>
+  &#160; <code>SignatureAlgo</code> = <code>Ed25519</code><br>
+  )</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Strongest</code> et <code>Efficient</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PKIX</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CertificateVerifSpec</code> =  (<br>
+  &#160; <code>CertificateAlgo</code> = <code>PKIX</code>,<br>
+  &#160; <code>PkixParam</code> = (<code>RevocationVerif</code> = <code>CRL</code>)<br>
+  )</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_type_de_message">4.3. Type de message</h3>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contrainte_du_module">5. Contrainte du module</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[CON-001] </dt>
+<dd>
+<p>La <em>Bibliothèque de sécurité</em> doit utiliser les primitives cryptographiques définies par le <code>JDK</code> de <code>Java security</code>.</p>
+</dd>
+<dt class="hdlist1">[CON-002] </dt>
+<dd>
+<p>Les fonctions de la <em>Bibliothèque de sécurité</em> devraient être utilisables de façon concurrentes.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèse_du_module">6. Hypothèse du module</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[HYP-001] </dt>
+<dd>
+<p>La <em>Bibliothèque de sécurité</em> ne vérifie pas les certificats racines.</p>
+</dd>
+<dt class="hdlist1">[HYP-002] </dt>
+<dd>
+<p>Les extensions qui seront vérifiées sur un certificat sur la <em>Bibliothèque de sécurité</em> sont les extensions qui sont critiques et appartenant aux groupes <code>Basic Constraints</code>, <code>Key Usage</code> ou <code>Subject Alternative Name</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_processus_du_module">7. Processus du module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_processus_pour_le_service_de_sécurité">7.1. Processus pour le service de sécurité</h3>
+<div class="paragraph">
+<p><strong><em>Spécification des algorithmes de sécurité</em></strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#PRO-SPEC-01">[PRO-SPEC-01]</a> </dt>
+<dd>
+<p>Récupère les spécifications des algorithmes de sécurité selon le profil de sécurité choisi.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong><em>Fonction de hachage</em></strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#PRO-SYM-HASH-01">[PRO-SYM-HASH-01]</a> </dt>
+<dd>
+<p>Génère une empreinte numérique avec une fonction de hachage.</p>
+</dd>
+<dt class="hdlist1"><a href="#PRO-SYM-HASH-02">[PRO-SYM-HASH-02]</a> </dt>
+<dd>
+<p>Vérifie si une empreinte numérique d&#8217;une fonction de hachage correspond à des données.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong><em>Symétrique - Chiffrement/Déchiffrement</em></strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#PRO-SYM-CIPHER-01">[PRO-SYM-CIPHER-01]</a> </dt>
+<dd>
+<p>Génère une clé secrète pour un chiffreur et déchiffreur symétrique.</p>
+</dd>
+<dt class="hdlist1"><a href="#PRO-SYM-CIPHER-02">[PRO-SYM-CIPHER-02]</a> </dt>
+<dd>
+<p>Chiffre des données avec un chiffreur symétrique.</p>
+</dd>
+<dt class="hdlist1"><a href="#PRO-SYM-CIPHER-03">[PRO-SYM-CIPHER-03]</a> </dt>
+<dd>
+<p>Déchiffre des données avec un déchiffreur symétrique.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong><em>Asymétrique - Générateur de clés</em></strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#PRO-ASYM-GEN-01">[PRO-ASYM-GEN-01]</a> </dt>
+<dd>
+<p>Génère une clé publique et une clé privée pour un algorithme asymétrique.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong><em>Asymétrique - Chiffrement/Déchiffrement</em></strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#PRO-ASYM-CIPHER-01">[PRO-ASYM-CIPHER-01]</a> </dt>
+<dd>
+<p>Chiffre des données avec un chiffreur asymétrique.</p>
+</dd>
+<dt class="hdlist1"><a href="#PRO-ASYM-CIPHER-02">[PRO-ASYM-CIPHER-02]</a> </dt>
+<dd>
+<p>Déchiffre des données avec un déchiffreur asymétrique.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong><em>Asymétrique - Échange de clé</em></strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#PRO-ASYM-KE-01">[PRO-ASYM-KE-01]</a> </dt>
+<dd>
+<p>Génère une clé secrète via un échange de clé.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong><em>Asymétrique - Signature numérique</em></strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#PRO-ASYM-SIG-01">[PRO-ASYM-SIG-01]</a> </dt>
+<dd>
+<p>Génère une signature numérique.</p>
+</dd>
+<dt class="hdlist1"><a href="#PRO-ASYM-SIG-02">[PRO-ASYM-SIG-02]</a> </dt>
+<dd>
+<p>Vérifie si une signature numérique correspond à des données.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong><em>Asymétrique - Vérification de certificat</em></strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="#PRO-ASYM-CRT-01">[RO-ASYM-CRT-01]</a> </dt>
+<dd>
+<p>Vérifie la validité temporelle d&#8217;un certificat.</p>
+</dd>
+<dt class="hdlist1"><a href="#PRO-ASYM-CRT-02">[RO-ASYM-CRT-02]</a> </dt>
+<dd>
+<p>Vérifie la signature numérique d&#8217;un certificat.</p>
+</dd>
+<dt class="hdlist1"><a href="#PRO-ASYM-CRT-03">[RO-ASYM-CRT-03]</a> </dt>
+<dd>
+<p>Vérifie la chaîne de certification est complète et valide.</p>
+</dd>
+<dt class="hdlist1"><a href="#PRO-ASYM-CRT-04">[RO-ASYM-CRT-04]</a> </dt>
+<dd>
+<p>Vérifie que le certificat respecte les extensions d&#8217;usages et de contraintes.</p>
+</dd>
+</dl>
+</div>
+<div class="sect3">
+<h4 id="_spécification_des_algorithmes_de_sécurité">7.1.1. Spécification des algorithmes de sécurité</h4>
+<div class="sect4">
+<h5 id="_pro_spec_01_processus_récupère_les_spécifications_de_sécurité"><a id="PRO-SPEC-01"></a>[PRO-SPEC-01] Processus « Récupère les spécifications de sécurité »</h5>
+<div class="sect5">
+<h6 id="_comportement">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-SPEC-01.1] 
+</td>
+<td class="hdlist2">
+<p>Récupère les spécifications de sécurité associées au profil</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Récupère les spécifications de sécurité associées à <code>SecurityProfile</code> et où les valeurs de toutes les spécifications sont définies dans <a href="#security-specs-profiles">Spécifications de sécurité du profil fort et efficace</a>.</p>
+</li>
+<li>
+<p>Retourne les spécifications sous le format de <code>SecurityProfileSpecs</code>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>getProfilSecuritySpecs</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>SecurityProfile</code> securityProfile  : Le profil de sécurité.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>SecurityProfileSpecs</code> securityProfileSpecs : Les spécifications de sécurité associées à l&#8217;identifiant du profil de sécurité.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fonction_de_hachage">7.1.2. Fonction de hachage</h4>
+<div class="sect4">
+<h5 id="_pro_sym_hash_01_processus_génère_une_empreinte_numérique"><a id="PRO-SYM-HASH-01"></a>[PRO-SYM-HASH-01] Processus « Génère une empreinte numérique »</h5>
+<div class="sect5">
+<h6 id="_comportement_2">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-SYM-HASH-01.1] 
+</td>
+<td class="hdlist2">
+<p>Génère une empreinte numérique</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit la fonction cryptographique selon la spécification de la fonction de hachage.</p>
+</li>
+<li>
+<p>Performe l&#8217;empreinte numérique sur les données à hacher avec la fonction cryptographique.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_2">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>generateDigest</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>HashFnSpec</code> hashFnSpec : Spécification de la fonction de hachage.</p>
+</li>
+<li>
+<p><code>Bytes</code> data : Données utilisées pour calculer l&#8217;empreinte numérique.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Digest</code> digest : Une empreinte numérique.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_2">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_pro_sym_hash_02_processus_vérifie_une_empreinte_numérique"><a id="PRO-SYM-HASH-02"></a>[PRO-SYM-HASH-02] Processus « Vérifie une empreinte numérique »</h5>
+<div class="sect5">
+<h6 id="_comportement_3">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-SYM-HASH-02.1]
+</td>
+<td class="hdlist2">
+<p>Vérification d&#8217;une empreinte numérique avec des données</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit la fonction cryptographique selon la spécification de la fonction de hachage.</p>
+</li>
+<li>
+<p>Performe l&#8217;empreinte numérique sur les données à hacher avec la fonction cryptographique.</p>
+</li>
+<li>
+<p>Compare si l&#8217;empreinte résultante est identique avec l&#8217;empreinte numérique en entrée.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_3">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>verifyDigest</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>HashFnSpec</code> hashFnSpec : Spécification de la fonction de hachage.</p>
+</li>
+<li>
+<p><code>Digest</code> digest : L&#8217;empreinte numérique à vérifier.</p>
+</li>
+<li>
+<p><code>Bytes</code> data : Données utilisées pour vérifier l&#8217;empreinte numérique.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> result : Le résultat de la vérification sous forme booléenne.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_3">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_symétrique_chiffrementdéchiffrement">7.1.3. Symétrique - Chiffrement/Déchiffrement</h4>
+<div class="sect4">
+<h5 id="_pro_sym_cipher_01_processus_génère_une_clé_secrète"><a id="PRO-SYM-CIPHER-01"></a>[PRO-SYM-CIPHER-01] Processus « Génère une clé secrète »</h5>
+<div class="sect5">
+<h6 id="_comportement_4">Comportement</h6>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[PRO-SYM-CIPHER-01.1]</dt>
+<dd>
+<p>Génère une clé symétrique</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit le générateur de valeurs aléatoires selon la spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Construit le générateur de clé selon la spécification du générateur de clé.</p>
+</li>
+<li>
+<p>Génère la clé secrète avec le générateur de valeurs aléatoires et de clé.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_4">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>generateSecretKey</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>CsprngSpec</code> csprngSpec : Spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p><code>SymKeyGenSpec</code> symKeyGenSpec : Spécification du générateur de clé symétrique.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>SecretKey</code> secretKey : La clé secrète générée.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_4">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_pro_sym_cipher_02_processus_chiffre_des_données"><a id="PRO-SYM-CIPHER-02"></a>[PRO-SYM-CIPHER-02] Processus « Chiffre des données »</h5>
+<div class="sect5">
+<h6 id="_comportement_5">Comportement</h6>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[PRO-SYM-CIPHER-02.1]</dt>
+<dd>
+<p>Chiffre à partir d&#8217;une clé symétrique</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit le générateur de valeurs aléatoires selon la spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Si un vecteur d&#8217;initialisation est défini dans la spécification du chiffreur,</p>
+<div class="ulist">
+<ul>
+<li>
+<p>on construit le vecteur d&#8217;initialisation de la longueur définie la spécification du chiffreur et en utilisant le générateur de valeurs aléatoires.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Construit le chiffreur selon la spécification du chiffreur symétrique, le générateur de valeurs aléatoires et le vecteur d&#8217;initialisation (si construit).</p>
+</li>
+<li>
+<p>Performe le chiffrement sur les données à chiffrer avec le chiffreur et la clé secrète.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_5">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>symEncrypt</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>CsprngSpec</code> csprngSpec : Spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p><code>SymCipherSpec</code> symCipherSpec : Spécification du chiffreur symétrique.</p>
+</li>
+<li>
+<p><code>SecretKey</code> secretKey : Clé secrète.</p>
+</li>
+<li>
+<p><code>Bytes</code> data : Données à chiffrer.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Bytes</code> encryptedData : Les données chiffrées.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_5">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_pro_sym_cipher_03_processus_déchiffre_des_données"><a id="PRO-SYM-CIPHER-03"></a>[PRO-SYM-CIPHER-03] Processus « Déchiffre des données »</h5>
+<div class="sect5">
+<h6 id="_comportement_6">Comportement</h6>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[PRO-SYM-CIPHER-03.1]</dt>
+<dd>
+<p>Déchiffre à partir d&#8217;une clé symétrique</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit le générateur de valeurs aléatoires selon la spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Si un vecteur d&#8217;initialisation est défini dans la spécification du déchiffreur,</p>
+<div class="ulist">
+<ul>
+<li>
+<p>on construit le vecteur d&#8217;initialisation de la longueur définie la spécification du chiffreur et en récupérant les valeurs du vecteur d&#8217;initialisation qui est dans les données chiffrées.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Construit le déchiffreur selon la spécification du déchiffreur symétrique, le générateur de valeurs aléatoires  et le vecteur d&#8217;initialisation (si construit).</p>
+</li>
+<li>
+<p>Performe le déchiffrement sur les données chiffrées avec le déchiffreur et la clé secrète.</p>
+</li>
+<li>
+<p>S&#8217;il est impossible de déchiffrer, erreur <code>DecryptException</code>.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_6">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>symDecrypt</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>CsprngSpec</code> csprngSpec : Spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p><code>SymCipherSpec</code> symCipherSpec : Spécification du déchiffreur symétrique.</p>
+</li>
+<li>
+<p><code>SecretKey</code> secretKey : Clé secrète.</p>
+</li>
+<li>
+<p><code>Bytes</code> encryptedData : Données chiffrées.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Bytes</code> decryptedData : Les données déchiffrées.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_6">Erreur</h6>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">DecryptException</dt>
+<dd>
+<p>Erreur lors du déchiffrement.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_asymétrique_générateur_de_clés">7.1.4. Asymétrique - Générateur de clés</h4>
+<div class="sect4">
+<h5 id="_pro_asym_gen_01_processus_génère_une_paire_de_clés"><a id="PRO-ASYM-GEN-01"></a>[PRO-ASYM-GEN-01] Processus « Génère une paire de clés »</h5>
+<div class="sect5">
+<h6 id="_comportement_7">Comportement</h6>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[PRO-ASYM-GEN-01.1]</dt>
+<dd>
+<p>Génère une paire de clés asymétrique</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit le générateur de valeurs aléatoires selon la spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Construit le générateur de clés selon la spécification du générateur de clés.</p>
+</li>
+<li>
+<p>Génère la paire de clés avec le générateur de valeurs aléatoires et de clés.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_7">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>generateKeyPair</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>CsprngSpec</code> csprngSpec : Spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p><code>AsymKeyPairGenSpec</code> asymKeyPairGenSpec : Spécification du générateur de paire de clés asymétrique.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>KeyPair</code> keyPair : La paire de clés générée.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_7">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_asymétrique_chiffrementdéchiffrement">7.1.5. Asymétrique - Chiffrement/Déchiffrement</h4>
+<div class="sect4">
+<h5 id="_pro_asym_cipher_01_processus_chiffre_des_données"><a id="PRO-ASYM-CIPHER-01"></a>[PRO-ASYM-CIPHER-01] Processus « Chiffre des données »</h5>
+<div class="sect5">
+<h6 id="_comportement_8">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CIPHER-01.1]
+</td>
+<td class="hdlist2">
+<p>Chiffre à partir d&#8217;une clé publique</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit le générateur de valeurs aléatoires selon la spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Construit le chiffreur selon la spécification du chiffreur asymétrique et le générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Performe le chiffrement sur les données à chiffrer avec le chiffreur et la clé publique.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_8">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>asymEncrypt</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>CsprngSpec</code> csprngSpec : Spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p><code>AsymCipherSpec</code> asymCipherSpec : Spécification du chiffreur asymétrique.</p>
+</li>
+<li>
+<p><code>PublicKey</code> publicKey : Clé publique.</p>
+</li>
+<li>
+<p><code>Bytes</code> data : Données à chiffrer.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Bytes</code> encryptedData : Les données chiffrées.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_8">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_pro_asym_cipher_02_processus_déchiffre_des_données"><a id="PRO-ASYM-CIPHER-02"></a>[PRO-ASYM-CIPHER-02] Processus « Déchiffre des données »</h5>
+<div class="sect5">
+<h6 id="_comportement_9">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CIPHER-02.1]
+</td>
+<td class="hdlist2">
+<p>Déchiffre à partir d&#8217;une clé privée</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit le générateur de valeurs aléatoires selon la spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Construit le déchiffreur selon la spécification du déchiffreur asymétrique et le générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Performe le déchiffrement sur les données chiffrées avec le déchiffreur et la clé privée.</p>
+</li>
+<li>
+<p>S&#8217;il est impossible de déchiffrer, erreur <code>DecryptException</code>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_9">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>asymDecrypt</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>CsprngSpec</code> csprngSpec : Spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p><code>AsymCipherSpec</code> asymCipherSpec : Spécification du déchiffreur asymétrique.</p>
+</li>
+<li>
+<p><code>PrivateKey</code> privateKey : Clé privée.</p>
+</li>
+<li>
+<p><code>Bytes</code> encryptedData : Données chiffrées.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Bytes</code> decryptedData : Les données déchiffrées.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_9">Erreur</h6>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">DecryptException</dt>
+<dd>
+<p>Erreur lors du déchiffrement.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_asymétrique_échange_de_clé_établissement_de_clé">7.1.6. Asymétrique - Échange de clé (établissement de clé)</h4>
+<div class="sect4">
+<h5 id="_pro_asym_ke_01_processus_génère_une_clé_secrète"><a id="PRO-ASYM-KE-01"></a>[PRO-ASYM-KE-01] Processus « Génère une clé secrète »</h5>
+<div class="sect5">
+<h6 id="_comportement_10">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-KE-01.1]
+</td>
+<td class="hdlist2">
+<p>Construction des fonctions cryptographiques</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit le générateur de valeurs aléatoires selon la spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Construit la fonction d&#8217;échange de clé selon la spécification de la fonction d&#8217;échange de clé et le générateur de valeurs aléatoires.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-KE-01.2]
+</td>
+<td class="hdlist2">
+<p>Accord d&#8217;une clé commune</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Initialise l&#8217;échange de clé avec la clé privée de l&#8217;initiateur et le générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Conclut l&#8217;échange de clé en utilisant la clé publique du partenaire.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-KE-01.3]
+</td>
+<td class="hdlist2">
+<p>Généré une clé secrète à partir de la clé conclue</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit une empreinte numérique avec</p>
+<div class="ulist">
+<ul>
+<li>
+<p>la fonction de hachage définie dans la spécification de la fonction d&#8217;échange de clé,</p>
+</li>
+<li>
+<p>les données ci-dessous ajoutées au hachage:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>la clé conlue,</p>
+</li>
+<li>
+<p>la clé publique de l&#8217;initiateur et</p>
+</li>
+<li>
+<p>la clé publique du partenaire.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Génère une clé secrète</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Transforme l&#8217;empreinte numérique en une clé secrète qui respecte la longueur de la clé définie dans la spécification de la fonction d&#8217;échange de clé.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_10">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>generateSharedSecretKey</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>CsprngSpec</code> csprngSpec : Spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p><code>KeyAgreementFnSpec</code> keyAgreementFnSpec : Spécification de la fonction d&#8217;échange de clé.</p>
+</li>
+<li>
+<p><code>KeyPair</code> originatorKeyPair : La paire de clés de l&#8217;initiateur de l&#8217;accord de clé.</p>
+</li>
+<li>
+<p><code>PublicKey</code> recipientPublicKey : La clé publique de l’autre partie à l’accord de clé.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>SecretKey</code> secretKey : La clé secrète commune négociée.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_10">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_asymétrique_signature_numérique">7.1.7. Asymétrique - Signature numérique</h4>
+<div class="sect4">
+<h5 id="_pro_asym_sig_01_processus_génère_une_signature_numérique"><a id="PRO-ASYM-SIG-01"></a>[PRO-ASYM-SIG-01] Processus « Génère une signature numérique »</h5>
+<div class="sect5">
+<h6 id="_comportement_11">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-SIG-01.1] 
+</td>
+<td class="hdlist2">
+<p>Génère une signature numérique</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit le générateur de valeurs aléatoires selon la spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p>Construit la fonction de signature selon la spécification de la fonction de signature.</p>
+</li>
+<li>
+<p>Performe la signature sur l&#8217;algorithme avec le générateur de valeurs aléatoires, la clé privée et les données à signer.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_11">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>generateSignature</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>CsprngSpec</code> csprngSpec : Spécification du générateur de valeurs aléatoires.</p>
+</li>
+<li>
+<p><code>SignatureFnSpec</code> signatureFnSpec : Spécification de la fonction de signature numérique.</p>
+</li>
+<li>
+<p><code>PrivateKey</code> privateKey : Clé privée.</p>
+</li>
+<li>
+<p><code>Bytes</code> data : Données à signer.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>DigitalSignature</code> signature : Signature numérique.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_11">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_pro_asym_sig_02_processus_vérifie_une_signature_numérique"><a id="PRO-ASYM-SIG-02"></a>[PRO-ASYM-SIG-02] Processus « Vérifie une signature numérique »</h5>
+<div class="sect5">
+<h6 id="_comportement_12">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-SIG-02.1] 
+</td>
+<td class="hdlist2">
+<p>Vérifie une signature numérique</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit la fonction de vérification de signature selon la spécification de la fonction de signature.</p>
+</li>
+<li>
+<p>Performe la vérification sur la fonction avec la clé publique, les données signées et la signature numérique.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_12">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>verifySignature</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>SignatureFnSpec</code> signatureFnSpec : Spécification de la fonction de signature numérique.</p>
+</li>
+<li>
+<p><code>PublicKey</code> publicKey : Clé publique.</p>
+</li>
+<li>
+<p><code>Bytes</code> signedData : Données signées.</p>
+</li>
+<li>
+<p><code>DigitalSignature</code> signature : Signature numérique.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> result : Le résultat de la vérification sous forme booléenne.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_12">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_asymétrique_certificat">7.1.8. Asymétrique - Certificat</h4>
+<div class="sect4">
+<h5 id="_pro_asym_crt_01_processus_vérifie_la_validité_temporelle_dun_certificat"><a id="PRO-ASYM-CRT-01"></a>[PRO-ASYM-CRT-01] Processus « Vérifie la validité temporelle d&#8217;un certificat »</h5>
+<div class="sect5">
+<h6 id="_comportement_13">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CRT-01.1]
+</td>
+<td class="hdlist2">
+<p>Vérifie l&#8217;aspect temporelle du certificat</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Vérifie si le certificat possède une date valide au moment présent et le certificat n&#8217;est pas expiré.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_13">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>verifyCertificateTemporalValidity</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>X509Certificate</code> certificate : Certificat numérique à vérifier.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> result : Le résultat de la vérification sous forme booléenne.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_13">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_pro_asym_crt_02_processus_vérifie_la_signature_numérique_dun_certificat"><a id="PRO-ASYM-CRT-02"></a>[PRO-ASYM-CRT-02] Processus « Vérifie la signature numérique d&#8217;un certificat »</h5>
+<div class="sect5">
+<h6 id="_comportement_14">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CRT-02.1]
+</td>
+<td class="hdlist2">
+<p>Vérifie la signature numérique d&#8217;un certificat</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Vérifie si la signature numérique du certificat est conforme avec la clé publique de l&#8217;entité qui a signé le certificat vérifié.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_14">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>verifyCertificateSignature</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>X509Certificate</code> certificate : Certificat numérique à vérifier.</p>
+</li>
+<li>
+<p><code>PublicKey</code> publicKey : Clé publique du certificat qui a émis le certificat.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> result : Le résultat de la vérification sous forme booléenne.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_14">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_pro_asym_crt_03_processus_vérifie_la_chaîne_de_certification"><a id="PRO-ASYM-CRT-03"></a>[PRO-ASYM-CRT-03] Processus « Vérifie la chaîne de certification »</h5>
+<div class="sect5">
+<h6 id="_comportement_15">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CRT-03.1]
+</td>
+<td class="hdlist2">
+<p>Construit la chaîne de certification</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Génère l&#8217;ensemble des certificats de confiance à partir des certificats racines.</p>
+</li>
+<li>
+<p>Génère la chaîne de certificats à partir des certificats intermédiaires et le certificat à vérifier.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CRT-03.2]
+</td>
+<td class="hdlist2">
+<p>Vérifie la chaîne de certification est complète et valide</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Construit le vérificateur de certificat selon la spécification du vérificateur de certificat.</p>
+</li>
+<li>
+<p>Performe la vérification sur le vérificateur avec la chaîne de certificats, l&#8217;ensemble des certificats de confiance et
+la vérification de révocation avec le paramètre défini dans la spécification du vérificateur de certificat.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_15">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>verifyCertificateChain</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>CertificateVerifSpec</code> certificateVerifSpec : Spécification du vérificateur de certificat.</p>
+</li>
+<li>
+<p><code>RootCertificates</code> rootCertificates :  Certificats numériques racines.</p>
+</li>
+<li>
+<p><code>IntermediateCertificates</code> intermidiateCertificates :  Certificats numériques intermédiaires.</p>
+</li>
+<li>
+<p><code>X509Certificate</code> certificate : Certificat numérique à vérifier.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> result : Le résultat de la vérification sous forme booléenne.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_15">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_pro_asym_crt_04_processus_vérifie_les_extensions_du_certificat"><a id="PRO-ASYM-CRT-04"></a>[PRO-ASYM-CRT-04] Processus « Vérifie les extensions du certificat »</h5>
+<div class="sect5">
+<h6 id="_comportement_16">Comportement</h6>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CRT-04.1]
+</td>
+<td class="hdlist2">
+<p>Récupère toutes les extensions critiques du certificat vérifié</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CRT-04.1.1]
+</td>
+<td class="hdlist2">
+<div class="ulist">
+<ul>
+<li>
+<p>Pour une extension appartenant à <code>Basic Constraints</code>,</p>
+<div class="ulist">
+<ul>
+<li>
+<p>la longueur de la contrainte doit être égale à -1.</p>
+</li>
+<li>
+<p>Sinon, la contrainte n&#8217;est pas respectée.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CRT-04.1.2]
+</td>
+<td class="hdlist2">
+<div class="ulist">
+<ul>
+<li>
+<p>Pour une extension appartenant à <code>Key Usage</code>,</p>
+<div class="ulist">
+<ul>
+<li>
+<p>tous les usages reçus en entrées doivent être présents dans les usages du certificat.</p>
+</li>
+<li>
+<p>Sinon, la contrainte n&#8217;est pas respectée.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CRT-04.1.3]
+</td>
+<td class="hdlist2">
+<div class="ulist">
+<ul>
+<li>
+<p>Pour une extension appartenant à <code>Subject Alternative Name</code> (<code>SAN</code>),</p>
+<div class="ulist">
+<ul>
+<li>
+<p>un des noms de domaine  existants dans le <code>Subject Alternative Name</code> doit au minimum correspondre au nom de domaine reçu en entrée.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CRT-04.1.4]
+</td>
+<td class="hdlist2">
+<div class="ulist">
+<ul>
+<li>
+<p>Dans le cas que si et seulement si aucune correspondance a été fait sur l&#8217;extension <code>Subject Alternative Name</code>,</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le <code>Common Name</code> (<code>CN</code>) du certificat doit correspondre au nom de domaine reçu en entrée.</p>
+</li>
+<li>
+<p>Sinon, la contrainte n&#8217;est pas respectée.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-ASYM-CRT-04.1.5]
+</td>
+<td class="hdlist2">
+<p>Retourne vrai si et seulement si toutes les contraintes sont respectées.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_interface_16">Interface</h6>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 50%;">
+<col style="width: 35.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>verifyCertificateExtensions</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>X509Certificate</code> certificate : Certificat numérique à vérifier.</p>
+</li>
+<li>
+<p><code>Hostname</code> hostname : Nom d&#8217;hôte du serveur à vérifier.</p>
+</li>
+<li>
+<p><code>CertificateKeyUsages</code> usages : Les usages qui doivent être présent dans le certificat.</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> result : Le résultat de la vérification sous forme booléenne.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect5">
+<h6 id="_erreur_16">Erreur</h6>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">8. Incongruités</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_matrice_de_spécification">9. Matrice de spécification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_matrice_de_dépendances">10. Matrice de dépendances</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annexes">11. Annexes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_java_sécurité">11.1. Java Sécurité</h3>
+<div class="sect3">
+<h4 id="_type">11.1.1. Type</h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Interfaces</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.Key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clé</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SecretKey</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.crypto.SecretKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clé secrète</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PublicKey</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.PublicKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clé publique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PrivateKey</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.PrivateKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clé privée</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyPair</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.KeyPair</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paire de clés</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>X509Certificate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.cert.X509Certificate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Certificat <code>X509</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SecureRandom</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.SecureRandom</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Générateur de nombre aléatoire</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyGenerator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.crypto.KeyGenerator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Générateur de clés</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyPairGenerator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.SecureRandom</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Générateur de paire de clés asymétriques</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SecretKeyFactory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.crypto.SecretKeyFactory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fabrique de dérivation de clé secrète</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyAgreement</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.crypto.KeyAgreement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Générateur d&#8217;échange de clé</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageDigest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.MessageDigest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Générateur d&#8217;empreinte numérique avec fonction de hachage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Signature</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.Signature</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Générateur et vérificateur de signature numérique</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Cipher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.crypto.Cipher</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chiffreur/déchiffreur</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CertPathValidator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.cert.CertPathValidator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validateur de certificat <code>X509</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DrbgParameters</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.DrbgParameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres d&#8217;algorithme du générateur de valeurs aléatoires</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RSAKeyGenParameterSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.spec.RSAKeyGenParameterSpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres d&#8217;algorithme de génération de clés RSA</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NamedParameterSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.spec.NamedParameterSpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres d&#8217;algorithme de génération de clés sur une courbe elliptique 25519 et sur une courbe elliptique 448</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PBEKeySpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javax.crypto.spec.PBEKeySpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres d&#8217;algorithme de dérivation de clé.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GCMParameterSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.spec.AlgorithmParameterSpec.GCMParameterSpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres d&#8217;algorithme de chiffrement AES GCM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PSSParameterSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.spec.PSSParameterSpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres du <code>PSS</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OAEPParameterSpec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.spec.OAEPParameterSpec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres <code>OAEP</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PKIXParameters</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.security.cert.PKIXParameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres du validateur de certificat <code>X509</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note">
+</td>
+<td class="content">
+Par défaut, <code>PKIXParameters</code> utilise <code>CRL</code> pour vérifier si un certificat est révoqué. Sinon, il est possible de plutôt utiliser <code>OCSP</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_concurrence">11.1.2. Concurrence</h4>
+<div class="paragraph">
+<p>Les classes <code>KeyGenerator</code>, <code>KeyPairGenerator</code>, <code>SecretKeyFactory</code>, <code>KeyAgreement</code>, <code>MessageDigest</code>, <code>Signature</code>, <code>Cipher</code> et <code>CertPathValidator</code> ne sont pas <em>thread safe</em>. Une approche recommandée pour gérer la concurrence consiste à créer une nouvelle instance de ces classes à chaque appel d&#8217;une fonction de la <em>Bibliothèque de sécurité</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_liens">11.2. Liens</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://datatracker.ietf.org/doc/html/rfc5280" class="bare">https://datatracker.ietf.org/doc/html/rfc5280</a></p>
+</li>
+<li>
+<p><a href="https://cyber.gouv.fr/sites/default/files/2021/03/anssi-guide-selection_crypto-1.0.pdf" class="bare">https://cyber.gouv.fr/sites/default/files/2021/03/anssi-guide-selection_crypto-1.0.pdf</a></p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/security/standard-names.html</a></p>
+</li>
+<li>
+<p><a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf" class="bare">https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v1<br>
+Last updated 2026-03-11 15:08:51 -0400
+</div>
+</div>
+</body>
+</html>

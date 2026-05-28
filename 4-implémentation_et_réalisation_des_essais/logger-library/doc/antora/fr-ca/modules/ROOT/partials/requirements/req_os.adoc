@@ -1,0 +1,4 @@
+* multiplateforme.
+
+La bibliothèque a été développée sous Ubuntu 18.04 et 20.04, et Windows 10, puis testée sous
+Ubuntu 18.04.

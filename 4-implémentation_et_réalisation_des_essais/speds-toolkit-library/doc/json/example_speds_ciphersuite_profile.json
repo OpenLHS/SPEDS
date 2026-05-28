@@ -1,0 +1,49 @@
+{
+  "spedsProfile": [
+    {
+      "spedsLayer": "PRESENTATION",
+      "algorithmCategory": "SYMM",
+      "securityProfile": "STRONG"
+    },
+    {
+      "spedsLayer": "SESSION",
+      "algorithmCategory": "SYMM",
+      "securityProfile": "STRONG"
+    },
+    {
+      "spedsLayer": "SESSION",
+      "algorithmCategory": "ASYM",
+      "securityProfile": "STRONG"
+    },
+    {
+      "spedsLayer": "SESSION",
+      "algorithmCategory": "HASH",
+      "securityProfile": "STRONG"
+    },
+    {
+      "spedsLayer": "SESSION",
+      "algorithmCategory": "SIGN",
+      "securityProfile": "STRONG"
+    },
+    {
+      "spedsLayer": "SESSION",
+      "algorithmCategory": "DH",
+      "securityProfile": "STRONG"
+    },
+    {
+      "spedsLayer": "TRANSPORT",
+      "algorithmCategory": "HASH",
+      "securityProfile": "STRONG"
+    },
+    {
+      "spedsLayer": "NETWORK",
+      "algorithmCategory": "SIGN",
+      "securityProfile": "STRONG"
+    },
+    {
+      "spedsLayer": "NETWORK",
+      "algorithmCategory": "HASH",
+      "securityProfile": "STRONG"
+    }
+  ]
+}

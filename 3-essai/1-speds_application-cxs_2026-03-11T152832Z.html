@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Spécification des essais de conceptions (CXS) de SPEDS Application">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification des Essais - SPEDS application</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification des Essais - SPEDS application</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_historique">1. Historique</a></li>
+<li><a href="#_objectif">2. Objectif</a></li>
+<li><a href="#_éléments_testées">3. Éléments Testées</a></li>
+<li><a href="#_hypothèses">4. Hypothèses</a></li>
+<li><a href="#_données_globales">5. Données globales</a></li>
+<li><a href="#_cas_de_test">6. Cas de Test</a>
+<ul class="sectlevel2">
+<li><a href="#CT_01">6.1. [CT_01] Requête de délégation bien formée</a></li>
+<li><a href="#CT_02">6.2. [CT_02] Requête de délégation mal formée</a></li>
+<li><a href="#CT_03">6.3. [CT_03] Requête de délégation pour un plan qui n&#8217;est pas en cours</a></li>
+<li><a href="#CT_04">6.4. [CT_04] Confirmation d&#8217;une délégation qui ne correspond pas à une requête précédente</a></li>
+<li><a href="#CT_05">6.5. [CT_05] Indication de message bien formée</a></li>
+<li><a href="#CT_06">6.6. [CT_06] Indication de message mal formée</a></li>
+<li><a href="#CT_07">6.7. [CT_07] Indication de message pour un plan qui n&#8217;est pas en cours</a></li>
+<li><a href="#CT_08">6.8. [CT_08] Réponse de réception de message qui ne correspond pas à une indication précédente</a></li>
+</ul>
+</li>
+<li><a href="#_essais">7. Essais</a>
+<ul class="sectlevel2">
+<li><a href="#_environnement">7.1. Environnement</a></li>
+<li><a href="#_descriptions">7.2. Descriptions</a></li>
+<li><a href="#_matrice_de_correspondance_élémentsessais">7.3. Matrice de correspondance Éléments/Essais</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Date de création: 2024-07-16<br>
+Auteur: Stéphanie St-Cyr</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification des essais prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-27 09:45</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-27 14:53</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_historique">1. Historique</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 58.3333%;">
+<col style="width: 16.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Modification</th>
+<th class="tableblock halign-left valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Première itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2024-07-16</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Réécriture suite à la nouvelle conception speds 2.0 (P6)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-01-17</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retirer tous les tests sur le stop/start</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-02-06</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ajout d&#8217;une incongruité et des params d&#8217;initialisation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-02-28</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modification essai E19 pour prendre en compte les changements dû à l&#8217;ajout d&#8217;un tracking number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-03-04</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Troisième itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2026-02-27</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_objectif">2. Objectif</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ce document définit les essais nécessaires pour vérifier le bon fonctionnement de <code>SPEDS - application</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_éléments_testées">3. Éléments Testées</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<div class="title">Processus pour un hôte source</div>
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-01]
+</td>
+<td class="hdlist2">
+<p>Demande d&#8217;une délégation d&#8217;un message.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-02]
+</td>
+<td class="hdlist2">
+<p>Confirmation d&#8217;une délégation.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<div class="title">Processus pour un hôte destinataire</div>
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-03]
+</td>
+<td class="hdlist2">
+<p>Indication de réception d’un message.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-04]
+</td>
+<td class="hdlist2">
+<p>Réponse de réception d’un message.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèses">4. Hypothèses</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[HYP_01]</dt>
+<dd>
+<p>Aucune entrave à la communication pour la réception et l&#8217;envoi des messages.</p>
+</dd>
+<dt class="hdlist1">[HYP_02]</dt>
+<dd>
+<p>Le temps <em>T<sub>max</sub></em> choisi pour confirmer qu&#8217;une procédure en suspens ne se terminera pas doit être largement supérieur au temps requis pour terminer la procédure selon le parcours nominal.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_données_globales">5. Données globales</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cas_de_test">6. Cas de Test</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="CT_01">6.1. [CT_01] Requête de délégation bien formée</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèses</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_request</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une requête de délégation bien formée de l&#8217;utilisateur de la couche</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_confirmation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une confirmation de délégation de la couche inférieure</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out_request</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une requête de transfert à la couche inférieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out_confirmation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une confirmation de délégation à l&#8217;utilisateur de la couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la procédure [PRO-01] "Demande de délégation d&#8217;un message"</p>
+</li>
+<li>
+<p>Appel de la procédure [PRO-02] "Confirmation d&#8217;une délégation"</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La requête de transfert à la couche inférieure <code>out_request</code> est bien formée :</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Pour l&#8217;attribut <code>context</code> :</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>L&#8217;identifiant de projet <code>PGA</code> est celui indiqué dans <code>projectId</code> de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le code de la source <code>source_code</code> est celui indiqué dans <code>sourceCode</code> de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le code du destinataire <code>destination_code</code> est celui indiqué dans <code>destinationCode</code> de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le service <code>service</code> contient la valeur <code>delegate</code>;</p>
+</li>
+<li>
+<p>La primitive <code>service_primitive</code> contient la valeur <code>request</code>;</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Pour l&#8217;attribut <code>header</code> du <code>PDU</code> sérialisé dans <code>message</code> :</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Le type de message est celui indiqué dans <code>msgType</code> de <code>in_request</code>;</p>
+</li>
+<li>
+<p>L&#8217;identifiant message est celui indiqué dans <code>msgId</code> de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Les informations de version contiennent celles fournies à l&#8217;initialisation de l&#8217;application;</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Le contenu de l&#8217;attribut <code>content</code> du <code>PDU</code> sérialisé dans <code>message</code> est identique à celui dans <code>content</code> de <code>in_request</code></p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>La confirmation transmise <code>out_confirmation</code> est bien formée :</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Le service contient la valeur <code>delegate</code>;</p>
+</li>
+<li>
+<p>La primitive contient la valeur <code>confirm</code>;</p>
+</li>
+<li>
+<p>Le code de la source <code>sourceCode</code> est celui indiqué dans <code>context</code> &#8594; <code>source_code</code> de <code>in_confirmation</code>;</p>
+</li>
+<li>
+<p>Le code du destinataire <code>destinationCode</code> est celui indiqué dans <code>context</code> &#8594; <code>destination_code</code> de <code>in_confirmation</code>;</p>
+</li>
+<li>
+<p>L&#8217;identifiant de projet <code>projectId</code> est celui indiqué dans <code>context</code> &#8594; <code>PGA</code> de <code>in_confirmation</code>;</p>
+</li>
+<li>
+<p>L&#8217;identifiant de message <code>msgId</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le type de message <code>msgType</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le contenu <code>content</code> est identique à celui dans <code>message</code> de <code>in_confirmation</code>.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_02">6.2. [CT_02] Requête de délégation mal formée</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèses</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_request</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une requête de délégation mal formée de l&#8217;utilisateur de la couche, c&#8217;est-à-dire avec un contenu invalide selon le mécanisme de vérification des <code>APDU</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out_confirmation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une confirmation de délégation à l&#8217;utilisateur de la couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la procédure [PRO-01] "Demande de délégation d&#8217;un message"</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La confirmation transmise <code>out_confirmation</code> est bien formée :</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Le service contient la valeur <code>delegate</code>;</p>
+</li>
+<li>
+<p>La primitive contient la valeur <code>confirm</code>;</p>
+</li>
+<li>
+<p>Le code de la source <code>sourceCode</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le code du destinataire <code>destinationCode</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>L&#8217;identifiant de projet <code>projectId</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>L&#8217;identifiant de message <code>msgId</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le type de message <code>msgType</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le contenu de <code>message</code> contient la valeur "FAILED: syntax".</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_03">6.3. [CT_03] Requête de délégation pour un plan qui n&#8217;est pas en cours</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèses</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La vérification du plan en cours auprès de <code>speds-toolkit</code> doit confirmer que le plan n&#8217;est pas en cours</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_request</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une requête de délégation bien formée de l&#8217;utilisateur de la couche, mais dont l&#8217;identifiant de projet est associé à un <code>PGA</code> dont le plan n&#8217;est pas en cours</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out_confirmation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une confirmation de délégation à l&#8217;utilisateur de la couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la procédure [PRO-01] "Demande de délégation d&#8217;un message"</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La confirmation transmise <code>out_confirmation</code> est bien formée :</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Le service contient la valeur <code>delegate</code>;</p>
+</li>
+<li>
+<p>La primitive contient la valeur <code>confirm</code>;</p>
+</li>
+<li>
+<p>Le code de la source <code>sourceCode</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le code du destinataire <code>destinationCode</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>L&#8217;identifiant de projet <code>projectId</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>L&#8217;identifiant de message <code>msgId</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le type de message <code>msgType</code> est celui indiqué dans le même champ de <code>in_request</code>;</p>
+</li>
+<li>
+<p>Le contenu de <code>message</code> contient la valeur "FAILED: ended plan".</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_04">6.4. [CT_04] Confirmation d&#8217;une délégation qui ne correspond pas à une requête précédente</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèses</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La confirmation de délégation reçue ne correspond pas à une requête de délégation transmise et non confirmée.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_request</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une requête de délégation bien formée de l&#8217;utilisateur de la couche</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_confirmation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une confirmation de délégation de la couche inférieure</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out_request</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une requête de transfert à la couche inférieure</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la procédure [PRO-01] "Demande de délégation d&#8217;un message"</p>
+</li>
+<li>
+<p>Appel de la procédure [PRO-02] "Confirmation d&#8217;une délégation"</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La procédure [PRO-01] reste en suspens et ne termine pas après un temps <em>T<sub>max</sub></em></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_05">6.5. [CT_05] Indication de message bien formée</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèses</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_indication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une indication de message bien formée de la couche inférieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une réponse de réception de message de l&#8217;utilisateur de la couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out_indication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une indication de message à l&#8217;utilisateur de la couche</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out_response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une réponse de réception de message à la couche inférieure</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la procédure [PRO-03] "Indication de réception de message"</p>
+</li>
+<li>
+<p>Appel de la procédure [PRO-04] "Réponse de réception de message"</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;indication transmise <code>out_indication</code> est bien formée :</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Le service contient la valeur <code>transfer</code>;</p>
+</li>
+<li>
+<p>La primitive contient la valeur <code>indication</code>;</p>
+</li>
+<li>
+<p>Le code de la source <code>sourceCode</code> est celui indiqué dans <code>context</code> &#8594; <code>source_code</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>Le code du destinataire <code>destinationCode</code> est celui indiqué dans <code>context</code> &#8594; <code>destination_code</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>L&#8217;identifiant de projet <code>projectId</code> est celui indiqué dans <code>context</code> &#8594; <code>PGA</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>L&#8217;identifiant de message <code>msgId</code> est celui indiqué dans <code>header</code> &#8594; <code>id</code> du <code>PDU</code> sérialisé dans <code>message</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>Le type de message <code>msgType</code> est celui indiqué dans <code>header</code> &#8594; <code>msgtype</code> du <code>PDU</code> sérialisé dans <code>message</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>Le contenu <code>content</code> est celui indiqué dans <code>content</code> du <code>PDU</code> sérialisé dans <code>message</code> de <code>in_indication</code>;</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>La réponse de réception de message à la couche inférieure <code>out_response</code> est bien formée :</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Pour l&#8217;attribut <code>context</code> :</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>L&#8217;identifiant de projet <code>PGA</code> est celui indiqué dans <code>projectId</code> de <code>in_response</code>;</p>
+</li>
+<li>
+<p>Le code de la source <code>source_code</code> est celui indiqué dans <code>sourceCode</code> de <code>in_response</code>;</p>
+</li>
+<li>
+<p>Le code du destinataire <code>destination_code</code> est celui indiqué dans <code>destinationCode</code> de <code>in_response</code>;</p>
+</li>
+<li>
+<p>Le service <code>service</code> contient la valeur <code>transfer</code>;</p>
+</li>
+<li>
+<p>La primitive <code>service_primitive</code> contient la valeur <code>response</code>;</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Le contenu de l&#8217;attribut <code>message</code> est identique à celui dans <code>content</code> de <code>in_response</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_06">6.6. [CT_06] Indication de message mal formée</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèses</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_indication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une indication de message mal formée de la couche inférieure, soit par des attributs superflus, manquants ou contenant des valeurs du mauvais type, ou encore en ne respectant pas la syntaxe du format <code>JSON</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out_response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une réponse de réception de message à la couche inférieure</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la procédure [PRO-03] "Indication de réception de message"</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La réponse de réception de message à la couche inférieure <code>out_response</code> est bien formée :</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Pour l&#8217;attribut <code>context</code> :</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>L&#8217;identifiant de projet <code>PGA</code> est celui indiqué dans <code>context</code> &#8594; <code>PGA</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>Le code de la source <code>source_code</code> est celui indiqué dans <code>context</code> &#8594; <code>source_code</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>Le code du destinataire <code>destination_code</code> est celui indiqué dans <code>context</code> &#8594; <code>destination_code</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>Le service <code>service</code> contient la valeur <code>transfer</code>;</p>
+</li>
+<li>
+<p>La primitive <code>service_primitive</code> contient la valeur <code>response</code>;</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Le contenu de <code>message</code> contient la valeur "FAILED: syntax".</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_07">6.7. [CT_07] Indication de message pour un plan qui n&#8217;est pas en cours</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèses</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La vérification du plan en cours auprès de <code>speds-toolkit</code> doit confirmer que le plan n&#8217;est pas en cours.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_indication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une indication de message bien formée de la couche inférieure, mais dont l&#8217;identifiant de projet est associé à un <code>PGA</code> dont le plan n&#8217;est pas en cours</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out_response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une réponse de réception de message à la couche inférieure</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la procédure [PRO-03] "Indication de réception de message"</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La réponse de réception de message à la couche inférieure <code>out_response</code> est bien formée :</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Pour l&#8217;attribut <code>context</code> :</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>L&#8217;identifiant de projet <code>PGA</code> est celui indiqué dans <code>context</code> &#8594; <code>PGA</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>Le code de la source <code>source_code</code> est celui indiqué dans <code>context</code> &#8594; <code>source_code</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>Le code du destinataire <code>destination_code</code> est celui indiqué dans <code>context</code> &#8594; <code>destination_code</code> de <code>in_indication</code>;</p>
+</li>
+<li>
+<p>Le service <code>service</code> contient la valeur <code>transfer</code>;</p>
+</li>
+<li>
+<p>La primitive <code>service_primitive</code> contient la valeur <code>response</code>;</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Le contenu de <code>message</code> contient la valeur "FAILED: ended plan".</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_08">6.8. [CT_08] Réponse de réception de message qui ne correspond pas à une indication précédente</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Hypothèses</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La réponse de réception de message reçue ne correspond pas à une indication de réception de message transmise et non répondue.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_indication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AIDU</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une indication de message bien formée de la couche inférieure</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">in_response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une réponse de réception de message de l&#8217;utilisateur de la couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out_indication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>applicationInterface</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une indication de message à l&#8217;utilisateur de la couche</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Instructions</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la procédure [PRO-03] "Indication de réception de message"</p>
+</li>
+<li>
+<p>Appel de la procédure [PRO-04] "Réponse de réception de message"</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La procédure [PRO-03] reste en suspens et ne termine pas après un temps <em>T<sub>max</sub></em></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_essais">7. Essais</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_environnement">7.1. Environnement</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 85.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV_01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Les informations de version sont correctement transmis à l&#8217;entité lors de son initialisation;</p>
+</li>
+<li>
+<p>Le plan du <code>PGA</code> associé à l&#8217;identifiant de <code>PGA</code> contenu dans le contexte des messages est en cours.</p>
+</li>
+</ol>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV_02</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Les informations de version sont correctement transmis à l&#8217;entité lors de son initialisation;</p>
+</li>
+<li>
+<p>Le plan du <code>PGA</code> associé à l&#8217;identifiant de <code>PGA</code> contenu dans le contexte des messages n&#8217;est pas en cours.</p>
+</li>
+</ol>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_descriptions">7.2. Descriptions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 6.6666%;">
+<col style="width: 13.3333%;">
+<col style="width: 40%;">
+<col style="width: 40.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV_01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_01">[CT_01] Requête de délégation bien formée</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une requête bien formée reçue de l&#8217;utilisateur de la couche et une confirmation de délégation reçue de la couche inférieure produisent une requête de transfert à la couche inférieure et une confirmation de délégation à l&#8217;utilisateur de la couche. Le contenu de la confirmation reçue est identique au contenu de la confirmation transmise.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV_01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_02">[CT_02] Requête de délégation mal formée</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une requête mal formée reçue de l&#8217;utilisateur de la couche produit une confirmation échouée de délégation à l&#8217;utilisateur de la couche. Aucune requête de transfert à la couche inférieure n&#8217;est produite.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV_02</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_03">[CT_03] Requête de délégation pour un plan qui n&#8217;est pas en cours</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une requête bien formée reçue de l&#8217;utilisateur de la couche, mais qui contient un identifiant de projet associé à un <code>PGA</code> dont le plan n&#8217;est pas en cours, produit une confirmation échouée de délégation à l&#8217;utilisateur de la couche. Aucune requête de transfert à la couche inférieure n&#8217;est produite.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV_01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_04">[CT_04] Confirmation d&#8217;une délégation qui ne correspond pas à une requête précédente</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une confirmation reçue de la couche inférieure qui ne correspond à aucune demande transmise et non confirmée ne produit aucun signal de confirmation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV_01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_05">[CT_05] Indication de message bien formée</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une indication de message bien formée reçue de la couche inférieure et une réponse de l&#8217;utilisateur de la couche produisent une indication de message à l&#8217;utilisateur de la couche et une réponse à la couche inférieure. Le contenu de la réponse reçue est identique au contenu de la réponse transmise.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV_01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_06">[CT_06] Indication de message mal formée</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une indication mal formée reçue de la couche inférieure produit une réponse échouée à la couche inférieure. Aucune indication à l&#8217;utilisateur de la couche n&#8217;est produite.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV_02</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_07">[CT_07] Indication de message pour un plan qui n&#8217;est pas en cours</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une indication bien formée reçue de la couche inférieure, mais qui contient un identifiant de projet associé à un <code>PGA</code> dont le plan n&#8217;est pas en cours, produit une réponse échouée de délégation à la couche inférieure. Aucune indication à l&#8217;utilisateur de la couche n&#8217;est produite.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_08</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV_01</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_08">[CT_08] Réponse de réception de message qui ne correspond pas à une indication précédente</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une réponse reçue de l&#8217;utilisateur de la couche qui ne correspond à aucune indication transmise et non répondue ne produit aucun signal de réponse.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_matrice_de_correspondance_élémentsessais">7.3. Matrice de correspondance Éléments/Essais</h3>
+<table class="tableblock frame-all grid-all fit-content">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_08</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-03</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-04</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:44:41 -0400
+</div>
+</div>
+</body>
+</html>

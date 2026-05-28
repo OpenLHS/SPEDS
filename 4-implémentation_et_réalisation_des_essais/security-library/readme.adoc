@@ -1,0 +1,215 @@
+// Settings
+:idprefix:
+:idseparator: -
+:component-name: security-library
+
+= {component-name}
+
+[#summary]
+== Sommaire
+
+La librairie {component-name} implémente des services de securité qui respectent les recommandations actuelles.
+
+[#overview]
+== Présentation
+
+La librairie {component-name} propose des services de sécurité qui respectent les recommandations actuelles et
+qui permettent de remplir des objectifs de sécurité classiquement assurés par des moyens cryptographiques,
+tels que la confidentialité, l’intégrité et l’authentification.
+
+
+[#techno]
+== Technologies utilisées
+
+* Languages utilisés :
+** Java
+
+[#prerequisite]
+== Préalable
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* logiciels prérequis :
+** S.O.
+
+* composants GRIIS prérequis
+** S.O.
+
+* systèmes
+** linux ou windows
+
+* matériels prérequis :
+** S.O.
+
+[#build]
+== Construction
+
+Pour construire la librairie *{component-name}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+[#compile]
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+[#install]
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la librairie *{component-name}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:security-library:${version}"
+}
+----
+
+La librairie *{component-name}* peut être déclarée en utilisant
+`ca.griis:security-library`.
+
+Pour développer directement sur la librairie *{component-name}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+=== Interface de programmation
+
+==== Module api
+
+*Interface SecurityFacade*
+
+|===
+| Id du processus | Signature impl.           | Comportement
+| PRO-SPEC-01
+| Map<String, SecuritySpec> getProfilSecuritySpecs(SecurityProfile securityProfile)
+| Récupérer les spécifications des algorithmes de sécurité selon le profil de sécurité choisi.
+| PRO-SYM-HASH-01
+| Digest generateDigest(HashFnSpec generateDigest, byte[] data)
+| Générer une empreinte numérique avec une fonction de hachage.
+| PRO-SYM-HASH-02
+| Boolean verifyDigest(HashFnSpec hashFnSpec, Digest digest, byte[] data)
+| Vérifier si une empreinte numérique d’une fonction de hachage correspond à des données.
+| PRO-SYM-CIPHER-01
+| SecretKey generateSecretKey(CsprngSpec csprngSpec, SymKeyGenSpec symKeyGenSpec)
+| Générer une clé secrète pour un chiffreur et déchiffreur symétrique.
+| PRO-SYM-CIPHER-02
+| byte[] symEncrypt(CsprngSpec csprngSpec, SymCipherSpec symCipherSpec, SecretKey secretKey,
+byte[] data)
+| Chiffrer des données avec un chiffreur symétrique.
+| PRO-SYM-CIPHER-03
+|  byte[] symDecrypt(CsprngSpec csprngSpec, SymCipherSpec symCipherSpec, SecretKey secretKey,
+byte[] encryptedData)
+| Déchiffrer des données avec un déchiffreur symétrique.
+| PRO-ASYM-GEN-01
+|  KeyPair generateKeyPair(CsprngSpec csprngSpec, AsymKeyPairGenSpec asymKeyPairGenSpec)
+| Générer une clé publique et une clé privée pour un algorithme asymétrique.
+| PRO-ASYM-CIPHER-01
+|  byte[] asymEncrypt(CsprngSpec csprngSpec, AsymCipherSpec asymCipherSpec, PublicKey publicKey,
+byte[] data)
+| Chiffrer des données avec un chiffreur asymétrique.
+| PRO-ASYM-CIPHER-02
+|  byte[] asymDecrypt(CsprngSpec csprngSpec, AsymCipherSpec asymCipherSpec, PrivateKey privateKey,
+byte[] encryptedData)
+| Déchiffrer des données avec un déchiffreur asymétrique.
+| PRO-ASYM-KE-01
+|  SecretKey generateSharedSecretKey(CsprngSpec csprngSpec, KeyAgreementFnSpec keyAgreementFnSpec,
+KeyPair originatorKeyPair, PublicKey recipientPublicKey)
+| Générer une clé secrète via un échange de clé.
+| PRO-ASYM-SIG-01
+| DigitalSignature generateSignature(CsprngSpec csprngSpec, SignatureFnSpec signatureFnSpec,
+PrivateKey privateKey, byte[] data)
+| Générer une signature numérique.
+| PRO-ASYM-SIG-02
+| Boolean verifySignature(SignatureFnSpec signatureFnSpec, PublicKey publicKey, byte[] signedData,
+DigitalSignature signature)
+| Vérifier si une signature numérique correspond à des données.
+| PRO-ASYM-CRT-01
+| Boolean verifyCertificateTemporalValidity(X509Certificate certificate)
+| Vérifier la validité temporelle d’un certificat.
+| PRO-ASYM-CRT-02
+| Boolean verifyCertificateSignature(X509Certificate certificate, PublicKey publicKey)
+| Vérifier la signature numérique d’un certificat.
+| PRO-ASYM-CRT-03
+| Boolean verifyCertificateChain(CertificateVerifSpec certificateVerifSpec, RootCertificates rootCertificates, IntermediateCertificates intermidiateCertificates, X509Certificate certificate)
+| Vérifier la chaîne de certification est complète et valide.
+| PRO-ASYM-CRT-04
+| Boolean verifyCertificateExtensions(X509Certificate certificate, Hostname hostname, CertificateKeyUsages usages)
+| Vérifie que le certificat respecte les extensions d’usages et de contraintes.
+|===
+
+[#launch]
+== Démarrage
+
+S.O.
+
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{component-name}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#contact]
+== Personnes ressources
+
+* Boubacar DEMBELE : Boubacar.Dembele@usherbrooke.ca
+* Francis Ouellet : Francis.Ouellet@USherbrooke.ca
+* Jean-François Éthier : JF.Ethier@usherbrooke.ca
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].

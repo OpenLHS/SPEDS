@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SealManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.internal.security</a> &gt; <span class="el_source">SealManager.java</span></div><h1>SealManager.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SealManager.
+ * @brief @~english SealManager class implementation.
+ */
+
+package ca.griis.speds.network.internal.security;
+
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SpedsLayer;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import java.nio.charset.StandardCharsets;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Base64;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Permet de créer et vérifier des sceaux sur des messages réseaux.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-02-16 [FO] - Refactorisation pour simplifier sa fonction.
+ *      2025-03-03 [CB] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class SealManager {
+  private final CryptographyService service;
+
+<span class="fc" id="L54">  public SealManager(CryptographyService service) {</span>
+<span class="fc" id="L55">    this.service = service;</span>
+<span class="fc" id="L56">  }</span>
+
+  public String createSeal(String message, PrivateKey privateKey) {
+<span class="fc" id="L59">    final var data = message.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L60">    final var hash = service.hash(SpedsLayer.NETWORK, data);</span>
+<span class="fc" id="L61">    final var signedData = service.sign(SpedsLayer.NETWORK, privateKey, hash);</span>
+<span class="fc" id="L62">    final String result = Base64.getEncoder().encodeToString(signedData);</span>
+<span class="fc" id="L63">    return result;</span>
+  }
+
+  public Boolean checkSeal(String message, PublicKey publicKey, String signature) {
+<span class="fc" id="L67">    final var data = message.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L68">    final var hash = service.hash(SpedsLayer.NETWORK, data);</span>
+<span class="fc" id="L69">    final var sign = Base64.getDecoder().decode(signature);</span>
+
+<span class="fc" id="L71">    Boolean result = service.checkSignatureValidity(SpedsLayer.NETWORK, sign, publicKey, hash);</span>
+<span class="fc" id="L72">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

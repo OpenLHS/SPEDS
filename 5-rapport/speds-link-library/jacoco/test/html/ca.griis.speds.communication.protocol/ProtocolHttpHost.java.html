@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProtocolHttpHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.communication.protocol</a> &gt; <span class="el_source">ProtocolHttpHost.java</span></div><h1>ProtocolHttpHost.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ProtocolHttpHost.
+ * @brief @~english Implementation of the ProtocolHttpHost class.
+ */
+
+package ca.griis.speds.communication.protocol;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Info;
+import ca.griis.speds.communication.protocol.unit.ProtocolIdu;
+import ca.griis.speds.communication.protocol.unit.ProtocolPdu;
+import ca.griis.speds.link.api.exception.ProtocolException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
+import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOperator;
+import io.netty.channel.ChannelOption;
+import io.netty.handler.ssl.SslContext;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicLong;
+import reactor.core.publisher.Mono;
+import reactor.netty.ByteBufFlux;
+import reactor.netty.DisposableServer;
+import reactor.netty.http.HttpProtocol;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.http.server.HttpServer;
+import reactor.netty.http.server.HttpServerRequest;
+import reactor.netty.http.server.HttpServerResponse;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre un hôte HTTP/2.0.
+ * @par Details
+ *      &lt;p&gt;
+ *      Offre la possibilité d'agir comme client et serveur HTTP ou HTTPS.
+ *      Ajout de délai d'expiration: de requête et réponse de 10 secondes, d'inactivité de 30.
+ *      Aussi, un ajout d'un nombre maximal de flux de données concurrents de 100.
+ *      &lt;/p&gt;
+ * 
+ *      &lt;p&gt;
+ *      Le patron fire-and-forget est privilégié dans ce contexte. L’architecture du protocole SPEDS
+ *      délègue aux couches utilisatrices la responsabilité de gérer la réémission en cas de besoin.
+ *      En cas d'exception, celle-ci est journalisée et un événement est délégué à l'écouteur de
+ *      l'événement.
+ *      &lt;/p&gt;
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-10 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+final class ProtocolHttpHost implements ProtocolHost {
+<span class="fc" id="L84">  private static final GriisLogger logger = getLogger(ProtocolHttpHost.class);</span>
+
+  private final HttpClient client;
+  private final DisposableServer server;
+  private final ObjectMapper objectMapper;
+  private final ProtocolHostEvent hostEvent;
+  private final Integer maxContentLengthBytes;
+  private final CircuitBreaker circuitBreaker;
+
+  ProtocolHttpHost(
+      ObjectMapper objectMapper,
+      String address,
+      Integer port,
+      SslContext sslClient,
+      SslContext sslServer,
+      Integer maxContentLength,
+<span class="fc" id="L100">      ProtocolHostEvent hostEvent) {</span>
+
+<span class="fc" id="L102">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L103">    this.hostEvent = hostEvent;</span>
+<span class="fc" id="L104">    this.maxContentLengthBytes = maxContentLength;</span>
+
+<span class="fc" id="L106">    this.client = HttpClient.create()</span>
+<span class="fc" id="L107">        .responseTimeout(Duration.ofSeconds(10))</span>
+<span class="fc" id="L108">        .protocol(HttpProtocol.H2)</span>
+<span class="fc" id="L109">        .secure(spec -&gt; spec.sslContext(sslClient));</span>
+
+<span class="fc" id="L111">    this.server = HttpServer.create()</span>
+<span class="fc" id="L112">        .option(ChannelOption.SO_BACKLOG, 100)</span>
+<span class="fc" id="L113">        .http2Settings(spec -&gt; spec.maxConcurrentStreams(100))</span>
+<span class="fc" id="L114">        .idleTimeout(Duration.ofSeconds(30))</span>
+<span class="fc" id="L115">        .requestTimeout(Duration.ofSeconds(10))</span>
+<span class="fc" id="L116">        .httpRequestDecoder(spec -&gt; spec.maxHeaderSize(8192).maxInitialLineLength(4096))</span>
+<span class="fc" id="L117">        .host(address)</span>
+<span class="fc" id="L118">        .port(port)</span>
+<span class="fc" id="L119">        .secure(spec -&gt; spec.sslContext(sslServer))</span>
+<span class="fc" id="L120">        .handle(this::handleRequest)</span>
+<span class="fc" id="L121">        .protocol(HttpProtocol.H2)</span>
+<span class="fc" id="L122">        .bindNow();</span>
+
+<span class="fc" id="L124">    this.circuitBreaker = createCircuitBreaker();</span>
+<span class="fc" id="L125">  }</span>
+
+  ProtocolHttpHost(
+      ObjectMapper objectMapper,
+      String address,
+      Integer port,
+      Integer maxContentLengthBytes,
+<span class="fc" id="L132">      ProtocolHostEvent hostEvent) {</span>
+
+<span class="fc" id="L134">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L135">    this.hostEvent = hostEvent;</span>
+<span class="fc" id="L136">    this.maxContentLengthBytes = maxContentLengthBytes;</span>
+
+<span class="fc" id="L138">    this.client = HttpClient.create();</span>
+
+<span class="fc" id="L140">    this.server = HttpServer.create()</span>
+<span class="fc" id="L141">        .host(address)</span>
+<span class="fc" id="L142">        .port(port)</span>
+<span class="fc" id="L143">        .handle(this::handleRequest)</span>
+<span class="fc" id="L144">        .bindNow();</span>
+
+<span class="fc" id="L146">    this.circuitBreaker = createCircuitBreaker();</span>
+<span class="fc" id="L147">  }</span>
+
+  @Override
+  public void send(ProtocolIdu idu) {
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">    if (idu.sdu().length() &gt; maxContentLengthBytes) {</span>
+<span class="nc" id="L152">      throw new ProtocolException(&quot;Payload too large&quot;);</span>
+    }
+
+<span class="fc" id="L155">    ProtocolPdu pdu = new ProtocolPdu(idu.destinationUri(), idu.sdu());</span>
+    final String content;
+    try {
+<span class="fc" id="L158">      content = objectMapper.writeValueAsString(pdu);</span>
+<span class="fc" id="L159">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L160">      throw new ProtocolException(&quot;JSON serialization error&quot;, e);</span>
+<span class="fc" id="L161">    }</span>
+
+<span class="fc" id="L163">    URI uri = URI.create(idu.destinationUri());</span>
+
+<span class="fc" id="L165">    client.post()</span>
+<span class="fc" id="L166">        .uri(uri)</span>
+<span class="fc" id="L167">        .send(ByteBufFlux.fromString(Mono.just(content)))</span>
+<span class="fc" id="L168">        .responseSingle((res, buf) -&gt; {</span>
+<span class="fc" id="L169">          return buf.asString().defaultIfEmpty(&quot;&quot;).flatMap(body -&gt; {</span>
+<span class="fc" id="L170">            Mono&lt;String&gt; result = Mono.just(body);</span>
+
+<span class="fc" id="L172">            Integer code = res.status().code();</span>
+<span class="pc bpc" id="L173" title="2 of 4 branches missed.">            if (code &lt; 200 || code &gt;= 300) {</span>
+<span class="nc" id="L174">              var ex = new ProtocolException(&quot;The client received HTTP &quot; + res.status().code());</span>
+<span class="nc" id="L175">              logger.error(Error.GENERIC_ERROR, ex);</span>
+<span class="nc" id="L176">              result = Mono.error(ex);</span>
+            }
+
+<span class="fc" id="L179">            String contentType = res.responseHeaders().get(&quot;Content-Type&quot;);</span>
+<span class="pc bpc" id="L180" title="2 of 4 branches missed.">            if (contentType == null || !contentType.toLowerCase().contains(&quot;application/json&quot;)) {</span>
+<span class="nc" id="L181">              var ex = new ProtocolException(&quot;Invalid or missing Content-Type: &quot; + contentType);</span>
+<span class="nc" id="L182">              logger.error(Error.GENERIC_ERROR, ex);</span>
+<span class="nc" id="L183">              result = Mono.error(ex);</span>
+            }
+
+<span class="fc" id="L186">            return result;</span>
+          });
+        })
+<span class="fc" id="L189">        .transformDeferred(CircuitBreakerOperator.of(circuitBreaker))</span>
+<span class="fc" id="L190">        .subscribe(</span>
+<span class="fc" id="L191">            ok -&gt; logger.info(Info.VARIABLE_LOGGING_2, &quot;state&quot;, &quot;HTTP message sent&quot;, &quot;uri&quot;, uri),</span>
+            err -&gt; {
+              Exception exception;
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">              if (err instanceof CallNotPermittedException) {</span>
+<span class="nc" id="L195">                exception = new ProtocolException(&quot;Circuit breaker OPEN for URI: &quot; + uri);</span>
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">              } else if (err instanceof Exception e) {</span>
+<span class="fc" id="L197">                exception = e;</span>
+              } else {
+<span class="nc" id="L199">                exception = new ProtocolException(&quot;Unexpected error: &quot; + err.getMessage(), err);</span>
+              }
+
+<span class="fc" id="L202">              logger.error(Error.GENERIC_ERROR, exception);</span>
+<span class="fc" id="L203">              hostEvent.notifyException(exception);</span>
+<span class="fc" id="L204">            });</span>
+<span class="fc" id="L205">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L209">    server.disposeNow();</span>
+<span class="fc" id="L210">  }</span>
+
+  private void notifyContent(String content) {
+    try {
+<span class="fc" id="L214">      ProtocolPdu pdu = objectMapper.readValue(content, ProtocolPdu.class);</span>
+<span class="fc" id="L215">      ProtocolIdu idu = new ProtocolIdu(</span>
+<span class="fc" id="L216">          pdu.remoteAddr(),</span>
+<span class="fc" id="L217">          pdu.sdu());</span>
+
+<span class="fc" id="L219">      hostEvent.notifyIdu(idu);</span>
+<span class="nc" id="L220">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L221">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L222">    }</span>
+<span class="fc" id="L223">  }</span>
+
+  private Mono&lt;Void&gt; handleRequest(HttpServerRequest request, HttpServerResponse response) {
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">    if (!&quot;POST&quot;.equalsIgnoreCase(request.method().name())) {</span>
+
+<span class="nc" id="L228">      ProtocolException ex =</span>
+          new ProtocolException(&quot;The received HTTP request is not a POST request.&quot;);
+<span class="nc" id="L230">      logger.error(Error.IGNORED_ERROR, ex);</span>
+<span class="nc" id="L231">      return response.status(405).send();</span>
+    }
+
+<span class="fc" id="L234">    AtomicLong size = new AtomicLong();</span>
+
+<span class="fc" id="L236">    return ByteBufFlux.fromInbound(</span>
+<span class="fc" id="L237">        request.receive()</span>
+<span class="fc" id="L238">            .timeout(Duration.ofSeconds(5))</span>
+<span class="fc" id="L239">            .doOnNext(buf -&gt; {</span>
+<span class="fc" id="L240">              Long total = size.addAndGet(buf.readableBytes());</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">              if (total &gt; maxContentLengthBytes) {</span>
+<span class="nc" id="L242">                throw new ProtocolException(&quot;Payload too large for the server&quot;);</span>
+              }
+<span class="fc" id="L244">            }))</span>
+<span class="fc" id="L245">        .aggregate()</span>
+<span class="fc" id="L246">        .asString(StandardCharsets.UTF_8)</span>
+<span class="fc" id="L247">        .flatMap(body -&gt; {</span>
+<span class="fc" id="L248">          notifyContent(body);</span>
+
+<span class="fc" id="L250">          logger.info(Info.VARIABLE_LOGGING_3,</span>
+              &quot;state&quot;, &quot;HTTP request received and sending response&quot;,
+<span class="fc" id="L252">              &quot;request.remoteAddress()&quot;, request.remoteAddress(),</span>
+<span class="fc" id="L253">              &quot;response.remoteAddress()&quot;, response.remoteAddress());</span>
+
+<span class="fc" id="L255">          response</span>
+<span class="fc" id="L256">              .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="fc" id="L257">              .header(&quot;X-Content-Type-Options&quot;, &quot;nosniff&quot;)</span>
+<span class="fc" id="L258">              .header(&quot;Strict-Transport-Security&quot;, &quot;max-age=31536000; includeSubDomains&quot;)</span>
+<span class="fc" id="L259">              .header(&quot;Cache-Control&quot;, &quot;no-store&quot;);</span>
+<span class="fc" id="L260">          return response.sendString(Mono.just(&quot;\&quot;OK\&quot;&quot;)).then();</span>
+        })
+<span class="fc" id="L262">        .onErrorResume(ProtocolException.class, e -&gt; {</span>
+<span class="nc" id="L263">          logger.error(Error.IGNORED_ERROR, e);</span>
+
+<span class="nc" id="L265">          return response</span>
+<span class="nc" id="L266">              .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="nc" id="L267">              .header(&quot;X-Content-Type-Options&quot;, &quot;nosniff&quot;)</span>
+<span class="nc" id="L268">              .header(&quot;Strict-Transport-Security&quot;, &quot;max-age=31536000; includeSubDomains&quot;)</span>
+<span class="nc" id="L269">              .status(413).send();</span>
+        })
+<span class="fc" id="L271">        .onErrorResume(e -&gt; {</span>
+<span class="nc" id="L272">          logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="nc" id="L273">          return response</span>
+<span class="nc" id="L274">              .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="nc" id="L275">              .header(&quot;X-Content-Type-Options&quot;, &quot;nosniff&quot;)</span>
+<span class="nc" id="L276">              .header(&quot;Strict-Transport-Security&quot;, &quot;max-age=31536000; includeSubDomains&quot;)</span>
+<span class="nc" id="L277">              .status(500).send();</span>
+        });
+  }
+
+  private CircuitBreaker createCircuitBreaker() {
+    CircuitBreakerConfig config =
+<span class="fc" id="L283">        CircuitBreakerConfig.custom()</span>
+<span class="fc" id="L284">            .failureRateThreshold(50)</span>
+<span class="fc" id="L285">            .slidingWindowSize(10)</span>
+<span class="fc" id="L286">            .minimumNumberOfCalls(5)</span>
+<span class="fc" id="L287">            .waitDurationInOpenState(Duration.ofSeconds(10))</span>
+<span class="fc" id="L288">            .permittedNumberOfCallsInHalfOpenState(3)</span>
+<span class="fc" id="L289">            .build();</span>
+
+<span class="fc" id="L291">    CircuitBreaker cb = CircuitBreaker.of(&quot;protocol-http-client&quot;, config);</span>
+<span class="fc" id="L292">    cb.getEventPublisher()</span>
+<span class="pc" id="L293">        .onStateTransition(event -&gt; logger.info(Info.VARIABLE_LOGGING_2, &quot;state&quot;,</span>
+<span class="nc" id="L294">            &quot;Circuit breaker transition&quot;, &quot;transition&quot;, event.getStateTransition()))</span>
+<span class="pc" id="L295">        .onFailureRateExceeded(event -&gt; logger.error(</span>
+            Error.GENERIC_ERROR,
+            new ProtocolException(&quot;Circuit breaker failure rate exceeded&quot;)));
+<span class="fc" id="L298">    return cb;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

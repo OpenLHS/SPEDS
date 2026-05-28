@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotifyDispatcher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.internal.dispatcher</a> &gt; <span class="el_source">NotifyDispatcher.java</span></div><h1>NotifyDispatcher.java</h1><pre class="source lang-java linenums">package ca.griis.speds.transport.internal.dispatcher;
+
+import ca.griis.js2p.gen.speds.transport.api.dto.Context45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.Header45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
+import ca.griis.js2p.gen.speds.transport.api.dto.ServicePrimitive;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.api.NetworkHost;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import ca.griis.speds.transport.internal.handler.EnvPduTransferIndicationHandler;
+import ca.griis.speds.transport.internal.handler.RecPduTransferIndicationHandler;
+import ca.griis.speds.transport.internal.sync.ConfirmationRegistry;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+/**
+ * &quot;Description brève du composant (classe, interface, ...)&quot;
+ *
+ * &lt;h3&gt;Historique&lt;/h3&gt;
+ * &lt;p&gt;
+ * XXXX-XX-XX [AS] - Implémentation initiale&lt;br&gt;
+ * &lt;/p&gt;
+ *
+ * &lt;h3&gt;Tâches&lt;/h3&gt;
+ * S.O.
+ *
+ * @author [AS] ameni.souid@usherbrooke.ca
+ * @since
+ */
+public final class NotifyDispatcher {
+<span class="fc" id="L38">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(NotifyDispatcher.class);</span>
+
+  private final EnvPduTransferIndicationHandler indicationEnvHandler;
+  private final RecPduTransferIndicationHandler indicationRecHandler;
+  private final ObjectMapper objectMapper;
+
+  public NotifyDispatcher(CryptographyService service, ObjectMapper objectMapper,
+      NetworkHost networkHost, ConfirmationRegistry registry,
+<span class="fc" id="L46">      Map&lt;UUID, Boolean&gt; clientPendingMessagesId, Map&lt;UUID, Boolean&gt; serverPendingMessagesId) {</span>
+
+<span class="fc" id="L48">    this.indicationEnvHandler =</span>
+        new EnvPduTransferIndicationHandler(service, objectMapper, networkHost,
+            serverPendingMessagesId);
+<span class="fc" id="L51">    this.indicationRecHandler =</span>
+        new RecPduTransferIndicationHandler(service, objectMapper, networkHost,
+            clientPendingMessagesId, registry);
+<span class="fc" id="L54">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L55">  }</span>
+
+  public Optional&lt;String&gt; handle(InterfaceDataUnit45Dto idu) {
+<span class="fc" id="L58">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L60">    Optional&lt;String&gt; tidu = Optional.empty();</span>
+    try {
+<span class="fc" id="L62">      final var context = idu.getContext();</span>
+
+<span class="fc bfc" id="L64" title="All 2 branches covered.">      if (context.getService() != Context45Dto.Service.TRANSFER) {</span>
+<span class="fc" id="L65">        final var ex = new RuntimeException(&quot;FAILED: Unknown service&quot;);</span>
+<span class="fc" id="L66">        logger.error(Error.IGNORED_ERROR, ex);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">      } else if (context.getServicePrimitive() == ServicePrimitive.INDICATION) {</span>
+<span class="fc" id="L68">        var pdu = objectMapper.readValue(idu.getMessage(), ProtocolDataUnit4TraDto.class);</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (pdu.getHeader().getMsgtype() == Header45Dto.Msgtype.TRA_MSG_ENV) {</span>
+<span class="fc" id="L70">          tidu = indicationEnvHandler.handle(idu, pdu);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        } else if (pdu.getHeader().getMsgtype() == Header45Dto.Msgtype.TRA_MSG_REC) {</span>
+<span class="fc" id="L72">          tidu = indicationRecHandler.handle(idu, pdu);</span>
+        } else {
+<span class="fc" id="L74">          final var ex = new RuntimeException(&quot;FAILED: msgType not supported&quot;);</span>
+<span class="fc" id="L75">          logger.error(Error.IGNORED_ERROR, ex);</span>
+        }
+<span class="fc" id="L77">      } else {</span>
+<span class="fc" id="L78">        final var ex = new RuntimeException(&quot;FAILED: Unknown primitive service&quot;);</span>
+<span class="fc" id="L79">        logger.error(Error.IGNORED_ERROR, ex);</span>
+      }
+<span class="fc" id="L81">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L82">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L83">    }</span>
+
+<span class="fc" id="L85">    logger.trace(Trace.EXIT_METHOD_1, &quot;tidu&quot;, tidu);</span>
+<span class="fc" id="L86">    return tidu;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

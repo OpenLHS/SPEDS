@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KeyAgreementProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">security-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.security.internal.keyexchange</a> &gt; <span class="el_source">KeyAgreementProvider.java</span></div><h1>KeyAgreementProvider.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Description de la classe KeyAgreementProvider.
+ * @brief @~english Implements the KeyAgreementProvider class.
+ */
+
+package ca.griis.security.internal.keyexchange;
+
+import ca.griis.security.api.domain.spec.csprng.CsprngSpec;
+import ca.griis.security.api.domain.spec.csprng.StrongCsprngSpec;
+import ca.griis.security.internal.asymmetric.generator.AsymKeysGenerator;
+import ca.griis.security.internal.random.RandomProvider;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.List;
+import javax.crypto.KeyAgreement;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.generators.HKDFBytesGenerator;
+import org.bouncycastle.crypto.params.HKDFParameters;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ * @brief @~french Fonctionnalités pour la mise en œuvre de l'accord de clé.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-12-17 [BD] - Implémentation initiale.&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public abstract class KeyAgreementProvider {
+  private final KeyAgreement keyAgreement;
+  private final AsymKeysGenerator keyGenerator;
+
+<span class="fc" id="L63">  public KeyAgreementProvider(KeyAgreement keyAgreement, AsymKeysGenerator keyGenerator) {</span>
+<span class="fc" id="L64">    this.keyAgreement = keyAgreement;</span>
+<span class="fc" id="L65">    this.keyGenerator = keyGenerator;</span>
+<span class="fc" id="L66">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Génère la paire de clés requise par le protocole d'accord de clé.
+   * @return la paire de clés
+   */
+  public KeyPair generateEphemeralKeys() {
+<span class="fc" id="L77">    CsprngSpec csprngSpec = new StrongCsprngSpec();</span>
+<span class="fc" id="L78">    KeyPair keyPair = keyGenerator.generateKeyPair(csprngSpec);</span>
+<span class="fc" id="L79">    return keyPair;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param privateKey «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Initialise l'accord de clé.
+   * @param privateKey la clé privée de l'entité locale
+   * @exception InvalidKeyException le format de la clé est invalide
+   */
+  public void initializeAgreement(PrivateKey privateKey, CsprngSpec csprngSpec)
+      throws InvalidKeyException {
+<span class="fc" id="L94">    SecureRandom random = RandomProvider.getSecureRandom(csprngSpec);</span>
+
+<span class="fc" id="L96">    keyAgreement.init(privateKey, random);</span>
+<span class="fc" id="L97">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param secondPk «Parameter description»
+   * @exception IllegalStateException «Exception description»
+   * @exception InvalidKeyException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Conclut l'accord de clé en produisant la clé secrète.
+   * @param secondPk la clé publique de l'entité distante
+   * @exception IllegalStateException l'accord de clé n'est pas conclu
+   * @exception InvalidKeyException la clé publique de l'entité distante est invalide
+   * @return la clé secrète commune aux deux entités
+   */
+  public byte[] completeAgreement(PublicKey secondPk)
+      throws IllegalStateException, InvalidKeyException {
+<span class="fc" id="L114">    keyAgreement.doPhase(secondPk, true);</span>
+
+<span class="fc" id="L116">    byte[] sharedKey = keyAgreement.generateSecret();</span>
+<span class="fc" id="L117">    return sharedKey;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param sharedSecret «Parameter description»
+   * @param selfPk «Parameter description»
+   * @param secondPk «Parameter description»
+   * @exception NoSuchAlgorithmException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Dérive une clé sécuritaire à partir d'une clé secrète partagée et des clés
+   *        publiques des deux parties.
+   * @param sharedSecret la clé secrète partagée par les deux entités
+   * @param selfPk la clé publique de l'entité locale
+   * @param secondPk la clé publique de l'entité distante
+   * @exception NoSuchAlgorithmException l'algorithme utilisé pour l'empreinte numérique est
+   *            invalide
+   * @return la valeur de la clé secrète dérivée
+   *
+   * @note 2020-10-15 [FO] - Favorable d'utiliser une clé dérivée plutôt d'utiliser la clé partagée
+   *       pour le chiffrement.
+   */
+  public byte[] deriveSecure256BitsKey(byte[] sharedSecret, PublicKey selfPk, PublicKey secondPk)
+      throws NoSuchAlgorithmException {
+<span class="fc" id="L142">    byte[] result = deriveSecureKey(sharedSecret, selfPk, secondPk, 256);</span>
+<span class="fc" id="L143">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param sharedSecret «Parameter description»
+   * @param selfPk «Parameter description»
+   * @param secondPk «Parameter description»
+   * @exception NoSuchAlgorithmException «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Dérive une clé sécuritaire à partir d'une clé secrète partagée et des clés
+   *        publiques des deux parties.
+   * @param sharedSecret la clé secrète partagée par les deux entités
+   * @param selfPk la clé publique de l'entité locale
+   * @param secondPk la clé publique de l'entité distante
+   * @exception NoSuchAlgorithmException l'algorithme utilisé pour l'empreinte numérique est
+   *            invalide
+   * @return la valeur de la clé secrète dérivée
+   *
+   * @note 2020-10-15 [FO] - Favorable d'utiliser une clé dérivée plutôt d'utiliser la clé partagée
+   *       pour le chiffrement.
+   */
+  public byte[] deriveSecure128BitsKey(byte[] sharedSecret, PublicKey selfPk, PublicKey secondPk)
+      throws NoSuchAlgorithmException {
+<span class="fc" id="L168">    byte[] result = deriveSecureKey(sharedSecret, selfPk, secondPk, 128);</span>
+<span class="fc" id="L169">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Dérive une clé sécuritaire à partir d'une clé secrète partagée et des clés
+   *        publiques des deux parties.
+   * @param sharedSecret la clé secrète partagée par les deux entités
+   * @param selfPk la clé publique de l'entité locale
+   * @param secondPk la clé publique de l'entité distante
+   * @param keySizeBits Longueur de la clé.
+   * @exception IllegalArgumentException Longueur de clé incorrecte.
+   * @return la valeur de la clé secrète dérivée
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  private byte[] deriveSecureKey(byte[] sharedSecret, PublicKey selfPk, PublicKey secondPk,
+      Integer keySizeBits) {
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">    if (keySizeBits % 8 != 0) {</span>
+<span class="nc" id="L193">      throw new IllegalArgumentException(&quot;Key size must be a multiple of 8&quot;);</span>
+    }
+
+<span class="fc" id="L196">    final var keySizeBytes = keySizeBits / 8;</span>
+<span class="fc" id="L197">    final List&lt;byte[]&gt; keys = Arrays.asList(selfPk.getEncoded(), secondPk.getEncoded());</span>
+<span class="fc" id="L198">    keys.sort(Arrays::compare);</span>
+
+<span class="fc" id="L200">    final HKDFBytesGenerator hkdf = new HKDFBytesGenerator(new SHA256Digest());</span>
+
+<span class="fc" id="L202">    final byte[] x = keys.get(0);</span>
+<span class="fc" id="L203">    final byte[] y = keys.get(1);</span>
+<span class="fc" id="L204">    byte[] info = new byte[x.length + y.length];</span>
+<span class="fc" id="L205">    System.arraycopy(x, 0, info, 0, x.length);</span>
+<span class="fc" id="L206">    System.arraycopy(y, 0, info, x.length, y.length);</span>
+
+<span class="fc" id="L208">    final HKDFParameters params = new HKDFParameters(sharedSecret, null, info);</span>
+<span class="fc" id="L209">    hkdf.init(params);</span>
+
+<span class="fc" id="L211">    byte[] derivedKey = new byte[keySizeBytes];</span>
+<span class="fc" id="L212">    hkdf.generateBytes(derivedKey, 0, derivedKey.length);</span>
+
+<span class="fc" id="L214">    return derivedKey;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

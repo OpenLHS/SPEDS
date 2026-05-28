@@ -1,0 +1,41 @@
+plugins {
+  id 'maven-publish'
+  id 'java-library'
+}
+
+dependencyLocking {
+  lockAllConfigurations()
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+group = "ca.griis"
+version = "1.0.4"
+
+dependencies {
+  implementation "ch.qos.cal10n:cal10n-api:0.8.1"
+  implementation "org.slf4j:slf4j-api:2.0.16"
+  implementation "org.javassist:javassist:3.29.2-GA"
+  testImplementation "ch.qos.logback:logback-classic:1.5.8"
+  testImplementation "ch.qos.logback:logback-core:1.5.8"
+  testImplementation "org.junit.jupiter:junit-jupiter-engine:5.10.3"
+  testImplementation "org.junit.platform:junit-platform-suite:1.10.3"
+  testImplementation "org.slf4j:slf4j-reload4j:2.0.16"
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}

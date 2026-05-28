@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LayerEntityService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-toolkit-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.common.entity.api.layer</a> &gt; <span class="el_source">LayerEntityService.java</span></div><h1>LayerEntityService.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe LayerEntityService.
+ * @brief @~english Contains description of LayerEntityService class.
+ */
+
+package ca.griis.speds.common.entity.api.layer;
+
+import ca.griis.dadagem.environment.EntityDef;
+import ca.griis.dadagemclient.service.EnvironmentService;
+import ca.griis.dadagemclient.service.LoDadClientService;
+import ca.griis.dadagemclient.share.SharedObjectMapper;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Info;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.common.entity.api.EntityService;
+import ca.griis.speds.common.entity.api.exception.EntityServiceException;
+import ca.griis.speds.common.entity.domain.CommunicationStatus;
+import ca.griis.speds.common.entity.domain.Entity;
+import ca.griis.speds.common.entity.domain.EntityCode;
+import ca.griis.speds.common.entity.domain.MessageResponse;
+import ca.griis.speds.common.entity.domain.PgaId;
+import ca.griis.speds.common.entity.domain.PuAk;
+import ca.griis.speds.common.entity.domain.RetrievedKey;
+import ca.griis.speds.common.service.CommonHttpClient;
+import ca.griis.speds.common.service.SecurityCertificateVerification;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+import org.apache.jena.iri.IRIFactory;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation de l'interface EntityService pour le protocol speds.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-04-09 [SSC] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class LayerEntityService implements EntityService {
+<span class="fc" id="L77">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(LayerEntityService.class);</span>
+
+  private final LoDadClientService loDadService;
+  private final CommonHttpClient commonHttpClient;
+
+  public LayerEntityService(LoDadClientService loDadService,
+<span class="fc" id="L83">      SecurityCertificateVerification checkKeyServiceCertificate) throws Exception {</span>
+<span class="fc" id="L84">    this.loDadService = loDadService;</span>
+<span class="fc" id="L85">    commonHttpClient = new CommonHttpClient(checkKeyServiceCertificate);</span>
+<span class="fc" id="L86">  }</span>
+
+  @Override
+  public Optional&lt;PuAk&gt; getPublicKey(PgaId pgaId, EntityCode entityCode) {
+<span class="fc" id="L90">    logger.trace(Trace.ENTER_METHOD_2, &quot;pgaId&quot;, pgaId, &quot;entityCode&quot;, entityCode);</span>
+<span class="fc" id="L91">    Optional&lt;PuAk&gt; puAk = Optional.empty();</span>
+
+    // Récupération de entité représentant l'unité administrative des clés du PGA
+<span class="fc" id="L94">    String iriStr = getKeyAdministrationEntity(pgaId);</span>
+
+    // Appel de sclé et récupération de la clé publique
+    try {
+<span class="fc" id="L98">      StringBuilder addr = new StringBuilder(iriStr);</span>
+<span class="fc" id="L99">      addr.append(&quot;/key&quot;).append(&quot;/&quot;).append(entityCode.code());</span>
+<span class="fc" id="L100">      HttpResponse&lt;String&gt; response = commonHttpClient.get(new URI(addr.toString()));</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">      if (response.statusCode() == HttpURLConnection.HTTP_OK) {</span>
+        MessageResponse&lt;?&gt; message;
+        try {
+<span class="fc" id="L104">          message = SharedObjectMapper.getInstance().getMapper().readValue(response.body(),</span>
+<span class="fc" id="L105">              new TypeReference&lt;MessageResponse&lt;RetrievedKey&gt;&gt;() {});</span>
+<span class="fc" id="L106">        } catch (InvalidFormatException ex) {</span>
+<span class="fc" id="L107">          message = SharedObjectMapper.getInstance().getMapper().readValue(response.body(),</span>
+<span class="fc" id="L108">              new TypeReference&lt;MessageResponse&lt;String&gt;&gt;() {});</span>
+<span class="fc" id="L109">          logger.info(Info.VARIABLE_LOGGING_1, &quot;Unsuccessful to retrieve key: &quot;,</span>
+<span class="fc" id="L110">              message.exceptionMsg());</span>
+<span class="fc" id="L111">        }</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (message.communicationStatus() == CommunicationStatus.ST_OK) {</span>
+<span class="fc" id="L113">          String tmpKey = ((RetrievedKey) message.body()).value();</span>
+<span class="fc" id="L114">          puAk = Optional.of(new PuAk(Base64.getDecoder().decode(tmpKey)));</span>
+        }
+      }
+<span class="fc" id="L117">    } catch (IOException | InterruptedException | URISyntaxException e) {</span>
+<span class="fc" id="L118">      throw new EntityServiceException(e);</span>
+<span class="fc" id="L119">    }</span>
+
+<span class="fc" id="L121">    logger.trace(Trace.EXIT_METHOD_1, &quot;puAk&quot;, puAk);</span>
+<span class="fc" id="L122">    return puAk;</span>
+  }
+
+  @Override
+  public Boolean verifyLegitimacy(PgaId pgaId, EntityCode entityCode, PuAk puAk) {
+<span class="fc" id="L127">    logger.trace(Trace.ENTER_METHOD_3, &quot;pgaId&quot;, pgaId, &quot;entityCode&quot;, entityCode, &quot;puAk&quot;, puAk);</span>
+
+<span class="fc" id="L129">    Optional&lt;PuAk&gt; key = getPublicKey(pgaId, entityCode);</span>
+<span class="fc bfc" id="L130" title="All 4 branches covered.">    Boolean isVerified = key.isPresent() &amp;&amp; Arrays.equals(key.get().puAk(), puAk.puAk());</span>
+
+<span class="fc" id="L132">    logger.trace(Trace.EXIT_METHOD_1, &quot;isVerified&quot;, isVerified);</span>
+<span class="fc" id="L133">    return isVerified;</span>
+  }
+
+  @Override
+  public Optional&lt;Entity&gt; getEntity(PgaId pgaId, EntityCode entityCode) {
+<span class="fc" id="L138">    logger.trace(Trace.ENTER_METHOD_2, &quot;pgaId&quot;, pgaId, &quot;entityCode&quot;, entityCode);</span>
+<span class="fc" id="L139">    Optional&lt;Entity&gt; entity = Optional.empty();</span>
+
+<span class="fc" id="L141">    EnvironmentService env = loDadService.getProjectService()</span>
+<span class="fc" id="L142">        .getEnvironment(new ca.griis.dadagem.type.lexicon.Guid(pgaId.pgaId()));</span>
+
+<span class="fc" id="L144">    List&lt;EntityDef&gt; entitiesDef = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L145">    entitiesDef.add(env.getEnv().getPlanEntities().getEeReferenceDef());</span>
+<span class="fc" id="L146">    entitiesDef.addAll(env.getEnv().getPlanEntities().getCeReferencesDef());</span>
+<span class="fc" id="L147">    entitiesDef.addAll(env.getEnv().getPlanEntities().getPeReferencesDef());</span>
+
+<span class="fc" id="L149">    entitiesDef.addAll(env.getEnv().getAdministrationEntities().getAesReferencesDef());</span>
+<span class="fc" id="L150">    entitiesDef.add(env.getEnv().getAdministrationEntities().getAecReferenceDef());</span>
+<span class="fc" id="L151">    entitiesDef.add(env.getEnv().getAdministrationEntities().getAekReferenceDef());</span>
+
+<span class="fc" id="L153">    Optional&lt;EntityDef&gt; aej = env.getEnv().getAdministrationEntities().getAejReferenceDef();</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">    if (aej.isPresent()) {</span>
+<span class="fc" id="L155">      entitiesDef.add(aej.get());</span>
+    }
+
+<span class="fc" id="L158">    entitiesDef.addAll(env.getEnv().getAdministrationEntities().getAeReferencesDef());</span>
+
+<span class="fc" id="L160">    Optional&lt;EntityDef&gt; entityDef =</span>
+<span class="fc" id="L161">        entitiesDef.stream().filter(x -&gt; x.getCode().equals(entityCode.code())).findFirst();</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">    if (entityDef.isPresent()) {</span>
+<span class="fc" id="L163">      String iriStr = entityDef.get().getProxyAddress();</span>
+<span class="fc" id="L164">      entity =</span>
+<span class="fc" id="L165">          Optional.of(new Entity(entityCode, IRIFactory.iriImplementation().construct(iriStr)));</span>
+    }
+
+<span class="fc" id="L168">    logger.trace(Trace.EXIT_METHOD_1, &quot;entity&quot;, entity);</span>
+<span class="fc" id="L169">    return entity;</span>
+  }
+
+  private String getKeyAdministrationEntity(PgaId pgaId) {
+<span class="fc" id="L173">    EnvironmentService env = loDadService.getProjectService()</span>
+<span class="fc" id="L174">        .getEnvironment(new ca.griis.dadagem.type.lexicon.Guid(pgaId.pgaId()));</span>
+<span class="fc" id="L175">    EntityDef scle = env.getEnv().getAdministrationEntities().getAekReferenceDef();</span>
+<span class="fc" id="L176">    String iriStr = scle.getProxyAddress();</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">    if (iriStr.equals(&quot;S.O.&quot;)) {</span>
+<span class="fc" id="L178">      iriStr = scle.getCode();</span>
+    }
+<span class="fc" id="L180">    return iriStr;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

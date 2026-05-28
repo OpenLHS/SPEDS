@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Spécification des essais de conceptions (CXS) de SPEDS Présentation">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Date de création: 2025-01-16 +">
+<meta name="copyright" content="GRIIS">
+<title>Spécification des Essais du module « SPEDS - présentation »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification des Essais du module « <em>SPEDS - présentation</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_historique">1. Historique</a></li>
+<li><a href="#_contexte_général_des_tests">2. Contexte général des tests</a></li>
+<li><a href="#_éléments_testées">3. Éléments Testées</a></li>
+<li><a href="#_hypothèses">4. Hypothèses</a></li>
+<li><a href="#_données_globales">5. Données globales</a></li>
+<li><a href="#_cas_de_test">6. Cas de Test</a>
+<ul class="sectlevel2">
+<li><a href="#_cas_de_test_1_envoi_réussi_dun_envoi_de_données">6.1. Cas de Test 1 - Envoi réussi d&#8217;un envoi de données</a></li>
+<li><a href="#_cas_de_test_2_réception_réussie_dune_réception_de_donnée">6.2. Cas de Test 2 - Réception réussie d&#8217;une réception de donnée</a></li>
+<li><a href="#_cas_de_test_3_réponse_réussie_à_un_échange_de_données">6.3. Cas de Test 3 - Réponse réussie à un échange de données</a></li>
+<li><a href="#_cas_de_test_4_réception_réussi_dune_confirmation_déchange_de_données">6.4. Cas de Test 4 - Réception réussi d&#8217;une confirmation d&#8217;échange de données</a></li>
+<li><a href="#_cas_de_test_5_échec_de_déchiffrement_capté_lors_de_lindication_de_la_réception_dun_message">6.5. Cas de Test 5 - Échec de déchiffrement capté lors de l&#8217;indication de la réception d&#8217;un message</a></li>
+<li><a href="#_cas_de_test_6_échec_de_sérialisation_captée_lors_de_lenvoi_dun_message">6.6. Cas de Test 6 - Échec de sérialisation captée lors de l&#8217;envoi d&#8217;un message</a></li>
+</ul>
+</li>
+<li><a href="#_essais">7. Essais</a>
+<ul class="sectlevel2">
+<li><a href="#_matrice_de_correspondance_élémentsessais">7.1. Matrice de correspondance Éléments/Essais</a></li>
+<li><a href="#_incongruités">7.2. Incongruités</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec essai prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-24 13:47</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-24 14:25</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_historique">1. Historique</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 58.3333%;">
+<col style="width: 16.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Modification</th>
+<th class="tableblock halign-left valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Marc Dupuis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception initiale</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-01-16</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jonathan Moreau</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deuxième itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2025-05-01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jonathan Moreau</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Troisième itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2026-01-13</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jonathan Moreau</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quatrième itération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2026-02-23</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contexte_général_des_tests">2. Contexte général des tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le module <em>SPEDS - présentation</em> est responsable de la gestion des messages de la couche présentation. Il doit être capable de recevoir des messages des couches inférieure et supérieure. Les messages reçus doivent être valides et respecter le format attendu. Les messages envoyés doivent être conformes au format attendu.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_éléments_testées">3. Éléments Testées</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1] Demande d’échanger des données
+</td>
+<td class="hdlist2">
+<p>Initier une requête pour échanger des données par la couche Présentation.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2] Confirme l&#8217;échange de données
+</td>
+<td class="hdlist2">
+<p>Confirmer la prise en charge de la requête d&#8217;échange de données par la couche <code>Session</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3] Indique un échange de données
+</td>
+<td class="hdlist2">
+<p>Reçoit la demande d’une requête avec les données échangées par l’initiateur de requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-4] Répond à un échange de données
+</td>
+<td class="hdlist2">
+<p>Répond à un initiateur de requête sous une réponse avec des données à échanger.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèses">4. Hypothèses</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_données_globales">5. Données globales</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cas_de_test">6. Cas de Test</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_cas_de_test_1_envoi_réussi_dun_envoi_de_données">6.1. Cas de Test 1 - <a id="CT_001"></a>Envoi réussi d&#8217;un envoi de données</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche supérieure par une entité et production d&#8217;un message pour la couche inférieure.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>L&#8217;entité est démarré.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-1_2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU valide. PrimitiveService est <code>REQUEST</code>. Service est <code>DELEGATE</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-2_3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU valide.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-1] Demande d&#8217;échanger des données</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est levée.</p>
+</li>
+<li>
+<p>Il est possible de déchiffrer le <code>content</code> dans le message de <code>InterfaceDataUnit-2_3</code> (<code>S_01</code>)  à l&#8217;aide de la clef SDEK.</p>
+</li>
+<li>
+<p>Le message de sortie est conforme au format attendu.</p>
+</li>
+<li>
+<p>La PrimitiveService est <code>REQUEST</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_2_réception_réussie_dune_réception_de_donnée">6.2. Cas de Test 2 - <a id="CT_002"></a>Réception réussie d&#8217;une réception de donnée</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche inférieure par une entité et production d&#8217;un message pour la couche supérieure</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>L&#8217;entité est démarré.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-2_3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU valide. PrimitiveService est <code>INDICATION</code>. Service est <code>TRANSFER</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-1_2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU valide.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-3] Indique un échange de données</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est levée.</p>
+</li>
+<li>
+<p>Le message de sortie est conforme au format attendu.</p>
+</li>
+<li>
+<p>Le message applicatif est bien celui attendu (Le même que <code>CT_001</code> E_01).</p>
+</li>
+<li>
+<p>La PrimitiveService est <code>INDICATION</code>.</p>
+</li>
+<li>
+<p>La clé <code>SDEK</code> à bien été enregistré et l&#8217;identifiant correspond à l&#8217;identifiant de message.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_3_réponse_réussie_à_un_échange_de_données">6.3. Cas de Test 3 - <a id="CT_003"></a>Réponse réussie à un échange de données</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche supérieure par une entité et production d&#8217;un message pour la couche inférieure</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>L&#8217;entité est démarré.
+L&#8217;entité a reçu un message 'indication' précédemment
+Une clé <code>SDEK</code> associée au tracking number du message entrant est présente en mémoire.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-1_2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU valide. PrimitiveService est <code>RESPONSE</code>. Service est <code>TRANSFER</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-2_3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU valide.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-4] Répond à un échange de données</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est levée.</p>
+</li>
+<li>
+<p>Le message de sortie est conforme au format attendu.</p>
+</li>
+<li>
+<p>La PrimitiveService est <code>RESPONSE</code>.</p>
+</li>
+<li>
+<p>La clé <code>SDEK</code> en sortie correspond à la clé <code>SDEK</code> en mémoire.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_4_réception_réussi_dune_confirmation_déchange_de_données">6.4. Cas de Test 4 - <a id="CT_004"></a>Réception réussi d&#8217;une confirmation d&#8217;échange de données</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche inférieure par un client et production d&#8217;un message pour la couche supérieure</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>L&#8217;entité est démarré.
+L&#8217;entité a envoyé un message 'request' précédemment.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-2_3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU valide. PrimitiveService est <code>CONFIRM</code>. Service est <code>DELEGATE</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-1_2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU valide.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-2] Confirme l’échange de données</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est levée.</p>
+</li>
+<li>
+<p>Le message de sortie est conforme au format attendu.</p>
+</li>
+<li>
+<p>La PrimitiveService et <code>CONFIRM</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_5_échec_de_déchiffrement_capté_lors_de_lindication_de_la_réception_dun_message">6.5. Cas de Test 5 - <a id="CT_005"></a>Échec de déchiffrement capté lors de l&#8217;indication de la réception d&#8217;un message</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche inférieure par une entité et tentative de production d&#8217;un message pour la couche supérieure.<br></p>
+<div class="paragraph">
+<p>Erreur de déchiffrement captée.</p>
+</div>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>L&#8217;entité est démarré<br>
+La clé de chiffrement ne permet pas de déchiffrer le message</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-2_3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU contenant un SDEK ne pouvant pas déchiffrer le message. PrimitiveService est <code>INDICATION</code>. Service est <code>TRANSFER</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-2_3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU est retourné.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-3] Indique un échange de données</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le message contient la chaîne de caractères "FAILED: &lt;information&gt;".</p>
+</li>
+<li>
+<p>La PrimitiveService est <code>RESPONSE</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cas_de_test_6_échec_de_sérialisation_captée_lors_de_lenvoi_dun_message">6.6. Cas de Test 6 - <a id="CT_006"></a>Échec de sérialisation captée lors de l&#8217;envoi d&#8217;un message</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception d&#8217;un message de la couche supérieure par une entité et tentative de production d&#8217;un message pour la couche inférieure<br></p>
+<div class="paragraph">
+<p>Erreur de serialisation captée</p>
+</div>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>L&#8217;entité est démarré<br>
+Un message autre que le format attendu est reçu</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-1_2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU mal formé. PrimitiveService est <code>REQUEST</code>. Service est <code>DELEGATE</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-1_2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU est retourné.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-1 Confirme l’échange de données</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le message contient la chaîne de caractères "FAILED: &lt;information&gt;".</p>
+</li>
+<li>
+<p>La PrimitiveService est <code>CONFIRM</code></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_essais">7. Essais</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Environnements</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="Env1"></a>ENV1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>L&#8217;entité est initialisée.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Essais dénotant le parcours nominal:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Env1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_001">[CT_001]</a>, <a href="#CT_002">[CT_002]</a>, <a href="#CT_003">[CT_003]</a>, <a href="#CT_004">[CT_004]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie l&#8217;envoie de message du client, la réception de message du serveur, la production de réponse du serveur et le traitement de la  réponse du client</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Il n&#8217;y a pas de contraintes apparentes liés à l&#8217;environnement.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Essais dénotant le parcours exceptionnel:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Env1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_005">[CT_005]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie la gestion du chiffrement</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Env1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CT_006">[CT_006]</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifie la gestion de la désérialisation</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_matrice_de_correspondance_élémentsessais">7.1. Matrice de correspondance Éléments/Essais</h3>
+<table class="tableblock frame-all grid-all fit-content">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai\Élem.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_08</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_incongruités">7.2. Incongruités</h3>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:47:12 -0400
+</div>
+</div>
+</body>
+</html>

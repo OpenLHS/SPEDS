@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProtocolEventhandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.link.internal.event</a> &gt; <span class="el_source">ProtocolEventhandler.java</span></div><h1>ProtocolEventhandler.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ProtocolEventhandler.
+ * @brief @~english Implementation of the ProtocolEventhandler class.
+ */
+
+package ca.griis.speds.link.internal.event;
+
+import ca.griis.speds.communication.protocol.ProtocolHostEvent;
+import ca.griis.speds.communication.protocol.unit.ProtocolIdu;
+import java.util.concurrent.atomic.AtomicReference;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Écoute les événements de la couche liaison et notifie l'instance de classe qui
+ *        s'est enregistré à ces événements.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-02-18 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class ProtocolEventhandler implements ProtocolHostEvent {
+  private final AtomicReference&lt;ProtocolHostEvent&gt; hostEventConsumer;
+
+<span class="fc" id="L51">  public ProtocolEventhandler() {</span>
+<span class="fc" id="L52">    this.hostEventConsumer = new AtomicReference&lt;&gt;();</span>
+<span class="fc" id="L53">  }</span>
+
+  public Boolean register(ProtocolHostEvent subscriber) {
+<span class="fc" id="L56">    return hostEventConsumer.compareAndSet(null, subscriber);</span>
+  }
+
+  @Override
+  public void notifyIdu(ProtocolIdu idu) {
+<span class="fc" id="L61">    ProtocolHostEvent current = hostEventConsumer.get();</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">    if (current == null) {</span>
+<span class="nc" id="L63">      throw new RuntimeException(&quot;No host event is registered&quot;);</span>
+    }
+
+<span class="fc" id="L66">    current.notifyIdu(idu);</span>
+<span class="fc" id="L67">  }</span>
+
+  @Override
+  public void notifyException(Exception exception) {
+<span class="fc" id="L71">    ProtocolHostEvent current = hostEventConsumer.get();</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">    if (current == null) {</span>
+<span class="nc" id="L73">      throw new RuntimeException(&quot;No host event is registered&quot;);</span>
+    }
+
+<span class="fc" id="L76">    current.notifyException(exception);</span>
+<span class="fc" id="L77">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

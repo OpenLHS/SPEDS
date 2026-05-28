@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.3">
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/api/CryptographyFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/api/CryptographyService.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/api/exception/NoSuchAlgorithmException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/api/exception/NoSuchCategoryException.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/DefaultCryptographyFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/DefaultCryptographyService.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/provider/KeyGeneratorSpecProvider.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/provider/SpecBaseProvider.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/provider/SpecProvider.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/provider/CsprngSpecProvider.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/provider/DhSpecProvider.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/provider/SpecAlgoProvider.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/reader/CipherSuiteDtoReader.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/reader/SpedsConfigItemDtoReader.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/converter/facade/specid/GenSpecIdConverter.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/converter/facade/specid/SpecId.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/converter/facade/specid/SpecIdConverter.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/converter/facade/spec/DhGenAlgo.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/converter/facade/spec/DhSpecGenConverter.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/converter/facade/spec/SpecConverter.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/converter/facade/spec/SpecGenConverter.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/crypto/internal/converter/facade/profile/SpedsSecurityProfileConverter.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/serializer/ToolkitSharedObjectMapper.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/security/api/DefaultCertificateService.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/security/api/CertificateService.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/security/api/DefaultCertificateFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/security/api/CertificateFactory.java">
+</file>
+<file name="/builds/produits/speds-line/speds-toolkit-library/src/main/java/ca/griis/speds/toolkit/project/ProjectService.java">
+</file>
+</checkstyle>

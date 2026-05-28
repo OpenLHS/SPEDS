@@ -1,3 +1,13 @@
+:toc:
+:toc-title: Table des matières
+:toclevels: 2
+:sectnums:
+:asciidoc-extensions: adoc,asciidoc,json
+
+= Environnement de démonstration de `SPEDS`
+
+Ce document présente les étapes qui permettent de faire fonctionner le système `SPEDS`.
+
 [#licence]
 == Copyright et licences
 
@@ -10,3 +20,23 @@ link:liliqr-licence.adoc[LILIQ-R].
 
 La documentation de ce projet est sous licence
 https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
+
+== Présentation
+
+Le répertoire `sandbox_default` contient la production d'une compilation tel qu'indiqué dans ce document, c'est-à-dire les fichiers `jar`, les fichiers de configuration et les scripts.
+
+[#compile]
+=== Compilation et vérification
+
+WARNING: Une compilation nécessite un accès internet pour récupérer `gradle`
+
+Pour construire l'environnement, à partir du répertoire principal dans un terminal, la commande `./build.sh` lance la construction du service `SPEDS`.
+
+[source, bash]
+----
+$ ./build.sh
+----
+
+Une fois la compilation terminée, un répertoire ``sandbox_``__datetime__ est disponible, où __datetime__ est l'estampille de temps du temps courant lors de la construction.
+
+Ce répertoire contient un répertoire `product` qui contient les bibliothèques formant `SPEDS` (répertoire `build/libs`).

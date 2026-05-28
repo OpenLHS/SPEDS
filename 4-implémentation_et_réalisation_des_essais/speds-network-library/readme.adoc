@@ -1,0 +1,323 @@
+// Settings
+:idprefix:
+:idseparator: -
+:component-name: speds-network-library
+
+= {component-name}
+
+[#summary]
+== Sommaire
+
+`{component-name}` implémente la couche réseau du protocole d'échange SPEDS.
+
+[#overview]
+== Présentation
+
+Le rôle de `{component-name}` est d’acheminer les données d’un hôte source à un hôte destination sous un réseau.
+
+Un service d'API est offert pour la couche supérieure.
+
+`{component-name}` permet d'effectuer les tâches suivantes :
+
+* Effectuer un échange de données et confirmer celui-ci;
+* Confirmer un échange de données;
+* Recevoir les données échangées par un initiateur;
+* Répondre à un échange de données;
+* Libérer les ressources utilisées par un hôte de la couche réseau.
+
+[#techno]
+== Technologies utilisées
+
+* Language(s) utilisé(s) :
+** Java
+
+* API utilisé(s) :
+** `speds-toolkit-library`
+** `speds-link-library`
+
+* Bibliothèque(s) tierce(s) :
+** `jsonschema2pojo`
+** `caffeine`
+
+[#prerequisite]
+== Préalable
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient remplies :
+
+* logiciels prérequis :
+** S.O.
+
+* composants GRIIS prérequis
+** `logger-library`
+** `speds-toolkit-library`
+** `speds-link-library`
+
+* systèmes
+** S.O.
+
+* matériels prérequis :
+** S.O.
+
+* Autres :
+** `jsonschema2pojo`
+** `reactor-netty`
+** `caffeine`
+
+[#build]
+== Construction
+
+Pour construire `{component-name}`, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+[#compile]
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+[#install]
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la `{component-name}` dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-network-library:${version}"
+}
+----
+
+`{component-name}` peut être déclarée en utilisant
+`ca.griis:speds-network-library`.
+
+Pour développer directement sur `{component-name}`, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA. 
+Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+=== Littérature
+
+*CompletableFuture*
+
+CompletableFuture est une classe permettant de gérer des tâches de calcul asynchrones. Elle offre une grande flexibilité en rendant possible l’exécution non bloquante des calculs.
+
+https://www.baeldung.com/java-completablefuture
+
+[source, gradle]
+----
+// Quelques exemples en Java
+
+var future = CompletableFuture.runAsync(() -> {..., executor);
+var future = CompletableFuture.completedFuture(out);
+----
+
+=== Interface de programmation
+
+==== Module dto
+
+Définit les interfaces qui sont échangés entre services ou le protocole de la couche réseau. 
+
+==== Module api
+
+*NetworkHost*
+
+Interface permettant de définir et d’exposer les opérations d’un hôte de la couche réseau à un utilisateur.
+
+|===
+| Identifiants de processus | Signature impl.             | Comportement
+
+| PRO-1, PRO-4, PRO-2  
+| CompletableFuture<Optional<String>> submitIdu(String idu)
+|
+
+*Entrée* : + 
+Interface d'unité de données fournie par l'utilisateur de la couche. +
+*Comportement*:  +
+Soumet le traitement de l’interface d'unité de données (transport et réseau) qui respecte le service de transfert et 
+les primitives de requête ou de réponse - (PRO-1, PRO-4). +
+
+*Sortie* : + 
+PRO-1, la sortie, après le calcul de traitement (get), sera une interface d'unité de données de confirmation. + 
+PRO-4, la sortie, après le calcul de traitement (get), sera une option vide.
+
+| S.O.            
+| void close()
+| Désalloue les ressources sur la couche de protocole.
+
+|===
+
+===== Détails sur `CompletableFuture<Optional<String>> submitIdu(String idu)`
+
+Dans le cas qu'on soumet une réponse, celle-ci doit être associée à une indication de message préalablement émise.
+
+Ainsi, l’interface de l’unité de données reçue en entrée dans le cadre d’une réponse de transfert doit contenir un élément clé-valeur, dont le format respecte une structure de type dictionnaire (map).
+
+Ce dictionnaire doit comporter une clé nommée `TN`, dont la valeur correspond à l’identifiant d’un message précédemment reçu via une indication de message.
+
+_Représentation des options d'une interface d'unité de données 45 lors d'une réponse de réception de données en Java._
+----
+var options = Map.of("TN", "184fa9a3-f967-4a98-9d8f-57152e7cbe64");
+----
+
+*HostEvent*
+
+Interface qui permet à une classe qui utilise la couche réseau de se faire notifier des événements.
+
+* L’utilisateur de la couche réseau qui souhaite écouter les événements doit définir une classe implémentant l’interface `NetworkHostEvent`.
+
+|===
+| Id du processus | Signature impl.             | Comportement
+
+| PRO-3           
+| void notifyIdu(String idu)
+| 
+Notifie l'interface d'unité de données construit par l'hôte de la couche réseau et qui veut notifier à la couche utilisatrice. + 
+L'interface notifiée est une interface d'unité de données (transport et réseau) qui respecte le service transfert et la primitive indication. +
+
+| S.O.          
+| void notifyException(Exception exception);
+| Notifie une exception à l'utilisateur de la couche réseau.
+
+|===
+
+===== Détails sur `void notifyIdu(String idu)`
+
+Cette interface comporte un champs options qui contient un élément clé-valeur et dont le format respecte une structure de type dictionnaire (map).
+Ce dictionnaire comporte une clé nommée `TN`, dont la valeur correspond à l’identifiant d’un message reçu.
+
+_Représentation des options d'une interface d'unité de données 45 lors d'une indication de message en Java._
+----
+var options = Map.of("TN", "184fa9a3-f967-4a98-9d8f-57152e7cbe64");
+----
+
+*NetworkHostFactory*
+
+Définit la fabrique des hôtes du protocole de SPEDS au niveau de la couche réseau.
+
+. La fabrique permet:
+.. d'initialiser un `CryptographyService` - service cryptographique de `speds-toolkit-library`.
+.. d'initialiser la création d'un hôte avec:
+... un dictionnaire d'options de configuration sous une chaîne de caractères respectant le format JSON.
+... une instance de la classe qui implémente `HostEvent` et qui recevra les `IDU`.
+
+*Exemple des options de configuration de la couche réseau :*
+
+[source]
+----
+- Version du protocole de la couche réseau.
+speds.net.version
+
+- Référence du protocole de la couche réseau.
+speds.net.reference
+
+- Certificat sous le format X.509.
+speds.net.cert
+
+- Clé privée associée au certificat sous le format PKCS #8.
+speds.net.private.key
+
+- Période maximale qu'une indication de message peut recevoir une réponse en minutes. Sinon, elle expire après ce temps en minutes.
+speds.net.response.window.minutes
+----
+
+==== Utilisation de l'API
+
+L'utilisateur de la couche réseau doit : 
+
+* définir une classe qui implémente l'interface `NetworkHostEvent`;
+* ajouter l'annotation `@Override` aux méthodes de la classe qui implémente l'interface `NetworkHostEvent`;
+* fornir l'instance `CryptographyService` au contructeur de la fabrique d'hôtes de la couche réseau;
+* fournir l'instance de la classe qui implémente l'interface `NetworkHostEvent` et les options de configurations à la fabrique pour créer un hôte;
+* appeler la méthode `submitIdu` de l’hôte de la couche réseau précédemment créé par la fabrique afin de soumettre des `IDU`;
+* traiter les `IDU` notifiés par l'instance de la classe qui implémente l'interface `networkHostEvent`.
+
+[source, gradle]
+----
+public final class ExampleHost implements NetworkHostEvent {
+  @Override
+  public void notifyIdu(String idu) {
+    ...
+  }
+
+  @Override
+  public void notifyException(Exception exception) {
+    ...
+  }
+}
+
+...
+
+ExampleHost host = new ExampleHost();
+Host networkHost = factory.init(params, host);
+
+...
+
+var result = networkHost.submit(idu);
+var optionalIdu = result.get();
+----
+
+[#launch]
+== Démarrage
+
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{page-component-title}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+==  Contact
+
+* Jean-François Ethier : JF.Ethier@usherbrooke.ca
+* Félix Camirand-Lemyre : Felix.Camirand.Lemyre@usherbrooke.ca
+Research group: **GRIIS** - Groupe de recherche interdisciplinaire en
+informatique de la santé (https://griis.ca)
+Health Data Research Network Canada (https://hdrn.ca)
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+include::copyright.adoc[]
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].

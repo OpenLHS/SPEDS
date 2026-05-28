@@ -1,0 +1,209 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta charset="UTF-8"/>
+      <title>SpotBugs Report</title>
+      <style type="text/css">
+		.tablerow0 {
+			background: #EEEEEE;
+		}
+
+		.tablerow1 {
+			background: white;
+		}
+
+		.detailrow0 {
+			background: #EEEEEE;
+		}
+
+		.detailrow1 {
+			background: white;
+		}
+
+		.tableheader {
+			background: #b9b9fe;
+			font-size: larger;
+		}
+
+		.tablerow0:hover, .tablerow1:hover {
+			background: #aaffaa;
+		}
+
+		.priority-1 {
+				color: red;
+				font-weight: bold;
+		}
+		.priority-2 {
+				color: orange;
+				font-weight: bold;
+		}
+		.priority-3 {
+				color: green;
+				font-weight: bold;
+		}
+		.priority-4 {
+				color: blue;
+				font-weight: bold;
+		}
+		</style>
+      <script type="text/javascript">
+			function toggleRow(elid) {
+				if (document.getElementById) {
+					element = document.getElementById(elid);
+					if (element) {
+						if (element.style.display == 'none') {
+							element.style.display = 'block';
+							//window.status = 'Toggle on!';
+						} else {
+							element.style.display = 'none';
+							//window.status = 'Toggle off!';
+						}
+					}
+				}
+			}
+		</script>
+   </head>
+   <body>
+      <h1>
+         <a href="https://spotbugs.github.io/">SpotBugs</a> Report</h1>
+      <h2>Project Information</h2>
+      <p>Project: 
+		speds-toolkit-library (spotbugsTest)</p>
+      <p>SpotBugs version: 4.8.3</p>
+      <p>Code analyzed:</p>
+      <ul>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/integration/Environment.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/integration/GlobalData.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/integration/Suites.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/integration/utilities/BouncyCastleUtil.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/integration/Cases.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/unit/crypto/internal/converter/profile/SpedsSecurityProfileConverterTest.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/unit/crypto/internal/provider/CsprngSpecProviderTest.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/unit/crypto/internal/provider/SpecProviderTest.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/unit/crypto/internal/reader/CiphersuiteDtoTest.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/unit/crypto/internal/DefaultCryptographyFactoryTest.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/unit/crypto/internal/DefaultCryptographyServiceTest.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/unit/utilities/ConfigCreator.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/unit/utilities/X509CertificateCreator.class</li>
+         <li>/builds/produits/speds-line/speds-toolkit-library/build/classes/java/test/ca/griis/speds/toolkit/unit/security/api/DefaultCertificateTest.class</li>
+      </ul>
+      <p>
+         <br/>
+         <br/>
+      </p>
+      <h2>Metrics</h2>
+      <p>1080 lines of code analyzed,
+	in 14 classes, 
+	in 8 packages.</p>
+      <table width="500" cellpadding="5" cellspacing="2">
+         <tr class="tableheader">
+            <th align="left">Metric</th>
+            <th align="right">Total</th>
+            <th align="right">Density*</th>
+         </tr>
+         <tr class="tablerow0">
+            <td>High Priority Warnings</td>
+            <td align="right">1</td>
+            <td align="right">0.93</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>Medium Priority Warnings</td>
+            <td align="right"/>
+            <td align="right">0.00</td>
+         </tr>
+         <tr class="$totalClass">
+            <td>
+               <b>Total Warnings</b>
+            </td>
+            <td align="right">
+               <b>1</b>
+            </td>
+            <td align="right">
+               <b>0.93</b>
+            </td>
+         </tr>
+      </table>
+      <p>
+         <i>(* Defects per Thousand lines of non-commenting source statements)</i>
+      </p>
+      <p>
+         <br/>
+         <br/>
+      </p>
+      <h2>Contents</h2>
+      <ul>
+         <li>
+            <a href="#Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+         </li>
+         <li>
+            <a href="#Details">Details</a>
+         </li>
+      </ul>
+      <h1>Summary</h1>
+      <table width="500" cellpadding="5" cellspacing="2">
+         <tr class="tableheader">
+            <th align="left">Warning Type</th>
+            <th align="right">Number</th>
+         </tr>
+         <tr class="tablerow0">
+            <td>
+               <a href="#Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+            </td>
+            <td align="right">1</td>
+         </tr>
+         <tr class="tablerow1">
+            <td>
+               <b>Total</b>
+            </td>
+            <td align="right">
+               <b>1</b>
+            </td>
+         </tr>
+      </table>
+      <h1>Warnings</h1>
+      <p>Click on a warning row to see full context information.</p>
+      <h2>
+         <a name="Warnings_BAD_PRACTICE">Bad practice Warnings</a>
+      </h2>
+      <table class="warningtable" width="100%" cellspacing="0">
+         <tr class="tableheader">
+            <th align="left">Code</th>
+            <th align="left">Warning</th>
+         </tr>
+         <tr class="tablerow1" onclick="toggleRow('d1e152');">
+            <td>
+               <span class="priority-1">DMI</span>
+            </td>
+            <td>Random object created and used only once in ca.griis.speds.toolkit.integration.utilities.BouncyCastleUtil.encryptWithBouncyCastle(SecretKey, byte[])</td>
+         </tr>
+         <tr class="detailrow1">
+            <td/>
+            <td>
+               <p id="d1e152" style="display: none;">
+                  <a href="#DMI_RANDOM_USED_ONLY_ONCE">Bug type DMI_RANDOM_USED_ONLY_ONCE (click for details)</a>
+                  <br/>In class ca.griis.speds.toolkit.integration.utilities.BouncyCastleUtil<br/>In method ca.griis.speds.toolkit.integration.utilities.BouncyCastleUtil.encryptWithBouncyCastle(SecretKey, byte[])<br/>Called method java.security.SecureRandom.nextBytes(byte[])<br/>At BouncyCastleUtil.java:[line 36]</p>
+            </td>
+         </tr>
+      </table>
+      <h1>
+         <a name="Details">Details</a>
+      </h1>
+      <h2>
+         <a name="DMI_RANDOM_USED_ONLY_ONCE">DMI_RANDOM_USED_ONLY_ONCE: Random object created and used only once</a>
+      </h2>
+
+<p> This code creates a java.util.Random object, uses it to generate one random number, and then discards
+the Random object. This produces mediocre quality random numbers and is inefficient.
+If possible, rewrite the code so that the Random object is created once and saved, and each time a new random number
+is required invoke a method on the existing Random object to obtain it.
+</p>
+
+<p>If it is important that the generated Random numbers not be guessable, you <em>must</em> not create a new Random for each random
+number; the values are too easily guessable. You should strongly consider using a java.security.SecureRandom instead
+(and avoid allocating a new SecureRandom for each random number needed).
+</p>
+
+    </body>
+</html>

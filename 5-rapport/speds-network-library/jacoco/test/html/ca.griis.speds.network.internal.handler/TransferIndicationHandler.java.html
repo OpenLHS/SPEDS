@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransferIndicationHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.internal.handler</a> &gt; <span class="el_source">TransferIndicationHandler.java</span></div><h1>TransferIndicationHandler.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe TransferIndicationHandler.
+ * @brief @~english Contains description of TransferIndicationHandler class.
+ */
+
+package ca.griis.speds.network.internal.handler;
+
+import ca.griis.js2p.gen.speds.network.api.dto.Context45Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.Context56Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.InterfaceDataUnit45Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.InterfaceDataUnit56Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.ProtocolDataUnit5NETDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.link.api.Host;
+import ca.griis.speds.network.internal.checker.NetworkPduChecker;
+import ca.griis.speds.network.internal.checker.PduCheckerResult;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Traite un transfert d'une indication.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-02-18 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class TransferIndicationHandler {
+<span class="fc" id="L63">  private static final GriisLogger logger =</span>
+<span class="fc" id="L64">      GriisLoggerFactory.getLogger(TransferIndicationHandler.class);</span>
+
+  private final ObjectMapper objectMapper;
+  private final NetworkPduChecker checker;
+  private final Host host;
+  private final Map&lt;UUID, Boolean&gt; indicatedMessages;
+
+  public TransferIndicationHandler(CryptographyService service, ObjectMapper objectMapper,
+<span class="fc" id="L72">      Host host, Map&lt;UUID, Boolean&gt; indicatedMessages) {</span>
+<span class="fc" id="L73">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L74">    this.checker = new NetworkPduChecker(service, objectMapper);</span>
+<span class="fc" id="L75">    this.host = host;</span>
+<span class="fc" id="L76">    this.indicatedMessages = indicatedMessages;</span>
+<span class="fc" id="L77">  }</span>
+
+  public Optional&lt;String&gt; handle(InterfaceDataUnit56Dto idu) throws JsonProcessingException {
+<span class="fc" id="L80">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L82">    Optional&lt;String&gt; result = Optional.empty();</span>
+<span class="fc" id="L83">    ProtocolDataUnit5NETDto pdu = null;</span>
+    PduCheckerResult checkResult;
+    try {
+<span class="fc" id="L86">      pdu = objectMapper.readValue(idu.getMessage(), ProtocolDataUnit5NETDto.class);</span>
+<span class="fc" id="L87">      checkResult = checker.check(pdu, idu.getContext().getDestinationIri());</span>
+<span class="nc" id="L88">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L89">      logger.error(Error.IGNORED_ERROR, e);</span>
+
+<span class="nc" id="L91">      checkResult = new PduCheckerResult(false, &quot;FAILED: JSON error&quot;);</span>
+<span class="fc" id="L92">    }</span>
+
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">    if (pdu != null) {</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">      if (checkResult.isValid()) {</span>
+<span class="fc" id="L96">        final var headerDto = pdu.getHeader();</span>
+<span class="fc" id="L97">        final var msgId = pdu.getHeader().getId();</span>
+<span class="fc" id="L98">        final var options = Map.of(&quot;TN&quot;, msgId, &quot;IRI&quot;, headerDto.getDestinationIri());</span>
+<span class="fc" id="L99">        var ici =</span>
+<span class="fc" id="L100">            new Context45Dto(headerDto.getSourceIri(), headerDto.getDestinationIri(),</span>
+                &quot;transfer&quot;, Context45Dto.ServicePrimitive.INDICATION, options);
+<span class="fc" id="L102">        var nsdu = new InterfaceDataUnit45Dto(ici, pdu.getContent());</span>
+<span class="fc" id="L103">        result = Optional.of(objectMapper.writeValueAsString(nsdu));</span>
+
+<span class="fc" id="L105">        indicatedMessages.putIfAbsent(msgId, true);</span>
+<span class="fc" id="L106">      } else {</span>
+<span class="fc" id="L107">        final var headerDto = pdu.getHeader();</span>
+<span class="fc" id="L108">        final var nici =</span>
+<span class="fc" id="L109">            new Context56Dto(headerDto.getSourceIri(), &quot;transfer&quot;,</span>
+<span class="fc" id="L110">                Context56Dto.ServicePrimitive.RESPONSE, false);</span>
+<span class="fc" id="L111">        final var niduDto = new InterfaceDataUnit56Dto(nici, checkResult.message());</span>
+<span class="fc" id="L112">        final var nidu = objectMapper.writeValueAsString(niduDto);</span>
+
+<span class="fc" id="L114">        host.submitIdu(nidu);</span>
+      }
+    }
+
+<span class="fc" id="L118">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L119">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

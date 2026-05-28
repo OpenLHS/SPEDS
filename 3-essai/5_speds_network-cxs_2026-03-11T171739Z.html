@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Spécification des essais de conceptions (CXS) de SPEDS Réseau">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification des Essais - « SPEDS - Réseau »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification des Essais -  « <em>SPEDS - Réseau</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_historique">1. Historique</a></li>
+<li><a href="#_référence">2. Référence</a></li>
+<li><a href="#_contexte_général_des_tests">3. Contexte général des tests</a></li>
+<li><a href="#_éléments_testées">4. Éléments Testées</a></li>
+<li><a href="#_hypothèses">5. Hypothèses</a></li>
+<li><a href="#_données_globales">6. Données globales</a></li>
+<li><a href="#_incongruités">7. Incongruités</a></li>
+<li><a href="#_cas_de_test">8. Cas de test</a>
+<ul class="sectlevel2">
+<li><a href="#CT_01">8.1. [CT_01] Rejet d&#8217;une confirmation de transfert</a></li>
+<li><a href="#CT_02">8.2. [CT_02] Demande de transfert d’un message avec confirmation</a></li>
+<li><a href="#CT_03">8.3. [CT_03] Indication de réception d’un message avec un sceau d&#8217;entête invalide</a></li>
+<li><a href="#CT_04">8.4. [CT_04] Indication de réception d’un message avec un sceau de contenu invalide</a></li>
+<li><a href="#CT_05">8.5. [CT_05] Rejet d&#8217;une réponse de réception d’un message</a></li>
+<li><a href="#CT_06">8.6. [CT_06] Indication de réception d’un message avec une réponse</a></li>
+</ul>
+</li>
+<li><a href="#_essais">9. Essais</a>
+<ul class="sectlevel2">
+<li><a href="#_matrice_de_correspondance_élémentsessais">9.1. Matrice de correspondance Éléments/Essais</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification des essais prête à être révisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-11 13:39</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">AS</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-11 14:40</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_historique">1. Historique</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 63.6363%;">
+<col style="width: 27.2728%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Modification</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec. des essais initiale</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-17</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec. des essais 2e itération</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-05-26</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec. des essais 3e itération</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-25</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec. des essais 4e itération</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-02</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spec. des essais 5e itération<br>
+        Adapter à la version de SPEDS 7</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-11</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_référence">2. Référence</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 30%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Consultation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5_speds_network-scs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-11</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-5_6.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-11</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-4_5.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-11</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProtocolDataUnit-5-NET.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-11</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contexte_général_des_tests">3. Contexte général des tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le présent document a pour objectif de spécifier les essais qui détermineront si l&#8217;implémentation de la couche <code>Réseau</code> respecte la conception définie pour cette même couche.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_éléments_testées">4. Éléments Testées</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1]
+</td>
+<td class="hdlist2">
+<p>Demande de transfert d’un message</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2]
+</td>
+<td class="hdlist2">
+<p>Confirmation d’un transfert</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3]
+</td>
+<td class="hdlist2">
+<p>Indication de réception d’un message</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-4]
+</td>
+<td class="hdlist2">
+<p>Réponse de réception d’un message</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèses">5. Hypothèses</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_données_globales">6. Données globales</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La version de SPEDS testée est v7.1.1.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">7. Incongruités</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cas_de_test">8. Cas de test</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="CT_01">8.1. [CT_01] Rejet d&#8217;une confirmation de transfert</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une confirmation de la couche liaison est reçue sans aucune demande de transfert y est associée.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Entrée 1 - <code>InterfaceDataUnit-5_6</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>confirm</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Instruction</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Exécution de <code>[PRO-2] - Confirmation d’un transfert</code> avec l&#8217;entrée 1.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Aucune erreur est soulevée.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_02">8.2. [CT_02] Demande de transfert d’un message avec confirmation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une demande de transfert avec une confirmation associée.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Entrée 1 - <code>InterfaceDataUnit-4_5</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>request</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI source est l&#8217;IRI de l&#8217;hôte source;</p>
+</li>
+<li>
+<p>l&#8217;IRI destination est l&#8217;IRI de l&#8217;hôte de destination;</p>
+</li>
+<li>
+<p>le message est une chaîne de caractères quelconque.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Entrée 2 - <code>InterfaceDataUnit-5_6</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>confirm</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI source est l&#8217;IRI de l&#8217;hôte source;</p>
+</li>
+<li>
+<p>l&#8217;IRI destination est l&#8217;IRI de l&#8217;hôte de destination;</p>
+</li>
+<li>
+<p>le message est un message réseau en format JSON où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>l&#8217;entête</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le type de message est <code>RES.MSG.ENV</code>;</p>
+</li>
+<li>
+<p>l&#8217;identifiant du message est un <code>UUID</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI source est l&#8217;IRI de l&#8217;hôte source;</p>
+</li>
+<li>
+<p>l&#8217;IRI destination est l&#8217;IRI de l&#8217;hôte destination;</p>
+</li>
+<li>
+<p>le champs authentification du message est un certificat valide pour l&#8217;entité source encodée en Base64;</p>
+</li>
+<li>
+<p>la version correspond à la version v7.1.1 ;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>sceaux</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le sceau d&#8217;entête est une signature valide de l&#8217;entête du message encodée en Base64;</p>
+</li>
+<li>
+<p>le sceau de contenu est une signature valide de l&#8217;entête du message encodée en Base64;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>le contenu est une une chaîne de caractères quelconque.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Sortie 1 - <code>InterfaceDataUnit-5_6</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>request</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI destination est l&#8217;IRI de l&#8217;hôte de destination;</p>
+</li>
+<li>
+<p>le message est un message réseau en format JSON où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>l&#8217;entête est identique à l&#8217;entête du message réseau de l&#8217;entrée 2;</p>
+</li>
+<li>
+<p>les sceaux sont identiques aux sceaux du message réseau de l&#8217;entrée 2;</p>
+</li>
+<li>
+<p>le contenu est identique au message de l&#8217;entrée 1.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Sortie 2 - <code>InterfaceDataUnit-4_5</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>confirm</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI source est l&#8217;IRI de l&#8217;hôte source;</p>
+</li>
+<li>
+<p>l&#8217;IRI destination est l&#8217;IRI de l&#8217;hôte de destination;</p>
+</li>
+<li>
+<p>le message est identique au contenu du message réseau de l&#8217;entrée 2.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Instruction</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Exécution de <code>PRO-1 - Demande de transfert d’un message</code> avec l&#8217;entrée 1 :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Réception de l&#8217;entrée 1 par la couche supérieure et transmission d&#8217;une <code>InterfaceDataUnit-5_6</code> à la couche inférieure.</p>
+</li>
+<li>
+<p>Exécution de <code>PRO-2 - Confirmation d’un transfert</code> avec l&#8217;entrée 2 :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Réception de l&#8217;entrée 2 par la couche inférieure et envoi du signal de confirmation.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Réception du signal de la confirmation et échange de <code>InterfaceDataUnit-4_5</code> à la couche supérieure.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Aucune erreur est soulevée.</p>
+</li>
+<li>
+<p><code>PRO-1 - Demande de transfert d’un message</code> a tranmis dans un délai maximal de 2 secondes l' <code>InterfaceDataUnit-5_6</code> et celle-ci correspond à la sortie 1.</p>
+</li>
+<li>
+<p><code>PRO-1 - Demande de transfert d’un message</code> a échangée dans un délai maximal de 2 secondes l' <code>InterfaceDataUnit-4_5</code> et celle-ci correspond à la sortie 2.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_03">8.3. [CT_03] Indication de réception d’un message avec un sceau d&#8217;entête invalide</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une indication de message avec un sceau d&#8217;entête invalide est rejetée.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Entrée 1 - <code>InterfaceDataUnit-5_6</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>indication</code>;</p>
+</li>
+<li>
+<p>le message est un message réseau en format JSON où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le sceau d&#8217;entête du message n&#8217;est pas une signature numérique valide avec la clé publique du certificat associée et l&#8217;empreinte numérique de l&#8217;entête du message.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Sortie 1 - <code>InterfaceDataUnit-5_6</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>response</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI de destination est l&#8217;IRI de l&#8217;entité source;</p>
+</li>
+<li>
+<p>le message est <code>FAILED: Invalid Header Seal</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Instruction</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Exécution de <code>[PRO-3] - Indication de réception d’un message</code> avec l&#8217;entrée 1.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Aucune erreur est soulevée.</p>
+</li>
+<li>
+<p><code>PRO-3 - Indication de réception d’un message</code> n&#8217;a pas échangé une <code>InterfaceDataUnit-4_5</code> à la couche supérieure.</p>
+</li>
+<li>
+<p><code>PRO-3 - Indication de réception d’un message</code> a tranmis dans un délai maximal de 2 secondes l' <code>InterfaceDataUnit-5_6</code> et celle-ci correspond à la sortie 1.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_04">8.4. [CT_04] Indication de réception d’un message avec un sceau de contenu invalide</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une indication de message avec un sceau de contenu invalide est rejetée.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Entrée 1 - <code>InterfaceDataUnit-5_6</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>indication</code>;</p>
+</li>
+<li>
+<p>le message est un message réseau en format JSON où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le sceau de contenu du message n&#8217;est pas une signature numérique valide avec la clé publique du certificat associée et l&#8217;empreinte numérique de contenu du message;</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Sortie 1 - <code>InterfaceDataUnit-5_6</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>response</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI de destination est l&#8217;IRI de l&#8217;entité source;</p>
+</li>
+<li>
+<p>le message est <code>FAILED: Invalid Content Seal</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Instruction</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Exécution de <code>[PRO-3] - Indication de réception d’un message</code> avec l&#8217;entrée 1.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Aucune erreur est soulevée.</p>
+</li>
+<li>
+<p><code>PRO-3 - Indication de réception d’un message</code> n&#8217;a pas échangé une <code>InterfaceDataUnit-4_5</code> à la couche supérieure.</p>
+</li>
+<li>
+<p><code>PRO-3 - Indication de réception d’un message</code> a tranmis dans un délai maximal de 2 secondes l' <code>InterfaceDataUnit-5_6</code> et celle-ci correspond à la sortie 1.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_05">8.5. [CT_05] Rejet d&#8217;une réponse de réception d’un message</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une réponse est demandé sans aucune indication de message y est associée.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Entrée 1 - <code>InterfaceDataUnit-4_5</code> où :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>response</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Instruction</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Exécution de <code>[PRO-4] - Réponse de réception d’un message</code> avec entrée 1.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Aucune erreur est soulevée.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_06">8.6. [CT_06] Indication de réception d’un message avec une réponse</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Une indication de message avec une réponse associée.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Entrée 1 - <code>InterfaceDataUnit-5_6</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>indication</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI destination est l&#8217;IRI de l&#8217;hôte de destination;</p>
+</li>
+<li>
+<p>le message est un message réseau en format JSON où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>l&#8217;entête</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le type de message est <code>RES.MSG.ENV</code>;</p>
+</li>
+<li>
+<p>l&#8217;identifiant du message est un <code>UUID</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI source est l&#8217;IRI de l&#8217;hôte source;</p>
+</li>
+<li>
+<p>l&#8217;IRI destination est l&#8217;IRI destination;</p>
+</li>
+<li>
+<p>le champs authentification du message est un certificat valide pour l&#8217;entité source encodée en Base64;</p>
+</li>
+<li>
+<p>la version correspond à la version v7.1.1;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>sceaux</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le sceau d&#8217;entête est une signature valide de l&#8217;entête du message encodée en Base64;</p>
+</li>
+<li>
+<p>le sceau de contenu est une signature valide de l&#8217;entête du message encodée en Base64;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>le contenu est une valeur quelconque.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Entrée 2 - <code>InterfaceDataUnit-4_5</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>response</code>;</p>
+</li>
+<li>
+<p>le message est une chaîne de caractères quelconque.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Sortie 1 - <code>InterfaceDataUnit-4_5</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>indication</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI source est l&#8217;IRI de l&#8217;hôte source;</p>
+</li>
+<li>
+<p>l&#8217;IRI destination est l&#8217;IRI de l&#8217;hôte de destination;</p>
+</li>
+<li>
+<p>le message est le contenu du message réseau de l&#8217;entrée 1.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Sortie 2 - <code>InterfaceDataUnit-5_6</code> où</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code>;</p>
+</li>
+<li>
+<p>la primitive de service est <code>response</code>;</p>
+</li>
+<li>
+<p>l&#8217;IRI de destination est l&#8217;IRI de l&#8217;entité source;</p>
+</li>
+<li>
+<p>le message est identique au message de l&#8217;entrée 2.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Instruction</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Exécution de <code>PRO-3 - Indication de réception d’un message</code> avec l&#8217;entrée 1.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Réception de l&#8217;entrée 1 par la couche inférieure et échange <code>InterfaceDataUnit-4_5</code> à la couche supérieure.</p>
+</li>
+<li>
+<p>Exécution de <code>PRO-4 - Réponse de réception d’un message</code> avec l&#8217;entrée 2.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Réception de l&#8217;entrée 2 par la couche inférieure et envoi du signal de réponse.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Réception du signal de réponse et transmission de <code>InterfaceDataUnit-5_6</code> à la couche inférieure.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Condition de réussite</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Aucune erreur est soulevée.</p>
+</li>
+<li>
+<p><code>PRO-3 - Indication de réception d’un message</code> a échangée dans un délai maximal de 2 secondes l' <code>InterfaceDataUnit-4_5</code> et celle-ci correspond à la sortie 1.</p>
+</li>
+<li>
+<p><code>PRO-3 - Indication de réception d’un message</code> a tranmis dans un délai maximal de 2 secondes l' <code>InterfaceDataUnit-5_6</code> et celle-ci correspond à la sortie 2.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_essais">9. Essais</h2>
+<div class="sectionbody">
+<table id="ENV1" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Environnements</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV1</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Configuration de deux hôtes.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Un hôte source pour l&#8217;envoi de requête et confirmation.</p>
+</li>
+<li>
+<p>Un hôte destination pour l&#8217;indication et réponse.<br></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Chaque hôte est initialisé avec les paramètres suivants :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>version</code> : v7.1.1</p>
+</li>
+<li>
+<p><code>reference</code> : valeur quelconque</p>
+</li>
+<li>
+<p><code>certificate</code> : un certificat valide pour l&#8217;IRI de l&#8217;hôte</p>
+</li>
+<li>
+<p><code>private_key</code> : valeur de clé privée associée à la clé publique du certificat</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Essais</caption>
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 9.0909%;">
+<col style="width: 54.5454%;">
+<col style="width: 27.2728%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Id.</th>
+<th class="tableblock halign-left valign-top">Env.</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV1">ENV1</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#CT_01">[CT_01] Rejet d&#8217;une confirmation de transfert</a></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Réception d&#8217;une confirmation avant une demande de transfert.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV1">ENV1</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#CT_02">[CT_02] Demande de transfert d’un message avec confirmation</a></p>
+</li>
+<li>
+<p><a href="#CT_01">[CT_01] Rejet d&#8217;une confirmation de transfert</a></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérification d&#8217;un transfert et réception d&#8217;une seconde confirmation non associée au transfert.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV1">ENV1</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#CT_03">[CT_03] Indication de réception d’un message avec un sceau d&#8217;entête invalide</a></p>
+</li>
+<li>
+<p><a href="#CT_04">[CT_04] Indication de réception d’un message avec un sceau de contenu invalide</a></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérification de réception de messages réseaux invalides de l&#8217;hôte destination.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV1">ENV1</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#CT_05">[CT_05] Rejet d&#8217;une réponse de réception d’un message</a></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Envoi d&#8217;une réponse avant une indication préalable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ENV1">ENV1</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#CT_06">[CT_06] Indication de réception d’un message avec une réponse</a></p>
+</li>
+<li>
+<p><a href="#CT_05">[CT_05] Rejet d&#8217;une réponse de réception d’un message</a></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérification d&#8217;une indication de réception de message et envoi d&#8217;une seconde réponse rejetée.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_matrice_de_correspondance_élémentsessais">9.1. Matrice de correspondance Éléments/Essais</h3>
+<table class="tableblock frame-all grid-all fit-content">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_05</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-1]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-2]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-3]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-4]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:53:48 -0400
+</div>
+</div>
+</body>
+</html>

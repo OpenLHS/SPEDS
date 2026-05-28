@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubmitDispatcher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.link.internal.dispatcher</a> &gt; <span class="el_source">SubmitDispatcher.java</span></div><h1>SubmitDispatcher.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SubmitDispatcher.
+ * @brief @~english Implementation of the SubmitDispatcher class.
+ */
+
+package ca.griis.speds.link.internal.dispatcher;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.link.api.dto.ContextDto;
+import ca.griis.js2p.gen.speds.link.api.dto.ContextDto.ServicePrimitive;
+import ca.griis.js2p.gen.speds.link.api.dto.InterfaceDataUnit56Dto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Info;
+import ca.griis.speds.communication.protocol.ProtocolHost;
+import ca.griis.speds.link.api.exception.ProtocolException;
+import ca.griis.speds.link.internal.handler.LinkTransferRequestHandler;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Assigne un IDU soumissionné et qui est associée à une primitive de service au bon
+ *        gestionnaire de soumission.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-04-21 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class SubmitDispatcher {
+<span class="fc" id="L60">  private static final GriisLogger logger = getLogger(SubmitDispatcher.class);</span>
+
+  private final ObjectMapper objectMapper;
+  private final LinkTransferRequestHandler handler;
+
+<span class="fc" id="L65">  public SubmitDispatcher(ObjectMapper objectMapper, ProtocolHost host) {</span>
+<span class="fc" id="L66">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L67">    this.handler = new LinkTransferRequestHandler(objectMapper, host);</span>
+<span class="fc" id="L68">  }</span>
+
+  public Optional&lt;String&gt; handle(String idu) {
+<span class="fc" id="L71">    Optional&lt;String&gt; result = Optional.empty();</span>
+
+    try {
+<span class="fc" id="L74">      InterfaceDataUnit56Dto inIdu = objectMapper.readValue(idu, InterfaceDataUnit56Dto.class);</span>
+<span class="fc" id="L75">      ContextDto context = inIdu.getContext();</span>
+<span class="fc" id="L76">      var service = context.getService();</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">      if (service != ContextDto.Service.TRANSFER) {</span>
+<span class="nc" id="L78">        final var failed = &quot;FAILED: Unknown service&quot;;</span>
+<span class="nc" id="L79">        final var ex = new RuntimeException(failed);</span>
+<span class="nc" id="L80">        logger.error(Error.IGNORED_ERROR, ex);</span>
+
+<span class="nc" id="L82">        result = createConfirm(failed);</span>
+<span class="pc bfc" id="L83" title="All 2 branches covered.">      } else if (context.getServicePrimitive() == ServicePrimitive.REQUEST) {</span>
+<span class="fc" id="L84">        result = handler.handle(inIdu);</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">      } else if (context.getServicePrimitive() == ServicePrimitive.RESPONSE) {</span>
+<span class="fc" id="L86">        final String responseMessage = inIdu.getMessage();</span>
+<span class="fc" id="L87">        logger.info(Info.VARIABLE_LOGGING_1, &quot;responseMessage&quot;, responseMessage);</span>
+<span class="fc" id="L88">      } else {</span>
+<span class="nc" id="L89">        final var failed = &quot;FAILED: Unknown primitive service&quot;;</span>
+<span class="nc" id="L90">        logger.error(Error.IGNORED_ERROR, new ProtocolException(failed));</span>
+
+<span class="nc" id="L92">        result = createConfirm(failed);</span>
+      }
+<span class="fc" id="L94">    } catch (Exception ex) {</span>
+<span class="fc" id="L95">      logger.error(Error.IGNORED_ERROR, ex);</span>
+
+<span class="fc" id="L97">      result = createConfirm(&quot;FAILED: Unable to deliver to the destination&quot;);</span>
+<span class="fc" id="L98">    }</span>
+
+<span class="fc" id="L100">    return result;</span>
+  }
+
+  private Optional&lt;String&gt; createConfirm(String confirmMessageContent) {
+<span class="fc" id="L104">    final ContextDto contextResponseDto = new ContextDto(&quot;?&quot;, ContextDto.Service.TRANSFER,</span>
+<span class="fc" id="L105">        ContextDto.ServicePrimitive.CONFIRM, false);</span>
+
+<span class="fc" id="L107">    final InterfaceDataUnit56Dto iduConfirmationDto = new InterfaceDataUnit56Dto(</span>
+        contextResponseDto, confirmMessageContent);
+
+<span class="fc" id="L110">    Optional&lt;String&gt; result = Optional.empty();</span>
+    try {
+<span class="fc" id="L112">      String idu = objectMapper.writeValueAsString(iduConfirmationDto);</span>
+<span class="fc" id="L113">      result = Optional.of(idu);</span>
+<span class="nc" id="L114">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L115">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L116">    }</span>
+
+<span class="fc" id="L118">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

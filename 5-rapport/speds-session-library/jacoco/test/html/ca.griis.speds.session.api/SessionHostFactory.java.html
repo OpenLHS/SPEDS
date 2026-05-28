@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SessionHostFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.api</a> &gt; <span class="el_source">SessionHostFactory.java</span></div><h1>SessionHostFactory.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SessionHostFactory.
+ * @brief @~english Implementation of the SessionHostFactory class.
+ */
+
+package ca.griis.speds.session.api;
+
+import ca.griis.js2p.gen.speds.session.api.dto.InitInParamsDto;
+import ca.griis.js2p.gen.speds.session.api.dto.OptionsDto;
+import ca.griis.js2p.gen.speds.session.api.dto.VersionDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.contract.IdentifierGenerator;
+import ca.griis.speds.session.api.exception.ParameterException;
+import ca.griis.speds.session.internal.contract.Options;
+import ca.griis.speds.session.internal.domain.HostStartupContext;
+import ca.griis.speds.session.internal.domain.PendingMessage;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.event.SessionEventHandler;
+import ca.griis.speds.session.internal.host.ImmutableSessionHost;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.security.CertificatePrivateKeysEntry;
+import ca.griis.speds.session.internal.security.authorization.AuthorizationService;
+import ca.griis.speds.session.internal.security.crypto.SessionSecurityService;
+import ca.griis.speds.session.internal.serializer.SharedObjectMapper;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import ca.griis.speds.toolkit.project.ProjectService;
+import ca.griis.speds.transport.api.TransportFactory;
+import ca.griis.speds.transport.api.TransportHost;
+import ca.griis.speds.transport.api.TransportHostEvent;
+import ca.griis.speds.transport.api.TransportHostFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.RemovalListener;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre une fabrique d'entités nécessaires à la couche session.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-03-13 [FO] - Refactorisation poru SPEDS v7.
+ *      2025-05-12 [CB] - Implémentation v2
+ *      2025-03-17 [SSC] - Implémentation de la conception (init)
+ *      2025-02-18 [MD] - Déplacé le paramètre PgaService vers constructeur &lt;/br&gt;
+ *      2025-02-10 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SessionHostFactory implements SessionFactory {
+<span class="fc" id="L84">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(SessionHostFactory.class);</span>
+
+  private final AuthorizationService projectService;
+<span class="fc" id="L87">  private final ObjectMapper sharedMapper = SharedObjectMapper.getInstance().getMapper();</span>
+<span class="fc" id="L88">  private final ObjectMapper sharedMapper2 = new ObjectMapper();</span>
+  private final TransportFactory transportFactory;
+  private final IdentifierGenerator identifierGenerator;
+  private final CryptographyService cryptoService;
+  private final SessionSecurityService securityService;
+
+  public SessionHostFactory(ProjectService projectService, CryptographyService cryptoService) {
+<span class="pc" id="L95">    this(projectService, cryptoService, () -&gt; UUID.randomUUID().toString());</span>
+<span class="fc" id="L96">  }</span>
+
+  public SessionHostFactory(ProjectService projectService, CryptographyService cryptoService,
+<span class="fc" id="L99">      IdentifierGenerator identifierGenerator) {</span>
+<span class="fc" id="L100">    logger.trace(Trace.ENTER_METHOD_3, &quot;projectService&quot;, projectService, &quot;identifierGenerator&quot;,</span>
+        identifierGenerator, &quot;cryptoService&quot;, cryptoService);
+<span class="fc" id="L102">    this.projectService = new AuthorizationService(projectService);</span>
+<span class="fc" id="L103">    this.identifierGenerator = identifierGenerator;</span>
+<span class="fc" id="L104">    this.cryptoService = cryptoService;</span>
+<span class="fc" id="L105">    this.transportFactory = new TransportHostFactory(cryptoService);</span>
+<span class="fc" id="L106">    this.securityService = new SessionSecurityService(cryptoService);</span>
+<span class="fc" id="L107">  }</span>
+
+  @Override
+  public SessionHost initHost(String parameters, SessionHostEvent hostEventConsumer) {
+<span class="fc" id="L111">    logger.trace(Trace.ENTER_METHOD_2, &quot;parameters&quot;, parameters, &quot;hostEventConsumer&quot;,</span>
+        hostEventConsumer);
+
+<span class="fc" id="L114">    final var handler = new SessionEventHandler();</span>
+<span class="fc" id="L115">    final TransportHost host = initTransportHost(parameters, handler);</span>
+<span class="fc" id="L116">    final OptionsDto options = getOptions(parameters);</span>
+
+<span class="fc" id="L118">    final CertificatePrivateKeysEntry pair =</span>
+<span class="fc" id="L119">        securityService.getCertificatePrivateKey(options.getCertificate(), options.getPrivateKey());</span>
+<span class="fc" id="L120">    final var version = new VersionDto(options.getSpedsVersion(), options.getSpedsReference());</span>
+
+<span class="fc" id="L122">    Integer confirmWindowMinutes = 10;</span>
+<span class="fc" id="L123">    Integer responseWindowMinutes = 10;</span>
+<span class="fc" id="L124">    Integer sessionTimeoutMinutes = 10;</span>
+<span class="fc" id="L125">    Integer nbThreads = 8;</span>
+<span class="fc" id="L126">    Integer transportConfirmationTimeout = 8;</span>
+
+    try {
+      final InitInParamsDto params =
+<span class="fc" id="L130">          SharedObjectMapper.getInstance().getMapper()</span>
+<span class="fc" id="L131">              .readValue(parameters, InitInParamsDto.class);</span>
+<span class="fc" id="L132">      confirmWindowMinutes =</span>
+<span class="fc" id="L133">          (Integer) params.getOptions().getOrDefault(&quot;speds.ses.confirm.window.minutes&quot;, 10);</span>
+<span class="fc" id="L134">      responseWindowMinutes =</span>
+<span class="fc" id="L135">          (Integer) params.getOptions().getOrDefault(&quot;speds.ses.response.window.minutes&quot;, 10);</span>
+<span class="fc" id="L136">      sessionTimeoutMinutes =</span>
+<span class="fc" id="L137">          (Integer) params.getOptions().getOrDefault(&quot;speds.ses.timeout.minutes&quot;, 10);</span>
+<span class="fc" id="L138">      nbThreads =</span>
+<span class="fc" id="L139">          (Integer) params.getOptions().getOrDefault(&quot;speds.ses.threads&quot;, 8);</span>
+<span class="fc" id="L140">      transportConfirmationTimeout =</span>
+<span class="fc" id="L141">          (Integer) params.getOptions().getOrDefault(&quot;speds.ses.transport.confirm.timeout.seconds&quot;,</span>
+<span class="fc" id="L142">              60);</span>
+<span class="nc" id="L143">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L144">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L145">    }</span>
+
+<span class="fc" id="L147">    final ExecutorService executor = Executors.newFixedThreadPool(nbThreads);</span>
+<span class="fc" id="L148">    final var initiatorSession = Caffeine.newBuilder()</span>
+<span class="fc" id="L149">        .expireAfterAccess(sessionTimeoutMinutes, TimeUnit.MINUTES)</span>
+<span class="fc" id="L150">        .maximumSize(100_000)</span>
+<span class="fc" id="L151">        .removalListener(</span>
+            (RemovalListener&lt;SessionId, SessionInformation&gt;) (key, value, cause) -&gt; {
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">              if (value != null) {</span>
+<span class="fc" id="L154">                value.cleanUp();</span>
+              }
+<span class="fc" id="L156">            })</span>
+<span class="fc" id="L157">        .build();</span>
+
+<span class="fc" id="L159">    final var peerSession = Caffeine.newBuilder()</span>
+<span class="fc" id="L160">        .expireAfterAccess(sessionTimeoutMinutes, TimeUnit.MINUTES)</span>
+<span class="fc" id="L161">        .maximumSize(100_000)</span>
+<span class="fc" id="L162">        .removalListener(</span>
+            (RemovalListener&lt;SessionId, SessionInformation&gt;) (key, value, cause) -&gt; {
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">              if (value != null) {</span>
+<span class="fc" id="L165">                value.cleanUp();</span>
+              }
+<span class="fc" id="L167">            })</span>
+<span class="fc" id="L168">        .build();</span>
+
+<span class="fc" id="L170">    final var pendingConfirmations = Caffeine.newBuilder()</span>
+<span class="fc" id="L171">        .expireAfterWrite(confirmWindowMinutes, TimeUnit.MINUTES)</span>
+<span class="fc" id="L172">        .maximumSize(100_000)</span>
+<span class="fc" id="L173">        .&lt;UUID, PendingMessage&gt;build();</span>
+
+<span class="fc" id="L175">    final var pendingResponses = Caffeine.newBuilder()</span>
+<span class="fc" id="L176">        .expireAfterWrite(responseWindowMinutes, TimeUnit.MINUTES)</span>
+<span class="fc" id="L177">        .maximumSize(100_000)</span>
+<span class="fc" id="L178">        .&lt;UUID, PendingMessage&gt;build();</span>
+
+<span class="fc" id="L180">    final var clientContext =</span>
+        new HostStartupContext(
+            host,
+            sharedMapper,
+            projectService,
+            version,
+            pair,
+            identifierGenerator,
+            cryptoService,
+            initiatorSession,
+            pendingConfirmations,
+            hostEventConsumer,
+            executor,
+            transportConfirmationTimeout);
+
+<span class="fc" id="L195">    final var serverContext =</span>
+        new HostStartupContext(
+            host,
+            sharedMapper2,
+            projectService,
+            version,
+            pair,
+            identifierGenerator,
+            cryptoService,
+            peerSession,
+            pendingResponses,
+            hostEventConsumer,
+            executor,
+            transportConfirmationTimeout);
+
+<span class="fc" id="L210">    final var sessionHost =</span>
+        new ImmutableSessionHost(clientContext, serverContext, hostEventConsumer);
+<span class="fc" id="L212">    handler.register(sessionHost);</span>
+
+<span class="fc" id="L214">    logger.trace(Trace.EXIT_METHOD_1, &quot;sessionHost&quot;, sessionHost);</span>
+<span class="fc" id="L215">    return sessionHost;</span>
+  }
+
+  @Override
+  public TransportHost initTransportHost(String parameters, TransportHostEvent hostEventConsumer) {
+<span class="fc" id="L220">    logger.trace(Trace.ENTER_METHOD_2, &quot;parameters&quot;, parameters, &quot;hostEventConsumer&quot;,</span>
+        hostEventConsumer);
+
+<span class="fc" id="L223">    TransportHost traHost = transportFactory.initHost(parameters, hostEventConsumer);</span>
+
+<span class="fc" id="L225">    logger.trace(Trace.EXIT_METHOD_1, &quot;transportHost&quot;, traHost);</span>
+<span class="fc" id="L226">    return traHost;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param parameters «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère les valeurs sérialisées pour initialiser la couche Session.
+   * @param parameters Les paramètres sous la forme d'une chaîne de caractères.
+   * @exception ParameterException Erreur soulevée lors de la récupération des paramètres
+   *            d'initialisation
+   * @return Les valeurs d'initialisation associées à la couche Session.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  private Options getOptions(String parameters) {
+<span class="fc" id="L245">    logger.trace(Trace.ENTER_METHOD_1, &quot;parameters&quot;, parameters);</span>
+
+    Options options;
+    try {
+<span class="fc" id="L249">      InitInParamsDto params = sharedMapper.readValue(parameters, new TypeReference&lt;&gt;() {});</span>
+<span class="fc" id="L250">      OptionsDto optionsDto = new OptionsDto(</span>
+<span class="fc" id="L251">          (String) params.getOptions().get(&quot;speds.ses.version&quot;),</span>
+<span class="fc" id="L252">          (String) params.getOptions().get(&quot;speds.ses.reference&quot;),</span>
+<span class="fc" id="L253">          (String) params.getOptions().get(&quot;speds.ses.cert&quot;),</span>
+<span class="fc" id="L254">          (String) params.getOptions().get(&quot;speds.ses.private.key&quot;));</span>
+<span class="fc" id="L255">      options = sharedMapper.convertValue(optionsDto, Options.class);</span>
+<span class="fc" id="L256">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L257">      final String exception = &quot;Cannot read initialization parameters: &quot; + e.getMessage();</span>
+<span class="fc" id="L258">      throw new ParameterException(exception);</span>
+<span class="fc" id="L259">    }</span>
+
+<span class="fc" id="L261">    validateOptions(options);</span>
+
+<span class="fc" id="L263">    logger.trace(Trace.EXIT_METHOD_1, &quot;options&quot;, options);</span>
+<span class="fc" id="L264">    return options;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param optionsDto «Parameter description»
+   * @exception «exception name» «Exception description»
+   *
+   * @brief @~french Valide la présence des paramètres d'initialisation
+   * @param optionsDto Les paramètres d'initialisation
+   * @exception ParameterException Erreur soulevée lors de la récupération des paramètres
+   *            d'initialisation
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  private void validateOptions(OptionsDto optionsDto) {
+<span class="fc" id="L281">    logger.trace(Trace.ENTER_METHOD_1, &quot;optionsDto&quot;, optionsDto);</span>
+
+<span class="fc bfc" id="L283" title="All 2 branches covered.">    if (optionsDto.getSpedsVersion() == null) {</span>
+<span class="fc" id="L284">      throw new ParameterException(&quot;SPEDS version is missing in the initialization parameters.&quot;);</span>
+    }
+
+<span class="fc bfc" id="L287" title="All 2 branches covered.">    if (optionsDto.getSpedsReference() == null) {</span>
+<span class="fc" id="L288">      throw new ParameterException(&quot;SPEDS reference is missing in the initialization parameters.&quot;);</span>
+    }
+
+<span class="fc bfc" id="L291" title="All 2 branches covered.">    if (optionsDto.getCertificate() == null) {</span>
+<span class="fc" id="L292">      throw new ParameterException(&quot;Parameter speds.ses.cert is missing.&quot;);</span>
+    }
+
+<span class="fc bfc" id="L295" title="All 2 branches covered.">    if (optionsDto.getPrivateKey() == null) {</span>
+<span class="fc" id="L296">      throw new ParameterException(&quot;Parameter speds.ses.private.key is missing.&quot;);</span>
+    }
+
+<span class="fc" id="L299">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L300">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

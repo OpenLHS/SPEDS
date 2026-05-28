@@ -1,0 +1,64 @@
+plugins {
+  id 'maven-publish'
+  id 'java-library'
+}
+
+dependencyLocking {
+  lockAllConfigurations()
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/main/java', 'src/gen/js2p']
+    }
+  }
+}
+
+group = "ca.griis"
+version = "3.2.0"
+
+test {
+  useJUnitPlatform()
+}
+
+dependencies {
+  api "ca.griis:logger-library:1.1.0"
+  api "ca.griis:speds-presentation-library:4.2.0"
+  api "ca.griis:speds-toolkit-library:7.1.0"
+  api "jakarta.validation:jakarta.validation-api:3.0.2"
+  api "com.fasterxml.jackson.core:jackson-databind:2.17.2"
+  api "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.17.2"
+  api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2"
+  api "org.apache.commons:commons-lang3:3.20.0"
+  api "org.apache.commons:commons-collections4:4.5.0"
+  api "org.apache.jena:jena-iri:5.6.0"
+  api "org.bouncycastle:bcprov-jdk18on:1.84"
+  api "org.bouncycastle:bcpkix-jdk18on:1.84"
+  testImplementation "org.assertj:assertj-core:3.25.3"
+  testImplementation "org.junit.jupiter:junit-jupiter-engine:5.10.3"
+  testImplementation "org.mockito:mockito-core:5.11.0"
+  testImplementation "org.mockito:mockito-junit-jupiter:5.11.0"
+  testImplementation "net.jqwik:jqwik:1.7.0"
+  testImplementation "net.jqwik:jqwik-api:1.7.0"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.3"
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}

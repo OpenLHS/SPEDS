@@ -1,0 +1,143 @@
+ {
+  "$id": "https://schema.openlhs.info/speds/json/v7.1.1/pdu/ProtocolDataUnit-1-APP.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolDataUnit-1-APP (2026-01-21T15:00:00-0500)",
+  "$defs": {
+    "iri": {
+      "description": "A valid IR according to RFC 3987",
+      "type": "string",
+      "format": "iri"
+    },
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "versioning": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)(\\.[0-9]+[a-z]*)$"
+    }
+  },
+  "description": "For the Application Layer of SPEDS (Layer 1) : a unit of data which is transferred from one end of a connection to the other with no loss of identity or meaning.",
+  "type": "object",
+  "examples": [
+    {
+      "header": {
+        "msgtype": "PLAN",
+        "id": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+        "parameters": false,
+        "SPEDS": {
+          "version": "6.1.0",
+          "reference": "https://schema.openlhs.info/speds/json/v6.1.0/"
+        }
+      },
+      "content": {
+        "action": "INSTRUCTION.REQUEST",
+        "task_ref": "550e8400-e29b-41d4-a716-446655440000",
+        "task_def": "aa30bc32-6d3f-4e0d-a6d7-29659bf37fe4",
+        "inArgs": [
+          {
+            "Name": "validNumber",
+            "Value": "(Value (Number (Token \"1\")))"
+          }
+        ],
+        "params": [],
+        "command": "START"
+      }
+    },
+    {
+      "header": {
+        "msgtype": "PLAN",
+        "id": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+        "parameters": false,
+        "SPEDS": {
+          "version": "7.1.0",
+          "reference": "https://schema.openlhs.info/speds/json/v7.1.1/"
+        }
+      },
+      "content": {
+        "action": "INSTRUCTION.REQUEST",
+        "task_ref": "550e8400-e29b-41d4-a716-446655440000",
+        "task_def": "aa30bc32-6d3f-4e0d-a6d7-29659bf37fe4",
+        "inArgs": [
+          {
+            "Name": "validNumber",
+            "Value": "(Value (Number (Token \"1\")))"
+          }
+        ],
+        "params": [],
+        "command": "START"
+      }
+    }
+  ],
+  "properties": {
+    "header": {
+      "description": "The header of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "properties": {
+        "msgtype": {
+          "description": "The type of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "javaType": "MsgType",
+          "enum": [
+            "PLAN",
+            "ADMINISTRATION"
+          ]
+        },
+        "id": {
+          "description": "The identifier of a SPEDS message. Mandatory in all layers.",
+          "$ref": "#/$defs/uuid"
+        },
+        "parameters": {
+          "description": "The parameters of the Application layer.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        },
+        "version": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "description": "The version of the current layer.",
+              "$ref": "#/$defs/versioning"
+            },
+            "reference": {
+              "description": "The reference of the present version of the layer.",
+              "type": "string",
+              "format": "iri"
+            }
+          },
+          "required": [
+            "number",
+            "reference"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "msgtype",
+        "id",
+        "parameters",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "content": {
+      "description": "The content of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "existingJavaType": "java.util.Map<String,Object>",
+      "minProperties": 1
+    }
+  },
+  "required": [
+    "header",
+    "content"
+  ],
+  "additionalProperties": false
+}

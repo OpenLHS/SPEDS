@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Spécification de la couche Présentation">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification de la couche Présentation</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification de la couche Présentation</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_responsabilité">Responsabilité</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La couche Présentation doit gérer le chiffrement et le déchiffrement des messages avec un algorithme de chiffrement symétrique.</p>
+</li>
+<li>
+<p>La couche Présentation doit créer une clé de chiffrement symétrique (SDEK) si elle reçoit un message par la primitive <code>request</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interfaces">Interfaces</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_couche_supérieure">Couche supérieure</h3>
+<div class="sect3">
+<h4 id="_entrant">entrant</h4>
+<div class="paragraph">
+<p>Un contenu (chaîne de caractère) en provenance d&#8217;une couche Application et un contexte indiquant le code de la source, le code du destinataire, le service, la primitive de service et l&#8217;identifiant du PGA.</p>
+</div>
+<div class="ulist">
+<div class="title">Services et primitives de service utilisés</div>
+<ul>
+<li>
+<p><code>delegate.request</code> : primitive utilisée par la couche supérieure pour envoyer un message à la couche Présentation et demander qu&#8217;il soit traité (chiffrement) et que son envoi soit délégué à la couche Session. Attends un <code>delegate.confirm</code> en réponse.</p>
+</li>
+<li>
+<p><code>transfer.response</code> : primitive utilisée par la couche supérieure pour indiquer à la couche Présentation que le message obtenu par <code>transfer.indication</code> est traité. Déclenche un <code>transfer.response</code> à la couche inférieure.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sortant">sortant</h4>
+<div class="paragraph">
+<p>Un message de la couche Application (chaîne de caractère décrivant un objet JSON) et son contexte indiquant le code de la source, le code du destinataire, le service, la primitive de service et l&#8217;identifiant du PGA.</p>
+</div>
+<div class="ulist">
+<div class="title">Services et primitives de service utilisés</div>
+<ul>
+<li>
+<p><code>delegate.confirm</code> : primitive utilisée par la couche courante pour indiquer que le message transmis par <code>delegate.request</code> est traité. Est déclenché par un <code>delegate.confirm</code> de la couche inférieure ou par une erreur local. Dans ce dernier cas, le contenu doit alors être de la forme "FAILED: information").</p>
+</li>
+<li>
+<p><code>transfer.indication</code> : primitive utilisée par la couche Présentation pour indiquer qu&#8217;un message est reçu et doit être transféré. Contient le message. Est déclenché par un <code>transfert.indication</code> de la couche inférieure.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche supérieure</div>
+<div class="content">
+<pre>{ "source_code": string
+, "destination_code": string
+, "PGA": string
+, "service": string
+, "service_primitive": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_couche_inférieure">Couche inférieure</h3>
+<div class="sect3">
+<h4 id="_entrant_2">entrant</h4>
+<div class="paragraph">
+<p>Un message en provenance de la couche Session avec un contexte indiquant le code de la source, le code du destinataire, l&#8217;identifiant du PGA, le service, la primitive de service et la clé de chiffrement utilisée (SDEK). Le message doit respecter le format standard (décrit après) sinon le message est ignoré.</p>
+</div>
+<div class="ulist">
+<div class="title">Services et primitives de service utilisés</div>
+<ul>
+<li>
+<p><code>delegate.confirm</code> : primitive utilisée par la couche inférieure pour indiquer que le message transmis par <code>delegate.request</code> est traité. Déclenche un <code>delegate.confirm</code> à la couche supérieure.</p>
+</li>
+<li>
+<p><code>transfer.indication</code> : primitive utilisée par la couche inférieure pour indiquer qu&#8217;un message est reçu et doit être transféré. Contient le message.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sortant_2">sortant</h4>
+<div class="paragraph">
+<p>Un message pour la couche Session  accompagné d&#8217;un contexte indiquant le code de la source, le code du destinataire, l&#8217;identifiant du PGA, le service, la primitive de service et la clé de chiffrement utilisé (SDEK). Le message doit respecter le format standard (décrit après).</p>
+</div>
+<div class="ulist">
+<div class="title">Services et primitives de service utilisés</div>
+<ul>
+<li>
+<p><code>delegate.request</code> : primitive utilisée par la couche Présentation pour envoyer un message à la couche inférieure pour que son envoi soit délégué à la couche Session. Est déclenché par un <code>delegate.request</code> de la couche supérieure.</p>
+</li>
+<li>
+<p><code>transfer.response</code> : primitive utilisée par la couche Présentation pour indiquer à la couche inférieure que le message obtenu par <code>transfer.indication</code> est traité. Peut être déclenché par une réponse de la couche supérieure (<code>transfer.response</code>), auquel cas le contenu est le même que celui transmis par la couche supérieure, ou par une erreur locale. Dans ce dernier cas, le contenu doit alors être de la forme <code>"FAILED: <em>information</em>"</code>). Par exemple, un problème de déchiffrement pourrait déclencher un <code>"FAILED: decypher failed."</code>.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche inférieure</div>
+<div class="content">
+<pre>{ "SDEK": string
+, "source_code": string
+, "destination_code": string
+, "PGA": string
+, "service": string
+, "service_primitive": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_format_des_messages_pour_la_couche_présentation">Format des messages pour la couche présentation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Un message est une chaîne de caractère représentant un objet JSON. Le format de l&#8217;objet JSON est défini comme suit.</p>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;un message</div>
+<div class="content">
+<pre>{ "header" : object
+, "content" : string
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;une entête</div>
+<div class="content">
+<pre>{ "msgtype" : string
+, "id" : string
+, "version" : { "number" : "x.x.x"
+              , "reference" : "IRI"
+              }
+, "parameters" : object (actuellement : false)
+}</pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_types">Types</h3>
+<div class="paragraph">
+<p>La chaîne de caractères représentant le type du message est</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>PRE.MSG.ENV</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_numéro_didentification_du_message_id">Numéro d&#8217;identification du message (<code>id</code>)</h3>
+<div class="paragraph">
+<p>Le numéro d&#8217;identification du message est un numéro généré unique (<code>uuid</code>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_schéma_json_des_communications">Schéma JSON des communications</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-1_2.schema.json">schéma JSON de la IDU</a> de la couche Application (<code>AIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-2_3.schema.json">schéma JSON de la IDU</a> de la couche Présentation (<code>PIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/ProtocolDataUnit-2-PRE.schema.json">schéma JSON de la PDU</a> de la couche Présentation (<code>PPDU</code>).</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="includes/echangePRE.svg" alt="echangePRE" width="245" height="288">
+</div>
+<div class="title">Figure 1. Modèle des échanges entre les couches et les entités</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_diagramme_de_séquence_de_message">Diagramme de séquence de message</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P200.svg" alt="P200" width="934" height="1471">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:52:29 -0400
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>

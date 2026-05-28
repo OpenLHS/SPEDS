@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Spécification de la couche Application">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification de la couche Application</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification de la couche Application</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_responsabilité">Responsabilité</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La couche Application doit initier l&#8217;envoi entre source et destinataire d&#8217;un message initié par la source ainsi que de la réponse générée par le destinataire. Les messages sont envoyés avec pour le service <code>delegate</code> et la primitive <code>request</code> et sont reçus avec le service <code>transfer</code> et la primitive <code>indication</code> dans tous les cas de figure.</p>
+</li>
+<li>
+<p>La couche Application doit filtrer les messages qui n&#8217;ont pas la syntaxe attendue pour les services <code>delegate</code> et <code>transfer</code>.
+Si un message contient un colis qui n&#8217;est pas au format JSON attendu en fonction de son type, le message est ignoré. Dans ce cas : si la primitive est <code>request</code>, un message de primitive <code>confirm</code> avec le contenu <code>"failed: syntax"</code> est transmis en retour ; si la primitive est un <code>indication</code>, un message de primitive <code>response</code> avec le contenu <code>"failed: syntax"</code> est transmis en retour. Cette vérification s&#8217;applique aussi au contenu du message qui doit être vérifié en fonction du type
+(<code>msgtype</code>).</p>
+</li>
+<li>
+<p>La couche Application doit vérifier qu&#8217;un message ayant un type <code>PLAN</code> est associé à un projet dont le plan est en cours. Autrement, si le plan n&#8217;est pas en cours, le message est ignoré (n&#8217;est pas transmis).
+Dans ce cas : si la primitive est <code>request</code>, un message de primitive <code>confirm</code> avec le contenu <code>"failed: ended plan"</code> est transmis en retour ; si la primitive est un <code>indication</code>, un message de primitive <code>response</code> avec le contenu <code>"failed: ended plan"</code> est transmis en retour.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_hypothèses_de_travail">Hypothèses de travail</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le contenu reçu par la couche inférieure est dans le cadre d&#8217;un projet actif.</p>
+</li>
+<li>
+<p>Le contenu reçu par la couche inférieure est d&#8217;un hôte authentifié pour le projet actif.</p>
+</li>
+<li>
+<p>Le contenu reçu par la couche inférieure est intègre.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_contraintes_de_maintenabilité">Contraintes de maintenabilité</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le système doit permettre d&#8217;ajouter ou de supprimer un schema de contenu (JSON) parmi les filtres autorisés avec le plus de facilité possible. C&#8217;est-à-dire en limitant les redémarrages et les activités de développement. Ainsi la fonction de vérification doit permettre de relier les types de messages définis (comme <code>PLAN</code>) à des schémas JSON dont au moins un doit permettre de valider le message.
+Par exemple, le système peut utiliser une table de lien dans un fichier TSV, des répertoires portant le nom des <code>msgtype</code> possibles ou une base de données tant que cela évite des redémarrages et des activités de développement au possible.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interfaces">Interfaces</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_couche_supérieure">Couche supérieure</h3>
+<div class="paragraph">
+<p>Correspond aux appels de l&#8217;hôte, c&#8217;est-à-dire l&#8217;entité appelante.</p>
+</div>
+<div class="sect3">
+<h4 id="_entrant">entrant</h4>
+<div class="paragraph">
+<p>Un contenu définissant un message à transmettre par un type d&#8217;un <em>message vers une entité externe</em>, un numéro d&#8217;identification du message, le code du destinataire et une chaîne de caractère décrivant un objet JSON. Le format du contenu est alors défini dans les diagrammes de protocole de 101 à 109 (selon le type).
+Le contenu est accompagné de l&#8217;identifiant du PGA en cours, de l&#8217;identifiant de la source et de l&#8217;identifiant du destinataire.</p>
+</div>
+<div class="paragraph">
+<p>Deux types de contenu peuvent être envoyés :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Un message à déléguer : déclenchant un <code>delegate.request</code> à la couche inférieure après les vérifications attendues ;</p>
+</li>
+<li>
+<p>Une réponse à un message reçu indiquant sa réception : déclenchant un <code>transfer.response</code> vers la couche inférieure puis donnant à l&#8217;hôte l&#8217;accès au message reçu si celui-ci passe les vérifications attendues.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sortant">sortant</h4>
+<div class="paragraph">
+<p>Un contenu sous la forme d&#8217;un objet JSON transmis à l&#8217;hôte. Ce contenu définit un message pour l&#8217;entité qui doit être traité. Ce contenu est accompagné de l&#8217;identifiant du PGA en cours, de l&#8217;identifiant de la source et de l&#8217;identifiant du destinataire.</p>
+</div>
+<div class="paragraph">
+<p>Deux types de contenu peuvent être envoyés :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Un message à traiter : résultat d&#8217;un <code>transfer.indication</code> de la couche inférieure dans le cas où le message reçu passe les vérifications attendues ;</p>
+</li>
+<li>
+<p>Une confirmation de délégation qui est soit le résultat reçu par la couche inférieure, soit un échec de validation de syntaxe (message <code>"FAILED: syntax"</code>) ou de plan terminé (message <code>"FAILED: ended plan"</code>).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_couche_inférieure">Couche inférieure</h3>
+<div class="sect3">
+<h4 id="_entrant_2">entrant</h4>
+<div class="paragraph">
+<p>Un message en provenance de la couche Présentation avec un contexte indiquant le code de source, le code du destinataire, le service et la primitive de service utilisés et l&#8217;identifiant du PGA. Le message doit respecter le format standard (décrit après) sinon le message est ignoré.</p>
+</div>
+<div class="ulist">
+<div class="title">Services et primitives de service utilisés</div>
+<ul>
+<li>
+<p><code>transfer.indication</code> : primitive utilisée par la couche inférieure pour indiquer qu&#8217;un message est reçu et doit être transféré. Contient le message.</p>
+</li>
+<li>
+<p><code>delegate.confirm</code> : primitive utilisée par la couche inférieure pour indiquer que le message de même numéro d&#8217;identification transmis par <code>delegate.request</code> est traité. Déclenche une confirmation à l&#8217;hôte qui contient la même information.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sortant_2">sortant</h4>
+<div class="paragraph">
+<p>Un message pour la couche Présentation accompagné d&#8217;un contexte indiquant le code de la source, le code du destinataire, le service et la primitive de service utilisés et l&#8217;identifiant du PGA. Le message doit respecter le format standard (décrit après).</p>
+</div>
+<div class="ulist">
+<div class="title">Services et primitives de service utilisés</div>
+<ul>
+<li>
+<p><code>delegate.request</code> : primitive utilisée par la couche courante pour envoyer un message (le contenu) à la couche inférieure et demander qu&#8217;il soit traité et que son envoi soit délégué à la couche Session. Est déclenché par la demande de l&#8217;hôte.</p>
+</li>
+<li>
+<p><code>transfer.response</code> : primitive utilisée par la couche courante pour indiquer à la couche inférieure que le message obtenu par <code>transfer.indication</code> est traité (transmis à l&#8217;hôte). Peut être déclenché par une réponse de l&#8217;hôte (<code>transfer.response</code>), auquel cas le contenu est le même que celui transmis par l&#8217;hôte, ou, peut être déclenché suite à un problème de structure (message <code>"FAILED: syntax"</code>) ou de plan terminé (message <code>"FAILED: ended plan"</code>).</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Format du contexte d&#8217;une communication avec la couche inférieure</div>
+<div class="content">
+<pre>{ "source_code": string
+, "destination_code": string
+, "PGA": string
+, "service": string
+, "service_primitive": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_format_des_messages_pour_la_couche_application">Format des messages pour la couche Application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Un message est une chaîne de caractère représentant un objet JSON. Le format de l&#8217;objet JSON est défini comme suit.</p>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;un message</div>
+<div class="content">
+<pre>{ "header" : object
+, "content" : object
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Format d&#8217;un entête</div>
+<div class="content">
+<pre>{ "msgtype" : string
+, "id" : string
+, "version" : { "number" : "x.x.x"
+              , "reference" : "IRI"
+              }
+, "parameters" : object (actuellement : false)
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>La version est celle de la couche Application. La référence est un IRI documentant la version.</p>
+</div>
+<div class="sect2">
+<h3 id="_types_de_message">Types de message</h3>
+<div class="paragraph">
+<p>La chaîne de caractères représentant le type d&#8217;un <em>message vers une entité externe</em> est l&#8217;une des suivantes :</p>
+</div>
+<div class="ulist">
+<div class="title">Valeurs possibles de la propriété <code>msgtype</code></div>
+<ul>
+<li>
+<p><code>PLAN</code></p>
+</li>
+<li>
+<p><code>ADMINISTRATIVE</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_numéro_didentification_du_message_id">Numéro d&#8217;identification du message (<code>id</code>)</h3>
+<div class="paragraph">
+<p>Le numéro d&#8217;identification du message est un numéro généré unique (<code>uuid</code>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_schéma_json_des_communications">Schéma JSON des communications</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-1_2.schema.json">schéma JSON de la IDU</a> de la couche Application (<code>AIDU</code>).</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/ProtocolDataUnit-1-APP.schema.json">schéma JSON de la PDU</a> de la couche Application (<code>APDU</code>).</p>
+</li>
+<li>
+<p>Les <code>ASDU</code> utilisés pour les types</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="includes/jsonSchema/101InstructionSendSDU.schema.json">INSTRUCTION.SEND</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/101InstructionResponseSDU.schema.json">INSTRUCTION.RESPONSE</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/102CompletionSendSDU.schema.json">COMPLETION.SEND</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/102CompletionResponseSDU.schema.json">COMPLETION.RESPONSE</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/103ExceptionSendSDU.schema.json">EXCEPTION.SEND</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/103ExceptionResponseSDU.schema.json">EXCEPTION.RESPONSE</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/104DataSendSDU.schema.json">DATA.SEND</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/104DataResponseSDU.schema.json">DATA.RESPONSE</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/105StatusSendSDU.schema.json">STATUS.SEND</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/105StatusResponseSDU.schema.json">STATUS.RESPONSE</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/106CommandSendSDU.schema.json">COMMAND.SEND</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/106CommandResponseSDU.schema.json">COMMAND.RESPONSE</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/107EndPlanSendSDU.schema.json">ENDPLAN.SEND</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/107EndPlanResponseSDU.schema.json">ENDPLAN.RESPONSE</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/108InformationSendSDU.schema.json">INFORMATION.SEND</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/108InformationResponseSDU.schema.json">INFORMATION.RESPONSE</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/109DeactivateProjectSendSDU.schema.json">ENDPLAN.SEND</a> ;</p>
+</li>
+<li>
+<p><a href="includes/jsonSchema/109DeactivateProjectResponseSDU.schema.json">ENDPLAN.RESPONSE</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="includes/echangeAPP.svg" alt="echangeAPP" width="248" height="172">
+</div>
+<div class="title">Figure 1. Modèle des échanges entre les couches et les entités</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_diagramme_de_séquence_de_messages">Diagramme de séquence de messages</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P100.svg" alt="P100" width="781" height="1200">
+</div>
+</div>
+<details>
+<summary class="title">Diagramme UML du protocole 101</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P101.svg" alt="P101" width="466" height="702">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 102</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P102.svg" alt="P102" width="443" height="587">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 103</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P103.svg" alt="P103" width="429" height="587">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 104</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P104.svg" alt="P104" width="466" height="564">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 105</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P105.svg" alt="P105" width="454" height="541">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 106</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P106.svg" alt="P106" width="576" height="518">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 107</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P107.svg" alt="P107" width="387" height="518">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 108</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P108.svg" alt="P108" width="554" height="541">
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Diagramme UML du protocole 109</summary>
+<div class="content">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P109.svg" alt="P109" width="468" height="518">
+</div>
+</div>
+</div>
+</details>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:51:48 -0400
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>

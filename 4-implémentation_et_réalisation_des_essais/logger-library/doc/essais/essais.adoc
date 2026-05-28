@@ -1,0 +1,399 @@
+:toc:
+:toc-title: Table des matières
+:toclevels: 1
+:sectnums:
+
+= Spécification des essais
+
+[cols="2s,8"]
+|===
+| Date de création
+| 2020-02-19
+
+| Responsable
+| MD
+
+| Mise à jour
+| 2021-12-16
+
+| Mandat
+| https://gestion.griis.usherbrooke.ca:8443/browse/P3-36[P3-36]
+
+| Conception
+| link:../conception/conception.adoc[conception.adoc]
+|===
+
+== Fonctions à tester
+// Lister les fonctions issues de la conception.
+
+[options="header",cols="s,8"]
+|===
+| Fonction
+| Description
+
+| [#F_01]`F_01` 
+| Récupère un journaliseur.
+
+| [#F_02]`F_02` 
+| Journalise l'information (niveau `info`).
+
+| [#F_03]`F_03` 
+| Journalise les avertissements (niveau `warn`).
+
+| [#F_04]`F_04` 
+| Journalise les erreurs (niveau `error`).
+
+| [#F_05]`F_05` 
+| Journalise le débogage (niveau `debug`).
+
+| [#F_06]`F_06` 
+| Journalise les activités (niveau `trace`).
+|===
+
+== Tests
+// Lister les tests en spécifiant leurs épreuves (étapes).
+
+[options="header",cols="s,4,6"]
+|===
+| Test
+| Description
+| Épreuves
+
+| [#T_01]`T_01`
+| Tester la construction d’un message par niveau de journalisation.
+a|
+. Tester la journalisation de l'information (niveau `info`).
+. Tester la journalisation des avertissements (niveau `warn`).
+. Tester la journalisation des erreurs (niveau `error`).
+. Tester la journalisation du débogage (niveau `debug`).
+. Tester la journalisation des activités (niveau `trace`).
+
+| [#T_02]`T_02`
+| Vérifier que toutes les énumérations (`Enum`) concordent avec les fichiers des ressources.
+a|
+. Tester les fichiers utilisés pour la journalisation de l'information (niveau `info`).
+. Tester les fichiers utilisés pour la journalisation des avertissements (niveau `warn`).
+. Tester les fichiers utilisés pour la journalisation des erreurs (niveau `error`).
+. Tester les fichiers utilisés pour la journalisation du débogage (niveau `debug`).
+. Tester les fichiers utilisés pour la journalisation des activités (niveau `trace`).
+
+| [#T_03]`T_03`
+| Vérifier que la fabrique produit bien un journaliseur.
+a|
+. Vérification que le journaliseur produit n’est pas nul.
+. Vérifier que le journaliseur a été produit pour la bonne classe.
+
+|===
+
+== Données de test
+// Lister les données utilisées pour les entrées et sorties des cas de test.
+
+// Valeur: Description de la donnée (code, message, etc.)
+
+[options="header",cols="s,4,4"]
+|===
+| Donnée de test
+| Description
+| Valeur
+
+| [#D_01]`D_01` 
+| Valeur de l’énumération `Info.APP_CLOSING`.
+| Voir le fichier qui contient les valeurs de paramétrage régional de l'énumération
+`Info.APP_CLOSING`.
+
+| [#D_02]`D_02` 
+| Nom du niveau de journalisation de l’information.
+| `INFO`
+
+| [#D_03]`D_03` 
+| Nom de la méthode de test.
+| `infoTest`
+
+| [#D_04]`D_04` 
+| Valeur de l’énumération `Warn.VARIABLE_LOGGING_1`.
+| Voir le fichier qui contient les valeurs de paramétrage régional de l'énumération
+`Warn.VARIABLE_LOGGING_1`.
+
+| [#D_05]`D_05` 
+| Nom du niveau de journalisation des avertissements.
+| `WARN`
+
+| [#D_06]`D_06` 
+| Nom de la méthode de test.
+| `warnTest`
+
+| [#D_07]`D_07` 
+| Valeur de l’énumération `Error.CONDITION_UNMET`.
+| Voir le fichier qui contient les valeurs de paramétrage régional de l'énumération
+`Error.CONDITION_UNMET`.
+
+| [#D_08]`D_08` 
+| Nom du niveau de journalisation des erreurs.
+| `ERROR`
+
+| [#D_09]`D_09` 
+| Nom de la méthode de test.
+| `errorTest`
+
+| [#D_010]`D_010` 
+| Valeur de l’énumération `Debug.FUNCTION_BRANCH_FAILED_0`.
+| Voir le fichier qui contient les valeurs de paramétrage régional de l'énumération
+`Debug.FUNCTION_BRANCH_FAILED_0`.
+
+| [#D_011]`D_011` 
+| Nom du niveau de journalisation du débogage.
+| `DEBUG`
+
+| [#D_012]`D_012` 
+| Nom de la méthode de test.
+| `debugTest`
+
+| [#D_013]`D_013` 
+| Valeur de l’énumération `Trace.ENTER_METHOD_0`.
+| Voir le fichier qui contient les valeurs de paramétrage régional de l'énumération
+`Trace.ENTER_METHOD_0`.
+
+| [#D_014]`D_014` 
+| Nom du niveau de journalisation des activités.
+| `TRACE`
+
+| [#D_015]`D_015` 
+| Nom de la méthode de test.
+| `traceTest`
+
+| [#D_016]`D_016` 
+| Code associé aux paramètres régionaux anglais.
+| `en_ca`
+
+| [#D_017]`D_017` 
+| Nom du code des paramètres régionaux.
+| `code`
+
+| [#D_018]`D_018` 
+| Journaliseur.
+| `logger`
+
+|===
+
+== Cas de test
+// Lister les cas de test en spécifiant le test impliqué, les pré-requis de son exécution, ses
+// données d’entrée et de sortie, ainsi que son critère de réussite.
+
+// Pré-requis: Conditions qui doivent être satisfaites pour l’exécution du cas de test
+// Entrée et sortie: Noms des données de tests
+// Critères de réussite: Ils peuvent être abstraits, non-vérifiables et contenir des conditions
+
+[options="header",cols="1,1,1,1,4a,4a,1"]
+|===
+| Cas de test
+| Test
+| Entrée
+| Sortie
+| Prérequis
+| Critère de réussite
+| Commentaires
+
+| [#C_01]`C_01` 
+| `xref:#T_01[T_01]` 
+| `xref:#D_01[D_01]` 
+| `xref:#D_01[D_01]`, `xref:#D_02[D_02]`, `xref:#D_03[D_03]` 
+| Un journaliseur configuré. 
+| Les données en sortie sont les bonnes.
+| S.O.
+
+| [#C_02]`C_02` 
+| `xref:#T_01[T_01]` 
+| `xref:#D_04[D_04]` 
+| `xref:#D_04[D_04]`, `xref:#D_05[D_05]`, `xref:#D_06[D_06]` 
+| Un journaliseur configuré.
+| Les données en sortie sont les bonnes.
+| S.O.
+
+| [#C_03]`C_03` 
+| `xref:#T_01[T_01]` 
+| `xref:#D_07[D_07]` 
+| `xref:#D_07[D_07]`, `xref:#D_08[D_08]`, `xref:#D_09[D_09]` 
+| Un journaliseur configuré.
+| Les données en sortie sont les bonnes.
+| S.O.
+
+| [#C_04]`C_04` 
+| `xref:#T_01[T_01]` 
+| `xref:#D_010[D_010]` 
+| `xref:#D_010[D_010]`, `xref:#D_012[D_012]`, `xref:#D_012[D_012]` 
+| Un journaliseur configuré.
+| Les données en sortie sont les bonnes.
+| S.O.
+
+| [#C_05]`C_05` 
+| `xref:#T_01[T_01]` 
+| `xref:#D_013[D_013]` 
+| `xref:#D_013[D_013]`, `xref:#D_014[D_014]`, `xref:#D_015[D_015]` 
+| Un journaliseur configuré.
+| Les données en sortie sont les bonnes.
+| S.O.
+
+| [#C_06]`C_06` 
+| `xref:#T_02[T_02]` 
+| `xref:#D_016[D_016]`, `xref:#D_017[D_017]` 
+| S.O. 
+| S.O. 
+| Aucune erreur de correspondance relevée.
+| S.O.
+
+| [#C_07]`C_07` 
+| `xref:#T_03[T_03]` 
+| S.O. 
+| `xref:#D_018[D_018]` 
+| S.O. 
+| Le journaliseur n’est pas nul et a été produit pour la bonne classe.
+| S.O.
+|===
+
+== Essais
+// Lister les essais en spécifiant les cas de test couverts, l’environnement d’exécution et
+// optionellement un commentaire.
+
+// Environnement: Configuration du système lors de l’exécution de l’essai
+// Commentaire: Dépendances, statut de l’essai ou autre}
+
+[options="header",cols="s,2,3,3"]
+|===
+
+| Nom 
+| Cas de test 
+| Environnement 
+| Commentaire
+
+| [#E_01]`E_01` 
+| `xref:#C_01[C_01]`, `xref:#C_02[C_02]`, `xref:#C_03[C_03]`, `xref:#C_04[C_04]`, `xref:#C_05[C_05]` 
+| Utilisation des paramètres régionaux anglais. 
+| S.O.
+
+| [#E_02]`E_02` 
+| `xref:#C_01[C_01]`, `xref:#C_02[C_02]`, `xref:#C_03[C_03]`, `xref:#C_04[C_04]`, `xref:#C_05[C_05]` 
+| Utilisation du code des paramètres régionaux.
+| S.O.
+
+| [#E_03]`E_03` 
+| `xref:#C_06[C_06]` 
+| Utilisation du niveau de journalisation de l’information (niveau `info`).
+| S.O.
+
+| [#E_04]`E_04` 
+| `xref:#C_06[C_06]` 
+| Utilisation du niveau de journalisation de l’information (niveau `warn`).
+| S.O.
+
+| [#E_05]`E_05` 
+| `xref:#C_06[C_06]` 
+| Utilisation du niveau de journalisation de l’information (niveau `error`).
+| S.O.
+
+| [#E_06]`E_06` 
+| `xref:#C_06[C_06]` 
+| Utilisation du niveau de journalisation de l’information (niveau `debug`).
+| S.O.
+
+| [#E_07]`E_07` 
+| `xref:#C_06[C_06]` 
+| Utilisation du niveau de journalisation de l’information (niveau `trace`).
+| S.O.
+
+| [#E_08]`E_08` 
+| `xref:#C_07[C_07]` 
+| S.O. 
+| S.O.
+
+|===
+
+== Correspondance entre essais et fonctions
+// Cocher les fonctions couvertes pour chaque test
+
+[options="header",cols="s,^,^,^,^,^,^"]
+|===
+
+| 
+| `xref:#F_01[F_01]` 
+| `xref:#F_02[F_02]` 
+| `xref:#F_03[F_03]` 
+| `xref:#F_04[F_04]` 
+| `xref:#F_05[F_05]` 
+| `xref:#F_06[F_06]`
+
+| `xref:#E_01[E_01]` 
+| 
+| ✓ 
+| ✓ 
+| ✓ 
+| ✓ 
+| ✓
+
+| `xref:#E_02[E_02]` 
+| 
+| ✓ 
+| ✓ 
+| ✓ 
+| ✓ 
+| ✓
+
+| `xref:#E_03[E_03]` 
+| 
+| 
+| 
+| 
+| 
+|
+
+| `xref:#E_04[E_04]` 
+| 
+| 
+| 
+| 
+| 
+|
+
+| `xref:#E_05[E_05]` 
+| 
+| 
+| 
+| 
+| 
+|
+
+| `xref:#E_06[E_06]` 
+| 
+| 
+| 
+| 
+| 
+|
+
+| `xref:#E_07[E_07]` 
+| 
+| 
+| 
+| 
+| 
+|
+
+| `xref:#E_08[E_08]` 
+| ✓ 
+| 
+| 
+| 
+| 
+|
+
+|===
+
+== Objectifs supplémentaires
+
+=== Couverture de code
+Il faut assurer la couverture d’au moins 60{nbsp}% du code par des tests unitaires.
+
+=== Performance
+S.O.
+
+=== Autres
+S.O.

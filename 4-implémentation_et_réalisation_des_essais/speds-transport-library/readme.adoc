@@ -1,0 +1,246 @@
+// Settings
+:idprefix:
+:idseparator: -
+:component-name: speds-transport-library
+:component: SPEDS
+
+= {component-name}
+
+[#summary]
+== Sommaire
+
+La *{component-name}* implémente la couche transport du protocole d'échange *{component}* utilisé pour les
+communications entre les différents sous-systèmes utilisant DadaGem.
+
+[#overview]
+== Présentation
+
+Le rôle de *{component-name}* est d'échanger des messages transport entre les sous-systèmes à partir des interfaces établies avec les couches supérieures et inférieures.
+Ceci implique la création de messages transport et les réponses à ces messages.
+
+Un service d'API est offert pour la couche supérieure.
+
+*{component-name}* permet d'effectuer les tâches suivantes :
+
+* Échanger des données à une autre entité.
+* Recevoir des données d'une autre entité.
+* Démarrer l'écoute de messages spour recevoir des messages d'autres entités de la couche transport.
+* Libérer les ressources utilisées en lien avec le protocole transport lors de l’arrêt des échanges.
+
+[#techno]
+== Technologies utilisées
+
+* Languages utilisés :
+** Java
+
+* Les API utilisés :
+** speds-network-library
+** `speds-toolkit-library`
+
+* Les applications tierces :
+** `jsonschema2pojo`
+** `guava`
+
+[#prerequisite]
+== Préalable
+
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* Logiciels prérequis :
+** S.O.
+
+* Composants GRIIS prérequis :
+** `speds-toolkit-library`
+** `logger-library`
+** `speds-network-library`
+
+
+* Systèmes
+** Multi-plateforme
+
+* Matériels prérequis :
+** S.O.
+
+* Autres :
+** `jsonschema2pojo`
+** `guava`
+** `reactor-netty`
+
+[#build]
+== Construction
+
+Pour construire *{component-name}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure *{component-name}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-transport-library:${version}"
+}
+----
+
+*{component-name}* peut être déclarée en utilisant
+`ca.griis:speds-transport-library`.
+
+Pour développer directement sur *{component-name}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+
+=== Interface de programmation
+
+==== Module api
+
+*TransportHost*
+
+Interface permettant de définir et d’exposer les opérations d’un hôte de la couche transport à un utilisateur.
+
+|===
+| Identifiants de processus | Signature impl.             | Comportement
+
+| PRO-01, PRO-02, PRO-03, PRO-04, PRO-05
+| CompletableFuture<Optional<String>> submitIdu(String idu)
+|
+Soumet le traitement d’une IDU transport selon le service `transfer` et la primitive `service_primitive`.
+Le  processus est déterminé par `context.service_primitive` et, lorsque applicable, par le type de PDU (`msgtype`).
+
+| S.O.
+| void close()
+| Désalloue les ressources sur la couche de protocole.
+
+|===
+
+*TransportHostEvent*
+
+Interface qui permet à une classe qui utilise la couche transport de se faire notifier des événements.
+
+* L’utilisateur de la couche réseau qui souhaite écouter les événements doit définir une classe implémentant l’interface `TransportHostEvent`.
+
+|===
+| Id du processus | Signature impl.             | Comportement
+
+| PRO-02, PRO-03
+| void notifyIdu(String idu)
+| Notifie l’interface d’unité de données (IDU 3_4) construite par l’hôte de la couche transport pour signaler une `indication` à la couche supérieure.
+
+| S.O.          
+| void notifyException(Exception exception);
+| Notifie une exception à l'utilisateur de la couche supérieure.
+
+|===
+
+
+*Class TransportFactory*
+
+Définit la fabrique des hôtes du protocole de *{component}*.  Un hôte permet d’être un client et un serveur sur le protocole *{component}*. La fabrique permet donc la création d’un hôte respectant des options de configuration nécessaires au bon déroulement du protocole de la couche transport.
+
+*Options de configuration sur la version de protocole*
+
+----
+speds.tra.version   - Version du protocole de la couche transport.
+speds.tra.reference - Référence du protocole de la couche transport.
+speds.net.security.profile - Profile de sécurité à la couche transport associé à bibliothèque commune de SPEDS sous le format JSON.
+speds.tra.confirm.window.minutes - Période maximale qu'un request de message peut recevoir une confirmation en minutes. Sinon, elle expire après ce temps en minutes.
+speds.tra.response.window.minutes Période maximale qu'une indication de message peut recevoir une réponse en minutes. Sinon, elle expire après ce temps en minutes.
+----
+
+*Exemple de configuration de l'option `speds.tra.security.profile` :*
+
+----
+{
+  "spedsProfile": [
+    {
+      "spedsLayer": "TRANSPORT",
+      "algorithmCategory": "HASH",
+      "securityProfile": "STRONG"
+    }
+  ]
+}
+----
+
+
+[#launch]
+== Démarrage
+
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{component-name}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#contact]
+== Personnes ressources
+
+* Ameni Souid : Ameni.Souid@usherbrooke.ca
+* Charles Beaudette : Charles.Beaudette@USherbrooke.ca
+* Jean-François Éthier : JF.Ethier@usherbrooke.ca
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].

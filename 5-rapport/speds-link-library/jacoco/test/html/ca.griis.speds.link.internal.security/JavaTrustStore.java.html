@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JavaTrustStore.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.link.internal.security</a> &gt; <span class="el_source">JavaTrustStore.java</span></div><h1>JavaTrustStore.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ * 
+ * @licence @@GRIIS_LICENCE@@
+ * 
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe JavaTrustStore
+ * @brief @~english «File description»
+ */
+
+package ca.griis.speds.link.internal.security;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import java.nio.file.Paths;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Magasin de confiance.
+ * @par Détails
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2021-08-05 [FO] - Implémentation initiale.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="nc" id="L55">public class JavaTrustStore {</span>
+<span class="fc" id="L56">  private static final GriisLogger logger = getLogger(JavaTrustStore.class);</span>
+
+  /**
+   * @brief @~english «Description of the method»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère le gestionnaire de confiance par défaut défini par
+   *        javax.net.ssl.trustStore.
+   * @return Gestionnaire de confiance au format X.509.
+   */
+  public static X509TrustManager getDefaultTrustManager() {
+<span class="fc" id="L67">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L69">    X509TrustManager tm = null;</span>
+
+<span class="fc" id="L71">    TrustManagerFactory factory = getDefaultTrustFactoryManager();</span>
+<span class="fc" id="L72">    TrustManager[] managers = factory.getTrustManagers();</span>
+
+<span class="fc" id="L74">    tm = (X509TrustManager) managers[0];</span>
+
+<span class="fc" id="L76">    logger.trace(Trace.EXIT_METHOD_1, &quot;trustManager&quot;, tm);</span>
+<span class="fc" id="L77">    return tm;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the method»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère la fabrique du gestionnaire de confiance par défaut défini par
+   *        javax.net.ssl.trustStore.
+   * @return Fabrique de gestionnaire de confiance au format X.509.
+   */
+  public static TrustManagerFactory getDefaultTrustFactoryManager() {
+<span class="fc" id="L89">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L91">    TrustManagerFactory tmf = null;</span>
+
+    try {
+<span class="fc" id="L94">      String cacerts =</span>
+<span class="fc" id="L95">          Paths.get(System.getProperty(&quot;java.home&quot;), &quot;lib&quot;, &quot;security&quot;, &quot;cacerts&quot;).toString();</span>
+<span class="fc" id="L96">      String uri = System.getProperty(&quot;javax.net.ssl.trustStore&quot;, cacerts);</span>
+<span class="fc" id="L97">      String type = System.getProperty(&quot;javax.net.ssl.trustStoreType&quot;, &quot;JKS&quot;);</span>
+
+<span class="fc" id="L99">      char[] password = null;</span>
+<span class="fc" id="L100">      String pwd = System.getProperty(&quot;javax.net.ssl.trustStorePassword&quot;);</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">      if (pwd != null) {</span>
+<span class="nc" id="L102">        password = pwd.toCharArray();</span>
+      }
+
+<span class="fc" id="L105">      KeyStore ks = JavaKeyStore.createKeyStore(uri, type, password);</span>
+<span class="fc" id="L106">      tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());</span>
+<span class="fc" id="L107">      tmf.init(ks);</span>
+<span class="nc" id="L108">    } catch (KeyStoreException | NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L109">      throw new IllegalStateException(&quot;Unable to initialize TrustManagerFactory&quot;, e);</span>
+<span class="fc" id="L110">    }</span>
+
+<span class="fc" id="L112">    logger.trace(Trace.EXIT_METHOD_1, &quot;trustManagerFactory&quot;, tmf);</span>
+<span class="fc" id="L113">    return tmf;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,250 @@
+// Settings
+:idprefix:
+:idseparator: -
+:page-component-title: Bibliothèque de journalisation
+//la valeur de page-component-title représente la valeur de l'attribut title assigné dans le fichier 
+//antora.yml
+= {page-component-title}
+
+[#summary]
+== Sommaire
+
+////
+Cette section doit décrire brièvement l'utilité de la composante. La description doit permettre au  
+lecteur de déterminer rapidement si la composante répond à ses besoins. Idéalement, le sommaire 
+doit préciser si la composante est une bibliothèque, une application ou un service et se limiter à 
+une seule phrase.
+
+////
+Bibliothèque qui offre un service de journalisation.
+
+[#overview]
+== Présentation
+
+////
+Cette section  doit présenter des informations plus détaillées sur {page-component-title}. Les
+ informations suivantes peuvent être fournies :
+
+* le rôle de {page-component-title},
+
+* les services qu’il peut offrir,
+
+* les tâches qui sont effectuées par {page-component-title},
+
+* toute autre information jugée importante quant à la compréhension du fonctionnement de
+  {page-component-title}.
+
+Pour introduire les tâches accomplies par {page-component-title}, la phrase suivante peut être utilisée :
+
+{page-component-title} permet d'effectuer les tâches suivantes : 
+
+NOTE: Dans le cas où de la documentation Antora existe pour cette composante, l'utilisation du 
+partial overview-component.adoc est suggérée dans cette section. Le partial est dans le dossier 
+ROOT\partials\other de la documentation Antora de la composante.
+ 
+L'instruction à utiliser est : 
+include::doc/antora/fr-ca/modules/ROOT/partials/other/overview-component.adoc[]
+////
+S.O.
+
+[#techno]
+== Technologies utilisées
+
+////
+Cette section doit décrire les technologies utilisées aux fins du développement de
+{page-component-title}, c'est-à-dire, le cadre d'applications, les API, les applications tierces et les 
+langages utilisés.
+
+NOTE: Dans le cas où de la documentation Antora existe pour cette composante, l'utilisation du 
+partial techno.adoc est suggérée dans cette section. Le partial est dans le dossier
+ROOT\partials\other de la documentation Antora de la composante.
+
+L'instruction à utiliser est : include::doc/antora/fr-ca/modules/ROOT/partials/other/techno.adoc[]
+////
+* Java
+* Postgres
+
+[#prerequisite]
+== Préalable
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+////
+Cette section doit fournir les prérequis de construction et de compilation pour le
+ `bibliothèque/service/application`). Les prérequis à documenter sont :
+
+* logiciels prérequis (postgresql, npm, docker, etc.);
+
+* composants GRIIS prérequis (si aucun composant GRIIS n'est prérequis, ajouter la mention 
+« S.O. ».
+
+* systèmes (multi-plateforme, Windows, Linux, Ubuntu 18.04, etc.); et
+
+* matériels prérequis (mémoire vive, type d'unité centrale de traitement (UCT), espace disque
+disponible). Il est possible qu'aucun prérequis matériel ne soit nécessaire. Dans ce cas, il suffit
+d'ajouter la mention « S.O. » sous ce type de prérequis.)
+
+NOTE: Dans le cas où de la documentation Antora existe pour cette composante, l'utilisation des 
+partials propres à la section « Préalable » est suggérée. Les partials sont dans le dossier
+ROOT\partials\requirements de la documentation Antora de la composante.
+
+L'instruction à utiliser pour chaque partial est :
+ include::doc/antora/fr-ca/modules/ROOT/partials/requirements/nomdufichier.adoc[]
+////
+*{page-component-title}* est développée en Java et utilise le logiciel Gradle comme
+outil de construction automatisée (_build automation tool_).
+
+[#build]
+== Construction
+
+////
+Cette section doit décrire la procédure à suivre pour la construction de la
+ `bibliothèque/service/application` et présenter, au besoin, toute information nécessaire au 
+ lecteur pour accomplir avec succès cette tâche.
+
+////
+  ./gradlew construction
+
+[#compile]
+=== Compilation
+
+////
+Cette section doit décrire la procédure à suivre pour compiler la
+`bibliothèque/service/application`.
+
+////
+  ./gradlew build
+
+[#tests]
+=== Exécution des tests
+
+////
+Cette section doit décrire la procédure à suivre pour exécuter les tests suite à la construction
+de la `bibliothèque/service/application` et présenter, au besoin, toute information 
+nécessaire au lecteur pour accomplir avec succès cette tâche.
+////
+  ./gradlew test
+
+[#install]
+=== Installation
+
+////
+Cette section doit décrire la procédure à suivre pour installer la
+`bibliothèque/service/application` et présenter, au besoin, toute information nécessaire au lecteur
+pour accomplir avec succès cette tâche. 
+
+Il est possible que cette section ne s'applique pas à un projet particulier; si c'est le cas, il 
+suffit de remplacer le contenu de la section par « S.O. » pour « sans objet ».
+
+////
+S.O.
+
+== Utilisation
+
+////
+Cette section doit décrire comment la bibliothèque logicielle (librairie) doit être intégrée au 
+projet. Cette section doit fournir des explications simples. 
+
+_Il faut indiquer où est généré l'artefact en spécifiant son nom et en précisant qu'il peut être 
+utilisé dans l'environnement de travail du développeur selon les outils utilisés par celui-ci.
+
+////
+
+Pour inclure la *{page-component-title}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraichir le projet Gradle. Pour plus de 
+renseignements, consulter la section «{nbsp}<<Installation>>{nbsp}».
+
+[source, gradle]
+----
+dependencies {
+  implementation "a.griis:logger-library:${version}"
+}
+----
+
+La *{page-component-title}* peut être déclarée en utilisant
+ `ca.griis:logger-library`.
+
+Pour développer directement sur la *{page-component-title}*, il faut importer le 
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+Pour plus de renseignements, consulter la section «{nbsp}<<Construction>>{nbsp}».
+
+[#launch]
+== Démarrage
+
+////
+Cette section doit décrire la procédure à suivre pour démarrer l'*application ou le service* et
+présenter, au besoin, toute information nécessaire au lecteur pour accomplir avec succès cette 
+tâche. Il est possible que cette section ne s'applique pas à un projet particulier; si c'est le 
+cas, il suffit de remplacer le contenu de la section par « S.O. » pour « sans objet ».
+////
+S.O.
+
+== Documentation du code
+
+////
+Ajouter le texte suivant lorsque la documentation du code est disponible seulement en français :
+Pour générer localement la version *française* de la documentation du code accompagnant
+{page-component-title}, taper la commande suivante dans un terminal :
+////
+
+// Ajouter la commande pour générer la documentation du code
+
+////
+Ajouter les explications pour afficher la documentation générée. Utiliser la phrase suivante :
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le 
+dossier build\doc-fr-doxygen\html.
+////
+
+
+////
+Ajouter le texte suivant lorsque la documentation du code est disponible seulement en anglais : 
+Pour générer localement la version *anglaise* de la documentation du code accompagnant
+{page-component-title}, taper la commande suivante dans un terminal :
+////
+
+// Ajouter la commande pour générer la documentation du code
+
+////
+Ajouter les explications pour afficher la documentation générée. Utiliser la phrase suivante : 
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le 
+dossier build\doc-en-doxygen\html.
+////
+
+S.O.
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+//Licence pour le code (logiciel de type autre que démonstration) - ajouter cette mention :
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+//Licence pour le code (logiciel de type démonstration) - ajouter cette mention :
+
+//Le code de ce projet est sous licence link:liliqp-licence.adoc[LILIQ-P]. Click here for the
+// link:liliqp-licence-english.adoc[English version].
+
+// Le code du projet ne peut être que sous la licence liliqp ou liliqr.
+
+//Licence pour le jeu de données - ajouter cette mention :
+ 
+//Le jeu de données disponible dans ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R].
+// Click here for the link:liliqr-licence-english.adoc[English version].
+
+//Licence pour la documentation et les ontologies - ajouter cette mention
+
+//La documentation de ce projet est sous licence
+// https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
+

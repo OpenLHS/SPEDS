@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutablePresentationHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-presentation-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.presentation.internal</a> &gt; <span class="el_source">ImmutablePresentationHost.java</span></div><h1>ImmutablePresentationHost.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ * @copyright @@GRIIS_COPYRIGHT@@
+ * @licence @@GRIIS_LICENCE@@
+ * @version @@GRIIS_VERSION@@
+ * @brief @~french Implémentation de la classe PresentationHost.
+ * @brief @~english Implementation of the PresentationHost class.
+ */
+
+package ca.griis.speds.presentation.internal;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.presentation.api.dto.InterfaceDataUnit23Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.VersionDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Info;
+import ca.griis.speds.presentation.api.PresentationHost;
+import ca.griis.speds.presentation.api.PresentationHostEvent;
+import ca.griis.speds.presentation.entity.PresentationTracking;
+import ca.griis.speds.presentation.entity.TrackingInformation;
+import ca.griis.speds.presentation.internal.dispatcher.NotifyDispatcher;
+import ca.griis.speds.presentation.internal.dispatcher.SubmitDispatcher;
+import ca.griis.speds.presentation.internal.serialization.SharedObjectMapper;
+import ca.griis.speds.session.api.SessionHost;
+import ca.griis.speds.session.api.SessionHostEvent;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.benmanes.caffeine.cache.Cache;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un hôte immutable de la couche présentation.
+ * @par Détails
+ *      - Un choix volontaire a été fait afin de ne pas envelopper (wrap) les classes générées,
+ *      dans l'optique de ne pas inutilement alourdir la gestion de la mémoire.
+ *      - Ce choix repose sur l'heuristique selon laquelle l'ajout d'un wrapper ne procure pas
+ *      de bénéfices suffisants en regard du coût engendré :
+ *      - Les objets générés sont directement compatibles avec nos besoins, rendant
+ *      l'encapsulation superflue.
+ *      - Une couche supplémentaire de wrappers augmenterait l'empreinte mémoire et
+ *      la complexité sans justification suffisante.
+ *      - La stabilité de la structure des objets générés permet de minimiser
+ *      l'impact des évolutions futures sur le code client.
+ *
+ * @par Modèle
+ *      ConcurrentHashMap&lt;PresentationTracking, TrackingInformation&gt; curator : &lt;/br&gt;
+ *      Contient les informations de suivi contextuelle de la couche pour les deux couches &lt;/br&gt;
+ *      intéragisseant avec la couche actuelle.
+ *      Set&lt;UUID&gt; messageSent = new HashSet&lt;&gt;(); :
+ *      Garde en mémoire les identifiants des messages envoyé pour faire la corercpondance &lt;/br&gt;
+ *      avec les messages de réponses reçu ultérieurement.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-18 [MD] - Implémentation des interfaces &lt;/br&gt;
+ *      2025-02-03 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutablePresentationHost implements PresentationHost, SessionHostEvent {
+<span class="fc" id="L79">  private static final GriisLogger logger = getLogger(ImmutablePresentationHost.class);</span>
+
+  private final SubmitDispatcher submitDispatcher;
+  private final NotifyDispatcher notifyDispatcher;
+  private final SessionHost host;
+  private final PresentationHostEvent presentationHostConsumer;
+  private final Cache&lt;PresentationTracking, TrackingInformation&gt; serverTracking;
+
+  public ImmutablePresentationHost(SessionHost host, VersionDto version,
+      CryptographyService service, PresentationHostEvent presentationHostConsumer,
+<span class="fc" id="L89">      Cache&lt;PresentationTracking, TrackingInformation&gt; serverTracking) {</span>
+<span class="fc" id="L90">    this.presentationHostConsumer = presentationHostConsumer;</span>
+<span class="fc" id="L91">    this.submitDispatcher = new SubmitDispatcher(version, service, host, serverTracking.asMap());</span>
+<span class="fc" id="L92">    this.notifyDispatcher = new NotifyDispatcher(service, host, serverTracking.asMap());</span>
+<span class="fc" id="L93">    this.host = host;</span>
+<span class="fc" id="L94">    this.serverTracking = serverTracking;</span>
+<span class="fc" id="L95">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L99">    host.close();</span>
+<span class="fc" id="L100">    serverTracking.invalidateAll();</span>
+<span class="fc" id="L101">    serverTracking.cleanUp();</span>
+<span class="fc" id="L102">  }</span>
+
+  @Override
+  public CompletableFuture&lt;Optional&lt;String&gt;&gt; submitIdu(String idu) throws JsonProcessingException {
+<span class="fc" id="L106">    Optional&lt;String&gt; result = submitDispatcher.handle(idu);</span>
+<span class="fc" id="L107">    return CompletableFuture.completedFuture(result);</span>
+  }
+
+  @Override
+  public void notifyIdu(String idu) {
+    try {
+      InterfaceDataUnit23Dto sesIdu =
+<span class="fc" id="L114">          SharedObjectMapper.getInstance().getMapper().readValue(idu, InterfaceDataUnit23Dto.class);</span>
+<span class="fc" id="L115">      Optional&lt;String&gt; result = notifyDispatcher.handle(sesIdu);</span>
+
+<span class="fc bfc" id="L117" title="All 2 branches covered.">      if (result.isPresent()) {</span>
+<span class="fc" id="L118">        presentationHostConsumer.notifyIdu(result.get());</span>
+      } else {
+<span class="fc" id="L120">        RuntimeException ex =</span>
+            new RuntimeException(&quot;An IDU23 was received by the host, with no resulting IDU12.&quot;);
+<span class="fc" id="L122">        logger.error(Error.IGNORED_ERROR, ex);</span>
+      }
+<span class="fc" id="L124">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L125">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L126">    }</span>
+<span class="fc" id="L127">  }</span>
+
+  @Override
+  public void notifyException(Exception exception) {
+<span class="nc" id="L131">    presentationHostConsumer.notifyException(exception);</span>
+<span class="nc" id="L132">  }</span>
+
+  @Override
+  public void notifyInitiatorSessionTerminatedSuccessfully(SessionId sessionId) {
+<span class="nc" id="L136">    logger.info(Info.VARIABLE_LOGGING_1, &quot;sessionId&quot;, sessionId);</span>
+<span class="nc" id="L137">  }</span>
+
+  @Override
+  public void notifyPeerSessionTerminatedSuccessfully(SessionId sessionId) {
+<span class="nc" id="L141">    logger.info(Info.VARIABLE_LOGGING_1, &quot;sessionId&quot;, sessionId);</span>
+<span class="nc" id="L142">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -39,7 +39,7 @@ body {
 
 /* En-têtes */
 h2, h3, h4, h5, h6 {
-    color: #007bb0;
+    color: #6ea1c5;
     font-size: 17pt;
     font-weight: bold;
     line-height: 1.2;
@@ -97,7 +97,7 @@ h1 {
 #toctitle {
     font-size: 24pt;
     font-weight: bold;
-    color: #007bb0;
+    color: #6ea1c5;
     margin-bottom: 30pt;
 }
 
@@ -131,7 +131,7 @@ a {
 }
 
 a:hover {
-    color: #007bb0;
+    color: #6ea1c5;
 }
 
 /* Listes */
@@ -172,7 +172,7 @@ table th {
 .removed {
     font-style: italic;
     text-decoration: line-through;
-    text-decoration-color: #007bb0;
+    text-decoration-color: #6ea1c5;
 }
 
 /* Admonitions */
@@ -180,13 +180,13 @@ table th {
     margin: 15pt 0;
     margin-left: 10pt;
     padding: 10pt;
-    border-left: 4px solid #007bb0;
+    border-left: 4px solid #6ea1c5;
     background-color: #f9f9f9;
 }
 
 .admonitionblock .title {
     font-weight: bold;
-    color: #007bb0;
+    color: #6ea1c5;
     margin-bottom: 5pt;
 }
 
@@ -214,7 +214,7 @@ p {
 blockquote {
     margin: 15pt 20pt;
     padding: 10pt;
-    border-left: 4px solid #007bb0;
+    border-left: 4px solid #6ea1c5;
     font-style: italic;
     background-color: #f9f9f9;
 }

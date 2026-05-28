@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="9.3">
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/entity/TrackingInformation.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\api\exception\ParameterException.java">
 </file>
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/entity/PresentationTracking.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\api\PresentationFactory.java">
 </file>
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/PresentationHost.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\api\PresentationHost.java">
 </file>
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/PresentationFactory.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\api\PresentationHostEvent.java">
 </file>
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/PresentationServer.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\api\PresentationHostFactory.java">
 </file>
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/sync/ImmutablePresentationHost.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\entity\PresentationTracking.java">
 </file>
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/sync/MutablePresentationFactory.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\entity\TrackingInformation.java">
 </file>
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/PresentationClient.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\internal\dispatcher\NotifyDispatcher.java">
 </file>
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/exception/InvalidPduId.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\internal\dispatcher\SubmitDispatcher.java">
 </file>
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/exception/CipherException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\internal\event\PresentationEventHandler.java">
 </file>
-<file name="/builds/produits/speds-line/speds-presentation-library/src/main/java/ca/griis/speds/presentation/api/exception/DeserializationException.java">
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\internal\handler\TransferIndicationHandler.java">
+</file>
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\internal\handler\TransferRequestHandler.java">
+</file>
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\internal\handler\TransferResponseHandler.java">
+</file>
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\internal\ImmutablePresentationHost.java">
+</file>
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\internal\security\SecretKeyDestroyer.java">
+</file>
+<file name="C:\Users\ouef1803\Gits\cert-speds\speds-presentation-library\src\main\java\ca\griis\speds\presentation\internal\serialization\SharedObjectMapper.java">
 </file>
 </checkstyle>

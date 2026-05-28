@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableNetworkHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.internal</a> &gt; <span class="el_source">ImmutableNetworkHost.java</span></div><h1>ImmutableNetworkHost.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ImmutableNetworkHost.
+ * @brief @~english ImmutableNetworkHost class implementation.
+ */
+
+package ca.griis.speds.network.internal;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.network.api.dto.InterfaceDataUnit56Dto;
+import ca.griis.js2p.gen.speds.network.api.dto.VersionDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.link.api.Host;
+import ca.griis.speds.link.api.HostEvent;
+import ca.griis.speds.network.api.NetworkHost;
+import ca.griis.speds.network.api.NetworkHostEvent;
+import ca.griis.speds.network.internal.dispatcher.NotifyDispatcher;
+import ca.griis.speds.network.internal.dispatcher.SubmitDispatcher;
+import ca.griis.speds.network.internal.identification.IdentifierGenerator;
+import ca.griis.speds.network.internal.security.CertificatePrivateKeyPair;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.benmanes.caffeine.cache.Cache;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un hôte immutable de la couche réseau.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-18 [FO] - Refactorisation et simplification.
+ *      2025-02-03 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class ImmutableNetworkHost implements NetworkHost, HostEvent {
+<span class="fc" id="L68">  private static final GriisLogger logger = getLogger(ImmutableNetworkHost.class);</span>
+
+  private final Host host;
+  private final NetworkHostEvent networkEventConsumer;
+  private final SubmitDispatcher submitDispatcher;
+  private final NotifyDispatcher notifyDispatcher;
+  private final ObjectMapper mapper;
+  private final Cache&lt;UUID, Boolean&gt; indicatedMessages;
+  private final CertificatePrivateKeyPair pair;
+
+  public ImmutableNetworkHost(Host host, VersionDto version, Cache&lt;UUID, Boolean&gt; indicatedMessages,
+      CertificatePrivateKeyPair pair, IdentifierGenerator generator, CryptographyService service,
+<span class="fc" id="L80">      ObjectMapper mapper, NetworkHostEvent networkEventConsumer) {</span>
+<span class="fc" id="L81">    this.host = host;</span>
+<span class="fc" id="L82">    this.networkEventConsumer = networkEventConsumer;</span>
+<span class="fc" id="L83">    this.indicatedMessages = indicatedMessages;</span>
+<span class="fc" id="L84">    this.submitDispatcher =</span>
+        new SubmitDispatcher(generator, version, pair, service, mapper, host,
+<span class="fc" id="L86">            indicatedMessages.asMap());</span>
+<span class="fc" id="L87">    this.notifyDispatcher = new NotifyDispatcher(service, mapper, host, indicatedMessages.asMap());</span>
+<span class="fc" id="L88">    this.mapper = mapper;</span>
+<span class="fc" id="L89">    this.pair = pair;</span>
+<span class="fc" id="L90">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L94">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L96">    host.close();</span>
+<span class="fc" id="L97">    indicatedMessages.invalidateAll();</span>
+<span class="fc" id="L98">    indicatedMessages.cleanUp();</span>
+<span class="fc" id="L99">    pair.cleanUp();</span>
+
+<span class="fc" id="L101">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L102">  }</span>
+
+  @Override
+  public CompletableFuture&lt;Optional&lt;String&gt;&gt; submitIdu(String idu) {
+<span class="fc" id="L106">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L108">    var result = submitDispatcher.handle(idu);</span>
+<span class="fc" id="L109">    var future = CompletableFuture.completedFuture(result);</span>
+
+<span class="fc" id="L111">    logger.trace(Trace.EXIT_METHOD_1, &quot;future&quot;, future);</span>
+<span class="fc" id="L112">    return future;</span>
+  }
+
+  @Override
+  public void notifyIdu(String idu) {
+<span class="fc" id="L117">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    try {
+<span class="fc" id="L120">      final var didu = mapper.readValue(idu, InterfaceDataUnit56Dto.class);</span>
+<span class="fc" id="L121">      var result = notifyDispatcher.handle(didu);</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">      if (result.isPresent()) {</span>
+<span class="fc" id="L123">        networkEventConsumer.notifyIdu(result.get());</span>
+      } else {
+<span class="fc" id="L125">        var ex =</span>
+            new RuntimeException(&quot;An IDU56 was received by the host, with no resulting IDU45.&quot;);
+<span class="fc" id="L127">        logger.error(Error.IGNORED_ERROR, ex);</span>
+      }
+<span class="nc" id="L129">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L130">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L131">    }</span>
+
+<span class="fc" id="L133">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L134">  }</span>
+
+  @Override
+  public void notifyException(Exception exception) {
+<span class="nc" id="L138">    networkEventConsumer.notifyException(exception);</span>
+<span class="nc" id="L139">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

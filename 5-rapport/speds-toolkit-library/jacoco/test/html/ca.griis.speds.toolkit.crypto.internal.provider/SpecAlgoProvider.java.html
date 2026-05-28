@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpecAlgoProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-toolkit-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.toolkit.crypto.internal.provider</a> &gt; <span class="el_source">SpecAlgoProvider.java</span></div><h1>SpecAlgoProvider.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe SpecAlgoProvider.
+ * @brief @~english Contains description of SpecAlgoProvider class.
+ */
+
+package ca.griis.speds.toolkit.crypto.internal.provider;
+
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.AlgorithmCategory;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SpedsLayer;
+import ca.griis.security.api.domain.spec.SecuritySpec;
+import java.util.Optional;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre de générer une spéfication en fonction du nom d'algorithme.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-01-07 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class SpecAlgoProvider {
+  private final SpecProvider provider;
+
+<span class="fc" id="L51">  public SpecAlgoProvider(SpecProvider provider) {</span>
+<span class="fc" id="L52">    this.provider = provider;</span>
+<span class="fc" id="L53">  }</span>
+
+  /**
+   * 
+   * @fn a
+   *
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère la spécification à partir du no mde l'algorithme et la couche du
+   *        protocole.
+   * @param spedsLayer La couche de protocole de SPEDS.
+   * @param algorithm Le nom normalisé de l'algorithme.
+   * @return La spécification de l'algorithme si possible.
+   *
+   * @note 2026-01-07 [FO] - Vu que le nom d'algorithme est indentique le générateur de clés et la
+   *       fonction de X25519 et Ed25519, les paramètres de la nction soit choisie et non du
+   *       générateur de clés.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public Optional&lt;SecuritySpec&gt; getSpec(SpedsLayer spedsLayer, String algorithm) {
+<span class="fc" id="L78">    Optional&lt;SecuritySpec&gt; spec = getAsymSpec(spedsLayer, algorithm);</span>
+
+<span class="fc bfc" id="L80" title="All 4 branches covered.">    if (spec.isEmpty() &amp;&amp; algorithm.equals(&quot;DRBG&quot;)) {</span>
+<span class="fc" id="L81">      spec = Optional.of(new CsprngSpecProvider().getSpec());</span>
+<span class="fc bfc" id="L82" title="All 4 branches covered.">    } else if (algorithm.equals(&quot;SHA-256&quot;) || algorithm.equals(&quot;SHA-512&quot;)) {</span>
+<span class="fc" id="L83">      spec = provider.getSpec(spedsLayer, AlgorithmCategory.HASH, false);</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">    } else if (algorithm.equals(&quot;AES&quot;)) {</span>
+<span class="fc" id="L85">      spec = provider.getSpec(spedsLayer, AlgorithmCategory.SYMM, true);</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">    } else if (algorithm.equals(&quot;AES/GCM/NoPadding&quot;)) {</span>
+<span class="fc" id="L87">      spec = provider.getSpec(spedsLayer, AlgorithmCategory.SYMM, false);</span>
+    }
+
+<span class="pc bpc" id="L90" title="1 of 4 branches missed.">    if (spec.isPresent() &amp;&amp; spec.get().getAlgo().equals(algorithm) == false) {</span>
+<span class="nc" id="L91">      spec = Optional.empty();</span>
+    }
+
+<span class="fc" id="L94">    return spec;</span>
+  }
+
+  private Optional&lt;SecuritySpec&gt; getAsymSpec(SpedsLayer spedsLayer, String algorithm) {
+<span class="fc" id="L98">    Optional&lt;SecuritySpec&gt; spec = Optional.empty();</span>
+
+<span class="fc bfc" id="L100" title="All 2 branches covered.">    if (algorithm.equals(&quot;RSA&quot;)) {</span>
+<span class="fc" id="L101">      var rsa = provider.getSpec(spedsLayer, AlgorithmCategory.ASYM, true);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">      spec = rsa.isEmpty() ? provider.getSpec(spedsLayer, AlgorithmCategory.SIGN, true) : rsa;</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">    } else if (algorithm.equals(&quot;RSA/ECB/OAEPWithSHA-256AndMGF1Padding&quot;)) {</span>
+<span class="fc" id="L104">      spec = provider.getSpec(spedsLayer, AlgorithmCategory.ASYM, false);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">    } else if (algorithm.equals(&quot;X25519&quot;)) {</span>
+<span class="fc" id="L106">      spec = provider.getSpec(spedsLayer, AlgorithmCategory.DH, false);</span>
+<span class="pc bpc" id="L107" title="1 of 4 branches missed.">    } else if (algorithm.equals(&quot;RSASSA-PSS&quot;) || algorithm.equals(&quot;Ed25519&quot;)) {</span>
+<span class="fc" id="L108">      spec = provider.getSpec(spedsLayer, AlgorithmCategory.SIGN, false);</span>
+    }
+
+<span class="fc" id="L111">    return spec;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

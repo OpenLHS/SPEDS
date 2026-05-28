@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpecBaseProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-toolkit-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.toolkit.crypto.internal.provider</a> &gt; <span class="el_source">SpecBaseProvider.java</span></div><h1>SpecBaseProvider.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe SpecBaseProvider.
+ * @brief @~english Contains description of SpecBaseProvider class.
+ */
+
+package ca.griis.speds.toolkit.crypto.internal.provider;
+
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.AlgorithmCategory;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SecurityProfile;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SpedsLayer;
+import ca.griis.security.api.SecurityService;
+import ca.griis.security.api.domain.spec.SecuritySpec;
+import ca.griis.speds.toolkit.crypto.internal.converter.facade.profile.SpedsSecurityProfileConverter;
+import ca.griis.speds.toolkit.crypto.internal.converter.facade.spec.SpecConverter;
+import ca.griis.speds.toolkit.crypto.internal.converter.facade.specid.GenSpecIdConverter;
+import ca.griis.speds.toolkit.crypto.internal.converter.facade.specid.SpecIdConverter;
+import ca.griis.speds.toolkit.crypto.internal.reader.CipherSuiteDtoReader;
+import java.util.Optional;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Définit comment générer une spéfication.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-12-03 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public abstract class SpecBaseProvider {
+  protected final SecurityService securityFacade;
+  protected final CipherSuiteDtoReader reader;
+  protected final SpecIdConverter converter;
+  protected final GenSpecIdConverter genConverter;
+
+<span class="fc" id="L61">  public SpecBaseProvider(SecurityService facade, CipherSuiteDtoReader reader) {</span>
+<span class="fc" id="L62">    this.securityFacade = facade;</span>
+<span class="fc" id="L63">    this.reader = reader;</span>
+<span class="fc" id="L64">    this.converter = new SpecIdConverter();</span>
+<span class="fc" id="L65">    this.genConverter = new GenSpecIdConverter();</span>
+<span class="fc" id="L66">  }</span>
+
+  protected Optional&lt;SecuritySpec&gt; getSpec(SpedsLayer spedsLayer, AlgorithmCategory category,
+      Boolean keyGenerator) {
+<span class="fc" id="L70">    var profile = reader.getSecurityProfile(spedsLayer, category);</span>
+<span class="fc" id="L71">    Optional&lt;SecuritySpec&gt; spec = getSpec(category, profile, keyGenerator);</span>
+
+<span class="fc bfc" id="L73" title="All 2 branches covered.">    if (spec.isEmpty()) {</span>
+<span class="fc" id="L74">      var algo = reader.getSecurityAlgo(spedsLayer, category);</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">      if (algo.isPresent()) {</span>
+<span class="fc" id="L76">        spec = Optional.of(new SpecConverter().apply(algo.get()));</span>
+      }
+    }
+
+<span class="fc" id="L80">    return spec;</span>
+  }
+
+  protected Optional&lt;SecuritySpec&gt; getSpec(
+      AlgorithmCategory category, Optional&lt;SecurityProfile&gt; profile, Boolean keyGenerator) {
+<span class="fc" id="L85">    Optional&lt;SecuritySpec&gt; spec = Optional.empty();</span>
+
+<span class="fc bfc" id="L87" title="All 2 branches covered.">    if (profile.isPresent()) {</span>
+<span class="fc" id="L88">      final var secProfile = new SpedsSecurityProfileConverter().apply(profile.get());</span>
+<span class="fc" id="L89">      final var specs = securityFacade.getProfilSecuritySpecs(secProfile);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">      final var specId = keyGenerator ? genConverter.apply(category) : converter.apply(category);</span>
+<span class="fc" id="L91">      spec = Optional.of(specs.get(specId.id()));</span>
+    }
+
+<span class="fc" id="L94">    return spec;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

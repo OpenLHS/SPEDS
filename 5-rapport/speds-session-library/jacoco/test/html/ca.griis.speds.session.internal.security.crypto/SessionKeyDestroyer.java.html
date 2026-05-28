@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SessionKeyDestroyer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.security.crypto</a> &gt; <span class="el_source">SessionKeyDestroyer.java</span></div><h1>SessionKeyDestroyer.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SessionKeyDestroyer.
+ * @brief @~english Implementation of the SessionKeyDestroyer class.
+ */
+
+package ca.griis.speds.session.internal.security.crypto;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import java.security.PrivateKey;
+import java.util.Arrays;
+import javax.crypto.SecretKey;
+import javax.security.auth.DestroyFailedException;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Fournit un service de destruction de clé, dans les limites des capacités offertes
+ *        par Java.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-04-24 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="nc" id="L51">public final class SessionKeyDestroyer {</span>
+<span class="fc" id="L52">  private static final GriisLogger logger = getLogger(SessionKeyDestroyer.class);</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Détruit si possible une clé privée.
+   * @param key La clé privée.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public static void destroy(PrivateKey key) {
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">    if (key != null) {</span>
+      try {
+<span class="nc" id="L69">        key.destroy();</span>
+<span class="fc" id="L70">      } catch (DestroyFailedException ex) {</span>
+<span class="fc" id="L71">        logger.debug(Error.IGNORED_ERROR, &quot;ex&quot;, ex);</span>
+<span class="nc" id="L72">      }</span>
+    }
+<span class="fc" id="L74">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Détruit si possible une clé secrète.
+   * @param key La clé secrète.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public static void destroy(SecretKey key) {
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">    if (key != null) {</span>
+      try {
+<span class="nc" id="L91">        key.destroy();</span>
+<span class="fc" id="L92">      } catch (DestroyFailedException ex) {</span>
+<span class="fc" id="L93">        logger.debug(Error.IGNORED_ERROR, &quot;ex&quot;, ex);</span>
+<span class="nc" id="L94">      }</span>
+    }
+<span class="fc" id="L96">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Détruit si possible une clé secrète sous un tableau d'octets.
+   * @param key La clé secrète.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public static void destroy(byte[] key) {
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">    if (key != null) {</span>
+<span class="fc" id="L112">      Arrays.fill(key, (byte) 0);</span>
+    }
+<span class="fc" id="L114">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

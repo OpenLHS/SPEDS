@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationInterface.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-application-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.application.internal.domain</a> &gt; <span class="el_source">ApplicationInterface.java</span></div><h1>ApplicationInterface.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation du record ApplicationInterface.
+ * @brief @~english ApplicationInterface record implementation.
+ */
+
+package ca.griis.speds.application.internal.domain;
+
+import ca.griis.js2p.gen.speds.application.api.dto.MsgType;
+import ca.griis.js2p.gen.speds.application.api.dto.Service;
+import ca.griis.js2p.gen.speds.application.api.dto.ServicePrimitive;
+import java.util.Objects;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Représente l'interface entre l'utilisateur de la couche application et la couche
+ *        application.
+ * @par Détails
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-03-04 [CB] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L49">public record ApplicationInterface (Service service, ServicePrimitive servicePrimitive,</span>
+    String sourceCode, String destinationCode, String projectId, String msgId, MsgType msgType,
+    String content) {
+
+<span class="fc" id="L53">  public ApplicationInterface {</span>
+<span class="fc" id="L54">    Objects.requireNonNull(service, &quot;Service must not be null.&quot;);</span>
+<span class="fc" id="L55">    Objects.requireNonNull(servicePrimitive, &quot;Service primitive must not be null.&quot;);</span>
+<span class="fc" id="L56">    Objects.requireNonNull(sourceCode, &quot;Source code must not be null.&quot;);</span>
+<span class="fc" id="L57">    Objects.requireNonNull(destinationCode, &quot;Destination code must not be null.&quot;);</span>
+<span class="fc" id="L58">    Objects.requireNonNull(projectId, &quot;Project ID must not be null.&quot;);</span>
+<span class="fc" id="L59">    Objects.requireNonNull(msgId, &quot;Message ID must not be null.&quot;);</span>
+<span class="fc" id="L60">    Objects.requireNonNull(msgType, &quot;Message type must not be null.&quot;);</span>
+<span class="fc" id="L61">    Objects.requireNonNull(content, &quot;Content must not be null.&quot;);</span>
+<span class="fc" id="L62">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
