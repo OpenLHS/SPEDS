@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecuritySpec.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">security-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.security.api.domain.spec</a> &gt; <span class="el_source">SecuritySpec.java</span></div><h1>SecuritySpec.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe SecuritySpec.
+ * @brief @~english Implementation of the class SecuritySpec.
+ */
+
+package ca.griis.security.api.domain.spec;
+
+import java.util.Map;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Définit la specification de sécurité.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      «2025-12-17» [BD] - Implémentation initiale
+ * @par Tâches
+ *      S.O.
+ */
+public abstract class SecuritySpec {
+  protected final String algo;
+
+<span class="fc" id="L51">  protected SecuritySpec(String algo) {</span>
+<span class="fc" id="L52">    this.algo = algo;</span>
+<span class="fc" id="L53">  }</span>
+
+  public String getAlgo() {
+<span class="fc" id="L56">    return algo;</span>
+  }
+
+  public abstract Map&lt;String, String&gt; getParameters();
+
+  @Override
+  public final boolean equals(Object o) {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">    if (o == null) {</span>
+<span class="fc" id="L64">      return false;</span>
+    }
+<span class="fc bfc" id="L66" title="All 2 branches covered.">    if (!(o instanceof SecuritySpec)) {</span>
+<span class="fc" id="L67">      return false;</span>
+    }
+<span class="fc" id="L69">    SecuritySpec that = (SecuritySpec) o;</span>
+<span class="fc" id="L70">    EqualsBuilder equalsBuilder = new EqualsBuilder();</span>
+<span class="fc" id="L71">    equalsBuilder.append(algo, that.algo);</span>
+<span class="fc" id="L72">    equalsBuilder.append(getParameters(), that.getParameters());</span>
+<span class="fc" id="L73">    return equalsBuilder.isEquals();</span>
+  }
+
+  @Override
+  public final int hashCode() {
+<span class="fc" id="L78">    HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();</span>
+<span class="fc" id="L79">    hashCodeBuilder.append(algo);</span>
+<span class="fc" id="L80">    hashCodeBuilder.append(getParameters());</span>
+<span class="fc" id="L81">    return hashCodeBuilder.hashCode();</span>
+  }
+
+  @Override
+  public final String toString() {
+<span class="fc" id="L86">    ToStringBuilder stringBuilder = new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE);</span>
+<span class="fc" id="L87">    stringBuilder.append(&quot;algo&quot;, algo);</span>
+<span class="fc" id="L88">    stringBuilder.append(&quot;parameters&quot;, getParameters());</span>
+<span class="fc" id="L89">    return stringBuilder.toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

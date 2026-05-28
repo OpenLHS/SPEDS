@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PresentationHostFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-presentation-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.presentation.api</a> &gt; <span class="el_source">PresentationHostFactory.java</span></div><h1>PresentationHostFactory.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe MutablePresentationFactory.
+ * @brief @~english Implementation of the MutablePresentationFactory class.
+ */
+
+package ca.griis.speds.presentation.api;
+
+import ca.griis.js2p.gen.speds.presentation.api.dto.InitInParamsDto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.VersionDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.presentation.api.exception.ParameterException;
+import ca.griis.speds.presentation.entity.PresentationTracking;
+import ca.griis.speds.presentation.entity.TrackingInformation;
+import ca.griis.speds.presentation.internal.ImmutablePresentationHost;
+import ca.griis.speds.presentation.internal.event.PresentationEventHandler;
+import ca.griis.speds.presentation.internal.serialization.SharedObjectMapper;
+import ca.griis.speds.session.api.SessionFactory;
+import ca.griis.speds.session.api.SessionHost;
+import ca.griis.speds.session.api.SessionHostEvent;
+import ca.griis.speds.session.api.SessionHostFactory;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import ca.griis.speds.toolkit.project.ProjectService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.RemovalListener;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @brief @~englisription (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre une fabrique d'entités nécessaires à la couche présentation.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-18 [MD] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class PresentationHostFactory implements PresentationFactory {
+<span class="fc" id="L66">  private static final GriisLogger logger =</span>
+<span class="fc" id="L67">      GriisLoggerFactory.getLogger(PresentationHostFactory.class);</span>
+  private final SessionFactory factory;
+  private final CryptographyService service;
+
+<span class="fc" id="L71">  public PresentationHostFactory(ProjectService projectService, CryptographyService service) {</span>
+<span class="fc" id="L72">    this.service = service;</span>
+<span class="fc" id="L73">    this.factory = new SessionHostFactory(projectService, service);</span>
+<span class="fc" id="L74">  }</span>
+
+  @Override
+  public PresentationHost initHost(String parameters, PresentationHostEvent hostEventConsumer) {
+<span class="fc" id="L78">    logger.trace(Trace.ENTER_METHOD_2, &quot;parameters&quot;, parameters, &quot;hostEventConsumer&quot;,</span>
+        hostEventConsumer);
+
+<span class="fc" id="L81">    final var handler = new PresentationEventHandler();</span>
+<span class="fc" id="L82">    final SessionHost host = initSessionHost(parameters, handler);</span>
+    InitInParamsDto params;
+    try {
+      params =
+<span class="fc" id="L86">          SharedObjectMapper.getInstance().getMapper().readValue(parameters, InitInParamsDto.class);</span>
+<span class="fc" id="L87">      String spedsVersion = (String) params.getOptions().get(&quot;speds.pre.version&quot;);</span>
+<span class="fc" id="L88">      String spedsReference = (String) params.getOptions().get(&quot;speds.pre.reference&quot;);</span>
+<span class="fc" id="L89">      Integer responseWindowMinutes =</span>
+<span class="fc" id="L90">          (Integer) params.getOptions().getOrDefault(&quot;speds.pre.response.window.minutes&quot;, 10);</span>
+
+<span class="fc" id="L92">      VersionDto version = new VersionDto(spedsVersion, spedsReference);</span>
+
+<span class="fc bfc" id="L94" title="All 4 branches covered.">      if (spedsVersion == null || spedsReference == null) {</span>
+<span class="fc" id="L95">        throw new ParameterException(</span>
+            &quot;SPEDS version or reference is missing in the initialization parameters. &quot;
+                + &quot;spedsVersion=&quot; + spedsVersion + &quot; spedsReference=&quot; + spedsReference);
+      }
+
+<span class="fc" id="L100">      final var pendingResponses = Caffeine.newBuilder()</span>
+<span class="fc" id="L101">          .expireAfterWrite(responseWindowMinutes, TimeUnit.MINUTES)</span>
+<span class="fc" id="L102">          .maximumSize(100_000)</span>
+<span class="fc" id="L103">          .removalListener(</span>
+              (RemovalListener&lt;PresentationTracking, TrackingInformation&gt;) (key, value, cause) -&gt; {
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">                if (value != null) {</span>
+<span class="fc" id="L106">                  value.destroy();</span>
+                }
+<span class="fc" id="L108">              })</span>
+<span class="fc" id="L109">          .build();</span>
+
+<span class="fc" id="L111">      final var presentationHost =</span>
+          new ImmutablePresentationHost(host, version, service, hostEventConsumer,
+              pendingResponses);
+
+<span class="fc" id="L115">      handler.register(presentationHost);</span>
+
+<span class="fc" id="L117">      logger.trace(Trace.EXIT_METHOD_1, &quot;presentationHost&quot;, presentationHost);</span>
+<span class="fc" id="L118">      return presentationHost;</span>
+<span class="fc" id="L119">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L120">      throw new ParameterException(&quot;Cannot read initialization parameters&quot; + e.getMessage());</span>
+    }
+  }
+
+  @Override
+  public SessionHost initSessionHost(String parameters, SessionHostEvent hostEventConsumer) {
+<span class="nc" id="L126">    logger.trace(Trace.ENTER_METHOD_1, &quot;parameters&quot;, parameters);</span>
+
+<span class="nc" id="L128">    SessionHost host = factory.initHost(parameters, hostEventConsumer);</span>
+
+<span class="nc" id="L130">    logger.trace(Trace.EXIT_METHOD_1, &quot;host&quot;, host);</span>
+<span class="nc" id="L131">    return host;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

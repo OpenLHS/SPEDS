@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Spécification de la couche Transport">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification de la couche Transport</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification de la couche Transport</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_responsabilité">1. Responsabilité</a></li>
+<li><a href="#_interfaces">2. Interfaces</a>
+<ul class="sectlevel2">
+<li><a href="#_couche_supérieure">2.1. Couche supérieure</a></li>
+<li><a href="#_couche_inférieure">2.2. Couche inférieure</a></li>
+</ul>
+</li>
+<li><a href="#_format_des_messages_pour_la_couche_transport">3. Format des messages pour la couche transport</a>
+<ul class="sectlevel2">
+<li><a href="#_types_de_message">3.1. Types de message</a></li>
+<li><a href="#_numéro_didentification_du_message_id">3.2. Numéro d&#8217;identification du message (<code>id</code>)</a></li>
+</ul>
+</li>
+<li><a href="#_schéma_json_des_communications">4. Schéma JSON des communications</a></li>
+<li><a href="#_diagramme_de_séquence_de_message">5. Diagramme de séquence de message</a></li>
+<li><a href="#_système_de_fenêtrage">6. Système de fenêtrage</a>
+<ul class="sectlevel2">
+<li><a href="#_états_du_module">6.1. États du module</a></li>
+<li><a href="#_comportement">6.2. Comportement</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_responsabilité">1. Responsabilité</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>La couche Transport doit gérer le transport de bout en bout entre une source (identifiée par son code et sa IRI) et un destinataire. C&#8217;est-à-dire que la couche assure</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>la garantie de l&#8217;intégrité des transmissions ;</p>
+</li>
+<li>
+<p>l&#8217;absence de perte de message (fiabilité), qui comprend</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>la confirmation de la réception par l&#8217;entité ciblée,</p>
+</li>
+<li>
+<p>la répétition des envois au besoin,</p>
+</li>
+<li>
+<p>la gestion des répétitions (un message n&#8217;est transmis pour traitement qu&#8217;une fois à la couche supérieure) ;</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Le système de fenêtrage n&#8217;est pas implémenté dans la version v7.0.0 de SPEDS. Ceci implique que les trois derniers points (<strong>1.b.ii</strong> et <strong>1.b.iii</strong>) ne sont pas gérés actuellement.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interfaces">2. Interfaces</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_couche_supérieure">2.1. Couche supérieure</h3>
+<div class="sect3">
+<h4 id="_entrant">2.1.1. entrant</h4>
+<div class="paragraph">
+<p>Un message en provenance de la couche Session avec un contexte indiquant, le service, la primitive de service, le code de la source, le code du destinataire, l&#8217;adresse (IRI) de la source et l&#8217;adresse (IRI) du destinataire.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>transfer.request</code> : primitive utilisée par la couche supérieure pour envoyer un message à la couche Transport et demander qu&#8217;il soit traité et transféré. Attends un <code>transfer.confirm</code> en réponse.</p>
+</li>
+<li>
+<p><code>transfer.response</code> : primitive utilisée par la couche supérieure pour indiquer à la couche Transport que le message obtenu par <code>transfer.indication</code> est traité. Déclenche un message de réponse à la source.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sortant">2.1.2. sortant</h4>
+<div class="paragraph">
+<p>Un message pour la couche Session (chaîne de caractère décrivant un objet JSON) avec son contexte indiquant, le service, la primitive de service, le code de la source, le code du destinataire, l&#8217;adresse (IRI) de la source et l&#8217;adresse (IRI) du destinataire.</p>
+</div>
+<div class="ulist">
+<div class="title">Services et primitives de service utilisés</div>
+<ul>
+<li>
+<p><code>transfer.confirm</code> : primitive utilisée par la couche Transport pour indiquer que le message transmis par <code>transfer.request</code> est traité. Est déclenché lorsque la confirmation est reçu du destinataire ou par une erreur local. Dans ce dernier cas, le contenu doit alors être de la forme "FAILED: information").</p>
+</li>
+<li>
+<p><code>transfer.indication</code> : primitive utilisée par la couche Transport pour indiquer qu&#8217;un message est reçu et doit être transféré. Contient le message. Est déclenché par un <code>transfer.indication</code> de la couche inférieure.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche supérieure</div>
+<div class="content">
+<pre>{ "source_code": string
+, "destination_code": string
+, "source_iri": string
+, "destination_iri": string
+, "service_primitive": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_couche_inférieure">2.2. Couche inférieure</h3>
+<div class="sect3">
+<h4 id="_entrant_2">2.2.1. entrant</h4>
+<div class="paragraph">
+<p>Un message en provenance de la couche Réseau avec son contexte indiquant, le service, la primitive de service, l&#8217;adresse (IRI) de la source et l&#8217;adresse (IRI) du destinataire. Le message doit respecter le format standard (décrit après) sinon le message est ignoré.</p>
+</div>
+<div class="ulist">
+<div class="title">Services et primitives de service utilisés</div>
+<ul>
+<li>
+<p><code>transfer.confirm</code> : primitive utilisée par la couche inférieure pour indiquer que le message transmis par <code>transfer.request</code> est traité. Si le traitement indique un échec (<code>FAILED: xxx</code>), la demande de transfert de la couche supérieure qui a déclenché la demande de transfert de la couche</p>
+</li>
+<li>
+<p><code>transfer.indication</code> : primitive utilisée par la couche inférieure pour indiquer qu&#8217;un message est reçu et doit être transféré. Contient le message.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sortant_2">2.2.2. sortant</h4>
+<div class="paragraph">
+<p>Un message pour la couche Réseau avec son contexte indiquant, le service, la primitive de service, l&#8217;adresse (IRI) de la source et l&#8217;adresse (IRI) du destinataire.</p>
+</div>
+<div class="ulist">
+<div class="title">Services et primitives de service utilisés</div>
+<ul>
+<li>
+<p><code>transfer.request</code> : primitive utilisée par la couche Transport pour envoyer un message à la couche inférieure pour que son envoi soit délégué à la couche Session. Est déclenché par un <code>transfer.request</code> de la couche supérieure ou pour transmettre une confirmation.</p>
+</li>
+<li>
+<p><code>transfer.response</code> : primitive utilisée par la couche Transport pour indiquer à la couche inférieure que le message obtenu par <code>transfer.indication</code> est traité. Peut être déclenché après les validations d&#8217;intégrités, auquel cas le contenu est <code>"SUCCEED"</code>, ou par une erreur locale. Dans ce dernier cas, le contenu doit alors être de la forme <code>"FAILED: <em>information</em>"</code>).
+Par exemple, un échec de la validation de l&#8217;intégrité de l&#8217;entête pourrait déclencher un contenu <code>"FAILED: integrity of the header is compromised"</code>.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">format du contexte d&#8217;une communication avec la couche inférieure</div>
+<div class="content">
+<pre>{ "source_iri": string
+, "destination_iri": string
+, "service_primitive": string
+, "options": object (actuellement : false)
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_format_des_messages_pour_la_couche_transport">3. Format des messages pour la couche transport</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Un message est une chaîne de caractère représentant un objet JSON. Le format de l&#8217;objet JSON est défini comme suit.</p>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;un message</div>
+<div class="content">
+<pre>{ "header" : object
+, "stamp" : object
+, "content" : object ou string
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">format du timbre des sceaux d&#8217;intégrité</div>
+<div class="content">
+<pre>{ "header_seal" : string
+, "content_seal" : string
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">format d&#8217;un entête</div>
+<div class="content">
+<pre>{ "msgtype" : string
+, "id" : object ou string
+, "source_code": string
+, "destination_code": string
+, "parameters": object
+, "version" : { "number" : "x.x.x"
+              , "reference" : "IRI"
+              }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Les paramètres (<code>parameters</code>):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>PFE pour la source ou PFA pour le destinataire.</p>
+</li>
+<li>
+<p>Si une entente est en cours (<code>"active": true</code>), la période de validité des paramètres.</p>
+</li>
+<li>
+<p>Si une négociation est en cours (<code>"active": false</code>), la période de la négociation de l&#8217;entente.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">format des paramètres possibles</div>
+<div class="content">
+<pre>{ "PFE": { "DMR": number
+         , "DME": number
+         , "TFE": number
+         }
+, "PFA": { "DRC": number
+         , "DMT": number
+         , "TFA": number
+         }
+, "agreement": { "active": boolean
+               , "start": date-time
+               , "duration": duration
+               }
+}</pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_types_de_message">3.1. Types de message</h3>
+<div class="paragraph">
+<p>La chaîne de caractères représentant le type du message est l&#8217;une des suivantes.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TRA.INF.ENV</code></p>
+</li>
+<li>
+<p><code>TRA.INF.REC</code></p>
+</li>
+<li>
+<p><code>TRA.MSG.ENV</code></p>
+</li>
+<li>
+<p><code>TRA.MSG.REC</code></p>
+</li>
+<li>
+<p><code>TRA.FIN.ENV</code></p>
+</li>
+<li>
+<p><code>TRA.FIN.REC</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_numéro_didentification_du_message_id">3.2. Numéro d&#8217;identification du message (<code>id</code>)</h3>
+<div class="paragraph">
+<p>Dans le cas des transmissions de messages (type de message <code>TRA.MSG</code>),
+l&#8217;identificateur du message est une paire de valeurs générées et
+composée d&#8217;un numéro de message (<em>ME#</em>) et d&#8217;un numéro de répétition (<em>MR#</em>);
+autrement l&#8217;identificateur est un numéro généré de façon unique (<code>uuid</code>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_schéma_json_des_communications">4. Schéma JSON des communications</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-3_4.schema.json">schéma JSON de la IDU</a> de la couche Session (<code>SIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/InterfaceDataUnit-4_5.schema.json">schéma JSON de la IDU</a> de la couche Transport (<code>TIDU</code>) ;</p>
+</li>
+<li>
+<p>Le <a href="includes/jsonSchema/ProtocolDataUnit-4-TRA.schema.json">schéma JSON de la PDU</a> de la couche Transport (<code>TPDU</code>).</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="includes/echangeTRA.svg" alt="echangeTRA" width="246" height="288">
+</div>
+<div class="title">Figure 1. Modèle des échanges entre les couches et les entités</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_diagramme_de_séquence_de_message">5. Diagramme de séquence de message</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="includes/P400.svg" alt="P400" width="1153" height="3085">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_système_de_fenêtrage">6. Système de fenêtrage</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_états_du_module">6.1. États du module</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Les inégalités sont à considérer dans l&#8217;anneau \(\mathbb{Z}/n\mathbb{Z}\) où \(n = ppcm(TFE, TFA)\).
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_état_en_tant_que_source">6.1.1. État en tant que source</h4>
+<div class="paragraph">
+<p>Chaque entité utilisant une couche transport doit conserver pour chaque destinataire potentiel (déterminé par son IRI), les informations suivantes :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>PFE+ : les paramètres de la fenêtre d&#8217;envoi augmentés</p>
+<div class="ulist">
+<ul>
+<li>
+<p>PFE : les paramètres de la fenêtre d&#8217;envoi</p>
+<div class="ulist">
+<ul>
+<li>
+<p>DMR : le dernier numéro de message d&#8217;une série de messages répondus</p>
+</li>
+<li>
+<p>DME : le dernier numéro de message d&#8217;une série de messages envoyés</p>
+</li>
+<li>
+<p>TFE : la taille de la fenêtre d&#8217;envoi, c&#8217;est-à-dire le nombre de messages pouvant être envoyé avant de recevoir leurs réponses</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Mémorisation des numéros de messages répondus supérieurs ou égales à DMR+1 (et inférieurs ou égales à DME)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Période de validité d&#8217;une entente \(\Delta\)</p>
+</li>
+<li>
+<p>Période de validité d&#8217;une négociation \(\delta\)</p>
+</li>
+<li>
+<p>Activation d&#8217;une négociation</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_état_en_tant_que_destinataire">6.1.2. État en tant que destinataire</h4>
+<div class="paragraph">
+<p>L&#8217;entité doit aussi conserver pour chaque source potentielle (déterminé par son IRI), les informations suivantes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>PFA+ : les paramètres de la fenêtre d&#8217;acceptation augmentés</p>
+<div class="ulist">
+<ul>
+<li>
+<p>PFA : les paramètres de la fenêtre d&#8217;acceptation</p>
+<div class="ulist">
+<ul>
+<li>
+<p>DRC : le dernier numéro de message d&#8217;une série de messages dont la réponse a été confirmée</p>
+</li>
+<li>
+<p>DMT : le dernier numéro de message d&#8217;une série de messages traités</p>
+</li>
+<li>
+<p>TFA : la taille de la fenêtre d&#8217;acceptation, c&#8217;est-à-dire le nombre de messages pouvant être traité en attente de voir leur réponse confirmée par la source</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Mémorisation des numéros de messages traités supérieurs ou égales à DMT+1 (et inférieurs ou égales à DRC+TFA)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Période de validité d&#8217;une entente \(\Delta\)</p>
+</li>
+<li>
+<p>Période de validité d&#8217;une négociation \(\delta\)</p>
+</li>
+<li>
+<p>Activation d&#8217;une négociation</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_considération_sur_la_concurrence">6.1.3. Considération sur la concurrence</h4>
+<div class="paragraph">
+<p>Il est important que toutes procédures qui débutent mettent en place un verrou sur les états (en tant que source ou destinataire) afin d&#8217;assurer que aucune situation de compétition (<em>race condition</em>) ne surviennent. L&#8217;état est considéré comme une section critique.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_détermination_des_durées">6.1.4. Détermination des durées</h4>
+<div class="paragraph">
+<p>Supposons que \(\delta_d\) soit la durée impartie avant d&#8217;envoyer une répétition à un message non répondu. Soit <em>R#</em> le nombre de répétitions avant de considérer que l&#8217;envoi d&#8217;un message a échoué définitivement.</p>
+</div>
+<div class="paragraph">
+<p>La durée de la validité d&#8217;une entente \(\Delta_d\) devrait être supérieur à \(\delta_d R\#\).</p>
+</div>
+<div class="paragraph">
+<p>Le nombre de répétitions consécutives d&#8217;une négociation <em>r#</em> devrait être inférieur strictement à <em>R#</em>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Pour SPEDS 6.0 :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>\(\delta_d = 3s\)</p>
+</li>
+<li>
+<p>\(R\# = 10\)</p>
+</li>
+<li>
+<p>\(r\# = 5\)</p>
+</li>
+<li>
+<p>\(\Delta_d = \delta_d R\# = 30s\)</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_invariant">6.1.5. Invariant</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><em>DMR ≤ DME ≤ DMR + TFE</em></p>
+</li>
+<li>
+<p>Au moment d&#8217;un envoi (y compris une répétition), <em>ME#</em> vérifie que <em>ME# ≤ DME</em>.</p>
+</li>
+<li>
+<p><em>DRC ≤ DMT ≤ DRC + TFA</em></p>
+</li>
+<li>
+<p><em>DMT ≥ DMR</em></p>
+</li>
+<li>
+<p><em>DMR ≥ DRC</em></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_les_opérations_sur_les_états">6.1.6. Les opérations sur les états</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Soit \({x}\) un entier, \(\overline{x}\) est le représentant de \({x}\) dans l&#8217;anneau \(\mathbb{Z}/n\mathbb{Z}\) où \(n = ppcm(TFE, TFA)\).<br>
+C&#8217;est-à-dire que \(0 \leq \overline{x} \leq n\) et \(\exists k. k\in\mathbb{Z} \land x = \overline{x} + k n\).</p>
+</li>
+<li>
+<p>Un numéro <em>m</em> est dans la fenêtre d&#8217;envoi si et seulement si<br>
+\(0 &lt; \overline{(m-DMR)} \leq TFE\)</p>
+</li>
+<li>
+<p>Un numéro <em>m</em> est dans la fenêtre d&#8217;acceptation si et seulement si<br>
+\(0 &lt; \overline{(m-DRC)} \leq TFA\)</p>
+</li>
+<li>
+<p>Mise à jour des PFE+ avec les PFA</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Si le <em>DMT &gt; DMR</em> alors <em>DMR = DMT</em></p>
+</li>
+<li>
+<p>Réajuster les numéros de messages répondus mémorisés</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Mise à jour des PFA+ avec les PFE</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Si le <em>DMR &gt; DRC</em> alors <em>DRC = DMR</em></p>
+</li>
+<li>
+<p>Réajuster les numéros de messages traités mémorisés</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Ajustement des PFE+ après un message répondu</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Réajuster les numéros de messages répondus mémorisés</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Ajustement des PFA+ après un message traité</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Réajuster les numéros de messages traités mémorisés</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Être dans la période de validité d&#8217;une entente</p>
+</li>
+<li>
+<p>Être dans la période de validité d&#8217;une négociation</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_comportement">6.2. Comportement</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+De façon périodique, l&#8217;entité doit vérifier pour chaque source et chaque destinataire avec qui il communique si la période de validité d&#8217;entente est dépassée, c&#8217;est-à-dire si le temps écoulé depuis \(\Delta_m\) dépasse deux fois \(\Delta_d\). Dans ce cas, les paramètres correspondants (les PFE+ ou les PFA+) peuvent être réinitialisés.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_source_transport_dun_message">6.2.1. Source : transport d&#8217;un message</h4>
+<div class="dlist">
+<div class="title">Procédure déclenchée par la couche supérieure</div>
+<dl>
+<dt class="hdlist1">[Procédure 1 : Envoi d&#8217;un message avec en option un <em><strong>MS#</strong> = (ME#, MR#)</em> défini]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si une entente est en cours</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Si le message n&#8217;a pas de <em><strong>MS#</strong></em>, calculer le numéro de message <em>ME#</em> à partir de DME; <em>MR#=1</em></p>
+</li>
+<li>
+<p>Transmettre le message <strong>MS#</strong> avec les PFE et une nouvelle période de validité d&#8217;entente \(\Delta'\) à la couche inférieure</p>
+</li>
+<li>
+<p>Démarrer un timer de \(\delta_d\) qui déclenche l&#8217;envoi d&#8217;une répétition de <em><strong>MS#</strong></em><br>
+(Procédure 2)</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Envoyer une demande d&#8217;information<br>
+(Procédure 3)</p>
+</li>
+<li>
+<p>Démarrer un timer de \(\delta_d\) qui déclenche l&#8217;envoi du message<br>
+(Procédure 1)</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">Procédures internes</div>
+<dl>
+<dt class="hdlist1">[Procédure 2 : Envoi d&#8217;une répétition de <em><strong>MS#</strong> = (ME#, MR#)</em>]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si une entente est en cours</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Si les PFE+ indiquent que la réponse est hors de la fenêtre d&#8217;envoi ou que le message <em>ME#</em> est marqué comme répondu, il n&#8217;y a pas de répétition à envoyer</p>
+</li>
+<li>
+<p>Si le nombre de répétitions maximum est atteint, une erreur est transmise à la couche supérieure &#8658; <strong>Déclenchement d&#8217;une erreur</strong></p>
+</li>
+<li>
+<p>Sinon envoyer le message avec le nouveau numéro de répétition
+avec <em><strong>MS#'</strong> = (ME#, MR#+1)</em><br>
+(Procédure 1)</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Envoyer une demande d&#8217;information<br>
+(Procédure 3)</p>
+</li>
+<li>
+<p>Démarrer un timer de \(\delta_d\) qui déclenche l&#8217;envoi d&#8217;une répétition de <em><strong>MS#</strong></em><br>
+(Procédure 2)</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">[Procédure 3 : Envoi d&#8217;une demande d&#8217;information (négociation)]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si une négociation est en cours, ignorer la demande</p>
+</li>
+<li>
+<p>Si le nombre de demandes d&#8217;information consécutives a atteint son maximum, une erreur est transmise à la couche supérieure &#8658; <strong>Déclenchement d&#8217;une erreur</strong></p>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Définir une nouvelle période de validité de négociation \(\delta'\)</p>
+</li>
+<li>
+<p>Transmettre la demande d&#8217;information avec les PFE et la période \(\delta'\) à la couche inférieure</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><code>"active": false</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">Procédures déclenchées par la couche inférieure</div>
+<dl>
+<dt class="hdlist1">[Procédure 4 : Réception d&#8217;une réponse <em><strong>MS#</strong> = (ME#, MR#)</em>]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si l&#8217;entête n&#8217;est pas intègre, ignorer la réponse</p>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Mettre à jour les PFE+ avec les PFA envoyés</p>
+</li>
+<li>
+<p>Si les PFE+ indiquent que la réponse est hors de la fenêtre d&#8217;envoi ou que le message <em>ME#</em> est marqué comme répondu, ignorer la réponse</p>
+</li>
+<li>
+<p>Sinon mettre à jour la période de validité de l&#8217;entente \(\Delta\) du message, si celle-ci termine après la période en cours</p>
+</li>
+<li>
+<p>Si la réponse est intègre et est "ACK", considérer que l&#8217;envoi <em><strong>MS#</strong></em> est un succès, c&#8217;est-à-dire</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><em>ME#</em> est considéré comme répondu</p>
+</li>
+<li>
+<p>Ajuster les PFE+ si nécessaire</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon, ignorer la réponse</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">[Procédure 5 : Réception d&#8217;information]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si l&#8217;entête n&#8217;est pas intègre, l&#8217;information est ignorée</p>
+</li>
+<li>
+<p>Sinon si une négociation est en cours et que cette information est la réponse à la demande d&#8217;information</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Terminer la négociation en cours.</p>
+</li>
+<li>
+<p>Réinitialiser le nombre de demandes d&#8217;information consécutive à 0.</p>
+</li>
+<li>
+<p>Initialiser l&#8217;entente selon les paramètres du destinataire, c&#8217;est-à-dire</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>Si l&#8217;information indique qu&#8217;une entente est en cours</p>
+<div class="olist upperalpha">
+<ol class="upperalpha" type="A">
+<li>
+<p>Récupérer les derniers PFE utilisés</p>
+</li>
+<li>
+<p>Mettre à jour les PFE+ avec les PFA envoyés</p>
+</li>
+<li>
+<p>Mettre à jour la période de validité de l&#8217;entente \(\Delta\) du message</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist upperalpha">
+<ol class="upperalpha" type="A">
+<li>
+<p>Réinitialiser les PFE avec les valeurs par défaut.</p>
+</li>
+<li>
+<p>Définir (modifier) la durée de validité de l&#8217;entente par le \(\Delta\) de la réponse.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon l&#8217;information est ignorée</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_destinataire">6.2.2. Destinataire</h4>
+<div class="dlist">
+<div class="title">Procédures déclenchées par la couche inférieure</div>
+<dl>
+<dt class="hdlist1">[Procédure 1 : Réception d&#8217;un message]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si l&#8217;entête n&#8217;est pas intègre, ignorer le message</p>
+</li>
+<li>
+<p>Si aucune entente n&#8217;est en cours, ignorer le message</p>
+</li>
+<li>
+<p>Sinon si le message n&#8217;est pas dans la fenêtre d&#8217;acceptation, ignorer le message</p>
+</li>
+<li>
+<p>Sinon si le contenu du message n&#8217;est pas intègre, transmettre une réponse "NAK" avec les PFA et la période de validité de l&#8217;entente en cours \(\Delta\)</p>
+</li>
+<li>
+<p>Sinon, si le message est considéré comme traité</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Transmettre une réponse "ACK" avec les PFA et la période de validité de l&#8217;entente en cours \(\Delta\)</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Considérer le message comme traité et ajuster les PFA+ en conséquence</p>
+</li>
+<li>
+<p>Transmettre le contenu du message à la couche supérieure</p>
+</li>
+<li>
+<p>Transmettre une réponse "ACK" avec les PFA et la période de validité de l&#8217;entente en cours \(\Delta\)</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">[Procédure 2 : Réception d&#8217;une demande d&#8217;information]</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Si l&#8217;entête n&#8217;est pas intègre, ignorer la demande</p>
+</li>
+<li>
+<p>Si le destinataire est en période de négociation, ignorer la demande</p>
+</li>
+<li>
+<p>Sinon définir la période de négociation avec \(\delta\)</p>
+</li>
+<li>
+<p>Si une entente est en cours</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Transmettre la réponse avec les PFA et la période de validité de l&#8217;entente en cours \(\Delta\)</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><code>"active": true</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Sinon</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Réinitialiser les PFA+</p>
+</li>
+<li>
+<p>Définir une nouvelle période de validité d&#8217;entente \(\Delta'\)</p>
+</li>
+<li>
+<p>Transmettre la réponse avec les PFA et la période de validité de l&#8217;entente en cours \(\Delta'\)</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p><code>"active": false</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:51:38 -0400
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>

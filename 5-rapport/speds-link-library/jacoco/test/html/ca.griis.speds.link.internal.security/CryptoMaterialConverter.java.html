@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CryptoMaterialConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.link.internal.security</a> &gt; <span class="el_source">CryptoMaterialConverter.java</span></div><h1>CryptoMaterialConverter.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe CryptoMaterialConverter.
+ * @brief @~english Implementation of the CryptoMaterialConverter class.
+ */
+
+package ca.griis.speds.link.internal.security;
+
+import ca.griis.speds.link.api.exception.ParameterException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.security.PrivateKey;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.Base64;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Fournit un service permettant de convertir un certificat et une clé privée
+ *        encodés en Base64 en objets Java.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-04-21 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L57">public final class CryptoMaterialConverter {</span>
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Convertir une chaine base64 en certificat.
+   * @param base64Certificate La chaine encodée en base64
+   * @return Le certificat.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public X509Certificate toCertificate(String base64Certificate) {
+    try {
+<span class="fc" id="L73">      byte[] certificateBytes = Base64.getDecoder().decode(base64Certificate);</span>
+<span class="fc" id="L74">      CertificateFactory certificateFactory = CertificateFactory.getInstance(&quot;X.509&quot;);</span>
+
+<span class="fc" id="L76">      X509Certificate x509Certificate = null;</span>
+<span class="fc" id="L77">      try (ByteArrayInputStream inputStream = new ByteArrayInputStream(certificateBytes)) {</span>
+<span class="fc" id="L78">        x509Certificate = (X509Certificate) certificateFactory.generateCertificate(inputStream);</span>
+      }
+
+<span class="fc" id="L81">      return x509Certificate;</span>
+<span class="fc" id="L82">    } catch (IOException | CertificateException | IllegalArgumentException e) {</span>
+<span class="fc" id="L83">      throw new ParameterException(&quot;Invalid Base64 encoded Certificate&quot;);</span>
+    }
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Convertir une chaine base64 en clé privée.
+   * @param base64PrivateKey La chaine encodée en base64
+   * @return La clé privée.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public PrivateKey toPrivateKey(String base64PrivateKey) {
+<span class="fc" id="L101">    byte[] privateKeyBytes = new byte[0];</span>
+    try {
+<span class="fc" id="L103">      privateKeyBytes = Base64.getDecoder().decode(base64PrivateKey);</span>
+
+<span class="fc" id="L105">      PrivateKeyInfo keyInfo =</span>
+<span class="fc" id="L106">          PrivateKeyInfo.getInstance(ASN1Primitive.fromByteArray(privateKeyBytes));</span>
+<span class="fc" id="L107">      PrivateKey privateKey = new JcaPEMKeyConverter()</span>
+<span class="fc" id="L108">          .getPrivateKey(keyInfo);</span>
+
+<span class="fc" id="L110">      Arrays.fill(privateKeyBytes, (byte) 0);</span>
+
+<span class="fc" id="L112">      return privateKey;</span>
+<span class="fc" id="L113">    } catch (IllegalArgumentException | IOException e) {</span>
+<span class="fc" id="L114">      Arrays.fill(privateKeyBytes, (byte) 0);</span>
+
+<span class="fc" id="L116">      throw new ParameterException(&quot;Invalid Base64 encoded Key&quot;);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

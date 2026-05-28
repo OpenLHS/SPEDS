@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CertificatePrivateKeyPair.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.internal.security</a> &gt; <span class="el_source">CertificatePrivateKeyPair.java</span></div><h1>CertificatePrivateKeyPair.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe CertificatePrivateKeyPair.
+ * @brief @~english CertificatePrivateKeyPair class implementation.
+ */
+
+package ca.griis.speds.network.internal.security;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.speds.network.api.exception.ParameterException;
+import java.io.ByteArrayInputStream;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Arrays;
+import java.util.Base64;
+import javax.security.auth.DestroyFailedException;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Représente une clé privée cryptographique et son certificat associé.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-02-16 [FO] - Refactorisation.
+ *      2025-03-04 [CB] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class CertificatePrivateKeyPair {
+<span class="fc" id="L64">  private static final GriisLogger logger = getLogger(CertificatePrivateKeyPair.class);</span>
+
+  private final Certificate certificate;
+  private final String authentification;
+  private PrivateKey privateKey;
+
+  public static CertificatePrivateKeyPair importFromPem(String certificatePem,
+      String privateKeyPem) {
+
+<span class="fc" id="L73">    final var certificate = loadCertificatePem(certificatePem);</span>
+<span class="fc" id="L74">    final var privateKey = loadPrivateKeyPem(privateKeyPem);</span>
+<span class="fc" id="L75">    final var authentification = toBase64(certificate);</span>
+
+<span class="fc" id="L77">    final var pair = new CertificatePrivateKeyPair(certificate, privateKey, authentification);</span>
+<span class="fc" id="L78">    return pair;</span>
+  }
+
+  private static Certificate loadCertificatePem(String certificatePem) {
+    final Certificate certificate;
+
+    try {
+<span class="fc" id="L85">      final CertificateFactory cf = CertificateFactory.getInstance(&quot;X.509&quot;);</span>
+<span class="fc" id="L86">      certificate =</span>
+<span class="fc" id="L87">          cf.generateCertificate(</span>
+<span class="fc" id="L88">              new ByteArrayInputStream(Base64.getDecoder().decode(certificatePem)));</span>
+<span class="fc" id="L89">    } catch (CertificateException | IllegalArgumentException e) {</span>
+<span class="fc" id="L90">      final String exception =</span>
+<span class="fc" id="L91">          &quot;Problems encountered while importing Network certificate: &quot; + e.getMessage();</span>
+<span class="fc" id="L92">      throw new ParameterException(exception);</span>
+<span class="fc" id="L93">    }</span>
+
+<span class="fc" id="L95">    return certificate;</span>
+  }
+
+  private static PrivateKey loadPrivateKeyPem(String privateKeyPem) {
+    PrivateKey privateKey;
+
+    try {
+<span class="fc" id="L102">      privateKey = loadPrivateKeyPem(privateKeyPem, &quot;RSA&quot;);</span>
+<span class="fc" id="L103">    } catch (ParameterException e) {</span>
+<span class="fc" id="L104">      logger.error(Error.IGNORED_ERROR, e);</span>
+
+      try {
+<span class="fc" id="L107">        privateKey = loadPrivateKeyPem(privateKeyPem, &quot;Ed25519&quot;);</span>
+<span class="fc" id="L108">      } catch (ParameterException ex) {</span>
+<span class="fc" id="L109">        throw new ParameterException(ex.getMessage(), ex);</span>
+<span class="fc" id="L110">      }</span>
+<span class="fc" id="L111">    }</span>
+
+<span class="fc" id="L113">    return privateKey;</span>
+  }
+
+  private static PrivateKey loadPrivateKeyPem(String privateKeyPem, String algo) {
+    final PrivateKey privateKey;
+<span class="fc" id="L118">    byte[] encoded = new byte[0];</span>
+    try {
+<span class="fc" id="L120">      final KeyFactory keyFactory = KeyFactory.getInstance(algo);</span>
+<span class="fc" id="L121">      encoded = Base64.getDecoder().decode(privateKeyPem);</span>
+<span class="fc" id="L122">      final PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);</span>
+<span class="fc" id="L123">      privateKey = keyFactory.generatePrivate(keySpec);</span>
+<span class="fc" id="L124">      Arrays.fill(encoded, (byte) 0);</span>
+
+<span class="fc" id="L126">      return privateKey;</span>
+<span class="fc" id="L127">    } catch (IllegalArgumentException | InvalidKeySpecException | NoSuchAlgorithmException e) {</span>
+<span class="fc" id="L128">      Arrays.fill(encoded, (byte) 0);</span>
+<span class="fc" id="L129">      final String exception =</span>
+<span class="fc" id="L130">          &quot;Problems encountered while importing private key: &quot; + e.getMessage();</span>
+<span class="fc" id="L131">      throw new ParameterException(exception);</span>
+    }
+  }
+
+  private static String toBase64(Certificate certificate) {
+    final String authentification;
+    try {
+<span class="fc" id="L138">      authentification = Base64.getEncoder().encodeToString(certificate.getEncoded());</span>
+<span class="fc" id="L139">      return authentification;</span>
+<span class="nc" id="L140">    } catch (CertificateEncodingException e) {</span>
+<span class="nc" id="L141">      throw new ParameterException(e.getMessage(), e);</span>
+    }
+  }
+
+  private CertificatePrivateKeyPair(Certificate certificate, PrivateKey privateKey,
+<span class="fc" id="L146">      String authentification) {</span>
+<span class="fc" id="L147">    this.certificate = certificate;</span>
+<span class="fc" id="L148">    this.privateKey = privateKey;</span>
+<span class="fc" id="L149">    this.authentification = authentification;</span>
+<span class="fc" id="L150">  }</span>
+
+  public Certificate getCertificate() {
+<span class="fc" id="L153">    return certificate;</span>
+  }
+
+  public PrivateKey getPrivateKey() {
+<span class="fc" id="L157">    return privateKey;</span>
+  }
+
+  public String getAuthentification() {
+<span class="fc" id="L161">    return authentification;</span>
+  }
+
+  public void cleanUp() {
+    try {
+<span class="nc" id="L166">      privateKey.destroy();</span>
+<span class="nc" id="L167">      privateKey = null;</span>
+<span class="fc" id="L168">    } catch (DestroyFailedException ex) {</span>
+<span class="fc" id="L169">      logger.debug(Error.IGNORED_ERROR, &quot;ex&quot;, ex);</span>
+<span class="nc" id="L170">    }</span>
+<span class="fc" id="L171">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

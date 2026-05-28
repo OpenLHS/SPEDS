@@ -1,0 +1,13 @@
+Le rôle de la *{page-component-title}* (`*{page-component-name}*`) est de fournir un journaliseur
+(_logger_) standardisé aux divers composants de PARS3. Cette bibliothèque a pour but de faciliter le
+suivi et la description, dans plus d’une langue, du comportement des bibliothèques et applications
+développées par le GRIIS. Son utilisation contribue à renforcer l’intégrité des systèmes, la
+présence de journaux d’évènements aidant à documenter toute utilisation inhabituelle des logiciels
+et facilitant le repérage d’éventuelles causes de dysfonctionnement.
+
+La bibliothèque permet d’effectuer les tâches suivantes{nbsp}:
+
+* offrir une interface de journalisation standardisée;
+* fournir les niveaux de journalisation habituelle;
+* utiliser, au lieu de contenus textuels libres, des codes d’états répartis selon les niveaux de
+gravité usuels (_activité_, _avertissement_, _débogage_, _erreur_ et _information_).

@@ -1,0 +1,149 @@
+{
+  "$id": "https://griis.ca/speds/json/schema/v7.0.0/pdu/ProtocolDataUnit-5-NET.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolDataUnit-5-NET (2025-11-28T10:00:00-0500)",
+  "$defs": {
+    "iri": {
+      "description": "A valid IR according to RFC 3987",
+      "type": "string",
+      "format": "iri"
+    },
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "bytestring": {
+      "description": "A base-64 encoded bytestring",
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "versioning": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)(\\.[0-9]+[a-z]*)$"
+    }
+  },
+  "description": "For the Network Layer of SPEDS (Layer 5) : a unit of data which is transferred from one end of a connection to the other with no loss of identity or meaning.",
+  "type": "object",
+  "properties": {
+    "header": {
+      "description": "The header of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "properties": {
+        "msgtype": {
+          "description": "The type of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "enum": [
+            "RES.MSG.ENV"
+          ]
+        },
+        "id": {
+          "description": "The identifier of a SPEDS message. Mandatory in all layers.",
+          "$ref": "#/$defs/uuid"
+        },
+        "source_iri": {
+          "description": "The source entity IRI (according to RFC3987).",
+          "$ref": "#/$defs/iri"
+        },
+        "destination_iri": {
+          "description": "The destination entity IRI (according to RFC3987).",
+          "$ref": "#/$defs/iri"
+        },
+        "authentification": {
+          "description": "The authentification method used",
+          "oneOf": [
+            {
+              "description": "A valid authentification certificate",
+              "$ref": "#/$defs/bytestring"
+            },
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "type": "string"
+                },
+                "parameters": {
+                  "type": "object",
+                  "minProperties": 1
+                }
+              },
+              "required": [
+                "method"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "parameters": {
+          "description": "The parameters of the Network layer.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        },
+        "version": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "description": "The version of the current layer.",
+              "$ref": "#/$defs/versioning"
+            },
+            "reference": {
+              "description": "The reference of the present version of the layer.",
+              "type": "string",
+              "format": "iri"
+            }
+          },
+          "required": [
+            "number",
+            "reference"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "msgtype",
+        "id",
+        "source_iri",
+        "destination_iri",
+        "authentification",
+        "parameters",
+        "version"
+      ]
+    },
+    "stamp": {
+      "type": "object",
+      "properties": {
+        "header_seal": {
+          "$ref": "#/$defs/bytestring"
+        },
+        "content_seal": {
+          "$ref": "#/$defs/bytestring"
+        }
+      },
+      "required": [
+        "header_seal",
+        "content_seal"
+      ],
+      "additionalProperties": false
+    },
+    "content": {
+      "description": "The content of a SPEDS message. Mandatory in all layers.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "header",
+    "stamp",
+    "content"
+  ],
+  "additionalProperties": false
+}

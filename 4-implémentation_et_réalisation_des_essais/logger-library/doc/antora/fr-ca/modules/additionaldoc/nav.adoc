@@ -1,0 +1,3 @@
+** Informations complémentaires
+*** Manuel utilisateur (optionnel)
+*** Documents PDF ou autres (optionnel)

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultCryptographyService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-toolkit-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.toolkit.crypto.internal</a> &gt; <span class="el_source">DefaultCryptographyService.java</span></div><h1>DefaultCryptographyService.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe DefaultCryptographyService.
+ * @brief @~english Contains description of DefaultCryptographyService class.
+ */
+
+package ca.griis.speds.toolkit.crypto.internal;
+
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.AlgorithmCategory;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SpedsLayer;
+import ca.griis.security.api.SecurityService;
+import ca.griis.security.api.domain.DigitalSignature;
+import ca.griis.security.api.domain.spec.cipher.asym.AsymCipherSpec;
+import ca.griis.security.api.domain.spec.cipher.symm.SymCipherSpec;
+import ca.griis.security.api.domain.spec.dh.KeyAgreementFnSpec;
+import ca.griis.security.api.domain.spec.generator.asym.AsymKeyPairGenSpec;
+import ca.griis.security.api.domain.spec.generator.symm.SymKeyGenSpec;
+import ca.griis.security.api.domain.spec.hash.HashFnSpec;
+import ca.griis.security.api.domain.spec.sign.SignatureFnSpec;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import ca.griis.speds.toolkit.crypto.api.exception.NoSuchAlgorithmException;
+import ca.griis.speds.toolkit.crypto.api.exception.NoSuchCategoryException;
+import ca.griis.speds.toolkit.crypto.internal.provider.CsprngSpecProvider;
+import ca.griis.speds.toolkit.crypto.internal.provider.SpecAlgoProvider;
+import ca.griis.speds.toolkit.crypto.internal.provider.SpecProvider;
+import ca.griis.speds.toolkit.crypto.internal.reader.CipherSuiteDtoReader;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.HashMap;
+import java.util.Map;
+import javax.crypto.SecretKey;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémente le service de primitives cryptographiques.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-11-25 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class DefaultCryptographyService implements CryptographyService {
+  private final SecurityService service;
+  private final CipherSuiteDtoReader reader;
+
+<span class="fc" id="L72">  public DefaultCryptographyService(SecurityService service, CipherSuiteDtoReader reader) {</span>
+<span class="fc" id="L73">    this.service = service;</span>
+<span class="fc" id="L74">    this.reader = reader;</span>
+<span class="fc" id="L75">  }</span>
+
+  @Override
+  public byte[] encryptSymmetric(SpedsLayer spedsLayer, SecretKey secretKey, byte[] data) {
+<span class="fc" id="L79">    var csprngSpec = new CsprngSpecProvider().getSpec();</span>
+<span class="fc" id="L80">    var spec = (SymCipherSpec) new SpecProvider(service, reader).getSpec(spedsLayer,</span>
+<span class="fc" id="L81">        AlgorithmCategory.SYMM, false).get();</span>
+<span class="fc" id="L82">    var result = service.symEncrypt(csprngSpec, spec, secretKey, data);</span>
+<span class="fc" id="L83">    return result;</span>
+  }
+
+  @Override
+  public byte[] decryptSymmetric(SpedsLayer spedsLayer, SecretKey secretKey, byte[] data) {
+<span class="fc" id="L88">    var csprngSpec = new CsprngSpecProvider().getSpec();</span>
+<span class="fc" id="L89">    var spec = (SymCipherSpec) new SpecProvider(service, reader).getSpec(spedsLayer,</span>
+<span class="fc" id="L90">        AlgorithmCategory.SYMM, false).get();</span>
+<span class="fc" id="L91">    var result = service.symDecrypt(csprngSpec, spec, secretKey, data);</span>
+<span class="fc" id="L92">    return result;</span>
+  }
+
+  @Override
+  public SecretKey generateSymmetricKey(SpedsLayer spedsLayer) {
+<span class="fc" id="L97">    var csprngSpec = new CsprngSpecProvider().getSpec();</span>
+<span class="fc" id="L98">    var spec = (SymKeyGenSpec) new SpecProvider(service, reader).getSpec(spedsLayer,</span>
+<span class="fc" id="L99">        AlgorithmCategory.SYMM, true).get();</span>
+<span class="fc" id="L100">    var result = service.generateSecretKey(csprngSpec, spec);</span>
+<span class="fc" id="L101">    return result;</span>
+  }
+
+  @Override
+  public byte[] encryptAsymmetric(SpedsLayer spedsLayer, PublicKey publicKey, byte[] data) {
+<span class="fc" id="L106">    var csprngSpec = new CsprngSpecProvider().getSpec();</span>
+<span class="fc" id="L107">    var spec = (AsymCipherSpec) new SpecProvider(service, reader).getSpec(spedsLayer,</span>
+<span class="fc" id="L108">        AlgorithmCategory.ASYM, false).get();</span>
+<span class="fc" id="L109">    var result = service.asymEncrypt(csprngSpec, spec, publicKey, data);</span>
+<span class="fc" id="L110">    return result;</span>
+  }
+
+  @Override
+  public byte[] decryptAsymmetric(SpedsLayer spedsLayer, PrivateKey privateKey, byte[] data) {
+<span class="fc" id="L115">    var csprngSpec = new CsprngSpecProvider().getSpec();</span>
+<span class="fc" id="L116">    var spec = (AsymCipherSpec) new SpecProvider(service, reader).getSpec(spedsLayer,</span>
+<span class="fc" id="L117">        AlgorithmCategory.ASYM, false).get();</span>
+<span class="fc" id="L118">    var result = service.asymDecrypt(csprngSpec, spec, privateKey, data);</span>
+<span class="fc" id="L119">    return result;</span>
+  }
+
+  @Override
+  public byte[] hash(SpedsLayer spedsLayer, byte[] data) {
+<span class="fc" id="L124">    var spec = (HashFnSpec) new SpecProvider(service, reader).getSpec(spedsLayer,</span>
+<span class="fc" id="L125">        AlgorithmCategory.HASH, false).get();</span>
+<span class="fc" id="L126">    var digest = service.generateDigest(spec, data);</span>
+<span class="fc" id="L127">    var result = digest.bytes();</span>
+<span class="fc" id="L128">    return result;</span>
+  }
+
+  @Override
+  public byte[] sign(SpedsLayer spedsLayer, PrivateKey privateKey, byte[] data) {
+<span class="fc" id="L133">    var csprngSpec = new CsprngSpecProvider().getSpec();</span>
+<span class="fc" id="L134">    var spec = (SignatureFnSpec) new SpecProvider(service, reader).getSpec(spedsLayer,</span>
+<span class="fc" id="L135">        AlgorithmCategory.SIGN, false).get();</span>
+<span class="fc" id="L136">    var signature = service.generateSignature(csprngSpec, spec, privateKey, data);</span>
+<span class="fc" id="L137">    var result = signature.bytes();</span>
+<span class="fc" id="L138">    return result;</span>
+  }
+
+  @Override
+  public Boolean checkSignatureValidity(SpedsLayer spedsLayer, byte[] digitalSignature,
+      PublicKey publicKey, byte[] data) {
+<span class="fc" id="L144">    var spec = (SignatureFnSpec) new SpecProvider(service, reader).getSpec(spedsLayer,</span>
+<span class="fc" id="L145">        AlgorithmCategory.SIGN, false).get();</span>
+<span class="fc" id="L146">    var signature = new DigitalSignature(digitalSignature);</span>
+<span class="fc" id="L147">    var result = service.verifySignature(spec, publicKey, data, signature);</span>
+<span class="fc" id="L148">    return result;</span>
+  }
+
+  @Override
+  public KeyPair chooseDiffieHellmanValue(SpedsLayer spedsLayer) {
+<span class="fc" id="L153">    var csprngSpec = new CsprngSpecProvider().getSpec();</span>
+<span class="fc" id="L154">    var spec = (AsymKeyPairGenSpec) new SpecProvider(service, reader).getSpec(spedsLayer,</span>
+<span class="fc" id="L155">        AlgorithmCategory.DH, true).get();</span>
+<span class="fc" id="L156">    var result = service.generateKeyPair(csprngSpec, spec);</span>
+<span class="fc" id="L157">    return result;</span>
+  }
+
+  @Override
+  public SecretKey getDiffieHellmanSecretKey(SpedsLayer spedsLayer, KeyPair choiceX,
+      PublicKey choiceY) {
+<span class="fc" id="L163">    var csprngSpec = new CsprngSpecProvider().getSpec();</span>
+<span class="fc" id="L164">    var spec = (KeyAgreementFnSpec) new SpecProvider(service, reader).getSpec(spedsLayer,</span>
+<span class="fc" id="L165">        AlgorithmCategory.DH, false).get();</span>
+<span class="fc" id="L166">    var result = service.generateSharedSecretKey(csprngSpec, spec, choiceX, choiceY);</span>
+<span class="fc" id="L167">    return result;</span>
+  }
+
+  @Override
+  public String getAlgorithm(SpedsLayer spedsLayer, AlgorithmCategory category) {
+<span class="fc" id="L172">    var provider = new SpecProvider(service, reader);</span>
+<span class="fc" id="L173">    var spec = provider.getSpec(spedsLayer, category, false);</span>
+
+<span class="fc bfc" id="L175" title="All 2 branches covered.">    if (spec.isEmpty()) {</span>
+<span class="fc" id="L176">      throw new NoSuchCategoryException(&quot;spedsLayer: &quot; + spedsLayer + &quot;, category: &quot; + category);</span>
+    }
+
+<span class="fc" id="L179">    var algo = spec.get().getAlgo();</span>
+<span class="fc" id="L180">    return algo;</span>
+  }
+
+  @Override
+  public Map&lt;String, String&gt; getAlgorithmParameters(SpedsLayer spedsLayer, String algorithm) {
+<span class="fc" id="L185">    final Map&lt;String, String&gt; params = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L186">    final var provider = new SpecAlgoProvider(new SpecProvider(service, reader));</span>
+<span class="fc" id="L187">    final var spec = provider.getSpec(spedsLayer, algorithm);</span>
+
+<span class="fc bfc" id="L189" title="All 2 branches covered.">    if (spec.isPresent()) {</span>
+<span class="fc" id="L190">      params.putAll(spec.get().getParameters());</span>
+    } else {
+<span class="fc" id="L192">      throw new NoSuchAlgorithmException(&quot;spedsLayer: &quot; + spedsLayer + &quot;, algorithm: &quot; + algorithm);</span>
+    }
+
+<span class="fc" id="L195">    return params;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

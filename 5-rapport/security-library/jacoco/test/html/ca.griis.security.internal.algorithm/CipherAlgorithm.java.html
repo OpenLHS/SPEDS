@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CipherAlgorithm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">security-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.security.internal.algorithm</a> &gt; <span class="el_source">CipherAlgorithm.java</span></div><h1>CipherAlgorithm.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de l'énumération CipherAlgorithm.
+ * @brief @~english Implements the CipherAlgorithm enumerated type.
+ */
+
+package ca.griis.security.internal.algorithm;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Énumère les algorithmes pris en charge par la JDK pour le
+ *        chiffrement/déchiffrement.
+ * @par Détails
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-12-17 [BD] - Implémentation initiale.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L44">public enum CipherAlgorithm {</span>
+  /** @~french algorithme de chiffrement RSA */
+  /** @~english RSA encryption algorithm */
+<span class="fc" id="L47">  RSA(&quot;RSA/ECB/OAEPWithSHA-256AndMGF1Padding&quot;),</span>
+  /** @~french algorithme de chiffrement AES avec le mode d'opération GCM */
+  /** @~english AES encryption algorithm with GCM mode of operation */
+<span class="fc" id="L50">  AESGCM(&quot;AES/GCM/NoPadding&quot;);</span>
+
+  private final String algorithm;
+
+<span class="fc" id="L54">  CipherAlgorithm(String algorithm) {</span>
+<span class="fc" id="L55">    this.algorithm = algorithm;</span>
+<span class="fc" id="L56">  }</span>
+
+  /**
+   * @brief @~english «Description of the method»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère l'algorithme correspondant au type énuméré dans le format standard
+   *        pris en charge par la JDK 8.
+   * @return une chaine de caractères qui contient un nom d'algorithme
+   */
+  public String getAlgorithm() {
+<span class="fc" id="L67">    return algorithm;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

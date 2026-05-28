@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultInterfaceChecker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-application-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.application.internal.verification</a> &gt; <span class="el_source">DefaultInterfaceChecker.java</span></div><h1>DefaultInterfaceChecker.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe DefaultInterfaceChecker.
+ * @brief @~english DefaultInterfaceChecker class implementation.
+ */
+
+package ca.griis.speds.application.internal.verification;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Info;
+import ca.griis.speds.application.serializer.SharedObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Permet de vérifier le format du contenu d'une interface reçue par l'utilisateur
+ *        de la couche application.
+ * @par Détails
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-03-05 [CB] - Implémentation initiale&lt;br&gt;
+ *
+ * @note 2026-04-23 [FO] - Actuellement, la vérification ne fait que vérifier si le contenu est dans
+ *       un format JSON.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L56">public final class DefaultInterfaceChecker implements InterfaceChecker {</span>
+<span class="fc" id="L57">  private static final GriisLogger logger = getLogger(DefaultInterfaceChecker.class);</span>
+
+  @Override
+  public boolean test(String s) {
+<span class="fc" id="L61">    final ObjectMapper objectMapper = SharedObjectMapper.getInstance().getMapper();</span>
+
+<span class="fc" id="L63">    Boolean predicate = false;</span>
+    try {
+<span class="fc" id="L65">      objectMapper.readTree(s);</span>
+<span class="fc" id="L66">      predicate = true;</span>
+<span class="nc" id="L67">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L68">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L69">    }</span>
+
+<span class="fc" id="L71">    logger.info(Info.VARIABLE_LOGGING_1, &quot;predicate&quot;, predicate);</span>
+
+<span class="fc" id="L73">    return predicate;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

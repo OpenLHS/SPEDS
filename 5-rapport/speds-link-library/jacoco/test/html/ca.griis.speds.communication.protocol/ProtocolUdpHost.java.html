@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProtocolUdpHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.communication.protocol</a> &gt; <span class="el_source">ProtocolUdpHost.java</span></div><h1>ProtocolUdpHost.java</h1><pre class="source lang-java linenums">
+package ca.griis.speds.communication.protocol;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.communication.protocol.unit.ProtocolIdu;
+import ca.griis.speds.communication.protocol.unit.ProtocolPdu;
+import ca.griis.speds.link.api.exception.ProtocolException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
+import reactor.core.publisher.Mono;
+import reactor.netty.ByteBufFlux;
+
+final class ProtocolUdpHost implements ProtocolHost {
+<span class="fc" id="L19">  private static final GriisLogger logger = getLogger(ProtocolUdpHost.class);</span>
+
+  private final reactor.netty.udp.UdpClient client;
+  private final reactor.netty.udp.UdpServer server;
+  private final reactor.netty.Connection disposableServer;
+  private final ObjectMapper objectMapper;
+  private final ProtocolHostEvent hostEvent;
+
+  ProtocolUdpHost(ObjectMapper objectMapper, String address, Integer port,
+<span class="fc" id="L28">      ProtocolHostEvent hostEvent) {</span>
+<span class="fc" id="L29">    this.client = reactor.netty.udp.UdpClient.create();</span>
+<span class="fc" id="L30">    this.server = reactor.netty.udp.UdpServer.create();</span>
+<span class="fc" id="L31">    this.disposableServer = server</span>
+<span class="fc" id="L32">        .host(address)</span>
+<span class="fc" id="L33">        .port(port)</span>
+<span class="fc" id="L34">        .handle(</span>
+<span class="fc" id="L35">            (request, response) -&gt; request.receive().asString().doOnNext(this::notifyContent)</span>
+<span class="fc" id="L36">                .then())</span>
+<span class="fc" id="L37">        .bindNow();</span>
+
+<span class="fc" id="L39">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L40">    this.hostEvent = hostEvent;</span>
+<span class="fc" id="L41">  }</span>
+
+  @Override
+  public void close() {
+<span class="fc" id="L45">    disposableServer.disposeNow();</span>
+<span class="fc" id="L46">  }</span>
+
+  @Override
+  public void send(ProtocolIdu idu) {
+<span class="fc" id="L50">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L52">    ProtocolPdu pdu = new ProtocolPdu(idu.destinationUri(), idu.sdu());</span>
+    String content;
+    try {
+<span class="fc" id="L55">      content = objectMapper.writeValueAsString(pdu);</span>
+<span class="fc" id="L56">    } catch (JsonProcessingException e) {</span>
+<span class="fc" id="L57">      throw new ProtocolException(&quot;Json processing error&quot;, e);</span>
+<span class="fc" id="L58">    }</span>
+
+<span class="fc" id="L60">    URI uri = URI.create(idu.destinationUri());</span>
+<span class="fc" id="L61">    client</span>
+<span class="fc" id="L62">        .host(uri.getHost())</span>
+<span class="fc" id="L63">        .port(uri.getPort())</span>
+<span class="fc" id="L64">        .handle(</span>
+<span class="fc" id="L65">            (inbound, outbound) -&gt; outbound.send(ByteBufFlux.fromString(Mono.just(content))).then())</span>
+<span class="fc" id="L66">        .connect()</span>
+<span class="pc" id="L67">        .doOnError(e -&gt; logger.error(Error.IGNORED_ERROR, e))</span>
+<span class="fc" id="L68">        .subscribe();</span>
+<span class="fc" id="L69">  }</span>
+
+  protected void notifyContent(String content) {
+<span class="fc" id="L72">    logger.trace(Trace.ENTER_METHOD_1, &quot;content&quot;, content);</span>
+
+    ProtocolPdu pdu;
+    try {
+<span class="fc" id="L76">      pdu = objectMapper.readValue(content, ProtocolPdu.class);</span>
+<span class="fc" id="L77">      ProtocolIdu idu = new ProtocolIdu(pdu.remoteAddr(), pdu.sdu());</span>
+<span class="fc" id="L78">      hostEvent.notifyIdu(idu);</span>
+<span class="nc" id="L79">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L80">      throw new RuntimeException(e);</span>
+<span class="fc" id="L81">    }</span>
+<span class="fc" id="L82">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

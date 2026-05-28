@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonHttpClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-toolkit-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.common.service</a> &gt; <span class="el_source">CommonHttpClient.java</span></div><h1>CommonHttpClient.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe CommonHttpClient.
+ * @brief @~english Contains description of CommonHttpClient class.
+ */
+
+package ca.griis.speds.common.service;
+
+import ca.griis.speds.common.entity.api.exception.EntityServiceException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Builder;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Définit un service client pour dialoguer avec un serveur http(s) version 1.1
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-04-08 [SSC] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class CommonHttpClient {
+
+  private HttpClient httpClient;
+
+<span class="fc" id="L61">  public CommonHttpClient(SecurityCertificateVerification checkCertificate) {</span>
+<span class="fc" id="L62">    Builder client = HttpClient.newBuilder();</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">    if (checkCertificate.equals(SecurityCertificateVerification.insecure)) {</span>
+<span class="fc" id="L64">      System.getProperties().setProperty(&quot;jdk.internal.httpclient.disableHostnameVerification&quot;,</span>
+<span class="fc" id="L65">          Boolean.TRUE.toString());</span>
+      try {
+<span class="fc" id="L67">        SSLContext sslContext = SSLContext.getInstance(&quot;TLSv1.2&quot;);</span>
+<span class="fc" id="L68">        TrustManager[] trustAllCerts = new TrustManager[] {new TrustAllCertificates()};</span>
+<span class="fc" id="L69">        sslContext.init(null, trustAllCerts, new SecureRandom());</span>
+<span class="fc" id="L70">        client.sslContext(sslContext);</span>
+<span class="fc" id="L71">      } catch (NoSuchAlgorithmException | KeyManagementException e) {</span>
+<span class="fc" id="L72">        throw new EntityServiceException(e);</span>
+<span class="fc" id="L73">      }</span>
+    }
+<span class="fc" id="L75">    this.httpClient = client.build();</span>
+<span class="fc" id="L76">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Obtenir une information
+   * @param uri l'uri de l'information
+   * @exception IOException une exception entrée/sortie
+   * @exception InterruptedException une exception d'interruption
+   * @return String - l'information
+   */
+  public HttpResponse&lt;String&gt; get(URI uri) throws IOException, InterruptedException {
+<span class="fc" id="L91">    HttpRequest request = HttpRequest.newBuilder().GET().uri(uri).build();</span>
+
+<span class="fc" id="L93">    HttpResponse&lt;String&gt; response = this.httpClient.send(request, BodyHandlers.ofString());</span>
+<span class="fc" id="L94">    return response;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

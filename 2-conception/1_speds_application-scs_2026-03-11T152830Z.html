@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Document de conception pour SPEDS Application">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Conception du module « SPEDS - application »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Conception du module « <em>SPEDS - application</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_rôle_du_module">1. Rôle du module</a></li>
+<li><a href="#_modèle_propre_au_module">2. Modèle propre au module</a></li>
+<li><a href="#_type_au_module">3. Type au module</a>
+<ul class="sectlevel2">
+<li><a href="#_type_simple_de_données">3.1. Type simple de données</a></li>
+<li><a href="#_type_complexe_de_données">3.2. Type complexe de données</a></li>
+<li><a href="#_type_de_message">3.3. Type de message</a></li>
+</ul>
+</li>
+<li><a href="#_hypothèse_du_module">4. Hypothèse du module</a></li>
+<li><a href="#_contrainte_du_module">5. Contrainte du module</a></li>
+<li><a href="#_processus_du_module">6. Processus du module</a>
+<ul class="sectlevel2">
+<li><a href="#PRO-01">6.1. [PRO-01] Processus « Demande d&#8217;une délégation d&#8217;un message »</a></li>
+<li><a href="#PRO-02">6.2. [PRO-02] Processus « Confirmation d&#8217;une délégation »</a></li>
+<li><a href="#PRO-03">6.3. [PRO-03] Processus « Indication de réception d’un message »</a></li>
+<li><a href="#PRO-04">6.4. [PRO-04] Processus « Réponse de réception d’un message »</a></li>
+</ul>
+</li>
+<li><a href="#_incongruités">7. Incongruités</a></li>
+<li><a href="#_matrice_de_spécification">8. Matrice de spécification</a></li>
+<li><a href="#_matrice_de_dépendances">9. Matrice de dépendances</a></li>
+<li><a href="#_annexes">10. Annexes</a>
+<ul class="sectlevel2">
+<li><a href="#_glossaire">10.1. Glossaire</a></li>
+<li><a href="#_schéma_json">10.2. Schéma JSON</a></li>
+<li><a href="#_exemple_de_fonction_de_vérification_de_contenu_de_apdu">10.3. Exemple de fonction de vérification de contenu de <code>APDU</code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-26 15:08</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du spécificateur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-26 15:13</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur des tests réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-26 15:20</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Historique</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Changement important</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception initiale</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-13</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 1<br>
+  SPEDS v6.3.0</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-14</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 2<br>
+  SPEDS v7.0.0</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-16</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 3<br>
+  SPEDS v7.1.1</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-26</p></td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary class="title">Référence</summary>
+<div class="content">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Référence</caption>
+<colgroup>
+<col>
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Version consultée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1_speds_application-srs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-21</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-1_2.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">v7.1.1 (2026-01-20)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProtocolDataUnit-1-APP.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">v7.1.1 (2026-01-21)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</details>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rôle_du_module">1. Rôle du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le module « <em>SPEDS - application</em> »  est d&#8217;offrir une couche de services de protocole pour échanger des messages applicatifs via des services et applications.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_modèle_propre_au_module">2. Modèle propre au module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le module doit assurer :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Un mécanisme qui permet de traiter les signaux de confirmation (primitive de message <code>confirm</code>) et de réponse (primitive de message <code>response</code>)
+afin de déclencher les signaux associés.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Ceci peut être implémenté par n&#8217;importe quelle technologie y compris par un mécanisme de fonctions et de retour de fonctions.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Un mécanisme qui permet de vérifier le contenu d&#8217;un <code>APDU</code> à partir du type du message et avec l&#8217;aide de fonctions préinitialisées au démarrage du module.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Ceci peut être implémenté par un mécanisme de fonctions préinitialisées au module (voir annexe pour un exemple).
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_type_au_module">3. Type au module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_type_simple_de_données">3.1. Type simple de données</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Type simple de donnée</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>service</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères respectant l&#8217;énumération <code>service</code> défini dans <code>AIDU</code> et pouvant contenir les valeurs suivantes : <code>DELEGATE</code> et <code>TRANSFER</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nom d&#8217;un service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>primitive</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères respectant l&#8217;énumération <code>service_primitive</code> défini dans <code>AIDU</code> et pouvant contenir les valeurs suivantes : <code>REQUEST</code>, <code>INDICATION</code>, <code>RESPONSE</code> et <code>CONFIRM</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nom d&#8217;une primitive de service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sourceCode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères respectant le format de <code>source_code</code> défini dans <code>AIDU</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code de l&#8217;entité agissant comme source</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>destinationCode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères respectant le format de <code>destination_code</code> défini dans <code>AIDU</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code de l&#8217;entité agissant comme destination.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>projectId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères respectant le format de <code>PGA</code> défini dans <code>AIDU</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifiant de projet.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>msgId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères respectant le format de <code>id</code> défini dans <code>APDU</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Numéro d’identification du message.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>msgType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères respectant l&#8217;énumération <code>msgtype</code> définie dans <code>APDU</code> et pouvant contenir les valeurs suivantes : <code>PLAN</code> et <code>ADMINISTRATION</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type du message applicatif.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chaîne de caractères respectant le format JSON.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contenu d&#8217;un message applicatif.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_type_complexe_de_données">3.2. Type complexe de données</h3>
+<div class="sect3">
+<h4 id="_application_interface">3.2.1. Application Interface</h4>
+<div class="paragraph">
+<p>Interface entre l&#8217;utilisateur de la couche application et la couche application.</p>
+</div>
+<div class="paragraph">
+<p>Un type représentant la sommation des types suivants : <code>service</code>, <code>primitive</code>, <code>sourceCode</code>, <code>destinationCode</code>, <code>projectId</code>, <code>msgId</code>, <code>msgType</code> et <code>content</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_format_dentête_ent_a">3.2.2. Format d’entête (<code>Ent_A</code>)</h4>
+<div class="paragraph">
+<p>Un type décrivant un format d&#8217;entête.</p>
+</div>
+<div class="paragraph">
+<p>Ce type est attendu être équivalent à la propriété <code>{header}</code> appartenant au schéma JSON du PDU</p>
+</div>
+<div class="paragraph">
+<p>(cf. annexe <a href="#APDU">Schéma JSON du message de la couche application.</a>).</p>
+</div>
+<div class="paragraph">
+<p>Le PCI est l&#8217;équivalent de <code>Ent_A</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_message_du_protocole_de_la_couche_application_apdu">3.2.3. Message du protocole de la couche application (<code>APDU</code>)</h4>
+<div class="paragraph">
+<p>Un type décrivant un format de message.
+Ce type est attendu être équivalent au schéma JSON du même objet</p>
+</div>
+<div class="paragraph">
+<p>(cf. annexe <a href="#APDU">Schéma JSON du message de la couche application.</a>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interface_de_lunité_de_données_du_service_de_la_couche_application_aidu">3.2.4. Interface de l&#8217;unité de données du service de la couche application (<code>AIDU</code>)</h4>
+<div class="paragraph">
+<p>Unité d’information transférée en une seule interaction à l’interface de 2 couches, constituée d’information de contrôle d’interface (ICI(N)) et d&#8217;unité de service de données (SDU(N)).</p>
+</div>
+<div class="paragraph">
+<p>(cf. annexe <a href="#AIDU">Schéma JSON du format d&#8217;interface d&#8217;unité de données entre la couche application et présentation.</a>).</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_type_de_message">3.3. Type de message</h3>
+<div class="ulist horizontal">
+<ul class="horizontal">
+<li>
+<p><code>PLAN</code></p>
+</li>
+<li>
+<p><code>ADMINISTRATION</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèse_du_module">4. Hypothèse du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[HYP-001]
+</td>
+<td class="hdlist2">
+<p>La version et la référence du protocole sont connues à l&#8217;initialisation du module.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[HYP-002]
+</td>
+<td class="hdlist2">
+<p>Pour chaque type de message <code>APDU</code>, une liste de schémas de JSON y est associée.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contrainte_du_module">5. Contrainte du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[CON-001]
+</td>
+<td class="hdlist2">
+<p>La couche application (incluant les états de celle-ci et les structures) doit gérer la concurrence.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-002]
+</td>
+<td class="hdlist2">
+<p>La couche application utilise <code>speds-toolkit-library</code> pour vérifier si un plan est en cours.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_processus_du_module">6. Processus du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<div class="title">Processus pour une hôte source</div>
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-01]
+</td>
+<td class="hdlist2">
+<p>Demande d&#8217;une délégation d&#8217;un message.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-02]
+</td>
+<td class="hdlist2">
+<p>Confirmation d&#8217;une délégation.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<div class="title">Processus pour un hôte destinataire</div>
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-03]
+</td>
+<td class="hdlist2">
+<p>Indication de réception d’un message.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-04]
+</td>
+<td class="hdlist2">
+<p>Réponse de réception d’un message.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="PRO-01">6.1. [PRO-01] Processus « Demande d&#8217;une délégation d&#8217;un message »</h3>
+<div class="sect3">
+<h4 id="_interface">6.1.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Déclencheur</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Interface reçue de l&#8217;utilisateur de la couche.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>le service est <code>delegate</code></p>
+</li>
+<li>
+<p>la primitive est <code>request</code></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Flux d&#8217;entrée</div>
+<ul>
+<li>
+<p>une requête de délégation de l&#8217;utilisateur de la couche - <code>applicationInterface</code></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Flux de sorties</div>
+<ul>
+<li>
+<p>une requête de transfert à la couche inférieure - <code>AIDU</code>.</p>
+</li>
+<li>
+<p>une confirmation de délégation à la couche supérieure - <code>applicationInterface</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement">6.1.2. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-01.1]
+</td>
+<td class="hdlist2">
+<p>Vérification de l&#8217;interface</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Si la vérification du contenu ne s&#8217;est pas fait avec succès alors le contenu de confirmation de l&#8217;interface est <code>FAILED: syntax</code>.</p>
+</li>
+<li>
+<p>Si le plan n&#8217;est pas en cours alors le contenu de confirmation de l&#8217;interface est <code>FAILED: ended plan</code>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-01.2]
+</td>
+<td class="hdlist2">
+<p>Construction de l' <code>AIDU</code> si la vérification de l&#8217;interface a été fait avec succès</p>
+<div class="ulist">
+<ul>
+<li>
+<p>La ICI est construite avec</p>
+<div class="ulist">
+<ul>
+<li>
+<p>l&#8217;identifiant de projet est celui indiqué de <code>applicationInterface</code> reçue en entrée;</p>
+</li>
+<li>
+<p>le code source est celui indiqué de <code>applicationInterface</code> reçue en entrée;</p>
+</li>
+<li>
+<p>le code de destination est celui indiqué de <code>applicationInterface</code> reçue en entrée;</p>
+</li>
+<li>
+<p><code>delegate</code> comme service;</p>
+</li>
+<li>
+<p><code>request</code> comme primitive;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>La <code>APDU</code> est construite avec</p>
+<div class="ulist">
+<ul>
+<li>
+<p>l&#8217;entête suivante:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>le type de message est celui indiqué de <code>applicationInterface</code> reçue en entrée;</p>
+</li>
+<li>
+<p>l&#8217;identifiant message est celui indiqué de <code>applicationInterface</code> reçue en entrée;</p>
+</li>
+<li>
+<p>la version avec les informations définies à [HYP-001].</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>le contenu de <code>applicationInterface</code> reçue en entrée pour contenu.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-01.3]
+</td>
+<td class="hdlist2">
+<p>Traitement avec la couche inférieure si un <code>AIDU</code> a été construit</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Transmission de l' <code>AIDU</code> à la couche inférieure</p>
+</li>
+<li>
+<p>Attente du signal du message de confirmation correspondant à cet <code>AIDU</code>.</p>
+</li>
+<li>
+<p>Le contenu de confirmation de l&#8217;interface est le contenu du message de confirmation reçue.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.4]
+</td>
+<td class="hdlist2">
+<p>Transmission de la confirmation de délégation à la couche supérieure.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>La <code>applicationInterface</code> est construite avec</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>delegate</code> comme service,</p>
+</li>
+<li>
+<p><code>confirm</code> comme primitive,</p>
+</li>
+<li>
+<p>le code source est celui indiqué de l&#8217;interface reçue en entrée,</p>
+</li>
+<li>
+<p>le code de destination est celui indiqué de l&#8217;interface reçue en entrée,</p>
+</li>
+<li>
+<p>l&#8217;identifiant de projet est celui indiqué de l&#8217;interface reçue en entrée,</p>
+</li>
+<li>
+<p>l&#8217;identifiant de message est celui indiqué de l&#8217;interface reçue en entrée,</p>
+</li>
+<li>
+<p>le type de message est celui indiqué de l&#8217;interface reçue en entrée,</p>
+</li>
+<li>
+<p>la contenu de confirmation de l&#8217;interface comme contenu.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_erreur">6.1.3. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="PRO-02">6.2. [PRO-02] Processus « Confirmation d&#8217;une délégation »</h3>
+<div class="sect3">
+<h4 id="_interface_2">6.2.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Déclencheur</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Message reçu de la couche inférieure.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>le service est <code>delegate</code></p>
+</li>
+<li>
+<p>la primitive est <code>confirm</code></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Flux d&#8217;entrée</div>
+<ul>
+<li>
+<p>une confirmation de délégation provenant la couche inférieure - <code>AIDU</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Flux de sorties</div>
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_2">6.2.2. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-02.1]
+</td>
+<td class="hdlist2">
+<p>Signaler la confirmation</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Si la confirmation correspond à une demande <code>delegate.request</code> transmise et non confirmée, signaler le message de confirmation;</p>
+</li>
+<li>
+<p>sinon ignorer la confirmation.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_erreurs_spécifiques">6.2.3. Erreurs spécifiques</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_erreur_2">6.2.4. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="PRO-03">6.3. [PRO-03] Processus « Indication de réception d’un message »</h3>
+<div class="sect3">
+<h4 id="_interface_3">6.3.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Déclencheur</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Message reçu de la couche inférieure</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code></p>
+</li>
+<li>
+<p>la primitive est <code>indication</code></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Flux d&#8217;entrée</div>
+<ul>
+<li>
+<p>Une indication d’un message reçu par la couche inférieure - <code>AIDU</code></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Flux de sorties</div>
+<ul>
+<li>
+<p>une indication d’un message reçu à la couche supérieure - <code>applicationInterface</code></p>
+</li>
+<li>
+<p>une réponse vers la couche inférieure - <code>AIDU</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_3">6.3.2. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-03.1]
+</td>
+<td class="hdlist2">
+<p>Vérification de l' <code>AIDU</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Si la vérification du contenu ne s&#8217;est pas fait avec succès alors la réponse est <code>FAILED: syntax</code>.</p>
+</li>
+<li>
+<p>Si le plan n&#8217;est pas en cours alors la réponse est <code>FAILED: ended plan</code>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.2]
+</td>
+<td class="hdlist2">
+<p>Transmettre l&#8217;interface à la couche supérieure si la vérification a été fait avec succès</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Transmettre à la couche supérieure</p>
+<div class="ulist">
+<ul>
+<li>
+<p>L&#8217;interface <code>applicationInterface</code> avec</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>transfer</code> comme service,</p>
+</li>
+<li>
+<p><code>indication</code> comme primitive,</p>
+</li>
+<li>
+<p>le code source est celui indiqué de l' <code>AIDU</code> reçue en entrée,</p>
+</li>
+<li>
+<p>le code de destination est celui indiqué de l' <code>AIDU</code> reçue en entrée,</p>
+</li>
+<li>
+<p>l&#8217;identifiant de projet est celui indiqué de l' <code>AIDU</code> reçue en entrée,</p>
+</li>
+<li>
+<p>l&#8217;identifiant de message est celui indiqué de l' <code>AIDU</code> reçue en entrée,</p>
+</li>
+<li>
+<p>le type de message est celui indiqué de l' <code>AIDU</code> reçue en entrée,</p>
+</li>
+<li>
+<p>le contenu de l&#8217;indication comme contenu.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Attente du signal de réponse correspondant à cette interface, et conserver la réponse.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.3]
+</td>
+<td class="hdlist2">
+<p>Transmettre la réponse obtenue à la couche inférieure</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>transfer</code> comme service;</p>
+</li>
+<li>
+<p><code>response</code> comme primitive;</p>
+</li>
+<li>
+<p>un numéro de suivi dans les options qui est identique au numéro de suivi de l' <code>AIDU</code> reçue en entrée.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_erreur_3">6.3.3. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="PRO-04">6.4. [PRO-04] Processus « Réponse de réception d’un message »</h3>
+<div class="sect3">
+<h4 id="_interface_4">6.4.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Déclencheur</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Interface reçue de l&#8217;utilisateur de la couche.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>le service est <code>transfer</code></p>
+</li>
+<li>
+<p>la primitive est <code>response</code></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Flux d&#8217;entrée</div>
+<ul>
+<li>
+<p>une réponse de la couche supérieure (IDU) - <code>applicationInterface</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Flux de sorties</div>
+<p>S.O</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_4">6.4.2. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-4.1]
+</td>
+<td class="hdlist2">
+<p>Signaler la réponse</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Si la <em>réponse</em> correspond à une demande <code>transfer.indication</code> transmise et non répondue, signaler la réponse;</p>
+</li>
+<li>
+<p>sinon ignorer la <em>réponse</em>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_erreur_4">6.4.3. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">7. Incongruités</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>[INC-01] La spécification et le <a href="#APDU">Schéma JSON du message de la couche application.</a> définissent un type de message différent. La conception respecte le type de message défini par le <a href="#APDU">Schéma JSON du message de la couche application.</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_matrice_de_spécification">8. Matrice de spécification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_matrice_de_dépendances">9. Matrice de dépendances</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annexes">10. Annexes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_glossaire">10.1. Glossaire</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+Source
+</td>
+<td class="hdlist2">
+<p>L&#8217;entité qui initie l&#8217;envoi de données.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Destination
+</td>
+<td class="hdlist2">
+<p>L&#8217;entité qui reçoit les données.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Couche inférieure
+</td>
+<td class="hdlist2">
+<p>La couche de communication qui offre des services utilisés par la couche application.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+SDU
+</td>
+<td class="hdlist2">
+<p>Unité de données du service.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+ICI
+</td>
+<td class="hdlist2">
+<p>Information de contrôle de l&#8217;interface.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+PDU
+</td>
+<td class="hdlist2">
+<p>Unité de données de protocole.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_schéma_json">10.2. Schéma JSON</h3>
+<details id="AIDU">
+<summary class="title">Schéma JSON du format d&#8217;interface d&#8217;unité de données entre la couche application et présentation.</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>{
+  "$id": "https://schema.openlhs.info/speds/json/v7.1.1/idu/InterfaceDataUnit-1_2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InterfaceDataUnit-1_2 (2026-01-20T10:20:00-0500)",
+  "description": "An agreed way of communication among SPEDS layers Application (1) and Presentation (2).",
+  "type": "object",
+  "properties": {
+    "context": {
+      "description": "The context shared between these two SPEDS layers. This is the ICI (Interface Control Information), i.e. an information passed across an interface to coordinate interactions between two adjacent layers.",
+      "type": "object",
+      "properties": {
+        "PGA": {
+          "description": "The PGA identifier (a Lodad GUID).",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "source_code": {
+          "description": "The source entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "destination_code": {
+          "description": "The destination entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "service" : {
+          "description": "The service call from the initiating layer",
+          "type": "string",
+          "enum": ["delegate","transfer"]
+        },
+        "service_primitive": {
+          "description": "The service primitive used to communicate among the layers.",
+          "type": "string",
+          "enum": ["request","confirm","response","indication"]
+        },
+        "options": {
+          "description": "The options shared between the layers.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "PGA",
+        "source_code",
+        "destination_code",
+        "service",
+        "service_primitive",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "message": {
+      "description": "The message shared between these two SPEDS layers. This is the APDU : the PDU (Protocol Data Unit) of the Application layer (1).",
+      "type": "string"
+    }
+  },
+  "required": [
+    "context",
+    "message"
+  ],
+  "additionalProperties": false
+}</pre>
+</div>
+</div>
+</div>
+</details>
+<details id="APDU">
+<summary class="title">Schéma JSON du message de la couche application.</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>{
+  "$id": "https://schema.openlhs.info/speds/json/v7.1.1/pdu/ProtocolDataUnit-1-APP.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolDataUnit-1-APP (2026-01-21T15:00:00-0500)",
+  "$defs": {
+    "iri": {
+      "description": "A valid IR according to RFC 3987",
+      "type": "string",
+      "format": "iri"
+    },
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "versioning": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)(\\.[0-9]+[a-z]*)$"
+    }
+  },
+  "description": "For the Application Layer of SPEDS (Layer 1) : a unit of data which is transferred from one end of a connection to the other with no loss of identity or meaning.",
+  "type": "object",
+  "examples": [
+    {
+      "header": {
+        "msgtype": "PLAN",
+        "id": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+        "parameters": false,
+        "SPEDS": {
+          "version": "6.1.0",
+          "reference": "https://schema.openlhs.info/speds/json/v6.1.0/"
+        }
+      },
+      "content": {
+        "action": "INSTRUCTION.REQUEST",
+        "task_ref": "550e8400-e29b-41d4-a716-446655440000",
+        "task_def": "aa30bc32-6d3f-4e0d-a6d7-29659bf37fe4",
+        "inArgs": [
+          {
+            "Name": "validNumber",
+            "Value": "(Value (Number (Token \"1\")))"
+          }
+        ],
+        "params": [],
+        "command": "START"
+      }
+    },
+    {
+      "header": {
+        "msgtype": "PLAN",
+        "id": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+        "parameters": false,
+        "SPEDS": {
+          "version": "7.1.0",
+          "reference": "https://schema.openlhs.info/speds/json/v7.1.1/"
+        }
+      },
+      "content": {
+        "action": "INSTRUCTION.REQUEST",
+        "task_ref": "550e8400-e29b-41d4-a716-446655440000",
+        "task_def": "aa30bc32-6d3f-4e0d-a6d7-29659bf37fe4",
+        "inArgs": [
+          {
+            "Name": "validNumber",
+            "Value": "(Value (Number (Token \"1\")))"
+          }
+        ],
+        "params": [],
+        "command": "START"
+      }
+    }
+  ],
+  "properties": {
+    "header": {
+      "description": "The header of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "properties": {
+        "msgtype": {
+          "description": "The type of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "enum": [
+            "PLAN",
+            "ADMINISTRATION"
+          ]
+        },
+        "id": {
+          "description": "The identifier of a SPEDS message. Mandatory in all layers.",
+          "$ref": "#/$defs/uuid"
+        },
+        "parameters": {
+          "description": "The parameters of the Application layer.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        },
+        "version": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "description": "The version of the current layer.",
+              "$ref": "#/$defs/versioning"
+            },
+            "reference": {
+              "description": "The reference of the present version of the layer.",
+              "type": "string",
+              "format": "iri"
+            }
+          },
+          "required": [
+            "number",
+            "reference"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "msgtype",
+        "id",
+        "parameters",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "content": {
+      "description": "The content of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "minProperties": 1
+    }
+  },
+  "required": [
+    "header",
+    "content"
+  ],
+  "additionalProperties": false
+}</pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+<div class="sect2">
+<h3 id="_exemple_de_fonction_de_vérification_de_contenu_de_apdu">10.3. Exemple de fonction de vérification de contenu de <code>APDU</code></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Chaque type de message a un schéma JSON regroupe plusieurs schémas.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Celui-ci utilise <code>oneOf</code> pour que la désérialisation soit possible si un des schémas est respecté.</p>
+</li>
+<li>
+<p>Celui-ci est initialisé au module.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>La fonction vérifie que la désérialisation réussie à partir d&#8217;un type de message et un contenu de message.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:44:51 -0400
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>

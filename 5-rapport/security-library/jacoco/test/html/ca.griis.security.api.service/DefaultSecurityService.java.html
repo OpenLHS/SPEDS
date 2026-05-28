@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultSecurityService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">security-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.security.api.service</a> &gt; <span class="el_source">DefaultSecurityService.java</span></div><h1>DefaultSecurityService.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe DefaultSecurityService.
+ * @brief @~english Implementation of the class DefaultSecurityService.
+ */
+
+package ca.griis.security.api.service;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.security.api.SecurityService;
+import ca.griis.security.api.domain.Digest;
+import ca.griis.security.api.domain.DigitalSignature;
+import ca.griis.security.api.domain.SecurityProfile;
+import ca.griis.security.api.domain.spec.SecuritySpec;
+import ca.griis.security.api.domain.spec.certificate.CertificateVerifSpec;
+import ca.griis.security.api.domain.spec.certificate.Hostname;
+import ca.griis.security.api.domain.spec.certificate.IntermediateCertificates;
+import ca.griis.security.api.domain.spec.certificate.RootCertificates;
+import ca.griis.security.api.domain.spec.certificate.usage.CertificateKeyUsages;
+import ca.griis.security.api.domain.spec.cipher.asym.AsymCipherSpec;
+import ca.griis.security.api.domain.spec.cipher.asym.RsaCipherSpec;
+import ca.griis.security.api.domain.spec.cipher.symm.SymCipherSpec;
+import ca.griis.security.api.domain.spec.csprng.CsprngSpec;
+import ca.griis.security.api.domain.spec.dh.KeyAgreementFnSpec;
+import ca.griis.security.api.domain.spec.generator.asym.AsymKeyPairGenSpec;
+import ca.griis.security.api.domain.spec.generator.asym.RsaKeyPairGenSpec;
+import ca.griis.security.api.domain.spec.generator.symm.SymKeyGenSpec;
+import ca.griis.security.api.domain.spec.hash.HashFnSpec;
+import ca.griis.security.api.domain.spec.sign.RsaSignatureFnSpec;
+import ca.griis.security.api.domain.spec.sign.SignatureFnSpec;
+import ca.griis.security.internal.algorithm.CipherAlgorithm;
+import ca.griis.security.internal.algorithm.KeyAgreementAlgorithm;
+import ca.griis.security.internal.algorithm.MessageDigestAlgorithm;
+import ca.griis.security.internal.algorithm.SecretKeyGeneratorAlgorithm;
+import ca.griis.security.internal.algorithm.SignatureAlgorithm;
+import ca.griis.security.internal.asymmetric.encryption.RsaDecryptor;
+import ca.griis.security.internal.asymmetric.encryption.RsaEncryptor;
+import ca.griis.security.internal.asymmetric.generator.AsymKeysGenerator;
+import ca.griis.security.internal.asymmetric.generator.Ed25519KeysGenerator;
+import ca.griis.security.internal.asymmetric.generator.RsaKeysGenerator;
+import ca.griis.security.internal.asymmetric.generator.X25519KeysGenerator;
+import ca.griis.security.internal.certificate.verification.CertificateExtensionsVerification;
+import ca.griis.security.internal.certificate.verification.ChainCertificationVerification;
+import ca.griis.security.internal.certificate.verification.SignatureVerification;
+import ca.griis.security.internal.certificate.verification.TemporalVerification;
+import ca.griis.security.internal.hash.hashing.Hashing;
+import ca.griis.security.internal.hash.hashing.Sha256Hashing;
+import ca.griis.security.internal.hash.hashing.Sha512Hashing;
+import ca.griis.security.internal.hash.verification.Sha256VerifyHashing;
+import ca.griis.security.internal.hash.verification.Sha512VerifyHashing;
+import ca.griis.security.internal.hash.verification.VerifyHashing;
+import ca.griis.security.internal.keyexchange.KeyAgreementProvider;
+import ca.griis.security.internal.keyexchange.X25519Provider;
+import ca.griis.security.internal.signature.signing.EdDsaSigning;
+import ca.griis.security.internal.signature.signing.RsaSigning;
+import ca.griis.security.internal.signature.signing.Signing;
+import ca.griis.security.internal.signature.verification.EdDsaVerifySigning;
+import ca.griis.security.internal.signature.verification.RsaVerifySigning;
+import ca.griis.security.internal.signature.verification.VerifySigning;
+import ca.griis.security.internal.spec.SpecProvider;
+import ca.griis.security.internal.symmetric.encryption.AesGcmDecryptor;
+import ca.griis.security.internal.symmetric.encryption.AesGcmEncryptor;
+import ca.griis.security.internal.symmetric.generator.SecretKeyGenerator;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.X509CRL;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Définit le service de sécurité.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      «2025-12-17» [BD] - Implémentation initiale
+ * @par Tâches
+ *      S.O.
+ */
+public class DefaultSecurityService implements SecurityService {
+<span class="fc" id="L116">  private static final GriisLogger logger = getLogger(DefaultSecurityService.class);</span>
+
+  private final List&lt;X509CRL&gt; crl;
+
+<span class="fc" id="L120">  public DefaultSecurityService(List&lt;X509CRL&gt; crl) {</span>
+<span class="fc" id="L121">    this.crl = crl;</span>
+<span class="fc" id="L122">  }</span>
+
+<span class="fc" id="L124">  public DefaultSecurityService() {</span>
+<span class="fc" id="L125">    this.crl = List.of();</span>
+<span class="fc" id="L126">  }</span>
+
+  @Override
+  public Map&lt;String, SecuritySpec&gt; getProfilSecuritySpecs(SecurityProfile securityProfile) {
+<span class="fc" id="L130">    logger.trace(Trace.ENTER_METHOD_1, &quot;securityProfile&quot;, securityProfile);</span>
+
+<span class="fc" id="L132">    SpecProvider specProvider = new SpecProvider();</span>
+<span class="fc" id="L133">    Map&lt;String, SecuritySpec&gt; securityProfileSpecs =</span>
+<span class="fc" id="L134">        specProvider.getProfilSecuritySpecs(securityProfile);</span>
+
+<span class="fc" id="L136">    logger.trace(Trace.EXIT_METHOD_1, &quot;securityProfileSpecs&quot;, securityProfileSpecs);</span>
+<span class="fc" id="L137">    return securityProfileSpecs;</span>
+  }
+
+  @Override
+  public Digest generateDigest(HashFnSpec hashFnSpec, byte[] data) {
+<span class="fc" id="L142">    logger.trace(Trace.ENTER_METHOD_2, &quot;hashFnSpec&quot;, hashFnSpec, &quot;data&quot;,</span>
+<span class="fc" id="L143">        System.identityHashCode(data));</span>
+
+    Hashing hashing;
+<span class="fc bfc" id="L146" title="All 2 branches covered.">    if (hashFnSpec.getAlgo().equals(MessageDigestAlgorithm.SHA512.getAlgorithm())) {</span>
+<span class="fc" id="L147">      hashing = new Sha512Hashing();</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">    } else if (hashFnSpec.getAlgo().equals(MessageDigestAlgorithm.SHA256.getAlgorithm())) {</span>
+<span class="fc" id="L149">      hashing = new Sha256Hashing();</span>
+    } else {
+<span class="fc" id="L151">      throw new IllegalArgumentException(&quot;Unexpected hashFnSpec value !&quot;);</span>
+    }
+
+<span class="fc" id="L154">    Digest digest = hashing.hash(data);</span>
+
+<span class="fc" id="L156">    logger.trace(Trace.EXIT_METHOD_1, &quot;digest&quot;, System.identityHashCode(digest));</span>
+<span class="fc" id="L157">    return digest;</span>
+  }
+
+  @Override
+  public Boolean verifyDigest(HashFnSpec hashFnSpec, Digest digest, byte[] data) {
+<span class="fc" id="L162">    logger.trace(Trace.ENTER_METHOD_3, &quot;hashFnSpec&quot;, hashFnSpec, &quot;digest&quot;,</span>
+<span class="fc" id="L163">        System.identityHashCode(digest), &quot;data&quot;, System.identityHashCode(data));</span>
+
+    VerifyHashing verifyHashing;
+<span class="fc bfc" id="L166" title="All 2 branches covered.">    if (hashFnSpec.getAlgo().equals(MessageDigestAlgorithm.SHA512.getAlgorithm())) {</span>
+<span class="fc" id="L167">      verifyHashing = new Sha512VerifyHashing();</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">    } else if (hashFnSpec.getAlgo().equals(MessageDigestAlgorithm.SHA256.getAlgorithm())) {</span>
+<span class="fc" id="L169">      verifyHashing = new Sha256VerifyHashing();</span>
+    } else {
+<span class="fc" id="L171">      throw new IllegalArgumentException(&quot;Unexpected hashFnSpec value !&quot;);</span>
+    }
+
+<span class="fc" id="L174">    Boolean result = verifyHashing.verify(data, digest);</span>
+
+<span class="fc" id="L176">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L177">    return result;</span>
+  }
+
+  @Override
+  public SecretKey generateSecretKey(CsprngSpec csprngSpec, SymKeyGenSpec symKeyGenSpec) {
+<span class="fc" id="L182">    logger.trace(Trace.ENTER_METHOD_2, &quot;csprngSpec&quot;, csprngSpec, &quot;symKeyGenSpec&quot;, symKeyGenSpec);</span>
+
+<span class="fc" id="L184">    Integer keyBitLength = symKeyGenSpec.getKeyBitLength();</span>
+<span class="fc" id="L185">    SecretKey key = SecretKeyGenerator.generateSymmetricKey(symKeyGenSpec.getAlgo(),</span>
+        keyBitLength, csprngSpec);
+
+<span class="fc" id="L188">    logger.trace(Trace.EXIT_METHOD_1, &quot;key&quot;, System.identityHashCode(key));</span>
+<span class="fc" id="L189">    return key;</span>
+  }
+
+  @Override
+  public byte[] symEncrypt(CsprngSpec csprngSpec, SymCipherSpec symCipherSpec, SecretKey secretKey,
+      byte[] data) {
+<span class="fc" id="L195">    logger.trace(Trace.ENTER_METHOD_4, &quot;csprngSpec&quot;, csprngSpec, &quot;symCipherSpec&quot;, symCipherSpec,</span>
+<span class="fc" id="L196">        &quot;secretKey&quot;, System.identityHashCode(secretKey), &quot;data&quot;, System.identityHashCode(data));</span>
+
+<span class="fc bfc" id="L198" title="All 2 branches covered.">    if (!(symCipherSpec.getAlgo().equals(CipherAlgorithm.AESGCM.getAlgorithm()))) {</span>
+<span class="fc" id="L199">      throw new IllegalArgumentException(&quot;Unexpected symCipherSpec value !&quot;);</span>
+    }
+
+<span class="fc" id="L202">    AesGcmEncryptor encryptor = new AesGcmEncryptor(secretKey);</span>
+<span class="fc" id="L203">    byte[] encryptedData = encryptor.encrypt(data, csprngSpec);</span>
+
+<span class="fc" id="L205">    logger.trace(Trace.EXIT_METHOD_1, &quot;encryptedData&quot;, System.identityHashCode(encryptedData));</span>
+<span class="fc" id="L206">    return encryptedData;</span>
+  }
+
+  @Override
+  public byte[] symDecrypt(CsprngSpec csprngSpec, SymCipherSpec symCipherSpec, SecretKey secretKey,
+      byte[] encryptedData) {
+<span class="fc" id="L212">    logger.trace(Trace.ENTER_METHOD_4, &quot;csprngSpec&quot;, csprngSpec, &quot;symCipherSpec&quot;, symCipherSpec,</span>
+<span class="fc" id="L213">        &quot;secretKey&quot;, System.identityHashCode(secretKey), &quot;encryptedData&quot;,</span>
+<span class="fc" id="L214">        System.identityHashCode(encryptedData));</span>
+
+<span class="fc bfc" id="L216" title="All 2 branches covered.">    if (!(symCipherSpec.getAlgo().equals(CipherAlgorithm.AESGCM.getAlgorithm()))) {</span>
+<span class="fc" id="L217">      throw new IllegalArgumentException(&quot;Unexpected symCipherSpec value !&quot;);</span>
+    }
+
+<span class="fc" id="L220">    AesGcmDecryptor decryptor = new AesGcmDecryptor(secretKey);</span>
+<span class="fc" id="L221">    byte[] decryptedData = decryptor.decrypt(encryptedData, csprngSpec);</span>
+
+<span class="fc" id="L223">    logger.trace(Trace.EXIT_METHOD_1, &quot;decryptedData&quot;, System.identityHashCode(decryptedData));</span>
+<span class="fc" id="L224">    return decryptedData;</span>
+  }
+
+  @Override
+  public KeyPair generateKeyPair(CsprngSpec csprngSpec, AsymKeyPairGenSpec asymKeyPairGenSpec) {
+<span class="fc" id="L229">    logger.trace(Trace.ENTER_METHOD_2, &quot;csprngSpec&quot;, csprngSpec, &quot;asymKeyPairGenSpec&quot;,</span>
+        asymKeyPairGenSpec);
+
+    AsymKeysGenerator generator;
+<span class="fc bfc" id="L233" title="All 2 branches covered.">    if (asymKeyPairGenSpec.getAlgo().equals(&quot;RSA&quot;)) {</span>
+<span class="fc" id="L234">      generator = new RsaKeysGenerator(</span>
+<span class="fc" id="L235">          ((RsaKeyPairGenSpec) asymKeyPairGenSpec).getKeyGenParameterSpec().getKeysize());</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">    } else if (asymKeyPairGenSpec.getAlgo().equals(&quot;Ed25519&quot;)) {</span>
+<span class="fc" id="L237">      generator = new Ed25519KeysGenerator();</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">    } else if (asymKeyPairGenSpec.getAlgo().equals(&quot;X25519&quot;)) {</span>
+<span class="fc" id="L239">      generator = new X25519KeysGenerator();</span>
+    } else {
+<span class="fc" id="L241">      throw new IllegalArgumentException(&quot;Unexpected asymKeyPairGenSpec value !&quot;);</span>
+    }
+
+<span class="fc" id="L244">    KeyPair keyPair = generator.generateKeyPair(csprngSpec);</span>
+
+<span class="fc" id="L246">    logger.trace(Trace.EXIT_METHOD_1, &quot;keyPair&quot;, System.identityHashCode(keyPair));</span>
+<span class="fc" id="L247">    return keyPair;</span>
+  }
+
+  @Override
+  public byte[] asymEncrypt(CsprngSpec csprngSpec, AsymCipherSpec asymCipherSpec,
+      PublicKey publicKey, byte[] data) {
+<span class="fc" id="L253">    logger.trace(Trace.ENTER_METHOD_4, &quot;csprngSpec&quot;, csprngSpec, &quot;asymCipherSpec&quot;, asymCipherSpec,</span>
+<span class="fc" id="L254">        &quot;publicKey&quot;, System.identityHashCode(publicKey), &quot;data&quot;, System.identityHashCode(data));</span>
+
+    RsaEncryptor encryptor;
+
+<span class="fc bfc" id="L258" title="All 2 branches covered.">    if (asymCipherSpec.getAlgo().equals(CipherAlgorithm.RSA.getAlgorithm())) {</span>
+<span class="fc" id="L259">      encryptor = new RsaEncryptor((RSAPublicKey) publicKey,</span>
+<span class="fc" id="L260">          ((RsaCipherSpec) asymCipherSpec).getParameterSpec());</span>
+    } else {
+<span class="fc" id="L262">      throw new IllegalArgumentException(&quot;Unexpected asymCipherSpec value !&quot;);</span>
+    }
+
+<span class="fc" id="L265">    byte[] encryptedData = encryptor.encrypt(data, csprngSpec);</span>
+
+<span class="fc" id="L267">    logger.trace(Trace.EXIT_METHOD_1, &quot;encryptedData&quot;, System.identityHashCode(encryptedData));</span>
+<span class="fc" id="L268">    return encryptedData;</span>
+  }
+
+  @Override
+  public byte[] asymDecrypt(CsprngSpec csprngSpec, AsymCipherSpec asymCipherSpec,
+      PrivateKey privateKey, byte[] encryptedData) {
+<span class="fc" id="L274">    logger.trace(Trace.ENTER_METHOD_4, &quot;csprngSpec&quot;, csprngSpec, &quot;asymCipherSpec&quot;, asymCipherSpec,</span>
+<span class="fc" id="L275">        &quot;privateKey&quot;, System.identityHashCode(privateKey), &quot;encryptedData&quot;,</span>
+<span class="fc" id="L276">        System.identityHashCode(encryptedData));</span>
+
+    RsaDecryptor decryptor;
+
+<span class="fc bfc" id="L280" title="All 2 branches covered.">    if (asymCipherSpec.getAlgo().equals(CipherAlgorithm.RSA.getAlgorithm())) {</span>
+<span class="fc" id="L281">      decryptor = new RsaDecryptor((RSAPrivateKey) privateKey,</span>
+<span class="fc" id="L282">          ((RsaCipherSpec) asymCipherSpec).getParameterSpec());</span>
+    } else {
+<span class="fc" id="L284">      throw new IllegalArgumentException(&quot;Unexpected asymCipherSpec value !&quot;);</span>
+    }
+
+<span class="fc" id="L287">    byte[] decryptedData = decryptor.decrypt(encryptedData, csprngSpec);</span>
+
+<span class="fc" id="L289">    logger.trace(Trace.EXIT_METHOD_1, &quot;decryptedData&quot;, System.identityHashCode(decryptedData));</span>
+<span class="fc" id="L290">    return decryptedData;</span>
+  }
+
+  @Override
+  public SecretKey generateSharedSecretKey(CsprngSpec csprngSpec,
+      KeyAgreementFnSpec keyAgreementFnSpec, KeyPair originatorKeyPair,
+      PublicKey recipientPublicKey) {
+<span class="fc" id="L297">    logger.trace(Trace.ENTER_METHOD_4, &quot;csprngSpec&quot;, csprngSpec, &quot;keyAgreementFnSpec&quot;,</span>
+<span class="fc" id="L298">        keyAgreementFnSpec, &quot;originatorKeyPair&quot;, System.identityHashCode(originatorKeyPair),</span>
+<span class="fc" id="L299">        &quot;recipientPublicKey&quot;, System.identityHashCode(recipientPublicKey));</span>
+
+<span class="fc" id="L301">    byte[] derivedKey = new byte[0];</span>
+<span class="fc" id="L302">    byte[] sharedKey = new byte[0];</span>
+
+    try {
+<span class="fc" id="L305">      KeyAgreementProvider keyAgreementProvider = new X25519Provider();</span>
+<span class="fc" id="L306">      keyAgreementProvider.initializeAgreement(originatorKeyPair.getPrivate(), csprngSpec);</span>
+<span class="fc" id="L307">      sharedKey = keyAgreementProvider.completeAgreement(recipientPublicKey);</span>
+
+      // Dérive une clé écuritaire
+<span class="fc bfc" id="L310" title="All 2 branches covered.">      if (keyAgreementFnSpec.getAlgo().equals(KeyAgreementAlgorithm.X25519.getAlgorithm())</span>
+<span class="fc bfc" id="L311" title="All 2 branches covered.">          &amp;&amp; keyAgreementFnSpec.getParameters().get(&quot;keyBitLength&quot;).equals(&quot;256&quot;)) {</span>
+<span class="fc" id="L312">        derivedKey =</span>
+<span class="fc" id="L313">            keyAgreementProvider.deriveSecure256BitsKey(sharedKey, originatorKeyPair.getPublic(),</span>
+                recipientPublicKey);
+<span class="fc bfc" id="L315" title="All 2 branches covered.">      } else if (keyAgreementFnSpec.getAlgo().equals(KeyAgreementAlgorithm.X25519.getAlgorithm())</span>
+<span class="pc bpc" id="L316" title="1 of 2 branches missed.">          &amp;&amp; keyAgreementFnSpec.getParameters().get(&quot;keyBitLength&quot;).equals(&quot;128&quot;)) {</span>
+<span class="fc" id="L317">        derivedKey = keyAgreementProvider.deriveSecure128BitsKey(sharedKey,</span>
+<span class="fc" id="L318">            originatorKeyPair.getPublic(), recipientPublicKey);</span>
+      } else {
+<span class="fc" id="L320">        throw new IllegalArgumentException(&quot;Unexpected keyAgreementFnSpec value !&quot;);</span>
+      }
+
+<span class="fc" id="L323">      Arrays.fill(sharedKey, (byte) 0);</span>
+<span class="fc" id="L324">    } catch (NoSuchAlgorithmException | InvalidKeyException e) {</span>
+<span class="fc" id="L325">      Arrays.fill(sharedKey, (byte) 0);</span>
+<span class="fc" id="L326">      Arrays.fill(derivedKey, (byte) 0);</span>
+
+<span class="fc" id="L328">      throw new RuntimeException(e);</span>
+<span class="fc" id="L329">    }</span>
+
+<span class="fc" id="L331">    SecretKey secretKey =</span>
+<span class="fc" id="L332">        new SecretKeySpec(derivedKey, SecretKeyGeneratorAlgorithm.AES.getAlgorithm());</span>
+<span class="fc" id="L333">    Arrays.fill(derivedKey, (byte) 0);</span>
+
+<span class="fc" id="L335">    logger.trace(Trace.EXIT_METHOD_1, &quot;secretKey&quot;, System.identityHashCode(secretKey));</span>
+<span class="fc" id="L336">    return secretKey;</span>
+  }
+
+  @Override
+  public DigitalSignature generateSignature(CsprngSpec csprngSpec, SignatureFnSpec signatureFnSpec,
+      PrivateKey privateKey, byte[] data) {
+<span class="fc" id="L342">    logger.trace(Trace.ENTER_METHOD_4, &quot;csprngSpec&quot;, csprngSpec, &quot;signatureFnSpec&quot;, signatureFnSpec,</span>
+<span class="fc" id="L343">        &quot;privateKey&quot;, System.identityHashCode(privateKey), &quot;data&quot;, System.identityHashCode(data));</span>
+
+    Signing signing;
+<span class="fc bfc" id="L346" title="All 2 branches covered.">    if (signatureFnSpec.getAlgo().equals(SignatureAlgorithm.ed25519.getAlgorithm())) {</span>
+<span class="fc" id="L347">      signing = new EdDsaSigning(privateKey);</span>
+<span class="fc bfc" id="L348" title="All 2 branches covered.">    } else if (signatureFnSpec.getAlgo().equals(SignatureAlgorithm.RSA.getAlgorithm())) {</span>
+<span class="fc" id="L349">      signing =</span>
+<span class="fc" id="L350">          new RsaSigning(privateKey, ((RsaSignatureFnSpec) signatureFnSpec).getParameterSpec());</span>
+    } else {
+<span class="fc" id="L352">      throw new IllegalArgumentException(&quot;Unexpected signatureFnSpec value !&quot;);</span>
+    }
+
+<span class="fc" id="L355">    DigitalSignature signature = signing.sign(data, csprngSpec);</span>
+
+<span class="fc" id="L357">    logger.trace(Trace.EXIT_METHOD_1, &quot;signature&quot;, System.identityHashCode(signature));</span>
+<span class="fc" id="L358">    return signature;</span>
+  }
+
+  @Override
+  public Boolean verifySignature(SignatureFnSpec signatureFnSpec, PublicKey publicKey,
+      byte[] signedData, DigitalSignature signature) {
+<span class="fc" id="L364">    logger.trace(Trace.ENTER_METHOD_4, &quot;signatureFnSpec&quot;, signatureFnSpec, &quot;publicKey&quot;,</span>
+<span class="fc" id="L365">        System.identityHashCode(publicKey), &quot;signedData&quot;, System.identityHashCode(signedData),</span>
+<span class="fc" id="L366">        &quot;signature&quot;, System.identityHashCode(signature));</span>
+    VerifySigning verifySigning;
+
+<span class="fc bfc" id="L369" title="All 2 branches covered.">    if (signatureFnSpec.getAlgo().equals(SignatureAlgorithm.ed25519.getAlgorithm())) {</span>
+<span class="fc" id="L370">      verifySigning = new EdDsaVerifySigning(publicKey);</span>
+<span class="fc bfc" id="L371" title="All 2 branches covered.">    } else if (signatureFnSpec.getAlgo().equals(SignatureAlgorithm.RSA.getAlgorithm())) {</span>
+<span class="fc" id="L372">      verifySigning = new RsaVerifySigning(publicKey,</span>
+<span class="fc" id="L373">          ((RsaSignatureFnSpec) signatureFnSpec).getParameterSpec());</span>
+    } else {
+<span class="fc" id="L375">      throw new IllegalArgumentException(&quot;Unexpected signatureFnSpec value !&quot;);</span>
+    }
+
+<span class="fc" id="L378">    Boolean result = verifySigning.verify(signedData, signature);</span>
+
+<span class="fc" id="L380">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L381">    return result;</span>
+  }
+
+  @Override
+  public Boolean verifyCertificateTemporalValidity(X509Certificate certificate) {
+<span class="fc" id="L386">    logger.trace(Trace.ENTER_METHOD_1, &quot;certificate&quot;, certificate);</span>
+
+<span class="fc" id="L388">    Boolean isValid =</span>
+<span class="fc" id="L389">        new TemporalVerification().verifyCertificateTemporalValidity(certificate);</span>
+
+<span class="fc" id="L391">    logger.trace(Trace.EXIT_METHOD_1, &quot;isValid&quot;, isValid);</span>
+<span class="fc" id="L392">    return isValid;</span>
+  }
+
+  @Override
+  public Boolean verifyCertificateSignature(X509Certificate certificate, PublicKey publicKey) {
+<span class="fc" id="L397">    logger.trace(Trace.ENTER_METHOD_2, &quot;certificate&quot;, certificate, &quot;publicKey&quot;,</span>
+<span class="fc" id="L398">        System.identityHashCode(publicKey));</span>
+
+<span class="fc" id="L400">    Boolean isValid =</span>
+<span class="fc" id="L401">        new SignatureVerification().verifyCertificateSignature(certificate, publicKey);</span>
+
+<span class="fc" id="L403">    logger.trace(Trace.EXIT_METHOD_1, &quot;isValid&quot;, isValid);</span>
+<span class="fc" id="L404">    return isValid;</span>
+  }
+
+  @Override
+  public Boolean verifyCertificateChain(CertificateVerifSpec certificateVerifSpec,
+      RootCertificates rootCertificates, IntermediateCertificates intermidiateCertificates,
+      X509Certificate certificate) {
+<span class="fc" id="L411">    logger.trace(Trace.ENTER_METHOD_4, &quot;certificateVerifSpec&quot;, certificateVerifSpec,</span>
+        &quot;rootCertificates&quot;, rootCertificates, &quot;intermidiateCertificates&quot;, intermidiateCertificates,
+        &quot;certificate&quot;, certificate);
+
+<span class="fc" id="L415">    Boolean isValid = new ChainCertificationVerification().verifyCertificateChain(</span>
+        certificateVerifSpec, rootCertificates, intermidiateCertificates, certificate, crl);
+
+<span class="fc" id="L418">    logger.trace(Trace.EXIT_METHOD_1, &quot;isValid&quot;, isValid);</span>
+<span class="fc" id="L419">    return isValid;</span>
+  }
+
+  @Override
+  public Boolean verifyCertificateExtensions(X509Certificate certificate, Hostname hostname,
+      CertificateKeyUsages usages) {
+<span class="fc" id="L425">    logger.trace(Trace.ENTER_METHOD_3, &quot;certificate&quot;, certificate, &quot;hostname&quot;, hostname, &quot;usages&quot;,</span>
+        usages);
+
+<span class="fc" id="L428">    Boolean isValid =</span>
+<span class="fc" id="L429">        new CertificateExtensionsVerification().verifyCertificateExtensions(certificate,</span>
+            hostname, usages);
+
+<span class="fc" id="L432">    logger.trace(Trace.EXIT_METHOD_1, &quot;isValid&quot;, isValid);</span>
+<span class="fc" id="L433">    return isValid;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

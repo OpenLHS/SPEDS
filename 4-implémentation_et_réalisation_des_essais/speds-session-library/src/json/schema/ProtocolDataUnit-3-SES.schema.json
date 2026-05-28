@@ -1,0 +1,147 @@
+{
+  "$id": "https://schema.openlhs.info/speds/json/v7.1.1/pdu/ProtocolDataUnit-3-SES.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolDataUnit-3-SES (2026-01-15T10:20:00-0500)",
+  "$defs": {
+    "iri": {
+      "description": "A valid IR according to RFC 3987",
+      "type": "string",
+      "format": "iri"
+    },
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "bytestring": {
+      "description": "A base-64 encoded bytestring",
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "versioning": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)(\\.[0-9]+[a-z]*)$"
+    }
+  },
+  "description": "For the Session Layer of SPEDS (Layer 3) : a unit of data which is transferred from one end of a connection to the other with no loss of identity or meaning.",
+  "type": "object",
+  "examples": [
+    {
+      "header": {
+        "msgtype": "SES.PUB.REC",
+        "id": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+        "parameters": false,
+        "version": {
+          "number": "2.3.0",
+          "reference": "https://www.griis.ca/speds/layer/ses/v2.3.0/reference"
+        }
+      },
+      "stamp": "Q2UgbW9uZGUgZXN0IHRyb3AgY3J1ZWwgIQo=",
+      "content": "TUVnQ1FRQ285K0JwTVJZUS9kTDNEUzJDeUp4UkYrajZjdGJUMy9RcDg0K0tlRmhuaWk3TlQ3ZkVMaWxLVVNueApTMzBXQXZRQ0NvMnlVMW9yZmdxcjQxbU03ME1CQWdNQkFBRT0="
+    },
+    {
+      "header": {
+        "msgtype": "SES.MSG.ENV",
+        "id": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+        "parameters": false,
+        "version": {
+          "number": "7.1.0",
+          "reference": "https://www.griis.ca/speds/layer/ses/v7.1.1/reference"
+        }
+      },
+      "stamp": "Y2NmZTBiOTVlMzJjNDM4NjFkMjU1NmUxMzQ1ODMzODgyMmE4MjM2MTFiNDgyM2Q2MDZjOWQ5ZWQ2YTM5YmQ2NjA4OGY5OGM2ODhiNjdmNWVkMTViYmZhYWY1N2IxZDAxYjM4YWVjMDAzYTc5NWZkNGZiODYyYjVmZDA5YzdkYTE=",
+      "content": "YmE2MmNlYmYtZTlmYS00NDcyLWI3NzYtNDljYmYwNGFiMzJh="
+    }
+  ],
+  "properties": {
+    "header": {
+      "description": "The header of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "properties": {
+        "msgtype": {
+          "description": "The type of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "enum": [
+            "SES.PUB.ENV",
+            "SES.PUB.REC",
+            "SES.CLE.ENV",
+            "SES.CLE.REC",
+            "SES.SAK.ENV",
+            "SES.SAK.REC",
+            "SES.MSG.ENV",
+            "SES.MSG.REC",
+            "SES.FIN.ENV",
+            "SES.FIN.REC"
+          ]
+        },
+        "id": {
+          "description": "The identifier of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "parameters": {
+          "description": "The parameters of the Session layer.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        },
+        "version": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "description": "The version of the current layer.",
+              "$ref": "#/$defs/versioning"
+            },
+            "reference": {
+              "description": "The reference of the present version of the layer.",
+              "type": "string",
+              "format": "iri"
+            }
+          },
+          "required": [
+            "number",
+            "reference"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "msgtype",
+        "id",
+        "parameters",
+        "version"
+      ]
+    },
+    "stamp": {
+      "description": "The authentification seal (the stamp) of the sender of this message.",
+      "$ref": "#/$defs/bytestring"
+    },
+    "content": {
+      "description": "The content of a SPEDS message. Mandatory in all layers.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/bytestring"
+        },
+        {
+          "$ref": "#/$defs/uuid"
+        },
+        {
+          "type": "object",
+          "minProperties": 1
+        }
+      ]
+    }
+  },
+  "required": [
+    "header",
+    "stamp",
+    "content"
+  ],
+  "additionalProperties": false
+}

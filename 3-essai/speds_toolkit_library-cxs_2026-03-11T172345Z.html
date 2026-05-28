@@ -1,0 +1,4151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Spécification des essais - Bibliothèque de fonctions de service de SPEDS">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification des Essais - « Bibliothèque de fonctions de service de SPEDS »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification des Essais -  « <em>Bibliothèque de fonctions de service de SPEDS</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_historique">1. Historique</a></li>
+<li><a href="#_référence">2. Référence</a></li>
+<li><a href="#_contexte_général_des_tests">3. Contexte général des tests</a></li>
+<li><a href="#_définitions">4. Définitions</a></li>
+<li><a href="#_éléments_testées">5. Éléments Testées</a></li>
+<li><a href="#_hypothèse">6. Hypothèse</a></li>
+<li><a href="#_données_globales">7. Données globales</a></li>
+<li><a href="#_cas_de_test">8. Cas de Test</a>
+<ul class="sectlevel2">
+<li><a href="#CT_GEN-01">8.1. [CT_GEN-01] Récupérer le IRI d’une entité</a></li>
+<li><a href="#CT_GEN-02">8.2. [CT_GEN-02] Vérifier la légitimité d&#8217;une entité</a></li>
+<li><a href="#CT_GEN-03">8.3. [CT_GEN-03] Récupération d&#8217;une clé publique</a></li>
+<li><a href="#CT_GEN-04">8.4. [CT_GEN-04] Vérification de l&#8217;activité d&#8217;un projet</a></li>
+<li><a href="#CT_GEN-05">8.5. [CT_GEN-05] Vérification de l’activité d’un plan de projet</a></li>
+<li><a href="#CT_SEC-01">8.6. [CT_SEC-01] Vérifier la validité d&#8217;un certificat</a></li>
+<li><a href="#CT_CRYPT-SYMM-01">8.7. [CT_CRYPT-SYMM-01] Effectuer les opérations en lien avec le chiffrement symétrique</a></li>
+<li><a href="#CT_CRYPT-SYMM-02">8.8. [CT_CRYPT-SYMM-02] Effectuer les opérations en lien avec le chiffrement symétrique</a></li>
+<li><a href="#CT_CRYPT-ASYM-01">8.9. [CT_CRYPT-ASYM-01] Effectuer les opérations en lien avec le chiffrement asymétrique</a></li>
+<li><a href="#CT_CRYPT-ASYM-02">8.10. [CT_CRYPT-ASYM-02] Effectuer les opérations en lien avec le chiffrement asymétrique</a></li>
+<li><a href="#CT_CRYPT-HASH-01">8.11. [CT_CRYPT-HASH-01] Effectuer les opération en lien avec un hachage</a></li>
+<li><a href="#CT_CRYPT-SIGN-01">8.12. [CT_CRYPT-SIGN-01] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</a></li>
+<li><a href="#CT_CRYPT-SIGN-02">8.13. [CT_CRYPT-SIGN-02] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</a></li>
+<li><a href="#CT_CRYPT-DH-01">8.14. [CT_CRYPT-DH-01] Effectuer les opérations en lien avec la méthode d&#8217;échange Diffie-Hellman</a></li>
+<li><a href="#CT_CRYPT-ALGO-01">8.15. [CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></li>
+<li><a href="#CT_CRYPT-ALGO-02">8.16. [CT_CRYPT-ALGO-02] Récupérer l&#8217;algorithme disponible pour une catégorie - Erreur</a></li>
+<li><a href="#CT_CRYPT-PARAM-01">8.17. [CT_CRYPT-PARAM-01] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie - Succès</a></li>
+<li><a href="#CT_CRYPT-PARAM-02">8.18. [CT_CRYPT-PARAM-02] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie - Erreur</a></li>
+</ul>
+</li>
+<li><a href="#_essais">9. Essais</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spécification des essais prête à être révisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-10 14:10</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-10 14:19</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_historique">1. Historique</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 63.6363%;">
+<col style="width: 27.2728%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Modification</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implémentation initiale</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-10-29</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 6 - Ajout d&#8217;essai de fiabilité</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-20</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 7 - Ajout de fonctions de vérification de projet</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-10</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_référence">2. Référence</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 30%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Consultation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">speds_toolkit_library-scs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-10</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contexte_général_des_tests">3. Contexte général des tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le présent document a pour objectif de spécifier les essais qui détermineront si l&#8217;implémentation du « <em>Bibliothèque de fonctions de service de SPEDS</em> » respecte la conception définie pour cette bibliothèque.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_définitions">4. Définitions</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="ProjectLibrary"></a> Bibliothèque de projet </dt>
+<dd>
+<p>Bibliothèque permettant de récupérer des informations externes reliées à un projet, notamment les entités et leur clé publique associée.</p>
+</dd>
+<dt class="hdlist1"><a id="SecurityLibrary"></a> Bibliothèque de sécurité </dt>
+<dd>
+<p>Bibliothèque offrant des services de sécurité respectant les recommandations actuelles. Elle permet de remplir des objectifs de sécurité assurés par des moyens cryptographiques, tels la confidentialité, l&#8217;intégrité et l&#8217;authentification.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_éléments_testées">5. Éléments Testées</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<div class="title">Général</div>
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-GE-01] Récupérer le IRI d&#8217;une entité
+</td>
+<td class="hdlist2">
+<p>Récupère le IRI d&#8217;une entité inscrite dans le projet.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-GE-02] Vérifier la légitimité d&#8217;une entité
+</td>
+<td class="hdlist2">
+<p>Vérifie la légitimité d’une entité définie par un couple (<em>code</em>, <em>puK</em>), où <em>code</em> est le code identifiant l’entité et <em>puK</em> est une clé de chiffrement asymétrique (considérée comme la clé publique de l’entité à légitimer).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-GE-03] Récupérer la clé publique d&#8217;une entité
+</td>
+<td class="hdlist2">
+<p>Récupère la clé publique utilisée par une entité du projet définie par son code identifiant.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-GE-04] Vérification de l&#8217;activité d&#8217;un projet
+</td>
+<td class="hdlist2">
+<p>Vérifie si un projet est actif.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-GE-05] Vérification de l’activité d’un plan de projet
+</td>
+<td class="hdlist2">
+<p>Vérifie si le plan d’un projet est en cours.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<div class="title">Sécurité</div>
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-SE-01] Vérifier la validité d&#8217;un certificat
+</td>
+<td class="hdlist2">
+<p>Vérifie la validité d&#8217;un certificat pour une entité proprement identifiée par une IRI.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<div class="title">Cryptographie</div>
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-01] Effectuer un chiffrement symétrique
+</td>
+<td class="hdlist2">
+<p>Effectue un chiffrement symétrique des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-02] Effectuer un déchiffrement symétrique
+</td>
+<td class="hdlist2">
+<p>Effectue un déchiffrement symétrique des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-03] Générer une clé de chiffrement symétrique
+</td>
+<td class="hdlist2">
+<p>Génère une clé pour le chiffrement symétrique des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-04] Effectuer un chiffrement asymétrique
+</td>
+<td class="hdlist2">
+<p>Effectue un chiffrement asymétrique des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-05] Effectuer un déchiffrement asymétrique
+</td>
+<td class="hdlist2">
+<p>Effectue un déchiffrement asymétrique des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-06] Effectuer un hachage
+</td>
+<td class="hdlist2">
+<p>Effectue un hachage des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-07] Apposer une signature
+</td>
+<td class="hdlist2">
+<p>Appose une signature sur les données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-08] Vérifier la validité d’une signature 
+</td>
+<td class="hdlist2">
+<p>Vérifie la validité d&#8217;une signature sur les données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-09] Choisir une valeur pour la méthode d&#8217;échange Diffie-Hellman
+</td>
+<td class="hdlist2">
+<p>Choisit une valeur dans un algorithme de poignée de main suivant la méthode Diffie-Hellman en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-10] Déterminer la clé secrète pour la méthode d&#8217;échange Diffie-Hellman
+</td>
+<td class="hdlist2">
+<p>Détermine la clé secrète dans un algorithme de poignée de main suivant la méthode Diffie-Hellman en fonction des choix effectué par les deux entités en communication et de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-11] Récupérer l&#8217;algorithme disponible pour une catégorie
+</td>
+<td class="hdlist2">
+<p>Indique le nom de l’algorithme disponible (sous une version standardisée) pour une catégorie définie en [DE-GE-01].</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-12] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie
+</td>
+<td class="hdlist2">
+<p>Indique les paramètres par défaut de l’algorithme disponible pour une catégorie définie en [DE-GE-01].</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèse">6. Hypothèse</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[HYP-01]</dt>
+<dd>
+<p>Les données globales à propos des fonctions de cryptographie sont uniques et propres à chaque couche de protocole.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_données_globales">7. Données globales</h2>
+<div class="sectionbody">
+<div class="dlist">
+<div class="title">Général</div>
+<dl>
+<dt class="hdlist1"><a id="project_id"></a> Identifiant de projet</dt>
+<dd>
+<p>Valeur quelconque sous la forme de <code>String</code>.</p>
+</dd>
+<dt class="hdlist1"><a id="code"></a> Code d&#8217;entité</dt>
+<dd>
+<p>Valeur quelconque sous la forme de <code>String</code>.</p>
+</dd>
+<dt class="hdlist1"><a id="iri"></a> IRI d&#8217;une entité</dt>
+<dd>
+<p>Valeur quelconque sous la forme de <code>IRI</code>.</p>
+</dd>
+<dt class="hdlist1"><a id="public_key"></a> Clé publique d&#8217;une entité</dt>
+<dd>
+<p>Valeur quelconque sous la forme de <code>PublicKey</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">Cryptographie</div>
+<dl>
+<dt class="hdlist1"><a id="data"></a> Données</dt>
+<dd>
+<p>Valeur quelconque sous la forme de <code>byte[]</code>.</p>
+</dd>
+<dt class="hdlist1"><a id="algorithm"></a> Algorithme</dt>
+<dd>
+<p>Valeur quelconque d&#8217;un algorithme disponible en version standardisée.</p>
+</dd>
+<dt class="hdlist1"><a id="parameters"></a> Paramètres</dt>
+<dd>
+<p>Tableau de correspondance entre le nom des paramètres et leur valeur pour un algorithme donné contenant zéro ou plusieurs éléments.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cas_de_test">8. Cas de Test</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="CT_GEN-01">8.1. [CT_GEN-01] Récupérer le IRI d’une entité</h3>
+<div class="dlist">
+<div class="title">Général</div>
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Récupération du IRI associé à un code d&#8217;entité.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectId</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#project_id">Identifiant de projet</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du projet</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">code</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#code">Code d&#8217;entité</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code unique de l&#8217;entité spécifié dans le projet</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iri</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>IRI</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;IRI de l&#8217;entité inscrite dans le projet</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement de l&#8217;essai est initialisé.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-GE-01] Récupérer le IRI d&#8217;une entité</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>iri</code> correspond à <a href="#iri">IRI d&#8217;une entité</a>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_GEN-02">8.2. [CT_GEN-02] Vérifier la légitimité d&#8217;une entité</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Vérification de la légitimité d&#8217;une entité par son code d&#8217;entité.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectId</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#project_id">Identifiant de projet</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du projet</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">code</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#code">Code d&#8217;entité</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code unique de l&#8217;entité spécifié dans le projet</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">puAk</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Valeur quelconque de <code>PublicKey</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La clé publique de l&#8217;entité à vérifier</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">result</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La légitimité de l&#8217;entité</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement de l&#8217;essai est initialisé.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-GE-02] Vérifier la légitimité d&#8217;une entité</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>result</code> correspond à la valeur <code>Vrai</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_GEN-03">8.3. [CT_GEN-03] Récupération d&#8217;une clé publique</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Récupération de la clé publique d&#8217;une entité.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectId</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#project_id">Identifiant de projet</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du projet</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">code</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#code">Code d&#8217;entité</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code unique de l&#8217;entité spécifié dans le projet</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">publicKey</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>PublicKey</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La clé publique de l&#8217;entité demandée</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement de l&#8217;essai est initialisé.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-GE-03] Récupérer la clé publique d&#8217;une entité</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>publicKey</code> correspond à <a href="#public_key">Clé publique d&#8217;une entité</a>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_GEN-04">8.4. [CT_GEN-04] Vérification de l&#8217;activité d&#8217;un projet</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Vérifie si un projet est actif.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectId</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#project_id">Identifiant de projet</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du projet</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">isActive</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Valeur booléenne confirmant le profil actif d&#8217;un projet</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement de l&#8217;essai est initialisé.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-GE-04] Vérification de l’activité d’un projet</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>isActive</code> correspond à la valeur <code>Vrai</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_GEN-05">8.5. [CT_GEN-05] Vérification de l’activité d’un plan de projet</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Vérifie si le plan d’un projet est en cours.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">projectId</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#project_id">Identifiant de projet</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du projet</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">isActive</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Valeur booléenne confirmant le profil actif d&#8217;un plan de projet</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement de l&#8217;essai est initialisé.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-GE-05] Vérification de l’activité d’un plan de projet</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>isActive</code> correspond à la valeur <code>Vrai</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_SEC-01">8.6. [CT_SEC-01] Vérifier la validité d&#8217;un certificat</h3>
+<div class="dlist">
+<div class="title">Sécurité</div>
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Vérification si l&#8217;identité du certificat correspond à une entité.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">certificate</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Certificat valide au format <code>X509Certificate</code> associé à un nom d&#8217;hôte qui correspond à <a href="#iri">IRI d&#8217;une entité</a>.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le certificat à valider</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iri</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#iri">IRI d&#8217;une entité</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IRI de l&#8217;entité visée par la vérification du certificat</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">result</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le résultat de la vérification du certificat</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement de l&#8217;essai est initialisé.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-SE-01] Valider un certificat</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>result</code> correspond à la valeur <code>Vrai</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-SYMM-01">8.7. [CT_CRYPT-SYMM-01] Effectuer les opérations en lien avec le chiffrement symétrique</h3>
+<div class="dlist">
+<div class="title">Cryptographie</div>
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Génération d&#8217;une clé symétrique par <code>Bibliothèque de fonctions de service de SPEDS</code>, chiffrement symétrique de données par une librairie externe, puis déchiffrement symétrique des données chiffrées par <code>Bibliothèque de fonctions de service de SPEDS</code> pour une couche du protocole.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole visée par l&#8217;opération</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#data">Données</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Données à chiffrer</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">result</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les données obtenues après le chiffrement et le déchiffrement symétrique</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement contient une configuration valide pour la couche de protocole fournie en entrée</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-CY-03] Générer une clé de chiffrement symétrique</code> qui servira au chiffrement et déchiffrement symétrique</p>
+</li>
+<li>
+<p>Effectuer un chiffrement symétrique à l&#8217;aide d&#8217;une bibliothèque externe selon les paramètres du profile de sécurité associés à la couche de protocole</p>
+</li>
+<li>
+<p>Appel de la fonction <code>[PRO-CY-02] Effectuer un déchiffrement symétrique</code> sur les données précédemment chiffrées</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>result</code> correspondent à <a href="#data">Données</a>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-SYMM-02">8.8. [CT_CRYPT-SYMM-02] Effectuer les opérations en lien avec le chiffrement symétrique</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Génération d&#8217;une clé symétrique par une librairie externe, chiffrement symétrique de données par <code>Bibliothèque de fonctions de service de SPEDS</code>, puis déchiffrement symétrique des données chiffrées par une librairie externe pour une couche du protocole.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole visée par l&#8217;opération</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#data">Données</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Données à chiffrer</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">result</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les données obtenues après le chiffrement et le déchiffrement symétrique</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement contient une configuration valide pour la couche de protocole fournie en entrée</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Générer une clé de chiffrement symétrique qui servira au chiffrement et déchiffrement symétrique à l&#8217;aide d&#8217;une bibliothèque externe selon les paramètres du profile de sécurité associés à la couche de protocole.</p>
+</li>
+<li>
+<p>Appel de la fonction <code>[PRO-CY-01] Effectuer un chiffrement symétrique</code></p>
+</li>
+<li>
+<p>Effectuer un déchiffrement symétrique sur les données précédemment chiffrées à l&#8217;aide d&#8217;une bibliothèque externe selon les paramètres du profile de sécurité associés à la couche de protocole</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>result</code> correspondent à <a href="#data">Données</a>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-ASYM-01">8.9. [CT_CRYPT-ASYM-01] Effectuer les opérations en lien avec le chiffrement asymétrique</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Chiffrement asymétrique de données par <code>Bibliothèque de fonctions de service de SPEDS</code>, puis déchiffrement asymétrique des données chiffrées par une librairie externe pour une couche du protocole.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole visée par l&#8217;opération</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keyPair</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Valeur quelconque au format <code>KeyPair</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paire de clé qui contient <code>PublicKey</code> associée à une <code>PrivateKey</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#data">Données</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Données à chiffrer</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">result</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les données obtenues après le chiffrement et le déchiffrement asymétrique</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement contient une configuration valide pour la couche de protocole fournie en entrée</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-CY-04] Effectuer un chiffrement asymétrique</code></p>
+</li>
+<li>
+<p>Effectuer un déchiffrement asymétrique sur les données précédemment chiffrées à l&#8217;aide d&#8217;une bibliothèque externe selon les paramètres du profile de sécurité associés à la couche de protocole</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>result</code> correspondent à <a href="#data">Données</a>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-ASYM-02">8.10. [CT_CRYPT-ASYM-02] Effectuer les opérations en lien avec le chiffrement asymétrique</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Chiffrement asymétrique de données par une librairie externe, puis déchiffrement asymétrique des données chiffrées par <code>Bibliothèque de fonctions de service de SPEDS</code> pour une couche du protocole.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole visée par l&#8217;opération</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keyPair</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Valeur quelconque au format <code>KeyPair</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paire de clé qui contient <code>PublicKey</code> associée à une <code>PrivateKey</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#data">Données</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Données à chiffrer</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">result</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les données obtenues après le chiffrement et le déchiffrement asymétrique</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement contient une configuration valide pour la couche de protocole fournie en entrée</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Effectuer un chiffrement asymétrique à l&#8217;aide d&#8217;une bibliothèque externe selon les paramètres du profile de sécurité associés à la couche de protocole</p>
+</li>
+<li>
+<p>Appel de la fonction <code>[PRO-CY-05] Effectuer un déchiffrement asymétrique</code> sur les données précédemment chiffrées</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>result</code> correspondent à <a href="#data">Données</a>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-HASH-01">8.11. [CT_CRYPT-HASH-01] Effectuer les opération en lien avec un hachage</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Comparaison du hachage des données par <code>Bibliothèque de fonctions de service de SPEDS</code> et par une librairie externe pour une couche du protocole.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole visée par l&#8217;opération</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#data">Données</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Données à hacher</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">toolkitResult</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;empreinte résultant de la fonction de hachage par <code>Bibliothèque de fonctions de service de SPEDS</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">externResult</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;empreinte résultant de la fonction de hachage par une librairie externe</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement contient une configuration valide pour la couche de protocole fournie en entrée</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-CY-06] Effectuer un hachage</code></p>
+</li>
+<li>
+<p>Effectuer un hachage des données à l&#8217;aide d&#8217;une bibliothèque externe selon les paramètres du profile de sécurité associés à la couche de protocole</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La valeur de la donnée de sortie <code>toolkitResult</code> est équivalente à la valeur de la donnée de sortie <code>externResult</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-SIGN-01">8.12. [CT_CRYPT-SIGN-01] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Apposer une signature numérique sur un contenu par <code>Bibliothèque de fonctions de service de SPEDS</code>, puis valider la signature numérique de ce contenu par une librairie externe pour une couche du protocole.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole visée par l&#8217;opération</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keyPair</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Valeur quelconque au format <code>KeyPair</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paire de clé qui contient <code>PublicKey</code> associée à une <code>PrivateKey</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#data">Données</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Données à signer</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">result</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le résultat de la validation de la signature numérique</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement contient une configuration valide pour la couche de protocole fournie en entrée</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-CY-07]  Apposer une signature</code></p>
+</li>
+<li>
+<p>Effectuer une validation de la signature numérique sur les données à l&#8217;aide d&#8217;une bibliothèque externe selon les paramètres du profile de sécurité associés à la couche de protocole</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>result</code> correspondent à <code>Vrai</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-SIGN-02">8.13. [CT_CRYPT-SIGN-02] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Apposer une signature numérique sur un contenu par une librairie externe, puis valider la signature numérique de ce contenu par <code>Bibliothèque de fonctions de service de SPEDS</code> pour une couche du protocole.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole visée par l&#8217;opération</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keyPair</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Valeur quelconque au format <code>KeyPair</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paire de clé qui contient <code>PublicKey</code> associée à une <code>PrivateKey</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#data">Données</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Données à signer</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">result</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le résultat de la validation de la signature numérique</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement contient une configuration valide pour la couche de protocole fournie en entrée</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Effectuer une signature numérique sur les données à l&#8217;aide d&#8217;une bibliothèque externe selon les paramètres du profile de sécurité associés à la couche de protocole</p>
+</li>
+<li>
+<p>Appel de la fonction <code>[PRO-CY-08]  Valider une signature</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>result</code> correspondent à <code>Vrai</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-DH-01">8.14. [CT_CRYPT-DH-01] Effectuer les opérations en lien avec la méthode d&#8217;échange Diffie-Hellman</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Générer simultanément avec <code>Bibliothèque de fonctions de service de SPEDS</code> et une librairie externe des valeurs publiques d&#8217;échange, puis comparer la clé secrète générée par ces deux (2) entités à l&#8217;aide de ces deux (2) valeurs publiques d&#8217;échange pour une couche du protocole.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole visée par l&#8217;opération</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">toolkitResult</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>SecretKey</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La clé secrète résultante de la méthode d&#8217;échange Diffie-Hellman par <code>Bibliothèque de fonctions de service de SPEDS</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">externResult</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>SecretKey</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La clé secrète résultante de la méthode d&#8217;échange Diffie-Hellman par une librairie externe</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement contient une configuration valide pour la couche de protocole fournie en entrée</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-CY-09] Choisir une valeur pour la méthode d&#8217;échange Diffie-Hellman</code></p>
+</li>
+<li>
+<p>Générer une valeur publique d&#8217;échange à l&#8217;aide d&#8217;une bibliothèque externe selon les paramètres du profile de sécurité associés à la couche de protocole</p>
+</li>
+<li>
+<p>Appel de la fonction <code>[PRO-CY-10] Déterminer la clé secrète pour la méthode d&#8217;échange Diffie-Hellman</code></p>
+</li>
+<li>
+<p>Générer une clé secrète à l&#8217;aide d&#8217;une bibliothèque externe selon les paramètres du profile de sécurité associés à la couche de protocole</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La valeur de la donnée de sortie <code>toolkitResult</code> est équivalente à la valeur de la donnée de sortie <code>externResult</code>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-ALGO-01">8.15. [CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Indique le nom de l’algorithme disponible (sous une version standardisée) pour une catégorie et une couche de protocole.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">category</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>AlgorithmCategory</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Catégorie d&#8217;algorithme</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">algorithm</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;algorithme associé à la couche de protocole.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement de l&#8217;essai est initialisé.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-CY-11] Récupérer l&#8217;algorithme disponible pour une catégorie</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>algorithm</code> correspond à <a href="#algorithm">Algorithme</a>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-ALGO-02">8.16. [CT_CRYPT-ALGO-02] Récupérer l&#8217;algorithme disponible pour une catégorie - Erreur</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Aucun algorithme disponible (sous une version standardisée) pour une catégorie et une couche de protocole.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">category</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>AlgorithmCategory</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Catégorie d&#8217;algorithme</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement de l&#8217;essai est initialisé.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-CY-11] Récupérer l&#8217;algorithme disponible pour une catégorie</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;exception <code>NoSuchCategoryException</code> est lancée.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-PARAM-01">8.17. [CT_CRYPT-PARAM-01] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie - Succès</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Indique les paramètres par défaut de l’algorithme disponible pour une catégorie.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">algorithm</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Valeur quelconque au format <code>String</code> et connu de <a href="#SecurityLibrary">Bibliothèque de sécurité </a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cet algorithme est associé au moins à une valeur de <code>SpedsLayer</code> et de <code>SecurityProfile</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parameters</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Map&lt;String, String&gt;</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Les paramètres associés à l&#8217;algorithme.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement de l&#8217;essai est initialisé.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-CY-12] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est lancée.</p>
+</li>
+<li>
+<p>La donnée de sortie <code>parameters</code> correspond à <a href="#parameters">Paramètres</a>.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="CT_CRYPT-PARAM-02">8.18. [CT_CRYPT-PARAM-02] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie - Erreur</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Aucun paramètre disponible pour un algorithme donné.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">spedsLayer</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Élément de l&#8217;énumération <code>SpedsLayer</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La couche de protocole</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">algorithm</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Valeur quelconque au format <code>String</code> et connu de <a href="#SecurityLibrary">Bibliothèque de sécurité </a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cet algorithme n&#8217;est pas associé à une valeur de <code>SpedsLayer</code> et de <code>SecurityProfile</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Prérequis</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;environnement de l&#8217;essai est initialisé.</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Test</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Appel de la fonction <code>[PRO-CY-12] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie</code></p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;exception <code>NoSuchAlgorithmException</code> est lancée.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_essais">9. Essais</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Environnements</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envProject</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La bibliothèque <a href="#ProjectLibrary">Bibliothèque de projet </a> connaît que <a href="#public_key">Clé publique d&#8217;une entité</a> et <a href="#iri">IRI d&#8217;une entité</a> sont associés à <a href="#project_id">Identifiant de projet</a> et <a href="#code">Code d&#8217;entité</a>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envPreEffSym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>EFFICIENT</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>SYMM</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>PRESENTATION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envPreStrSym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>STRONG</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>SYMM</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>PRESENTATION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesEffSym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>EFFICIENT</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>SYMM</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>SESSION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesStrSym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>STRONG</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>SYMM</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>SESSION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesEffAsym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>EFFICIENT</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>ASYM</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>SESSION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesStrAsym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>STRONG</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>ASYM</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>SESSION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesEffHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>EFFICIENT</code></p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>HASH</code></p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>SESSION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesStrHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>STRONG</code></p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>HASH</code></p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>SESSION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesEffSign</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>EFFICIENT</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>SIGN</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>SESSION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesStrSign</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>STRONG</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>SIGN</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>SESSION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesEffDh</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>EFFICIENT</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>DH</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>SESSION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesStrDh</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>STRONG</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>DH</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>SESSION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envTraEffHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>EFFICIENT</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>HASH</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>TRANSPORT</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envTraStrHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>STRONG</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>HASH</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>TRANSPORT</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envResEffHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>EFFICIENT</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>HASH</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>NETWORK</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envResStrHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>STRONG</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>HASH</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>NETWORK</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envResEffSign</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>EFFICIENT</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>SIGN</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>NETWORK</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envResStrSign</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>STRONG</code>;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>SIGN</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>NETWORK</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envInvalidSpedsAlgo</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>La <code>Bibliothèque de fonctions de service de SPEDS</code> appelle les fonctions en utilisant les valeurs de configuration ci-dessous :</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SecurityProfile</code> à <code>EFFICIENT</code> ;</p>
+</li>
+<li>
+<p><code>AlgorithmCategory</code> à <code>DH</code>;</p>
+</li>
+<li>
+<p><code>SpedsLayer</code> à <code>APPLICATION</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Essais - Général</caption>
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 9.0909%;">
+<col style="width: 54.5454%;">
+<col style="width: 27.2728%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ge01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envProject</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_GEN-01">[CT_GEN-01] Récupérer le IRI d’une entité</a></p>
+</li>
+<li>
+<p><a href="#CT_GEN-02">[CT_GEN-02] Vérifier la légitimité d&#8217;une entité</a></p>
+</li>
+<li>
+<p><a href="#CT_GEN-03">[CT_GEN-03] Récupération d&#8217;une clé publique</a></p>
+</li>
+<li>
+<p><a href="#CT_GEN-04">[CT_GEN-04] Vérification de l&#8217;activité d&#8217;un projet</a></p>
+</li>
+<li>
+<p><a href="#CT_GEN-05">[CT_GEN-05] Vérification de l’activité d’un plan de projet</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai sur les fonctions de projet.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Essais - Sécurité</caption>
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 9.0909%;">
+<col style="width: 54.5454%;">
+<col style="width: 27.2728%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">se01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S.O.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_SEC-01">[CT_SEC-01] Vérifier la validité d&#8217;un certificat</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai sur la vérification de certificat numérique.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Essais - Cryptographie</caption>
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 9.0909%;">
+<col style="width: 54.5454%;">
+<col style="width: 27.2728%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cePre01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envPreEffSym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-SYMM-01">[CT_CRYPT-SYMM-01] Effectuer les opérations en lien avec le chiffrement symétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-SYMM-02">[CT_CRYPT-SYMM-02] Effectuer les opérations en lien avec le chiffrement symétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai des fonctions de chiffrement symétrique sur la couche présentation avec le profil de sécurité efficace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cePre02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envPreStrSym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-SYMM-01">[CT_CRYPT-SYMM-01] Effectuer les opérations en lien avec le chiffrement symétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-SYMM-02">[CT_CRYPT-SYMM-02] Effectuer les opérations en lien avec le chiffrement symétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai des fonctions de chiffrement symétrique sur la couche présentation avec le profil de sécurité robuste.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesEffSym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-SYMM-01">[CT_CRYPT-SYMM-01] Effectuer les opérations en lien avec le chiffrement symétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-SYMM-02">[CT_CRYPT-SYMM-02] Effectuer les opérations en lien avec le chiffrement symétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai des fonctions symétriques sur la couche session avec le profil de sécurité efficace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesStrSym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-SYMM-01">[CT_CRYPT-SYMM-01] Effectuer les opérations en lien avec le chiffrement symétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-SYMM-02">[CT_CRYPT-SYMM-02] Effectuer les opérations en lien avec le chiffrement symétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai des fonctions symétriques sur la couche session avec le profil de sécurité robuste.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesEffAsym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-ASYM-01">[CT_CRYPT-ASYM-01] Effectuer les opérations en lien avec le chiffrement asymétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ASYM-02">[CT_CRYPT-ASYM-02] Effectuer les opérations en lien avec le chiffrement asymétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai des fonctions de chiffrement asymétrique sur la couche session avec le profil de sécurité efficace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesStrAsym</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-ASYM-01">[CT_CRYPT-ASYM-01] Effectuer les opérations en lien avec le chiffrement asymétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ASYM-02">[CT_CRYPT-ASYM-02] Effectuer les opérations en lien avec le chiffrement asymétrique</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai des fonctions de chiffrement asymétrique sur la couche session avec le profil de sécurité robuste.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesEffHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-HASH-01">[CT_CRYPT-HASH-01] Effectuer les opération en lien avec un hachage</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai de la fonction de hachage sur la couche session avec le profil de sécurité efficace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesStrHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-HASH-01">[CT_CRYPT-HASH-01] Effectuer les opération en lien avec un hachage</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai de la fonction de hachage sur la couche session avec le profil de sécurité robuste.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesEffSign</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-SIGN-01">[CT_CRYPT-SIGN-01] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-SIGN-02">[CT_CRYPT-SIGN-02] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai des fonctions de signature sur la couche session avec le profil de sécurité efficace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes08</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesStrSign</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-SIGN-01">[CT_CRYPT-SIGN-01] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-SIGN-02">[CT_CRYPT-SIGN-02] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai des fonctions de signature sur la couche session avec le profil de sécurité robuste.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes09</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesEffDh</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-DH-01">[CT_CRYPT-DH-01] Effectuer les opérations en lien avec la méthode d&#8217;échange Diffie-Hellman</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai de la méthode d&#8217;échange de clés Diffie-Hellman sur la couche session avec le profil de sécurité efficace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envSesStrDh</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-DH-01">[CT_CRYPT-DH-01] Effectuer les opérations en lien avec la méthode d&#8217;échange Diffie-Hellman</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai de la méthode d&#8217;échange de clés Diffie-Hellman sur la couche session avec le profil de sécurité efficace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceTra01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envTraEffHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-HASH-01">[CT_CRYPT-HASH-01] Effectuer les opération en lien avec un hachage</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-PARAM-01">[CT_CRYPT-PARAM-01] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai de la fonction de hachage sur la couche transport avec le profil de sécurité efficace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceTra02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envTraStrHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-HASH-01">[CT_CRYPT-HASH-01] Effectuer les opération en lien avec un hachage</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai de la fonction de hachage sur la couche transport avec le profil de sécurité robuste.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceRes01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envResEffHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-HASH-01">[CT_CRYPT-HASH-01] Effectuer les opération en lien avec un hachage</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai de la fonction de hachage sur la couche réseau avec le profil de sécurité efficace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceRes02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envResStrHash</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-HASH-01">[CT_CRYPT-HASH-01] Effectuer les opération en lien avec un hachage</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai de la fonction de hachage sur la couche réseau avec le profil de sécurité robuste.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceRes03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envResEffSign</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-SIGN-01">[CT_CRYPT-SIGN-01] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-SIGN-02">[CT_CRYPT-SIGN-02] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai des fonctions de signature de la couche réseau avec le profil de sécurité efficace.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceRes04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envResStrSign</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-SIGN-01">[CT_CRYPT-SIGN-01] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-SIGN-02">[CT_CRYPT-SIGN-02] Effectuer les opérations en lien avec la signature numérique d&#8217;un contenu</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-ALGO-01">[CT_CRYPT-ALGO-01] Récupérer l&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai des fonctions de signature de la couche réseau avec le profil de sécurité robuste.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceAlgo01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envInvalidSpedsAlgo</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-ALGO-02">[CT_CRYPT-ALGO-02] Récupérer l&#8217;algorithme disponible pour une catégorie - Erreur</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai sur la tentative de récupérer une catégorie d&#8217;algorithme qui n&#8217;existe pas sur une couche de protocole.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceAlgo02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">envResStrSign</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#CT_CRYPT-PARAM-01">[CT_CRYPT-PARAM-01] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie - Succès</a></p>
+</li>
+<li>
+<p><a href="#CT_CRYPT-PARAM-02">[CT_CRYPT-PARAM-02] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie - Erreur</a></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Essai sur la récupération de paramètres d&#8217;un algorithme sur une couche de protocole.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all fit-content">
+<caption class="title">Table 6. Matrice de correspondance Éléments/Essais - Général</caption>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ge01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-GE-01]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-GE-02]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-GE-03]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-GE-04]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-GE-05]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all fit-content">
+<caption class="title">Table 7. Matrice de correspondance Éléments/Essais - Sécurité</caption>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">se01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-SE-01]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all fit-content">
+<caption class="title">Table 8. Matrice de correspondance Éléments/Essais - Cryptographie - Couche présentation</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cePre01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cePre02</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-01]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-02]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-03]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-04]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-05]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-06]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-07]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-08]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-09]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-10]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-11]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-12]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all fit-content">
+<caption class="title">Table 9. Matrice de correspondance Éléments/Essais - Cryptographie - Couche session</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes08</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes09</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceSes10</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-01]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-02]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-03]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-04]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-05]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-06]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-07]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-08]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-09]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-10]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-11]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-12]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all fit-content">
+<caption class="title">Table 10. Matrice de correspondance Éléments/Essais - Cryptographie - Couche transport</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceTra01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceTra02</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-01]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-02]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-03]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-04]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-05]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-06]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-07]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-08]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-09]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-10]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-11]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-12]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all fit-content">
+<caption class="title">Table 11. Matrice de correspondance Éléments/Essais - Cryptographie - Couche réseau</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceRes01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceRes02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceRes03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceRes04</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-01]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-02]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-03]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-04]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-05]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-06]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-07]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-08]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-09]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-10]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-11]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-12]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all fit-content">
+<caption class="title">Table 12. Matrice de correspondance Éléments/Essais - Cryptographie - Algorithmes</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceAlgo01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ceAlgo02</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-01]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-02]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-03]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-04]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-05]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-06]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-07]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-08]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-09]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-10]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-11]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[PRO-CY-12]</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:59:40 -0400
+</div>
+</div>
+</body>
+</html>

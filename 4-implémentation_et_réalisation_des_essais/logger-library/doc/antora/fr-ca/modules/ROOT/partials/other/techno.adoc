@@ -1,0 +1,8 @@
+La *{page-component-title}* est développée en Java à l’aide des cadres d’applications Spring et
+Spring Boot. Ses tests utilisent `spring-boot-starter-test` avec le cadre d’applications PowerMock.
+À l’instar des autres composants de PARS3, elle utilise le logiciel Gradle comme
+outil de construction automatisée (_build automation tool_).
+
+En outre, la bibliothèque recourt au composant `*Log*` du logiciel Apache Camel et à la bibliothèque
+d’interfaçage `slf4j-ext-griis`, qui implémente la façade `slf4j-ext` pour fournir une nomenclature
+de journalisation standardisée.

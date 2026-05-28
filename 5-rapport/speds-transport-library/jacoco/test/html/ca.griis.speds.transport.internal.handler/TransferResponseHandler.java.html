@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransferResponseHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.internal.handler</a> &gt; <span class="el_source">TransferResponseHandler.java</span></div><h1>TransferResponseHandler.java</h1><pre class="source lang-java linenums">package ca.griis.speds.transport.internal.handler;
+
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto;
+import ca.griis.js2p.gen.speds.transport.api.dto.Context34Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.Context45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.Header45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit34Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.ProtocolDataUnit4TraDto;
+import ca.griis.js2p.gen.speds.transport.api.dto.ServicePrimitive;
+import ca.griis.js2p.gen.speds.transport.api.dto.Speds45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.StampDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.api.NetworkHost;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+/**
+ * &quot;Description brève du composant (classe, interface, ...)&quot;
+ *
+ * &lt;h3&gt;Historique&lt;/h3&gt;
+ * &lt;p&gt;
+ * XXXX-XX-XX [AS] - Implémentation initiale&lt;br&gt;
+ * &lt;/p&gt;
+ *
+ * &lt;h3&gt;Tâches&lt;/h3&gt;
+ * S.O.
+ *
+ * @author [AS] ameni.souid@usherbrooke.ca
+ * @since
+ */
+public final class TransferResponseHandler {
+<span class="fc" id="L45">  private static final GriisLogger logger =</span>
+<span class="fc" id="L46">      GriisLoggerFactory.getLogger(TransferResponseHandler.class);</span>
+
+  private final ObjectMapper objectMapper;
+  private final NetworkHost networkHost;
+  private final Map&lt;UUID, Boolean&gt; indicatedMessages;
+  private final Speds45Dto speds45Dto;
+  private final CryptographyService cryptographyService;
+
+  public TransferResponseHandler(ObjectMapper objectMapper, NetworkHost networkHost,
+      Map&lt;UUID, Boolean&gt; indicatedMessages, Speds45Dto version,
+<span class="fc" id="L56">      CryptographyService cryptographyService) {</span>
+<span class="fc" id="L57">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L58">    this.networkHost = networkHost;</span>
+<span class="fc" id="L59">    this.indicatedMessages = indicatedMessages;</span>
+<span class="fc" id="L60">    this.speds45Dto = version;</span>
+<span class="fc" id="L61">    this.cryptographyService = cryptographyService;</span>
+<span class="fc" id="L62">  }</span>
+
+  public CompletableFuture&lt;Optional&lt;String&gt;&gt; handle(InterfaceDataUnit34Dto idu) {
+<span class="fc" id="L65">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    CompletableFuture&lt;Optional&lt;String&gt;&gt; result =
+<span class="fc" id="L68">        CompletableFuture.completedFuture(Optional.empty());</span>
+
+    try {
+<span class="fc" id="L71">      final Context34Dto ctx34 = idu.getContext();</span>
+<span class="fc" id="L72">      final String sdu = idu.getMessage();</span>
+<span class="fc" id="L73">      final var options = objectMapper.convertValue(</span>
+<span class="fc" id="L74">          ctx34.getOptions(),</span>
+<span class="fc" id="L75">          new TypeReference&lt;Map&lt;String, String&gt;&gt;() {});</span>
+
+<span class="fc" id="L77">      final String tn = options.get(&quot;TN&quot;);</span>
+<span class="fc" id="L78">      final UUID msgId = UUID.fromString(tn);</span>
+
+<span class="fc" id="L80">      var removed = indicatedMessages.remove(msgId);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">      if (sdu.startsWith(&quot;FAILED&quot;)) {</span>
+<span class="nc" id="L82">        logger.error(Error.IGNORED_ERROR, new RuntimeException(sdu));</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">      } else if (removed == null) {</span>
+<span class="fc" id="L84">        final String exMessage =</span>
+            &quot;This tracking number from this transfer response does not match any received message&quot;;
+<span class="fc" id="L86">        logger.error(Error.IGNORED_ERROR, new RuntimeException(exMessage));</span>
+<span class="fc" id="L87">      } else {</span>
+        // request vers couche inférieure
+<span class="fc" id="L89">        final Context45Dto ctx45 = new Context45Dto(</span>
+<span class="fc" id="L90">            ctx34.getDestinationIri(),</span>
+<span class="fc" id="L91">            ctx34.getSourceIri(),</span>
+            Context45Dto.Service.TRANSFER,
+            ServicePrimitive.REQUEST,
+<span class="fc" id="L94">            false);</span>
+
+        // Construire TPDU TRA.MSG.REC
+<span class="fc" id="L97">        final Header45Dto header45Dto = new Header45Dto(</span>
+            Header45Dto.Msgtype.TRA_MSG_REC,
+            msgId,
+<span class="fc" id="L100">            ctx34.getSourceCode(),</span>
+<span class="fc" id="L101">            ctx34.getDestinationCode(),</span>
+            speds45Dto);
+
+        // contenu vide pour TRA.MSG.REC
+<span class="fc" id="L105">        final String content = &quot;&quot;;</span>
+<span class="fc" id="L106">        final var hashSdu = cryptographyService.hash(SpedsConfigItemDto.SpedsLayer.TRANSPORT,</span>
+<span class="fc" id="L107">            content.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L108">        final String sealContentSdu = Base64.getEncoder().encodeToString(hashSdu);</span>
+
+        // Création du sceau d'intégrité de l'entête
+<span class="fc" id="L111">        final String headerSerialized = objectMapper.writeValueAsString(header45Dto);</span>
+<span class="fc" id="L112">        final var traHeader = cryptographyService.hash(SpedsConfigItemDto.SpedsLayer.TRANSPORT,</span>
+<span class="fc" id="L113">            headerSerialized.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L114">        final var sealheaderSdu = Base64.getEncoder().encodeToString(traHeader);</span>
+<span class="fc" id="L115">        final var stamp = new StampDto(sealheaderSdu, sealContentSdu);</span>
+
+<span class="fc" id="L117">        final ProtocolDataUnit4TraDto pdu =</span>
+            new ProtocolDataUnit4TraDto(header45Dto, stamp, content);
+
+        // Construire TIDU45
+<span class="fc" id="L121">        final InterfaceDataUnit45Dto tidu45 = new InterfaceDataUnit45Dto(</span>
+            ctx45,
+<span class="fc" id="L123">            objectMapper.writeValueAsString(pdu));</span>
+<span class="fc" id="L124">        final String tidu45Json = objectMapper.writeValueAsString(tidu45);</span>
+
+        // Attendre la confirmation
+        try {
+<span class="fc" id="L128">          Optional&lt;String&gt; confirm = networkHost.submitIdu(tidu45Json).get();</span>
+<span class="pc bpc" id="L129" title="2 of 4 branches missed.">          if (confirm.isPresent() &amp;&amp; confirm.get().startsWith(&quot;FAILED&quot;)) {</span>
+<span class="nc" id="L130">            logger.error(Error.IGNORED_ERROR, new RuntimeException(confirm.get()));</span>
+          }
+<span class="nc" id="L132">        } catch (InterruptedException ex) {</span>
+<span class="nc" id="L133">          logger.error(Error.IGNORED_ERROR, ex);</span>
+
+<span class="nc" id="L135">          Thread.currentThread().interrupt();</span>
+<span class="nc" id="L136">        } catch (ExecutionException ex) {</span>
+<span class="nc" id="L137">          logger.error(Error.IGNORED_ERROR, ex);</span>
+<span class="pc" id="L138">        }</span>
+      }
+<span class="fc" id="L140">    } catch (JsonProcessingException | RuntimeException ex) {</span>
+<span class="fc" id="L141">      logger.error(Error.IGNORED_ERROR, ex);</span>
+<span class="fc" id="L142">    }</span>
+
+<span class="fc" id="L144">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L145">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

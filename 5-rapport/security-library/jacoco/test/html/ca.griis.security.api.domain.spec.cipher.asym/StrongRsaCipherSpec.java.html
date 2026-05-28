@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StrongRsaCipherSpec.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">security-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.security.api.domain.spec.cipher.asym</a> &gt; <span class="el_source">StrongRsaCipherSpec.java</span></div><h1>StrongRsaCipherSpec.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe StrongRsaCipherSpec.
+ * @brief @~english Implementation of the class StrongRsaCipherSpec.
+ */
+
+package ca.griis.security.api.domain.spec.cipher.asym;
+
+import java.security.spec.MGF1ParameterSpec;
+import java.util.Map;
+import javax.crypto.spec.OAEPParameterSpec;
+import javax.crypto.spec.PSource;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Définit la specification de chiffrement RSA fort.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      «2025-12-17» [BD] - Implémentation initiale
+ * @par Tâches
+ *      S.O.
+ */
+public class StrongRsaCipherSpec extends RsaCipherSpec {
+  public StrongRsaCipherSpec() {
+<span class="fc" id="L49">    super(</span>
+        &quot;RSA/ECB/OAEPWithSHA-256AndMGF1Padding&quot;,
+        new OAEPParameterSpec(
+            &quot;SHA-512&quot;,
+            &quot;MGF1&quot;,
+            MGF1ParameterSpec.SHA512,
+            PSource.PSpecified.DEFAULT));
+<span class="fc" id="L56">  }</span>
+
+  @Override
+  public Map&lt;String, String&gt; getParameters() {
+<span class="fc" id="L60">    return Map.of(</span>
+        &quot;mdName&quot;, &quot;SHA-512&quot;,
+        &quot;mgfName&quot;, &quot;MGF1&quot;,
+        &quot;mgfSpec&quot;, &quot;SHA-512&quot;,
+        &quot;pSrc&quot;, &quot;&quot;);
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

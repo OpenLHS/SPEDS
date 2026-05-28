@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="">
+<meta name="keywords" content="SI">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Spécification des Essais - « speds-datalink-library »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Spécification des Essais -  « <em>speds-datalink-library</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-1</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_contexte_général_des_tests">1. Contexte général des tests</a></li>
+<li><a href="#_éléments_testées">2. Éléments Testées</a></li>
+<li><a href="#_hypothèse">3. Hypothèse</a></li>
+<li><a href="#_données_globales">4. Données globales</a></li>
+<li><a href="#_cas_de_test">5. Cas de Test</a>
+<ul class="sectlevel2">
+<li><a href="#_ct_001_cas_de_test_1_échec_de_lenvoi_de_données_avec_un_iri_destinataire_non_rejoignable">5.1. [CT_001] Cas de Test 1 - Échec de l&#8217;envoi de données avec un IRI destinataire non rejoignable</a></li>
+<li><a href="#_ct_002_cas_de_test_2_envoi_réussi_denvoi_de_données">5.2. [CT_002] Cas de Test 2 - Envoi réussi d&#8217;envoi de données</a></li>
+<li><a href="#_ct_003_cas_de_test_3_réception_réussie_dun_échange_de_données">5.3. [CT_003] Cas de Test 3 - Réception réussie d&#8217;un échange de données</a></li>
+</ul>
+</li>
+<li><a href="#_essais">6. Essais</a>
+<ul class="sectlevel2">
+<li><a href="#_environnement">6.1. Environnement</a></li>
+<li><a href="#_descriptions">6.2. Descriptions</a></li>
+<li><a href="#_incongruité">6.3. Incongruité</a></li>
+<li><a href="#_matrice_de_correspondance_élémentsessais">6.4. Matrice de correspondance Éléments/Essais</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Document prêt à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-29 13:44</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-29 14:11</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Historique</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Changement important</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception initiale</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-01-21</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 2: retrait du init</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">SSC</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-05-21</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 3</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-06-20</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 4</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-12-10 13:40</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 5</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-13 11:00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 6<br>
+  Correction du cas test 3</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-29 13:30</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Référence</caption>
+<colgroup>
+<col>
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Consultation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6_speds_datalink-scs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-29</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InterfaceDataUnit-5_6.schema.json</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-29</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contexte_général_des_tests">1. Contexte général des tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ce document définit les essais nécessaires pour vérifier et valider le fonctionnement de la couche liaison du protocole de communication SPEDS.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_éléments_testées">2. Éléments Testées</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>[PRO-2] Demande d&#8217;échanger des données</p>
+</li>
+<li>
+<p>[PRO-4] Indique un échange de données</p>
+</li>
+<li>
+<p>[PRO-5] Répond à un échange de données</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèse">3. Hypothèse</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_données_globales">4. Données globales</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cas_de_test">5. Cas de Test</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ct_001_cas_de_test_1_échec_de_lenvoi_de_données_avec_un_iri_destinataire_non_rejoignable">5.1. [CT_001] Cas de Test 1 - Échec de l&#8217;envoi de données avec un IRI destinataire non rejoignable</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Échec de l&#8217;envoi de données avec IRI destinataire non rejoignable sur le protocole de communication.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-5_6 ` où le service est `transfer</code> et la primitive de service est <code>request</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU avec un IRI destinataire qui n&#8217;existe pas dans la configuration donnée.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S_01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-5_6</code> où le service est <code>transfer</code>, la primitive de service est <code>confirm</code> et <code>ConfirmMessageContent</code> contient la valeur <code>FAILED</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU avec un message de confimation contenant un échec.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>L&#8217;IDU sortant du processus correspond aux données de sorties.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ct_002_cas_de_test_2_envoi_réussi_denvoi_de_données">5.2. [CT_002] Cas de Test 2 - Envoi réussi d&#8217;envoi de données</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Envoi réussi d&#8217;un envoi de données.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-5_6</code>  où le service est <code>transfer</code> et la primitive de service est <code>request</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU qu&#8217;on veut transférer des données.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S_02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-5_6</code> où le service est <code>transfer</code>, la primitive de service est <code>confirm</code> et <code>ConfirmMessageContent</code> dont la valeur est <code>SUCCEED</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Un IDU valide avec un message de confirmation de succès.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est soulevée.</p>
+</li>
+<li>
+<p>L&#8217;IDU sortant du processus correspond aux données de sorties.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ct_003_cas_de_test_3_réception_réussie_dun_échange_de_données">5.3. [CT_003] Cas de Test 3 - Réception réussie d&#8217;un échange de données</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Description</dt>
+<dd>
+<p>Réception réussie d&#8217;un échange de données.</p>
+</dd>
+<dt class="hdlist1">Hypothèse</dt>
+<dd>
+<p>S.O.</p>
+</dd>
+<dt class="hdlist1">Données d&#8217;entrée</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E_03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ProtocolMessageContent</code> non vide</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contenu du message récupéré à l&#8217;aide du protocole de communication utilisé (IDU) valide.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Données de sortie</dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Valeur</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S_03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InterfaceDataUnit-5_6</code> où le service est <code>transfer</code>, la primitive de service est <code>indication</code> et le contenu du message correspond à <code>ProtocolMessageContent</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IDU qui contient les données échangées.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Conditions de réussite</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Aucune exception n&#8217;est soulevée.</p>
+</li>
+<li>
+<p>L&#8217;IDU sortant du processus correspond aux données de sorties.</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_essais">6. Essais</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_environnement">6.1. Environnement</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 85.7143%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;entité source et destination sont initialisées.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_descriptions">6.2. Descriptions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Identifiant</th>
+<th class="tableblock halign-left valign-top">Environnement</th>
+<th class="tableblock halign-left valign-top">Cas de test</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENV1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CT_001, CT_002, CT_003</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vérifier que l&#8217;envoi de données et la réception de données.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_incongruité">6.3. Incongruité</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">[INC-01]</dt>
+<dd>
+<p>Le processus « Répond à un échange de donnée » car le processus est interne. Il devra être vérifié par des essais unitaires.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_matrice_de_correspondance_élémentsessais">6.4. Matrice de correspondance Éléments/Essais</h3>
+<table class="tableblock frame-all grid-all fit-content">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E002</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-4</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRO-5</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:56:28 -0400
+</div>
+</div>
+</body>
+</html>

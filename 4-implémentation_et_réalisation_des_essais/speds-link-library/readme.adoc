@@ -1,0 +1,342 @@
+// Settings
+:idprefix:
+:idseparator: -
+:page-component-title: speds-link-library
+:page-component: SPEDS
+
+= {page-component-title}
+
+[#summary]
+== Sommaire
+
+La *{page-component-title}* implémente la couche  liaison du protocole d'échange *{page-component}*.
+
+[#overview]
+== Présentation
+
+Le rôle de *{page-component-title}* est d'échanger des données entre des entités en respectant l'interface d'unité de données.
+
+Un service d'API est offert pour la couche supérieure.
+
+*{page-component-title}* permet d'effectuer les tâches suivantes :
+
+* Effectuer un échange des données et confirmer celui-ci;
+* Recevoir les données échangées par un initiateur;
+* Répondre à un échange de données;
+* Libérer les ressources utilisées en lien avec le protocole liaison.
+
+[#techno]
+== Technologies utilisées
+
+* Languages utilisés :
+** Java
+
+* Les API utilisés :
+** S.O.
+
+* Les applications tierces :
+** `jsonschema2pojo`
+** `reactor-netty`
+
+[#prerequisite]
+== Préalable
+
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient
+remplies :
+
+* Logiciels prérequis :
+** S.O.
+
+* Composants GRIIS prérequis :
+** `logger-library`
+
+* Systèmes d'exploitation prérequis :
+** multi-plateforme
+*** S.O.
+
+* Matériels prérequis :
+** S.O.
+
+* Autres :
+** `jsonschema2pojo`
+** `reactor-netty`
+
+[#build]
+== Construction
+
+Pour construire la *{page-component-title}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew build
+----
+
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests
+
+Pour exécuter les tests, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew test
+----
+
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la *{page-component-title}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-link-library:${version}"
+}
+----
+
+La *{page-component-title}* peut être déclarée en utilisant
+ `ca.griis:speds-link-library`.
+
+Pour développer directement sur la *{page-component-title}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+ Pour plus de renseignements, consulter la section « <<Construction>> ».
+ 
+=== Littérature
+
+*CompletableFuture*
+
+CompletableFuture est une classe permettant de gérer des tâches de calcul asynchrones. Elle offre une grande flexibilité en rendant possible l’exécution non bloquante des calculs.
+
+https://www.baeldung.com/java-completablefuture
+
+[source, gradle]
+----
+// Quelques exemples en Java
+
+var future = CompletableFuture.runAsync(() -> {..., executor);
+var future = CompletableFuture.completedFuture(out);
+----
+
+=== Interface de programmation
+
+==== Module dto
+
+Définit l'unité d'interface de données qui dialogue avec la couche liaison.
+
+==== Module api
+
+*Host*
+
+Interface permettant de définir et d’exposer les opérations d’un hôte de la couche liaison à un utilisateur.
+
+|===
+| Identifiants de processus | Signature impl.             | Comportement
+
+| PRO-2, PRO-5          
+| CompletableFuture<Optional<String>> submitIdu(String idu)
+|
+
+*Entrée* : + 
+Interface d'unité de données fournie par l'utilisateur de la couche. +
+*Comportement*:  +
+Soumet le traitement de l’interface d'unité de données (réseau et liaison) qui respecte le service de transfert et les primitives de requête ou de réponse. +
+*Sortie* : + 
+PRO-2, la sortie, après le calcul de traitement (get), sera une interface d'unité de données de confirmation. + 
+PRO-4, la sortie, après le calcul de traitement (get), sera une option vide.
+
+| S.O.            
+| void close()
+| Désalloue les ressources sur la couche de protocole.
+
+|===
+
+*HostEvent*
+
+Interface qui permet à une classe qui utilise la couche liaison de se faire notifier des événements.
+
+* L’utilisateur de la couche liaison qui souhaite écouter les événements doit définir une classe implémentant l’interface `HostEvent`.
+
+|===
+| Id du processus | Signature impl.             | Comportement
+
+| PRO-4           
+| void notifyIdu(String idu)
+| Notifie l'interface d'unité de données construit par l'hôte de la couche liaison à partir des données reçues par le protocole de communication.
+
+| S.O.          
+| void notifyException(Exception exception);
+| Notifie une exception à l'utilisateur de la couche liaison à partir du protocole de communication.
+
+|===
+
+*HostFactory*
+
+Définit la fabrique des hôtes du protocole de *{page-component}* au niveau de la couche liaison. 
+
+. La fabrique permet:
+.. d'initialiser la création d'un hôte avec:
+... un dictionnaire d'options de configuration sous une chaîne de caractères respectant le format JSON.
+... une instance de la classe qui implémente `HostEvent` et qui recevra les `IDU`.
+
+. Options de configuration de la couche liaison :
+
+[, source]
+.Configuration du protocole utlisée
+----
+speds.dl.protocol - Protocole de communication. 
+
+- Actuellement, seulement le protocole `HTTPS` est offert.
+- La casse de l'option est ignorée.
+- Le client et serveur HTTPS fonctionnent avec HTTP/2.0 sous TLS.
+----
+
+[, source]
+.Configuration générale
+----
+speds.dl.https.server.host - Adresse rejoignable du serveur.
+speds.dl.https.server.port - Port du socket du serveur.
+speds.dl.https.cert - Certificat X.509 du serveur encodé en Base64.
+speds.dl.https.private.key - Clé privée associée au certificat PKCS#8 encodée en Base64.
+----
+
+[, source]
+.Longueur du contenu
+----
+speds.dl.https.max.content.length.bytes - Longueur maximale en octet pour émettre ou recevoir un contenu. 
+
+# La valeur par défaut est 1048576 - 1 Mo.
+----
+
+[, source]
+.Configuration de TLS
+----
+speds.dl.https.mode - Mode de vérification des certificats avec TLS (sous une énumération).
+
+# Énumération 
+insecure = TLS sans authentification de certificat.
+standard = TLS avec l'authentification standard.
+mTLS = TLS avec authentification mutuelle.
+
+# La valeur par défaut est mTLS.
+----
+
+[, source]
+.Configuration des certificats racines de TLS
+----
+speds.dl.https.root.certs - Liste des certificats racines encodés en Base64. 
+
+# Ex : 
+speds.dl.https.root.certs : [cert1 encodé en Base64, cert2 encodé en Base64]
+
+# La valeur par défaut est une liste vide.
+
+#IMPORTANT: Si aucun certificat racine est défini, les certificats racines fournis par le JDK de Java sera choisi par défaut.
+----
+
+==== Utilisation de l'API
+
+L'utilisateur de la couche liaison doit : 
+
+* définir une classe qui implémente l'interface `HostEvent`;
+* ajouter l'annotation `@Override` à la méthode de la classe qui implémente l'interface `HostEvent`;
+* fournir l'instance de la classe qui implémente l'interface `HostEvent` et les options de configurations à la fabrique pour créer un hôte;
+* appeler la méthode `submitIdu` de l’hôte de la couche liaison précédemment créé par la fabrique afin de soumettre des `IDU`;
+* traiter les `IDU` notifiés par l'instance de la classe qui implémente l'interface `HostEvent`.
+
+[source, gradle]
+----
+public final class ExampleHost implements HostEvent {
+  @Override
+  public void notifyIdu(String idu) {
+    ...
+  }
+  
+    @Override
+  public void notifyException(Exception exception) {
+    ...
+  }
+}
+
+...
+
+ExampleHost host = new ExampleHost();
+Host dataLinkHost = factory.init(params, host);
+
+...
+
+var result = dataLinkHost.submit(idu);
+var optionalIdu = result.get();
+----
+
+[#launch]
+== Démarrage
+
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{page-component-title}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+## speds-link-library
+
+Couche liaison du projet SPEDS
+
+## Background and details
+
+S.O.
+
+## Contact information
+* Jean-François Ethier : JF.Ethier@usherbrooke.ca
+* Félix Camirand-Lemyre : Felix.Camirand.Lemyre@usherbrooke.ca
+Research group: **GRIIS** - Groupe de recherche interdisciplinaire en
+informatique de la santé (https://griis.ca)
+Health Data Research Network Canada (https://hdrn.ca)
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].

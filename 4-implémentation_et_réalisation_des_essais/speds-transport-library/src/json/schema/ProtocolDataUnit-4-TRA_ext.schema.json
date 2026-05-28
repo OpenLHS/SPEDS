@@ -1,0 +1,140 @@
+{
+  "$id": "https://schema.openlhs.info/speds/json/v7.1.1/pdu/ProtocolDataUnit-4-TRA.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolDataUnit-4-TRA (2026-01-15T10:20:00-0500)",
+  "$defs": {
+    "iri": {
+      "description": "A valid IR according to RFC 3987",
+      "type": "string",
+      "format": "iri"
+    },
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "bytestring": {
+      "description": "A base-64 encoded bytestring",
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "versioning": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)(\\.[0-9]+[a-z]*)$"
+    }
+  },
+  "description": "For the Transport Layer of SPEDS (Layer 4) : a unit of data which is transferred from one end of a connection to the other with no loss of identity or meaning.",
+  "type": "object",
+  "javaType": "ProtocolDataUnit4Tra",
+  "properties": {
+    "header": {
+      "description": "The header of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "javaType": "Header45",
+      "properties": {
+        "msgtype": {
+          "description": "The type of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "enum": [
+            "TRA.INF.ENV",
+            "TRA.INF.REC",
+            "TRA.MSG.ENV",
+            "TRA.MSG.REC",
+            "TRA.FIN.ENV",
+            "TRA.FIN.REC"
+          ]
+        },
+        "id": {
+          "description": "The identifier of a SPEDS message. Mandatory in all layers.",
+          "oneOf": [
+            {
+              "description": "This identifier format is used for TRA.MSG message type",
+              "type": "object",
+              "properties": {
+                "message_number": {
+                  "type": "number"
+                },
+                "repetition_number": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "message_number",
+                "repetition_number"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "description": "This identifier format is used for TRA.INF and TRA.FIN message type",
+              "type": "string",
+              "format": "uuid"
+            }
+          ]
+        },
+        "source_code": {
+          "description": "The source entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "destination_code": {
+          "description": "The destination entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "version": {
+          "type": "object",
+          "javaType": "Speds45",
+          "properties": {
+            "number": {
+              "description": "The version of the current layer.",
+              "$ref": "#/$defs/versioning"
+            },
+            "reference": {
+              "description": "The reference of the present version of the layer.",
+              "type": "string",
+              "format": "iri"
+            }
+          },
+          "required": [
+            "number",
+            "reference"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "msgtype",
+        "id",
+        "source_code",
+        "destination_code",
+        "version"
+      ]
+    },
+    "stamp": {
+      "type": "object",
+      "properties": {
+        "header_seal": {
+          "$ref": "#/$defs/bytestring"
+        },
+        "content_seal": {
+          "$ref": "#/$defs/bytestring"
+        }
+      },
+      "required": [
+        "header_seal",
+        "content_seal"
+      ],
+      "additionalProperties": false
+    },
+    "content": {
+      "description": "The content of a SPEDS message. Mandatory in all layers.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "header",
+    "stamp",
+    "content"
+  ],
+  "additionalProperties": false
+}

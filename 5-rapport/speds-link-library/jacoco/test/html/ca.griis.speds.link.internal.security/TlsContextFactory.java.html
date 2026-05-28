@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TlsContextFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.link.internal.security</a> &gt; <span class="el_source">TlsContextFactory.java</span></div><h1>TlsContextFactory.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe TlsContextFactory.
+ * @brief @~english Implementation of the TlsContextFactory class.
+ */
+
+package ca.griis.speds.link.internal.security;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Warn;
+import ca.griis.speds.link.api.exception.ProtocolException;
+import io.netty.handler.ssl.ClientAuth;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
+import java.util.List;
+import javax.net.ssl.SSLException;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre un service de création de contexte TLS.
+ * @par Details
+ *      &lt;P&gt;
+ *      Pour le modes mTLS ou TLS standard, si aucun certificat racine n’est défini, les
+ *      certificats racines fournis par le JDK de Java sont utilisés par défaut.
+ *      &lt;/p&gt;
+ * 
+ *      &lt;P&gt;
+ *      Seules les versions 1.2 et 1.3 du protocole TLS sont supportées.
+ *      &lt;/p&gt;
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-04-21 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="nc" id="L64">public final class TlsContextFactory {</span>
+<span class="fc" id="L65">  private static final GriisLogger logger = getLogger(TlsContextFactory.class);</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Construit le contexte TLS du serveur.
+   * @param mode Le mode de vérification de certificat dans TLS.
+   * @param certificate Certificat du serveur.
+   * @param privateKey La clé privée du serveur.
+   * @param rootCerts Les certificats racines.
+   * @return Le contexte TLS du serveur.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public static SslContext createForServer(String mode, X509Certificate certificate,
+      PrivateKey privateKey, List&lt;X509Certificate&gt; rootCerts) {
+
+    try {
+<span class="fc" id="L87">      var builder =</span>
+<span class="fc" id="L88">          SslContextBuilder.forServer(privateKey, certificate).protocols(&quot;TLSv1.2&quot;, &quot;TLSv1.3&quot;);</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">      if (mode.equals(&quot;insecure&quot;)) {</span>
+<span class="fc" id="L90">        builder = builder.trustManager(InsecureTrustManagerFactory.INSTANCE);</span>
+
+<span class="fc" id="L92">        logger.warn(Warn.VARIABLE_LOGGING_1, &quot;trustManagerFactory&quot;,</span>
+            &quot;Insecure TLS client context. Use only for testing.&quot;);
+<span class="pc bpc" id="L94" title="1 of 4 branches missed.">      } else if (mode.equals(&quot;standard&quot;) || mode.equals(&quot;mTLS&quot;)) {</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (rootCerts.isEmpty()) {</span>
+<span class="fc" id="L96">          builder = builder.trustManager(JavaTrustStore.getDefaultTrustFactoryManager());</span>
+        } else {
+<span class="fc" id="L98">          builder = builder.trustManager(rootCerts);</span>
+        }
+
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (mode.equals(&quot;mTLS&quot;)) {</span>
+<span class="fc" id="L102">          builder = builder.clientAuth(ClientAuth.REQUIRE);</span>
+        }
+      } else {
+<span class="nc" id="L105">        throw new ProtocolException(&quot;Unknown tls mode: &quot; + mode);</span>
+      }
+
+<span class="fc" id="L108">      SslContext sslContext = builder.build();</span>
+<span class="fc" id="L109">      return sslContext;</span>
+<span class="nc" id="L110">    } catch (SSLException e) {</span>
+<span class="nc" id="L111">      throw new ProtocolException(&quot;Error initiating TLS context for server&quot;, e);</span>
+    }
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Construit le contexte TLS du client.
+   * @param mode Le mode de vérification de certificat dans TLS.
+   * @param certificate Certificat du client.
+   * @param privateKey La clé privée du client.
+   * @param rootCerts Les certificats racines.
+   * @return Le contexte TLS du client.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public static SslContext createForClient(String mode, X509Certificate certificate,
+      PrivateKey privateKey, List&lt;X509Certificate&gt; rootCerts) {
+    try {
+<span class="fc" id="L134">      var builder = SslContextBuilder.forClient().protocols(&quot;TLSv1.2&quot;, &quot;TLSv1.3&quot;);</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">      if (mode.equals(&quot;insecure&quot;)) {</span>
+<span class="fc" id="L136">        builder = builder.trustManager(InsecureTrustManagerFactory.INSTANCE);</span>
+
+<span class="fc" id="L138">        logger.warn(Warn.VARIABLE_LOGGING_1, &quot;trustManagerFactory&quot;,</span>
+            &quot;Insecure TLS server context. Use only for testing.&quot;);
+<span class="pc bpc" id="L140" title="1 of 4 branches missed.">      } else if (mode.equals(&quot;standard&quot;) || mode.equals(&quot;mTLS&quot;)) {</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (rootCerts.isEmpty()) {</span>
+<span class="fc" id="L142">          builder = builder.trustManager(JavaTrustStore.getDefaultTrustFactoryManager());</span>
+        } else {
+<span class="fc" id="L144">          builder = builder.trustManager(rootCerts);</span>
+        }
+
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (mode.equals(&quot;mTLS&quot;)) {</span>
+<span class="fc" id="L148">          builder = builder.keyManager(privateKey, certificate);</span>
+        }
+      } else {
+<span class="nc" id="L151">        throw new ProtocolException(&quot;Unknown tls mode: &quot; + mode);</span>
+      }
+
+<span class="fc" id="L154">      SslContext sslContext = builder.build();</span>
+<span class="fc" id="L155">      return sslContext;</span>
+<span class="nc" id="L156">    } catch (SSLException e) {</span>
+<span class="nc" id="L157">      throw new ProtocolException(&quot;Error initiating TLS context for client&quot;, e);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

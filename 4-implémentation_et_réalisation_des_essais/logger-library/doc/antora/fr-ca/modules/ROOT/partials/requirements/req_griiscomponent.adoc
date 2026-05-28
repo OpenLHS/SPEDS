@@ -1,0 +1,9 @@
+** cette bibliothèque{nbsp}:
+*** `slf4j-ext-griis` (bibliothèque d'interfaçage du journalisateur){nbsp};
+
+** ces outils{nbsp}:
+*** `gradle-plugin-griis`(projet des scripts de construction){nbsp};
+*** liste XML qui figure dans `dependencies-java-griis` (projet des dépendances Java).
+
+IMPORTANT: Il importe de prendre en compte les dépendances transitives et donc de cloner aussi les
+dépôts des composants nécessaires au fonctionnement des dépendances directes listées ci-dessus.

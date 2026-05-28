@@ -1,0 +1,23 @@
+= {page-component-title}
+// Paramètres
+:idprefix:
+:idseparator: -
+
+== Objet et portée
+La présente documentation porte sur la *{page-component-title}*. Elle a pour but{nbsp}:
+
+* de présenter la bibliothèque et de lister l’ensemble de ses fonctionnalités;
+* de fournir l’ensemble des informations requises avant d’entreprendre toute activité relative à la
+  construction, à l’utilisation ou au démarrage de la bibliothèque.
+
+Cette documentation s’adresse aux analystes, aux architectes et aux développeurs qui désirent
+configurer une plateforme expérimentale de PARS3 pour répondre aux besoins de leur équipe.
+
+== Contenu
+Cette documentation contient{nbsp}:
+
+* une présentation de la bibliothèque et des services offerts par celle-ci;
+* une présentation sommaire des technologies utilisées pour développer la bibliothèque;
+* une liste des conditions requises avant d’entreprendre toute activité de développement ou
+  d’utilisation de la bibliothèque;
+* des hyperliens menant au dépôt du code source ainsi qu'à la documentation du code.

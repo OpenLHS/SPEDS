@@ -1,0 +1,60 @@
+plugins {
+  id 'maven-publish'
+  id 'java-library'
+}
+
+dependencyLocking {
+  lockAllConfigurations()
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+group = "ca.griis"
+version = "7.2.0"
+
+test {
+  useJUnitPlatform()
+}
+
+dependencies {
+  implementation "ca.griis:logger-library:1.1.0"
+  implementation "ca.griis:speds-link-library:6.3.0"
+  implementation "ca.griis:speds-network-library:5.3.0"
+  implementation "ca.griis:speds-transport-library:9.2.0"
+  implementation "ca.griis:speds-session-library:9.2.0"
+  implementation "ca.griis:speds-presentation-library:4.2.0"
+  implementation "ca.griis:speds-application-library:3.2.0"
+  implementation "com.fasterxml.jackson.core:jackson-databind:2.17.2"
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.17.2"
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2"
+  implementation "org.bouncycastle:bcprov-jdk18on:1.84"
+  implementation "org.bouncycastle:bcpkix-jdk18on:1.84"
+  implementation "org.apache.jena:jena-iri:5.6.0"
+  implementation "org.slf4j:slf4j-api:2.0.16"
+  implementation "ch.qos.logback:logback-core:1.5.8"
+  implementation "ch.qos.logback:logback-classic:1.5.8"
+  testImplementation "org.junit.platform:junit-platform-launcher:1.10.3"
+  testImplementation "org.mockito:mockito-core:5.11.0"
+  testImplementation "org.mockito:mockito-junit-jupiter:5.11.0"
+  testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.3"
+  testImplementation "net.jqwik:jqwik:1.7.0"
+  testImplementation "net.jqwik:jqwik-api:1.7.0"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.3"
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}

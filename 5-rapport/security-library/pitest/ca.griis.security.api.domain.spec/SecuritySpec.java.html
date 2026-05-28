@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>SecuritySpec.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @file</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @copyright @@GRIIS_COPYRIGHT@@</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @licence @@GRIIS_LICENCE@@</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @version @@GRIIS_VERSION@@</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @brief @~french Contient la description de la classe SecuritySpec.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @brief @~english Implementation of the class SecuritySpec.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package ca.griis.security.api.domain.spec;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Map;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.apache.commons.lang3.builder.EqualsBuilder;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.apache.commons.lang3.builder.HashCodeBuilder;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.apache.commons.lang3.builder.ToStringBuilder;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.apache.commons.lang3.builder.ToStringStyle;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @brief @~english &#171;Brief component description (class, interface, ...)&#187;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Details</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      &#171;Detailed description of the component (optional)&#187;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Model</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      &#171;Model (Abstract, automation, etc.) (optional)&#187;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Conception</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      &#171;Conception description (criteria and constraints) (optional)&#187;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Limits</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      &#171;Limits description (optional)&#187;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @brief @~french D&#233;finit la specification de s&#233;curit&#233;.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Details</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      S.O.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Mod&#232;le</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      S.O.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Conception</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      S.O.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Limites</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      S.O.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par Historique</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      &#171;2025-12-17&#187; [BD] - Impl&#233;mentation initiale</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @par T&#226;ches</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *      S.O.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public abstract class SecuritySpec {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  protected final String algo;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>  protected SecuritySpec(String algo) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    this.algo = algo;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_55'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public String getAlgo() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_56'/>
+56
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_56'>1</a>
+<span>
+1. getAlgo : replaced return value with &#34;&#34; for ca/griis/security/api/domain/spec/SecuritySpec::getAlgo &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return algo;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public abstract Map&#60;String, String&#62; getParameters();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_62'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public final boolean equals(Object o) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_63'/>
+63
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_63'>1</a>
+<span>
+1. equals : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (o == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_64'/>
+64
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_64'>1</a>
+<span>
+1. equals : replaced boolean return with true for ca/griis/security/api/domain/spec/SecuritySpec::equals &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return false;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_65'/>
+65
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_65'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_66'/>
+66
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_66'>1</a>
+<span>
+1. equals : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    if (!(o instanceof SecuritySpec)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_67'/>
+67
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_67'>1</a>
+<span>
+1. equals : replaced boolean return with true for ca/griis/security/api/domain/spec/SecuritySpec::equals &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      return false;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_68'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_69'/>
+69
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_69'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    SecuritySpec that = (SecuritySpec) o;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_70'/>
+70
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_70'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    EqualsBuilder equalsBuilder = new EqualsBuilder();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_71'/>
+71
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_71'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    equalsBuilder.append(algo, that.algo);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_72'/>
+72
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_72'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    equalsBuilder.append(getParameters(), that.getParameters());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_73'/>
+73
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_73'>2</a>
+<span>
+1. equals : replaced boolean return with false for ca/griis/security/api/domain/spec/SecuritySpec::equals &rarr; KILLED<br/>
+2. equals : replaced boolean return with true for ca/griis/security/api/domain/spec/SecuritySpec::equals &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return equalsBuilder.isEquals();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_74'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_75'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_76'/>
+76
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_76'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public final int hashCode() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_78'/>
+78
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_78'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_79'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    hashCodeBuilder.append(algo);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_80'/>
+80
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_80'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    hashCodeBuilder.append(getParameters());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_81'/>
+81
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_81'>1</a>
+<span>
+1. hashCode : replaced int return with 0 for ca/griis/security/api/domain/spec/SecuritySpec::hashCode &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return hashCodeBuilder.hashCode();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_82'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_83'/>
+83
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_83'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_84'/>
+84
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_84'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_85'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public final String toString() {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_86'/>
+86
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_86'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    ToStringBuilder stringBuilder = new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_87'/>
+87
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_87'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    stringBuilder.append(&#34;algo&#34;, algo);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_88'/>
+88
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_88'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    stringBuilder.append(&#34;parameters&#34;, getParameters());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_89'/>
+89
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_89'>1</a>
+<span>
+1. toString : replaced return value with &#34;&#34; for ca/griis/security/api/domain/spec/SecuritySpec::toString &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return stringBuilder.toString();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_90'/>
+90
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_90'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@a64e035_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_91'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@a64e035_56'>56</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_56'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getAlgo<br/><b>Killed by : </b>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testConstructorAndGetAlgo()]</span></span> replaced return value with &#34;&#34; for ca/griis/security/api/domain/spec/SecuritySpec::getAlgo &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@a64e035_63'>63</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_63'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>equals<br/><b>Killed by : </b>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_EmptyParameters()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@a64e035_64'>64</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_64'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>equals<br/><b>Killed by : </b>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_Null()]</span></span> replaced boolean return with true for ca/griis/security/api/domain/spec/SecuritySpec::equals &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@a64e035_66'>66</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_66'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>equals<br/><b>Killed by : </b>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_DifferentClass()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@a64e035_67'>67</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_67'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>equals<br/><b>Killed by : </b>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_DifferentClass()]</span></span> replaced boolean return with true for ca/griis/security/api/domain/spec/SecuritySpec::equals &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@a64e035_73'>73</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_73'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>equals<br/><b>Killed by : </b>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_EmptyParameters()]</span></span> replaced boolean return with false for ca/griis/security/api/domain/spec/SecuritySpec::equals &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>equals<br/><b>Killed by : </b>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_DifferentParameters()]</span></span> replaced boolean return with true for ca/griis/security/api/domain/spec/SecuritySpec::equals &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@a64e035_81'>81</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_81'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>hashCode<br/><b>Killed by : </b>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEqualsHashCodeContract()]</span></span> replaced int return with 0 for ca/griis/security/api/domain/spec/SecuritySpec::hashCode &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@a64e035_89'>89</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@a64e035_89'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testToString_ContainsParameters()]</span></span> replaced return value with &#34;&#34; for ca/griis/security/api/domain/spec/SecuritySpec::toString &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testHashCode_EqualObjects()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testHashCode_Consistency()] (1 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testDifferentSubclasses()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEqualsHashCodeContract()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testHashCode_DifferentObjects()] (1 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_DifferentClass()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_Null()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_EmptyParameters()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_IdenticalObjects()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_DifferentParameters()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_SameObject()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_DifferentAlgo()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testEquals_Properties()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testRealWorldScenarios()] (0 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e01()] (1196 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testConstructorAndGetAlgo()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testComplexParameters()] (0 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateKeyPairWithWrongAlgo()] (0 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateDigestWithSha512()] (0 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateDigestIllegalArgument()] (1 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateDigestWithSha256()] (0 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateSecretKey256Efficient()] (0 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateSecretKey128Efficient()] (0 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateVerifyDigestWithWrongHashingAlgo()] (1 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testIllegalArgumentExceptionSymEncrypt()] (0 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateSecretKeyWrongAlgo()] (1 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateSecretKey256Strong()] (0 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateSecretKey128Strong()] (0 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateX25519KeyPair()] (1 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateVerifyDigestWithSha512()] (0 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateEd25519KeyPair()] (2 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateVerifyDigestWithSha256()] (0 ms)</li><li>ca.griis.security.unit.internal.signature.RsaSignatureTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.signature.RsaSignatureTest]/[method:testSignWithInvalidKey()] (3 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testSymDecryptException()] (1 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testIllegalArgumentExceptionSymDecrypt()] (1 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testSymEncrypt()] (1 ms)</li><li>ca.griis.security.unit.internal.asymmetric.generator.AsymKeysGeneratorTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.asymmetric.generator.AsymKeysGeneratorTest]/[method:testGenerateKeyPairWithInvalidAlgoSpec()] (7 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateSignatureWithEd()] (5 ms)</li><li>ca.griis.security.unit.internal.signature.EdDsaSignatureTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.signature.EdDsaSignatureTest]/[method:givenPairedSignatureThenMatchingSignature()] (7 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testSymDecrypt()] (2 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testX25519GenerateSharedSecretKeyWithWrongAlgo()] (5 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testVerifySignatureEd()] (8 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testStrongX25519GenerateSharedSecretKey()] (5 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e05()] (1 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testEfficientX25519GenerateSharedSecretKey()] (5 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e03()] (3 ms)</li><li>ca.griis.security.unit.internal.keyexchange.EfficientX25519ProviderTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.keyexchange.EfficientX25519ProviderTest]/[method:encryptedMessageFromAliceToBob()] (7 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e04()] (2 ms)</li><li>ca.griis.security.unit.internal.keyexchange.StrongX25519ProviderTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.keyexchange.StrongX25519ProviderTest]/[method:encryptedMessageFromAliceToBob()] (7 ms)</li><li>ca.griis.security.unit.internal.keyexchange.StrongX25519ProviderTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.keyexchange.StrongX25519ProviderTest]/[method:encryptedMessageFromBobToAlice()] (8 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e11()] (8 ms)</li><li>ca.griis.security.unit.internal.keyexchange.StrongX25519ProviderTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.keyexchange.StrongX25519ProviderTest]/[method:encryptedMessageIntercepted()] (9 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e02()] (8 ms)</li><li>ca.griis.security.unit.internal.keyexchange.EfficientX25519ProviderTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.keyexchange.EfficientX25519ProviderTest]/[method:encryptedAesMessageIntercepted()] (13 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e08()] (5 ms)</li><li>ca.griis.security.unit.internal.keyexchange.EfficientX25519ProviderTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.keyexchange.EfficientX25519ProviderTest]/[method:encryptedMessageFromBobToAlice()] (17 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e17()] (7 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e09()] (6 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e07()] (10 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e20()] (14 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e23()] (14 ms)</li><li>ca.griis.security.unit.internal.asymmetric.encryption.AsymCipherTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.asymmetric.encryption.AsymCipherTest]/[method:testEncryptWithInvalidAlgoSpec()] (41 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testAsymEncryptWithWrongAlgo()] (45 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e10()] (35 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e16()] (36 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testEfficientRsaDecrypt()] (73 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testAsymDecryptWithWrongAlgo()] (82 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e06()] (64 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testVerifySignature()] (102 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateSignatureIllegalArgument()] (111 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateSignature()] (166 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e13()] (153 ms)</li><li>ca.griis.security.unit.internal.signature.RsaSignatureTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.signature.RsaSignatureTest]/[method:givenPairedSignatureThenMatchingSignature()] (219 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e19()] (219 ms)</li><li>ca.griis.security.unit.internal.asymmetric.encryption.AsymCipherTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.asymmetric.encryption.AsymCipherTest]/[method:testDecryptWithInvalidAlgoSpec()] (270 ms)</li><li>ca.griis.security.unit.internal.signature.RsaSignatureTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.signature.RsaSignatureTest]/[method:testVerifySignWithInvalidKey()] (275 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testX25519GenerateSharedSecretKeyWithNonX25519Keys()] (277 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e22()] (297 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testEfficientRsaAsymEncrypt()] (328 ms)</li><li>ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest]/[method:testInvalidChainMissingRoot()] (401 ms)</li><li>ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest]/[method:testInvalidSelfSignedCertificate()] (411 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testVerifySignatureIllegalArgument()] (471 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e15()] (483 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testGenerateRsaKeyPair()] (514 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e27()] (646 ms)</li><li>ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest]/[method:testInvalidChainWrongIntermediate()] (672 ms)</li><li>ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest]/[method:testValidChainWithoutIntermediate()] (687 ms)</li><li>ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest]/[method:testExpiredCertificateInChain()] (699 ms)</li><li>ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest]/[method:testInvalidChainWrongRoot()] (706 ms)</li><li>ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest]/[method:testInvalidChainMismatchedIssuerDN()] (717 ms)</li><li>ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest]/[method:testNotYetValidCertificateInChain()] (741 ms)</li><li>ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest]/[method:testValidCertificateChain()] (777 ms)</li><li>ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.internal.certificate.verification.ChainCertificationVerificationTest]/[method:testValidChainWithMultipleRoots()] (1188 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testStrongRsaAsymEncrypt()] (1343 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e12()] (1564 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e18()] (2061 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e24()] (2079 ms)</li><li>ca.griis.security.unit.api.service.DefaultSecurityServiceTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.service.DefaultSecurityServiceTest]/[method:testStrongRsaDecrypt()] (3318 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e14()] (3390 ms)</li><li>ca.griis.security.spec.Suite.[engine:junit-jupiter]/[class:ca.griis.security.spec.Suite]/[method:e21()] (3971 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testToString_ContainsParameters()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testToString_NoClassName()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testToString_ContainsAlgo()] (0 ms)</li><li>ca.griis.security.unit.api.domain.SecuritySpecTest.[engine:junit-jupiter]/[class:ca.griis.security.unit.api.domain.SecuritySpecTest]/[method:testToString_EmptyParameters()] (0 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.16.1
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SesCleRequestHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.handler.request</a> &gt; <span class="el_source">SesCleRequestHandler.java</span></div><h1>SesCleRequestHandler.java</h1><pre class="source lang-java linenums">
+package ca.griis.speds.session.internal.handler.request;
+
+import static ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SpedsLayer.SESSION;
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.session.api.dto.Context34Dto;
+import ca.griis.js2p.gen.speds.session.api.dto.Context34Dto.ServicePrimitive;
+import ca.griis.js2p.gen.speds.session.api.dto.HeaderDto;
+import ca.griis.js2p.gen.speds.session.api.dto.VersionDto;
+import ca.griis.js2p.gen.speds.session.api.dto.cle.KeyTransferDto;
+import ca.griis.js2p.gen.speds.session.api.dto.cle.SesCleEnvDto;
+import ca.griis.js2p.gen.speds.session.api.dto.sak.SesSakRecDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.internal.contract.MsgType;
+import ca.griis.speds.session.internal.contract.Sidu;
+import ca.griis.speds.session.internal.contract.SiduContext;
+import ca.griis.speds.session.internal.contract.Spdu;
+import ca.griis.speds.session.internal.contract.SpduHeader;
+import ca.griis.speds.session.internal.domain.ExpandedSessionSidu;
+import ca.griis.speds.session.internal.domain.ExpandedSidu;
+import ca.griis.speds.session.internal.domain.HostStartupContext;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.security.crypto.SessionKeyDestroyer;
+import ca.griis.speds.session.internal.security.crypto.SessionSecurityService;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
+import java.util.Map;
+import java.util.UUID;
+import javax.crypto.SecretKey;
+
+public final class SesCleRequestHandler {
+<span class="fc" id="L40">  private static final GriisLogger logger = getLogger(SesCleRequestHandler.class);</span>
+
+  private final ObjectMapper mapper;
+  private final CryptographyService cryptographyService;
+  private final VersionDto version;
+  private final Map&lt;SessionId, SessionInformation&gt; sessionInformations;
+  private final SessionSecurityService securityService;
+
+<span class="fc" id="L48">  public SesCleRequestHandler(HostStartupContext hostStartupContext) {</span>
+<span class="fc" id="L49">    logger.trace(Trace.ENTER_METHOD_1, &quot;hostStartupContext&quot;, hostStartupContext);</span>
+
+<span class="fc" id="L51">    this.sessionInformations = hostStartupContext.sessions().asMap();</span>
+<span class="fc" id="L52">    this.mapper = hostStartupContext.sharedMapper();</span>
+<span class="fc" id="L53">    this.version = hostStartupContext.version();</span>
+<span class="fc" id="L54">    this.cryptographyService = hostStartupContext.cryptographyService();</span>
+<span class="fc" id="L55">    this.securityService = new SessionSecurityService(hostStartupContext.cryptographyService());</span>
+<span class="fc" id="L56">  }</span>
+
+  public ExpandedSessionSidu handle(SessionId sessionId, ExpandedSidu expandedSidu)
+      throws JsonProcessingException, NoSuchAlgorithmException, InvalidKeySpecException {
+<span class="fc" id="L60">    logger.trace(Trace.ENTER_METHOD_2, &quot;sessionId&quot;, sessionId, &quot;expandedSidu&quot;, expandedSidu);</span>
+<span class="fc" id="L61">    final SessionInformation session = sessionInformations.get(sessionId);</span>
+
+    // Déterminer / mémoriser SKAK
+<span class="fc" id="L64">    final SesSakRecDto sesSakRecDto =</span>
+<span class="fc" id="L65">        mapper.readValue((String) expandedSidu.spdu().getContent(), SesSakRecDto.class);</span>
+
+<span class="fc" id="L67">    final var peerChoice =</span>
+<span class="fc" id="L68">        securityService.convertToDhPublicKey(sesSakRecDto.getValue());</span>
+<span class="fc" id="L69">    final SecretKey skak =</span>
+<span class="fc" id="L70">        cryptographyService.getDiffieHellmanSecretKey(SESSION, session.firstChoice(),</span>
+            peerChoice);
+
+<span class="fc" id="L73">    final UUID sessionToken = UUID.randomUUID();</span>
+<span class="fc" id="L74">    final SessionInformation updatedInfo = SessionInformation.builder()</span>
+<span class="fc" id="L75">        .of(session)</span>
+<span class="fc" id="L76">        .skak(skak)</span>
+<span class="fc" id="L77">        .token(sessionToken)</span>
+<span class="fc" id="L78">        .build();</span>
+<span class="fc" id="L79">    sessionInformations.put(session.sessionId(), updatedInfo);</span>
+
+    // Procéder à l’envoi de la clé de chiffrement SDEK
+    // Créer SDU
+<span class="fc" id="L83">    final byte[] keyBytes = updatedInfo.sdek().getEncoded();</span>
+<span class="fc" id="L84">    final String serialKey = Base64.getEncoder().encodeToString(keyBytes);</span>
+<span class="fc" id="L85">    SessionKeyDestroyer.destroy(keyBytes);</span>
+
+<span class="fc" id="L87">    final KeyTransferDto keyTransferDto =</span>
+<span class="fc" id="L88">        new KeyTransferDto(serialKey, updatedInfo.pgaId(), sessionToken);</span>
+<span class="fc" id="L89">    final byte[] cryptedKeyTrans = cryptographyService.encryptSymmetric(SESSION, skak,</span>
+<span class="fc" id="L90">        mapper.writeValueAsBytes(keyTransferDto));</span>
+<span class="fc" id="L91">    final String serialKeyTrans = Base64.getEncoder().encodeToString(cryptedKeyTrans);</span>
+<span class="fc" id="L92">    final SesCleEnvDto sdu = new SesCleEnvDto(serialKeyTrans, updatedInfo.sessionId().id());</span>
+<span class="fc" id="L93">    final String serialSdu = mapper.writeValueAsString(sdu);</span>
+
+    // Construire la SPDU
+<span class="fc" id="L96">    final SpduHeader spduHeader = new SpduHeader(HeaderDto.Msgtype.SES_CLE_ENV,</span>
+<span class="fc" id="L97">        UUID.randomUUID(), false, version);</span>
+
+<span class="fc" id="L99">    final byte[] serialSduHash = cryptographyService.hash(SESSION, serialSdu.getBytes(</span>
+        StandardCharsets.UTF_8));
+<span class="fc" id="L101">    final String stamp = Base64.getEncoder()</span>
+<span class="fc" id="L102">        .encodeToString(cryptographyService.encryptSymmetric(SESSION, skak, serialSduHash));</span>
+<span class="fc" id="L103">    final Spdu spdu = new Spdu(spduHeader, stamp, mapper.writeValueAsString(sdu));</span>
+
+    // Construire la SIDU
+<span class="fc" id="L106">    final SiduContext siduContext = new SiduContext(</span>
+<span class="fc" id="L107">        updatedInfo.initiatorId(),</span>
+<span class="fc" id="L108">        updatedInfo.peerId(),</span>
+<span class="fc" id="L109">        updatedInfo.initiatorIri(),</span>
+        Context34Dto.Service.TRANSFER,
+        ServicePrimitive.REQUEST,
+<span class="fc" id="L112">        updatedInfo.peerIri(),</span>
+<span class="fc" id="L113">        false);</span>
+<span class="fc" id="L114">    final Sidu sidu = new Sidu(siduContext, mapper.writeValueAsString(spdu));</span>
+<span class="fc" id="L115">    final ExpandedSessionSidu result =</span>
+<span class="fc" id="L116">        new ExpandedSessionSidu(updatedInfo.sessionId(),</span>
+            new ExpandedSidu(sidu, spdu, MsgType.SES_CLE_ENV));
+
+<span class="fc" id="L119">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L120">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

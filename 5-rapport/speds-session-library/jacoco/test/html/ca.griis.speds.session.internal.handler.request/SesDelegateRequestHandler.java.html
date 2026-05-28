@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SesDelegateRequestHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.handler.request</a> &gt; <span class="el_source">SesDelegateRequestHandler.java</span></div><h1>SesDelegateRequestHandler.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe SesDelegateRequestHandler.
+ * @brief @~english Implementation of the SesDelegateRequestHandler class.
+ */
+
+package ca.griis.speds.session.internal.handler.request;
+
+import ca.griis.js2p.gen.speds.session.api.dto.Context23Dto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Info;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.session.api.SessionHostEvent;
+import ca.griis.speds.session.api.exception.InvalidTokenException;
+import ca.griis.speds.session.internal.contract.MsgType;
+import ca.griis.speds.session.internal.contract.Pidu;
+import ca.griis.speds.session.internal.domain.ExpandedSessionSidu;
+import ca.griis.speds.session.internal.domain.ExpandedSidu;
+import ca.griis.speds.session.internal.domain.HostStartupContext;
+import ca.griis.speds.session.internal.domain.PendingConfirmation;
+import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.handler.indication.initiator.InitiatorEvent;
+import ca.griis.speds.session.internal.model.SessionInformation;
+import ca.griis.speds.session.internal.sync.PendingConfirmationException;
+import ca.griis.speds.session.internal.sync.PendingConfirmationRegistry;
+import ca.griis.speds.session.internal.transport.TransportHostAdapter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Effectue une délégation de requête.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-03-13 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class SesDelegateRequestHandler implements InitiatorEvent {
+<span class="fc" id="L71">  private static final GriisLogger logger =</span>
+<span class="fc" id="L72">      GriisLoggerFactory.getLogger(SesDelegateRequestHandler.class);</span>
+
+  private final SesPubRequestHandler pubHandler;
+  private final SesSakRequestHandler sakHandler;
+  private final SesCleRequestHandler sdekHandler;
+  private final SesMsgRequestHandler msgHandler;
+  private final SesFinRequestHandler finHandler;
+  private final PendingConfirmationRegistry pendingConfirmationsRegistry;
+  private final ObjectMapper mapper;
+  private final TransportHostAdapter transportHost;
+  private final Map&lt;SessionId, SessionInformation&gt; sessions;
+  private final SessionHostEvent sessionHostEvent;
+
+<span class="fc" id="L85">  public SesDelegateRequestHandler(HostStartupContext context) {</span>
+<span class="fc" id="L86">    logger.trace(Trace.ENTER_METHOD_1, &quot;context&quot;, context);</span>
+
+<span class="fc" id="L88">    this.sessions = context.sessions().asMap();</span>
+<span class="fc" id="L89">    this.mapper = context.sharedMapper();</span>
+<span class="fc" id="L90">    this.transportHost = new TransportHostAdapter(context);</span>
+<span class="fc" id="L91">    this.pendingConfirmationsRegistry =</span>
+<span class="fc" id="L92">        new PendingConfirmationRegistry(context.pendingMessage().asMap());</span>
+<span class="fc" id="L93">    this.pubHandler = new SesPubRequestHandler(context);</span>
+<span class="fc" id="L94">    this.sakHandler = new SesSakRequestHandler(context);</span>
+<span class="fc" id="L95">    this.sdekHandler = new SesCleRequestHandler(context);</span>
+<span class="fc" id="L96">    this.msgHandler = new SesMsgRequestHandler(context);</span>
+<span class="fc" id="L97">    this.finHandler = new SesFinRequestHandler(context);</span>
+<span class="fc" id="L98">    this.sessionHostEvent = context.hostEventConsumer();</span>
+<span class="fc" id="L99">  }</span>
+
+  public Optional&lt;String&gt; handle(Pidu pidu) {
+<span class="fc" id="L102">    logger.trace(Trace.ENTER_METHOD_1, &quot;pidu&quot;, pidu);</span>
+
+<span class="fc" id="L104">    Optional&lt;String&gt; confirm = Optional.empty();</span>
+
+<span class="fc" id="L106">    final Context23Dto context = new Context23Dto(</span>
+<span class="fc" id="L107">        pidu.getContext().getPga(),</span>
+<span class="fc" id="L108">        pidu.getContext().getSourceCode(),</span>
+<span class="fc" id="L109">        pidu.getContext().getDestinationCode(),</span>
+<span class="fc" id="L110">        pidu.getContext().getSdek(),</span>
+        Context23Dto.Service.DELEGATE,
+        Context23Dto.ServicePrimitive.CONFIRM,
+<span class="fc" id="L113">        false);</span>
+<span class="fc" id="L114">    final Pidu confirmPidu = new Pidu(context, &quot;SUCCEED&quot;);</span>
+    try {
+<span class="fc" id="L116">      confirm = Optional.of(mapper.writeValueAsString(confirmPidu));</span>
+<span class="fc" id="L117">      requestConfirm(pidu);</span>
+<span class="nc" id="L118">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L119">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L120">    }</span>
+
+<span class="fc" id="L122">    logger.trace(Trace.EXIT_METHOD_1, &quot;confirm&quot;, confirm);</span>
+<span class="fc" id="L123">    return confirm;</span>
+  }
+
+  @Override
+  public void notifyPubRec(ExpandedSidu idu) {
+<span class="fc" id="L128">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    try {
+<span class="fc" id="L131">      PendingConfirmation match =</span>
+<span class="fc" id="L132">          pendingConfirmationsRegistry.checkMessage(idu, MsgType.SES_PUB_ENV);</span>
+
+<span class="fc" id="L134">      checkSessionIdentity(idu, match);</span>
+
+<span class="fc" id="L136">      final ExpandedSessionSidu expandedSessionIdu = sakHandler.handle(match.sessionId());</span>
+<span class="fc" id="L137">      final var entityCode = sessions.get(match.sessionId()).initiatorId();</span>
+
+<span class="fc" id="L139">      pendingConfirmationsRegistry.addMessage(expandedSessionIdu);</span>
+
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">      if (!transportHost.request(entityCode, match.sessionId(),</span>
+<span class="fc" id="L142">          expandedSessionIdu.expandedSidu())) {</span>
+<span class="nc" id="L143">        pendingConfirmationsRegistry.removeMessage(idu);</span>
+      }
+<span class="nc" id="L145">    } catch (PendingConfirmationException | JsonProcessingException e) {</span>
+<span class="nc" id="L146">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L147">    }</span>
+
+<span class="fc" id="L149">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L150">  }</span>
+
+  @Override
+  public void notifySakRec(ExpandedSidu idu) {
+<span class="fc" id="L154">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    try {
+<span class="fc" id="L157">      PendingConfirmation match =</span>
+<span class="fc" id="L158">          pendingConfirmationsRegistry.checkMessage(idu, MsgType.SES_SAK_ENV);</span>
+
+<span class="fc" id="L160">      checkSessionIdentity(idu, match);</span>
+
+<span class="fc" id="L162">      final ExpandedSessionSidu expandedSessionSidu = sdekHandler.handle(match.sessionId(), idu);</span>
+<span class="fc" id="L163">      final var entityCode = sessions.get(match.sessionId()).initiatorId();</span>
+
+<span class="fc" id="L165">      pendingConfirmationsRegistry.addMessage(expandedSessionSidu);</span>
+
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">      if (!transportHost.request(entityCode, match.sessionId(),</span>
+<span class="fc" id="L168">          expandedSessionSidu.expandedSidu())) {</span>
+<span class="nc" id="L169">        pendingConfirmationsRegistry.removeMessage(idu);</span>
+      }
+<span class="nc" id="L171">    } catch (PendingConfirmationException | JsonProcessingException | NoSuchAlgorithmException</span>
+        | InvalidKeySpecException e) {
+<span class="nc" id="L173">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L174">    }</span>
+
+<span class="fc" id="L176">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L177">  }</span>
+
+  @Override
+  public void notifyCleRec(ExpandedSidu idu) {
+<span class="fc" id="L181">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    try {
+<span class="fc" id="L184">      PendingConfirmation match =</span>
+<span class="fc" id="L185">          pendingConfirmationsRegistry.checkMessage(idu, MsgType.SES_CLE_ENV);</span>
+
+<span class="fc" id="L187">      checkSessionIdentity(idu, match);</span>
+
+<span class="fc" id="L189">      final ExpandedSessionSidu expandedSessionIdu = msgHandler.handle(match.sessionId(), idu);</span>
+<span class="fc" id="L190">      final var entityCode = sessions.get(match.sessionId()).initiatorId();</span>
+
+<span class="fc" id="L192">      pendingConfirmationsRegistry.addMessage(expandedSessionIdu);</span>
+
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">      if (!transportHost.request(entityCode, match.sessionId(),</span>
+<span class="fc" id="L195">          expandedSessionIdu.expandedSidu())) {</span>
+<span class="nc" id="L196">        pendingConfirmationsRegistry.removeMessage(idu);</span>
+      }
+<span class="nc" id="L198">    } catch (InvalidTokenException | PendingConfirmationException | JsonProcessingException e) {</span>
+<span class="nc" id="L199">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L200">    }</span>
+
+<span class="fc" id="L202">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L203">  }</span>
+
+  @Override
+  public void notifyMsgRec(ExpandedSidu idu) {
+<span class="fc" id="L207">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    try {
+<span class="fc" id="L210">      PendingConfirmation match =</span>
+<span class="fc" id="L211">          pendingConfirmationsRegistry.checkMessage(idu, MsgType.SES_MSG_ENV);</span>
+
+<span class="fc" id="L213">      checkSessionIdentity(idu, match);</span>
+
+<span class="fc" id="L215">      final ExpandedSessionSidu expandedSessionIdu = finHandler.handle(idu);</span>
+<span class="fc" id="L216">      final var entityCode = sessions.get(match.sessionId()).initiatorId();</span>
+
+<span class="fc" id="L218">      pendingConfirmationsRegistry.addMessage(expandedSessionIdu);</span>
+
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">      if (!transportHost.request(entityCode, match.sessionId(),</span>
+<span class="fc" id="L221">          expandedSessionIdu.expandedSidu())) {</span>
+<span class="nc" id="L222">        pendingConfirmationsRegistry.removeMessage(idu);</span>
+      }
+<span class="nc" id="L224">    } catch (PendingConfirmationException | JsonProcessingException e) {</span>
+<span class="nc" id="L225">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L226">    }</span>
+
+<span class="fc" id="L228">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L229">  }</span>
+
+  @Override
+  public void notifyFinRec(ExpandedSidu idu) {
+<span class="fc" id="L233">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    try {
+<span class="fc" id="L236">      PendingConfirmation match =</span>
+<span class="fc" id="L237">          pendingConfirmationsRegistry.checkMessage(idu, MsgType.SES_FIN_ENV);</span>
+
+<span class="fc" id="L239">      checkSessionIdentity(idu, match);</span>
+
+<span class="fc" id="L241">      SessionInformation session = sessions.get(match.sessionId());</span>
+<span class="fc" id="L242">      final var entityCode = sessions.get(match.sessionId()).initiatorId();</span>
+
+<span class="fc" id="L244">      logger.info(Info.VARIABLE_LOGGING_5,</span>
+          &quot;entityCode&quot;, entityCode,
+<span class="fc" id="L246">          &quot;msgId&quot;, idu.spdu().getHeader().getId(),</span>
+<span class="fc" id="L247">          &quot;msgType&quot;, idu.spdu().getHeader().getMsgtype(),</span>
+<span class="fc" id="L248">          &quot;sessionId&quot;, match.sessionId(),</span>
+<span class="fc" id="L249">          &quot;sessionTerminatedSuccessfully&quot;, true);</span>
+
+<span class="fc" id="L251">      sessions.remove(session.sessionId());</span>
+
+<span class="fc" id="L253">      sessionHostEvent.notifyInitiatorSessionTerminatedSuccessfully(session.sessionId());</span>
+<span class="nc" id="L254">    } catch (PendingConfirmationException ex) {</span>
+<span class="nc" id="L255">      logger.error(Error.IGNORED_ERROR, ex);</span>
+<span class="fc" id="L256">    }</span>
+
+<span class="fc" id="L258">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L259">  }</span>
+
+  private void checkSessionIdentity(ExpandedSidu idu, PendingConfirmation match)
+      throws PendingConfirmationException {
+<span class="fc" id="L263">    SessionInformation session = sessions.get(match.sessionId());</span>
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">    if (session == null) {</span>
+<span class="nc" id="L265">      throw new PendingConfirmationException(&quot;No session to the pending confirmation&quot;);</span>
+    }
+
+<span class="fc" id="L268">    final var code = idu.sidu().getContext().getSourceCode();</span>
+<span class="pc bpc" id="L269" title="1 of 2 branches missed.">    if (session.peerId().equals(code) == false) {</span>
+<span class="nc" id="L270">      throw new PendingConfirmationException(&quot;The code from the IDU does not match the peer ID&quot;);</span>
+    }
+<span class="fc" id="L272">  }</span>
+
+  private void requestConfirm(Pidu pidu) {
+    try {
+<span class="fc" id="L276">      final ExpandedSessionSidu expandedSessionIdu = pubHandler.handle(pidu);</span>
+<span class="fc" id="L277">      pendingConfirmationsRegistry.addMessage(expandedSessionIdu);</span>
+
+<span class="fc" id="L279">      transportHost.request(pidu.getContext().getSourceCode(), expandedSessionIdu.sessionId(),</span>
+<span class="fc" id="L280">          expandedSessionIdu.expandedSidu());</span>
+<span class="nc" id="L281">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L282">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L283">    }</span>
+<span class="fc" id="L284">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

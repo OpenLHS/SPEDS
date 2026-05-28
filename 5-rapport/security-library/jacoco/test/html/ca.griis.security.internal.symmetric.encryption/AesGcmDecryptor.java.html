@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AesGcmDecryptor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">security-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.security.internal.symmetric.encryption</a> &gt; <span class="el_source">AesGcmDecryptor.java</span></div><h1>AesGcmDecryptor.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ * @copyright @@GRIIS_COPYRIGHT@@
+ * @licence @@GRIIS_LICENCE@@
+ * @version @@GRIIS_VERSION@@
+ * @brief @~french Contient la description de la classe AesGcmDecryptor.
+ * @brief @~english Declaration of the Encryptor AesGcmDecryptor.
+ */
+
+package ca.griis.security.internal.symmetric.encryption;
+
+import ca.griis.security.api.domain.spec.csprng.CsprngSpec;
+import ca.griis.security.api.exception.DecryptException;
+import ca.griis.security.internal.algorithm.CipherAlgorithm;
+import ca.griis.security.internal.encryption.Decryptor;
+import java.nio.ByteBuffer;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details «Detailed description of the component (optional)»
+ * @par Model «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception «Conception description (criteria and constraints) (optional)»
+ * @par Limits «Limits description (optional)»
+ *
+ * @brief @~french Déchiffreur symétrique basé sur l'algorithme de chiffrement AES avec le mode
+ *        d'opération GCM.
+ * @par Détails
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      La méthode decrypt doit recevoir en entrée un tableau suffisamment grand sans quoi un
+ *      BufferOverFlow &lt;/\br&gt;
+ *      va être déclenché. C'est parce que selon la clef générée, une certaine longueur de tableau
+ *      &lt;/\br&gt;
+ *      est réservée par la clef et donc une taille minimum est attendue.
+ * @par Historique
+ *      2025-12-17 [BD] - Implémentation de la classe.
+ * @par Tâches S.O.
+ */
+public class AesGcmDecryptor extends Decryptor {
+<span class="fc" id="L46">  private static final Integer gcmTagBitSize = 128;</span>
+<span class="fc" id="L47">  private static final Integer gcmIvLength = 96;</span>
+
+  public AesGcmDecryptor(SecretKey key) {
+<span class="fc" id="L50">    super(CipherAlgorithm.AESGCM, key);</span>
+<span class="fc" id="L51">  }</span>
+
+  @Override
+  public byte[] decrypt(byte[] encryptedMessage, CsprngSpec csprngSpec) {
+<span class="fc" id="L55">    ByteBuffer wrappedEncryptedMsg = ByteBuffer.wrap(encryptedMessage);</span>
+
+<span class="fc" id="L57">    byte[] iv = new byte[gcmIvLength / 8];</span>
+
+    try {
+<span class="fc" id="L60">      wrappedEncryptedMsg.get(iv);</span>
+<span class="fc" id="L61">    } catch (java.nio.BufferUnderflowException e) {</span>
+<span class="fc" id="L62">      throw new DecryptException(&quot;Unable to decrypt &quot; + key.getAlgorithm(), e);</span>
+<span class="fc" id="L63">    }</span>
+
+<span class="fc" id="L65">    byte[] encryptedPart = new byte[wrappedEncryptedMsg.remaining()];</span>
+<span class="fc" id="L66">    wrappedEncryptedMsg.get(encryptedPart);</span>
+
+<span class="fc" id="L68">    GCMParameterSpec parameterSpec = new GCMParameterSpec(gcmTagBitSize, iv);</span>
+
+<span class="fc" id="L70">    return decrypt(encryptedPart, parameterSpec, csprngSpec);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

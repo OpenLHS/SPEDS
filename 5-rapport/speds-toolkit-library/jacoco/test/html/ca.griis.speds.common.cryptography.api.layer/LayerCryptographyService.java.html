@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LayerCryptographyService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-toolkit-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.common.cryptography.api.layer</a> &gt; <span class="el_source">LayerCryptographyService.java</span></div><h1>LayerCryptographyService.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe LayerCryptographyService.java
+ * @brief @~english Contains description of LayerCryptographyService.java class.
+ */
+
+package ca.griis.speds.common.cryptography.api.layer;
+
+import ca.griis.cryptography.algorithm.SecretKeyGeneratorAlgorithm;
+import ca.griis.cryptography.asymmetric.encryption.RsaDecryptor;
+import ca.griis.cryptography.asymmetric.encryption.RsaEncryptor;
+import ca.griis.cryptography.asymmetric.generator.RsaKeysGenerator;
+import ca.griis.cryptography.asymmetric.signature.entity.DigitalSignature;
+import ca.griis.cryptography.asymmetric.signature.signing.RsaSigning;
+import ca.griis.cryptography.asymmetric.signature.verification.RsaVerifySigning;
+import ca.griis.cryptography.asymmetric.signature.verification.VerifySigning;
+import ca.griis.cryptography.encryption.Decryptor;
+import ca.griis.cryptography.encryption.Encryptor;
+import ca.griis.cryptography.hash.entity.Hash;
+import ca.griis.cryptography.hash.hashing.Hashing;
+import ca.griis.cryptography.hash.hashing.Sha512Hashing;
+import ca.griis.cryptography.keyexchange.KeyAgreementProvider;
+import ca.griis.cryptography.keyexchange.X25519Provider;
+import ca.griis.cryptography.symmetric.encryption.AesGcmDecryptor;
+import ca.griis.cryptography.symmetric.encryption.AesGcmEncryptor;
+import ca.griis.cryptography.symmetric.generator.SecretKeyGenerator;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.common.cryptography.api.CryptographyService;
+import ca.griis.speds.common.cryptography.api.ProtocolLayerAlgoDictionary;
+import ca.griis.speds.common.cryptography.api.exception.CryptographyServiceException;
+import ca.griis.speds.common.cryptography.api.exception.DecryptException;
+import ca.griis.speds.common.cryptography.domain.AlgoLayerLink;
+import ca.griis.speds.common.cryptography.domain.Algorithm;
+import ca.griis.speds.common.cryptography.domain.AlgorithmFormat;
+import ca.griis.speds.common.cryptography.domain.KeyPairAlgorithmType;
+import ca.griis.speds.common.cryptography.domain.ProtocolLayer;
+import ca.griis.speds.common.entity.api.layer.LayerEntityService;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.concurrent.ConcurrentMap;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Implémentation de services de cryptographie offert aux différentes couche de
+ *        speds
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-04-14 [SSC] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class LayerCryptographyService implements CryptographyService {
+<span class="fc" id="L87">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(LayerEntityService.class);</span>
+
+  private final ConcurrentMap&lt;Algorithm, AlgoLayerLink&gt; algorithmForLayer;
+
+<span class="fc" id="L91">  public LayerCryptographyService(ProtocolLayer layer) {</span>
+<span class="fc" id="L92">    logger.trace(Trace.ENTER_METHOD_1, &quot;layer&quot;, layer);</span>
+<span class="fc" id="L93">    this.algorithmForLayer =</span>
+<span class="fc" id="L94">        ProtocolLayerAlgoDictionary.getInstance().getLayerAgorithmsGroup(layer);</span>
+<span class="fc" id="L95">  }</span>
+
+  @Override
+  public SecretKey generateSecretKey() {
+<span class="fc" id="L99">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L100">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.symmetricKeyGenerator);</span>
+
+<span class="fc bfc" id="L102" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L103">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+
+<span class="fc" id="L106">    SecretKeyGeneratorAlgorithm skga = null;</span>
+<span class="fc" id="L107">    switch (algoLink.format()) {</span>
+      case aes_gcm_nopadding:
+      default:
+<span class="fc" id="L110">        skga = SecretKeyGeneratorAlgorithm.AES;</span>
+        break;
+    }
+<span class="fc" id="L113">    AlgoLayerLink length = algorithmForLayer.get(Algorithm.symmetricKeyLength);</span>
+<span class="fc" id="L114">    String lengthStr = length.format().getFormat();</span>
+<span class="fc" id="L115">    SecretKey sk = SecretKeyGenerator.generateSymmetricKey(skga, Integer.decode(lengthStr));</span>
+
+<span class="fc" id="L117">    logger.trace(Trace.EXIT_METHOD_1, &quot;secretKey&quot;, System.identityHashCode(sk));</span>
+<span class="fc" id="L118">    return sk;</span>
+  }
+
+  @Override
+  public KeyPair generateKeyPair(KeyPairAlgorithmType type) {
+<span class="fc" id="L123">    logger.trace(Trace.ENTER_METHOD_1, &quot;type&quot;, type);</span>
+<span class="fc" id="L124">    KeyPair keyPair = null;</span>
+<span class="fc bfc" id="L125" title="All 3 branches covered.">    switch (type) {</span>
+      case signature:
+<span class="fc" id="L127">        keyPair = generateSignatureKeyPair();</span>
+<span class="fc" id="L128">        break;</span>
+      case keyAgreement:
+<span class="fc" id="L130">        keyPair = generateKeyAgreementKeyPair();</span>
+<span class="fc" id="L131">        break;</span>
+      case encryption:
+      default: // @note [SSC] : default is needed for checkstyle but will never be called
+<span class="fc" id="L134">        keyPair = generateAsymmetricEncryptionKeyPair();</span>
+        break;
+    }
+<span class="fc" id="L137">    logger.trace(Trace.EXIT_METHOD_1, &quot;keyPair&quot;, System.identityHashCode(keyPair));</span>
+<span class="fc" id="L138">    return keyPair;</span>
+  }
+
+  @Override
+  public Hash hash(byte[] data) {
+<span class="fc" id="L143">    logger.trace(Trace.ENTER_METHOD_1, &quot;data&quot;, data);</span>
+<span class="fc" id="L144">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.hashing);</span>
+
+<span class="fc bfc" id="L146" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L147">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+
+    Hashing sha;
+<span class="fc" id="L151">    switch (algoLink.format()) {</span>
+      case sha512:
+      default:
+<span class="fc" id="L154">        sha = new Sha512Hashing();</span>
+        break;
+    }
+    // Creation de l'empreinte numérique
+<span class="fc" id="L158">    Hash stamp = sha.hash(data);</span>
+<span class="fc" id="L159">    logger.trace(Trace.EXIT_METHOD_1, &quot;hash&quot;, stamp);</span>
+<span class="fc" id="L160">    return stamp;</span>
+  }
+
+  @Override
+  public Boolean verify(byte[] data, Hash hash) {
+<span class="fc" id="L165">    logger.trace(Trace.ENTER_METHOD_2, &quot;data&quot;, data, &quot;hash&quot;, hash);</span>
+<span class="fc" id="L166">    Hash verify = hash(data);</span>
+<span class="fc" id="L167">    Boolean result = verify.equals(hash);</span>
+<span class="fc" id="L168">    logger.trace(Trace.EXIT_METHOD_1, &quot;verify&quot;, result);</span>
+<span class="fc" id="L169">    return result;</span>
+  }
+
+  @Override
+  public Boolean verify(PublicKey publicKey, byte[] data, DigitalSignature signature) {
+<span class="fc" id="L174">    logger.trace(Trace.ENTER_METHOD_3, &quot;publicKey&quot;, publicKey, &quot;data&quot;, data, &quot;signature&quot;,</span>
+        signature);
+<span class="fc" id="L176">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.signature);</span>
+
+<span class="fc bfc" id="L178" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L179">      throw new CryptographyServiceException(&quot;Algorithms are unkwnown for this layer.&quot;);</span>
+    }
+
+<span class="fc" id="L182">    VerifySigning verifySigning = null;</span>
+<span class="fc" id="L183">    switch (algoLink.format()) {</span>
+      case sha3_512_rsa:
+      default:
+<span class="fc" id="L186">        verifySigning = new RsaVerifySigning((RSAPublicKey) publicKey);</span>
+        break;
+    }
+
+<span class="fc" id="L190">    Boolean result = verifySigning.verify(data, signature);</span>
+
+<span class="fc" id="L192">    logger.trace(Trace.EXIT_METHOD_1, &quot;verify&quot;, result);</span>
+<span class="fc" id="L193">    return result;</span>
+  }
+
+  @Override
+  public DigitalSignature sign(PrivateKey privateKey, byte[] data) {
+<span class="fc" id="L198">    logger.trace(Trace.ENTER_METHOD_2, &quot;privateKey&quot;, System.identityHashCode(privateKey), &quot;data&quot;,</span>
+        data);
+<span class="fc" id="L200">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.signature);</span>
+
+<span class="fc bfc" id="L202" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L203">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+
+<span class="fc" id="L206">    DigitalSignature ds = null;</span>
+<span class="fc" id="L207">    switch (algoLink.format()) {</span>
+      case sha3_512_rsa:
+      default:
+<span class="fc" id="L210">        RsaSigning rsaSign = new RsaSigning((RSAPrivateKey) privateKey);</span>
+<span class="fc" id="L211">        ds = rsaSign.sign(data);</span>
+    }
+<span class="fc" id="L213">    logger.trace(Trace.EXIT_METHOD_1, &quot;digitalSignature&quot;, ds);</span>
+<span class="fc" id="L214">    return ds;</span>
+  }
+
+  @Override
+  public byte[] symmetricEncrypt(SecretKey key, byte[] data) {
+<span class="fc" id="L219">    logger.trace(Trace.ENTER_METHOD_2, &quot;secretKey&quot;, System.identityHashCode(key), &quot;data&quot;, data);</span>
+<span class="fc" id="L220">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.symmetricCipher);</span>
+
+<span class="fc bfc" id="L222" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L223">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+
+<span class="fc" id="L226">    Encryptor symmetricEncrypt = null;</span>
+<span class="fc" id="L227">    switch (algoLink.format()) {</span>
+      case aes_gcm_nopadding:
+      default:
+<span class="fc" id="L230">        symmetricEncrypt = new AesGcmEncryptor(key);</span>
+        break;
+    }
+<span class="fc" id="L233">    byte[] encryptedData = symmetricEncrypt.encrypt(data);</span>
+<span class="fc" id="L234">    logger.trace(Trace.EXIT_METHOD_1, &quot;encryptedData&quot;, encryptedData);</span>
+<span class="fc" id="L235">    return encryptedData;</span>
+  }
+
+  @Override
+  public byte[] asymmetricEncrypt(PublicKey key, byte[] data) {
+<span class="fc" id="L240">    logger.trace(Trace.ENTER_METHOD_2, &quot;publicKey&quot;, key, &quot;data&quot;, data);</span>
+<span class="fc" id="L241">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.asymmetricCipher);</span>
+
+<span class="fc bfc" id="L243" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L244">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+
+<span class="fc" id="L247">    Encryptor encryptor = null;</span>
+<span class="fc" id="L248">    switch (algoLink.format()) {</span>
+      case rsa:
+      default:
+<span class="fc" id="L251">        encryptor = new RsaEncryptor((RSAPublicKey) key);</span>
+        break;
+    }
+<span class="fc" id="L254">    byte[] encryptedData = encryptor.encrypt(data);</span>
+<span class="fc" id="L255">    logger.trace(Trace.EXIT_METHOD_1, &quot;encryptedData&quot;, encryptedData);</span>
+<span class="fc" id="L256">    return encryptedData;</span>
+  }
+
+  @Override
+  public byte[] symmetricDecrypt(SecretKey key, byte[] encryptedData) {
+<span class="fc" id="L261">    logger.trace(Trace.ENTER_METHOD_2, &quot;secretKey&quot;, System.identityHashCode(key), &quot;encryptedData&quot;,</span>
+        encryptedData);
+<span class="fc" id="L263">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.symmetricCipher);</span>
+
+<span class="fc bfc" id="L265" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L266">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+
+<span class="fc" id="L269">    Decryptor decryptor = null;</span>
+<span class="fc" id="L270">    switch (algoLink.format()) {</span>
+      case aes_gcm_nopadding:
+      default:
+<span class="fc" id="L273">        decryptor = new AesGcmDecryptor(key);</span>
+        break;
+    }
+
+    try {
+<span class="fc" id="L278">      byte[] decryptedContent = decryptor.decrypt(encryptedData);</span>
+<span class="fc" id="L279">      logger.trace(Trace.EXIT_METHOD_1, &quot;decryptedContent&quot;,</span>
+<span class="fc" id="L280">          System.identityHashCode(decryptedContent));</span>
+<span class="fc" id="L281">      return decryptedContent;</span>
+<span class="fc" id="L282">    } catch (Exception e) {</span>
+<span class="fc" id="L283">      throw new DecryptException(e);</span>
+    }
+  }
+
+  @Override
+  public byte[] asymmetricDecrypt(PrivateKey key, byte[] encryptedData) {
+<span class="fc" id="L289">    logger.trace(Trace.ENTER_METHOD_2, &quot;privateKey&quot;, System.identityHashCode(key), &quot;encryptedData&quot;,</span>
+        encryptedData);
+<span class="fc" id="L291">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.asymmetricCipher);</span>
+
+<span class="fc bfc" id="L293" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L294">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+
+<span class="fc" id="L297">    Decryptor decryptor = null;</span>
+<span class="fc" id="L298">    switch (algoLink.format()) {</span>
+      case rsa:
+      default:
+<span class="fc" id="L301">        decryptor = new RsaDecryptor((RSAPrivateKey) key);</span>
+        break;
+    }
+
+    try {
+<span class="fc" id="L306">      byte[] decryptedData = decryptor.decrypt(encryptedData);</span>
+<span class="fc" id="L307">      logger.trace(Trace.EXIT_METHOD_1, &quot;decrypteData&quot;, System.identityHashCode(decryptedData));</span>
+<span class="fc" id="L308">      return decryptedData;</span>
+<span class="fc" id="L309">    } catch (Exception e) {</span>
+<span class="fc" id="L310">      throw new DecryptException(e);</span>
+    }
+  }
+
+  @Override
+  public SecretKey keyAgreement(KeyPair originatorKeyPair, PublicKey recipientPublicKey) {
+<span class="fc" id="L316">    logger.trace(Trace.ENTER_METHOD_2, &quot;originatorKeyPair&quot;,</span>
+<span class="fc" id="L317">        System.identityHashCode(originatorKeyPair), &quot;recipientPublicKey&quot;,</span>
+<span class="fc" id="L318">        System.identityHashCode(recipientPublicKey));</span>
+
+<span class="fc" id="L320">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.keyAgreement);</span>
+
+<span class="fc bfc" id="L322" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L323">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+
+    try {
+<span class="fc" id="L327">      KeyAgreementProvider keyAgreementProvider = null;</span>
+<span class="fc" id="L328">      switch (algoLink.format()) {</span>
+        case x25519:
+        default:
+<span class="fc" id="L331">          keyAgreementProvider = new X25519Provider();</span>
+          break;
+      }
+
+<span class="fc" id="L335">      keyAgreementProvider.initializeAgreement(originatorKeyPair.getPrivate());</span>
+<span class="fc" id="L336">      byte[] sharedSecretKey = keyAgreementProvider.completeAgreement(recipientPublicKey);</span>
+
+<span class="fc" id="L338">      byte[] derivedSecuredKey = keyAgreementProvider.deriveSecureKey(sharedSecretKey,</span>
+<span class="fc" id="L339">          originatorKeyPair.getPublic(), recipientPublicKey);</span>
+<span class="fc" id="L340">      SecretKey sk = new SecretKeySpec(derivedSecuredKey, 0, derivedSecuredKey.length,</span>
+<span class="fc" id="L341">          algorithmForLayer.get(Algorithm.symmetricKeyGenerator).format().getFormat());</span>
+
+<span class="fc" id="L343">      logger.trace(Trace.EXIT_METHOD_1, &quot;secretKey&quot;, System.identityHashCode(sk));</span>
+<span class="fc" id="L344">      return sk;</span>
+<span class="fc" id="L345">    } catch (InvalidKeyException | IllegalStateException | NoSuchAlgorithmException e) {</span>
+<span class="fc" id="L346">      throw new CryptographyServiceException(e);</span>
+    }
+  }
+
+  protected KeyAgreementProvider getKeyAgreementX25519Provider() throws NoSuchAlgorithmException {
+<span class="fc" id="L351">    return new X25519Provider();</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Génération d'une paire de clés pour KeyAgreement
+   * @return la paire de clés générée
+   */
+  private KeyPair generateKeyAgreementKeyPair() {
+<span class="fc" id="L364">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L365">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.keyAgreementKeyPairGenerator);</span>
+
+<span class="fc bfc" id="L367" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L368">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+
+    KeyAgreementProvider keyAgreementProvider;
+
+<span class="fc" id="L373">    AlgorithmFormat format = algoLink.format();</span>
+<span class="fc" id="L374">    switch (format) {</span>
+      case x25519:
+      default:
+        try {
+<span class="fc" id="L378">          keyAgreementProvider = getKeyAgreementX25519Provider();</span>
+<span class="fc" id="L379">        } catch (NoSuchAlgorithmException e) {</span>
+<span class="fc" id="L380">          throw new CryptographyServiceException(e);</span>
+<span class="fc" id="L381">        }</span>
+        break;
+    }
+
+<span class="fc" id="L385">    KeyPair keyPair = keyAgreementProvider.generateEphemeralKeys();</span>
+<span class="fc" id="L386">    logger.trace(Trace.EXIT_METHOD_1, &quot;keyPair&quot;, System.identityHashCode(keyPair));</span>
+<span class="fc" id="L387">    return keyPair;</span>
+  }
+
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Génération d'une paire de clés pour Signature
+   * @return la paire de clés générée
+   */
+  private KeyPair generateSignatureKeyPair() {
+<span class="fc" id="L401">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L402">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.signatureKeyPairGenerator);</span>
+
+<span class="fc bfc" id="L404" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L405">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+
+<span class="fc" id="L408">    KeyPair keyPair = null;</span>
+<span class="fc" id="L409">    AlgorithmFormat format = algoLink.format();</span>
+<span class="fc" id="L410">    switch (format) {</span>
+      case rsa:
+      default:
+<span class="fc" id="L413">        AlgoLayerLink length = algorithmForLayer.get(Algorithm.asymmetricKeyPairLength);</span>
+<span class="fc" id="L414">        String lengthStr = length.format().getFormat();</span>
+<span class="fc" id="L415">        RsaKeysGenerator keyGenerator = new RsaKeysGenerator(Integer.decode(lengthStr));</span>
+<span class="fc" id="L416">        keyPair = keyGenerator.generateKeyPair();</span>
+        break;
+    }
+
+<span class="fc" id="L420">    logger.trace(Trace.EXIT_METHOD_1, &quot;keyPair&quot;, System.identityHashCode(keyPair));</span>
+<span class="fc" id="L421">    return keyPair;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Génération d'une paire de clés pour Encryption asymmetrique
+   * @return la paire de clés générée
+   */
+  private KeyPair generateAsymmetricEncryptionKeyPair() {
+<span class="fc" id="L434">    logger.trace(Trace.ENTER_METHOD_0);</span>
+<span class="fc" id="L435">    AlgoLayerLink algoLink = algorithmForLayer.get(Algorithm.asymmetricKeyPairGenerator);</span>
+
+<span class="fc bfc" id="L437" title="All 2 branches covered.">    if (algoLink == null) {</span>
+<span class="fc" id="L438">      throw new CryptographyServiceException(&quot;Algorithms are unknown for this layer.&quot;);</span>
+    }
+<span class="fc" id="L440">    KeyPair keyPair = null;</span>
+
+<span class="fc" id="L442">    switch (algoLink.format()) {</span>
+      case rsa:
+      default:
+<span class="fc" id="L445">        AlgoLayerLink length = algorithmForLayer.get(Algorithm.asymmetricKeyPairLength);</span>
+<span class="fc" id="L446">        String lengthStr = length.format().getFormat();</span>
+<span class="fc" id="L447">        RsaKeysGenerator keyGenerator = new RsaKeysGenerator(Integer.decode(lengthStr));</span>
+<span class="fc" id="L448">        keyPair = keyGenerator.generateKeyPair();</span>
+        break;
+    }
+<span class="fc" id="L451">    logger.trace(Trace.EXIT_METHOD_1, &quot;keyPair&quot;, System.identityHashCode(keyPair));</span>
+<span class="fc" id="L452">    return keyPair;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

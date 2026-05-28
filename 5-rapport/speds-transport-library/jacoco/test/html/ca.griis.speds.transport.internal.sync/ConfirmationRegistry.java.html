@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfirmationRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.internal.sync</a> &gt; <span class="el_source">ConfirmationRegistry.java</span></div><h1>ConfirmationRegistry.java</h1><pre class="source lang-java linenums">package ca.griis.speds.transport.internal.sync;
+
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * &quot;Description brève du composant (classe, interface, ...)&quot;
+ *
+ * &lt;h3&gt;Historique&lt;/h3&gt;
+ * &lt;p&gt;
+ * XXXX-XX-XX [AS] - Implémentation initiale&lt;br&gt;
+ * &lt;/p&gt;
+ *
+ * &lt;h3&gt;Tâches&lt;/h3&gt;
+ * S.O.
+ *
+ * @author [AS] ameni.souid@usherbrooke.ca
+ * @since
+ */
+<span class="fc" id="L21">public class ConfirmationRegistry {</span>
+<span class="fc" id="L22">  private final ConcurrentHashMap&lt;UUID, CompletableFuture&lt;String&gt;&gt; pending =</span>
+      new ConcurrentHashMap&lt;&gt;();
+
+  public CompletableFuture&lt;String&gt; register(UUID id) {
+<span class="fc" id="L26">    CompletableFuture&lt;String&gt; future = new CompletableFuture&lt;&gt;();</span>
+<span class="fc" id="L27">    CompletableFuture&lt;String&gt; existing = pending.putIfAbsent(id, future);</span>
+
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">    if (existing != null) {</span>
+<span class="nc" id="L30">      throw new IllegalStateException(&quot;Confirmation already registered for id: &quot; + id);</span>
+    }
+
+<span class="fc" id="L33">    return future;</span>
+  }
+
+  public CompletableFuture&lt;String&gt; remove(UUID id) {
+<span class="fc" id="L37">    return pending.remove(id);</span>
+  }
+
+  public void confirm(UUID id, String value) {
+<span class="fc" id="L41">    CompletableFuture&lt;String&gt; future = remove(id);</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">    if (future != null) {</span>
+<span class="fc" id="L43">      future.complete(value);</span>
+    }
+<span class="fc" id="L45">  }</span>
+
+  public void cleanUp() {
+<span class="fc" id="L48">    pending.clear();</span>
+<span class="fc" id="L49">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

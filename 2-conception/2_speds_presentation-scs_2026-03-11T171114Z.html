@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Document de conception pour SPEDS Présentation">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Conception du module « SPEDS - présentation »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Conception du module « <em>SPEDS - présentation</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_rôle_du_module">1. Rôle du module</a></li>
+<li><a href="#_modèle_propre_au_module">2. Modèle propre au module</a>
+<ul class="sectlevel2">
+<li><a href="#_conservation_des_numéros_de_suivi_tracking_numbers">2.1. Conservation des numéros de suivi (<em>tracking numbers</em>)</a></li>
+</ul>
+</li>
+<li><a href="#_mode_de_transmission">3. Mode de transmission</a></li>
+<li><a href="#_type_au_module">4. Type au module</a>
+<ul class="sectlevel2">
+<li><a href="#_type_simple_de_données">4.1. Type simple de données</a></li>
+<li><a href="#_type_complexe_de_données">4.2. Type complexe de données</a>
+<ul class="sectlevel3">
+<li><a href="#SpedsVersion">4.2.1. Version de SPEDS</a></li>
+<li><a href="#AIDU">4.2.2. Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a></li>
+<li><a href="#PIDU">4.2.3. Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a></li>
+<li><a href="#AICI">4.2.4. Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</a></li>
+<li><a href="#PICI">4.2.5. Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a></li>
+<li><a href="#PPDU">4.2.6. Unité de données de protocole de la couche <code>Présentation</code> (<em>PPDU</em>)</a></li>
+<li><a href="#PPCI">4.2.7. Information de contrôle de protocole de la couche <code>Présentation</code> (<em>PPCI</em>)</a></li>
+</ul>
+</li>
+<li><a href="#_type_de_message">4.3. Type de message</a>
+<ul class="sectlevel3">
+<li><a href="#_pre_msg_env">4.3.1. PRE.MSG.ENV</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_contrainte_du_module">5. Contrainte du module</a></li>
+<li><a href="#_processus_du_module">6. Processus du module</a>
+<ul class="sectlevel2">
+<li><a href="#_processsus_pour_un_client">6.1. Processsus pour un client</a>
+<ul class="sectlevel3">
+<li><a href="#_pro_1_processus_demande_déchanger_des_données">6.1.1. [PRO-1] Processus « Demande d&#8217;échanger des données »</a></li>
+<li><a href="#_pro_2_processus_confirme_léchange_de_données">6.1.2. [PRO-2] Processus « Confirme l&#8217;échange de données »</a></li>
+</ul>
+</li>
+<li><a href="#_processus_pour_un_serveur">6.2. Processus pour un serveur</a>
+<ul class="sectlevel3">
+<li><a href="#_pro_3_processus_indique_un_échange_de_données">6.2.1. [PRO-3] Processus « Indique un échange de données »</a></li>
+<li><a href="#_pro_4_processus_répond_à_un_échange_de_données">6.2.2. [PRO-4] Processus « Répond à un échange de données »</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_incongruités">7. Incongruités</a></li>
+<li><a href="#_annexes">8. Annexes</a>
+<ul class="sectlevel2">
+<li><a href="#InterfaceDataUnit_1-2">8.1. <em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a></li>
+<li><a href="#InterfaceDataUnit_2-3">8.2. <em>Interface Data Unit</em> entre la couche présentation (2) et la couche session (3)</a></li>
+<li><a href="#ProtocolDataUnit2">8.3. <em>Protocol Data Unit</em> de la couche présentation (2)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-20 09:45</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du spécificateur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-20 11:09</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur des tests réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-23 09:10</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Historique</caption>
+<colgroup>
+<col style="width: 70%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Changement important</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception initiale</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2024-11-13</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deuxième itération</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-04-24</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Troisième itération</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-12-01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quatrième itération</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-20</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Référence</caption>
+<colgroup>
+<col>
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Version consultée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2_speds_presentation-srs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-11-28</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">200-P6.puml</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-13</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rôle_du_module">1. Rôle du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le module « <em>SPEDS - présentation</em> »  est responsable de gérer le chiffrement des données entre l&#8217;émetteur et le destinataire avec un algorithme de chiffrement symétrique.</p>
+</div>
+<div class="paragraph">
+<p>Lors de l&#8217;émission d&#8217;un message, la couche <code>Présentation</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Reçoit les données de la couche <code>Application</code>;</p>
+</li>
+<li>
+<p>Chiffre les données reçues;</p>
+</li>
+<li>
+<p>Transmet les données chiffrées à la couche <code>Session</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Inversement, lors de la réception de messages, la couche <code>Présentation</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Reçoit les données de la couche <code>Session</code>;</p>
+</li>
+<li>
+<p>Déchiffre les données reçues;</p>
+</li>
+<li>
+<p>Transmet les données déchiffrées à la couche <code>Application</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Le module <code>SPEDS - présentation</code> utilise une clé de chiffrement symétrique (<em>Symmetric Data Encription Key</em>, ou <code>SDEK</code>) pour le chiffrement des données reçues de la couche <code>Application</code>. Cette clé est ensuite transmise à la couche <code>Session</code>, qui s&#8217;occupera de l&#8217;acheminer au destinataire de façon sécuritaire, en s&#8217;assurant notamment que celle-ci ne soit pas transmise avec les données qu&#8217;elle a chiffrées.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_modèle_propre_au_module">2. Modèle propre au module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_conservation_des_numéros_de_suivi_tracking_numbers">2.1. Conservation des numéros de suivi (<em>tracking numbers</em>)</h3>
+<div class="paragraph">
+<p>Le module <code>SPEDS - présentation</code> doit être en mesure de pouvoir conserver temporairement des numéros de suivi et des clés de chiffrement symétrique pour le bon fonctionnement des processus du côté serveur. Plus spécifiquement, lors de la réception d&#8217;une <a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> en provenance de la couche <code>Session</code>, il doit conserver le numéro de suivi et la clé de chiffrement symétrique figurant dans ce message et leur associer l&#8217;identifiant de l'<a href="#PPDU">Unité de données de protocole de la couche <code>Présentation</code> (<em>PPDU</em>)</a>. Cet identifiant sera ensuite transmis à la couche <code>Application</code> et servira à son tour de numéro de suivi.</p>
+</div>
+<div class="paragraph">
+<p>Lors de la réception d&#8217;une <a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> de la couche <code>Application</code>, le module <code>SPEDS - présentation</code> doit pouvoir récupérer le numéro de suivi originellement reçu de la couche <code>Session</code> ainsi que la clé de chiffrement symétrique associée grâce au numéro de suivi contenu dans cette réponse. Ces informations serviront à la construction de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> à transmettre à la couche <code>Session</code> et pourront être supprimés par la suite.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mode_de_transmission">3. Mode de transmission</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sans connexion et sans accusé de réception.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_type_au_module">4. Type au module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_type_simple_de_données">4.1. Type simple de données</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Type simple de données</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="SDEK"></a><code>SDEK</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Un tableau d&#8217;octets.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Une clé de chiffrement symétrique</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="CODE"></a><code>code</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Une chaîne de caractères</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Un code d&#8217;entité, tel que défini dans le projet de gestion d&#8217;activité</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="PGA"></a><code>PGA</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Une chaîne de caractères</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Un identifiant de projet de gestion d&#8217;activité</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="SERVICE"></a><code>service</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Une énumération comprenant les valeurs <code>DELEGATE</code> et <code>TRANSFER</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Le service requis pour la couche <code>Présentation</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="PRIMITIVE"></a><code>service_primitive</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Une énumération comprenant les valeurs <code>REQUEST</code>, <code>INDICATION</code>, <code>RESPONSE</code>, et <code>CONFIRM</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>La primitive de service requise pour la couche <code>Présentation</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="MSGTYPE"></a><code>msgtype</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Une énumération comprenant la valeur <code>PRE.MSG.ENV</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Un type de message</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="ID"></a><code>id</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Un identifiant universel unique (<em>Universally Unique Identifier</em> ou <code>UUID</code>)</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Un identifiant de message</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="SDU"></a><code>SDU</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Une chaîne de caractères</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Il s&#8217;agit du contenu sérialisé d&#8217;une unité de données d&#8217;interface (<em>IDU</em>), sans les informations de contexte (<em>ICI</em>) du protocole. Il comprend les informations à transmettre au destinataire par la couche précédente. Correspond à l&#8217;attribut <code>message</code> de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> et de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_type_complexe_de_données">4.2. Type complexe de données</h3>
+<div class="sect3">
+<h4 id="SpedsVersion">4.2.1. Version de SPEDS</h4>
+<div class="paragraph">
+<p>Permet de désigner une implémentation spécifique du procotole <em>SPEDS</em>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Version de SPEDS</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribut</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Une chaîne de caractères</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Correspond au numéro de version du projet de référence</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identificateur de ressource internationalisé (<em>IRI</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Référent vers le projet de référence implémentant le protocole <em>SPEDS</em></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="AIDU">4.2.2. Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</h4>
+<div class="paragraph">
+<p>Contenu sérialisé au format <code>JSON</code> à être échangé entre la couche <code>Application</code> et <code>Présentation</code> du protocole <em>SPEDS</em> au sein d&#8217;une même entité. Comprend l'<a href="#AICI">Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</a> ainsi que l'<a href="#SDU">Unité de données de services (SDU)</a>. Doit respecter le schéma <code>JSON</code> de <a href="#InterfaceDataUnit_1-2"><em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Unité de données d&#8217;interface de la couche Application</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribut</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#AICI">Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contexte à être échangé entre les couches <code>Application</code> et <code>Présentation</code> pour gérer adéquatement les donneés</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#SDU">Unité de données de Services (SDU)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contenu sérialisé à transmettre au destinataire</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="PIDU">4.2.3. Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</h4>
+<div class="paragraph">
+<p>Contenu sérialisé au format <code>JSON</code> à être échangé entre la couche <code>Présentation</code> et <code>Session</code> du protocole <em>SPEDS</em> au sein d&#8217;une même entité. Comprend l'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a> ainsi que l'<a href="#SDU">Unité de données de services (SDU)</a>. Doit respecter le schéma <code>JSON</code> de <a href="#InterfaceDataUnit_2-3"><em>Interface Data Unit</em> entre la couche présentation (2) et la couche session (3)</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Unité de données d&#8217;interface de la couche Présentation</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribut</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contexte à être échangé entre les couches <code>Présentation</code> et <code>Session</code> pour gérer adéquatement les donneés</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">message</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#SDU">Unité de données de Services (SDU)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contenu sérialisé à transmettre au destinataire</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="AICI">4.2.4. Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</h4>
+<div class="paragraph">
+<p>Elle fournit le contexte nécessaire à être échangé entre les couches <code>Application</code> et <code>Présentation</code> pour transmettre adéquatement les données du <code>SDU</code>. Ces informations ne sont toutefois pas destinées à être transmises à l&#8217;entité destinataire (Voir l'<a href="#PPCI">Information de contrôle de protocole de la couche <code>Présentation</code> (<em>PPCI</em>)</a> à cet effet). Correspond à l&#8217;attribut <code>context</code> de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Information de contrôle d&#8217;interface de la couche Application</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribut</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CODE"><code>code</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code de l&#8217;entité source défini dans le <code>PGA</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CODE"><code>code</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code de l&#8217;entité de destination défini dans le <code>PGA</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#PGA"><code>PGA</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du PGA en lien avec l&#8217;échange de message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#SERVICE"><code>service</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service requis pour le message en cours</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">service_primitive</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#PRIMITIVE"><code>service_primitive</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Primitive de service requise pour le message en cours</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Objet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Options supplémentaires de l&#8217;unité de données d&#8217;interface</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="PICI">4.2.5. Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</h4>
+<div class="paragraph">
+<p>Elle fournit le contexte nécessaire à être échangé entre les couches <code>Présentation</code> et <code>Session</code> pour transmettre adéquatement les données du <code>SDU</code>. Ces informations ne sont toutefois pas destinées à être transmises à l&#8217;entité destinataire (Voir l'<a href="#PPCI">Information de contrôle de protocole de la couche <code>Présentation</code> (<em>PPCI</em>)</a> à cet effet). Correspond à l&#8217;attribut <code>context</code> de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Information de contrôle d&#8217;interface de la couche Présentation</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribut</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sdek</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#SDEK"><code>SDEK</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La clé de chiffrement symétrique ayant servi au chiffrement du message <code>Présentation</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">source_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CODE"><code>code</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code de l&#8217;entité source défini dans le <code>PGA</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination_code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#CODE"><code>code</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Le code de l&#8217;entité de destination défini dans le <code>PGA</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pga</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#PGA"><code>PGA</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L&#8217;identifiant du PGA en lien avec l&#8217;échange de message</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#SERVICE"><code>service</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service requis pour le message en cours</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">service_primitive</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#PRIMITIVE"><code>service_primitive</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Primitive de service requise pour le message en cours</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Objet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Options supplémentaires de l&#8217;unité de données d&#8217;interface</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="PPDU">4.2.6. Unité de données de protocole de la couche <code>Présentation</code> (<em>PPDU</em>)</h4>
+<div class="paragraph">
+<p>Information à transmettre à la couche <code>Présentation</code> de l&#8217;entité destinataire. Comprend le <code>PCI</code> et le <code>SDU</code> chiffré de la couche <code>Application</code>. Correspond au schéma <code>JSON</code> de <a href="#ProtocolDataUnit2"><em>Protocol Data Unit</em> de la couche présentation (2)</a></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Unité de données de protocole</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribut</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#PPCI">Information de contrôle de procotole (PCI)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contexte à transmettre à l&#8217;entité destinataire pour gérer adéquatement les donneés</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">content</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tableau d&#8217;octets représentant l'<a href="#SDU">Unité de données de services (SDU)</a> de la couche <code>Application</code> chiffré par la clé <code>SDEK</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contenu du message à transmettre au destinataire</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="PPCI">4.2.7. Information de contrôle de protocole de la couche <code>Présentation</code> (<em>PPCI</em>)</h4>
+<div class="paragraph">
+<p>Elle fournit le contexte permettant à l&#8217;entité destinataire de gérer et d&#8217;interpréter adéquatement les donneés du <code>PDU</code>. Elle n&#8217;est pas utilisée par les autres couches du protocole. Correspond à l&#8217;attribut <code>header</code> de <a href="#PPDU">Unité de données de protocole de la couche <code>Présentation</code> (<em>PPDU</em>)</a></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Information de contrôle de protocole</caption>
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribut</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msgtype</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#MSGTYPE"><code>msgtype</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identification du type de message <code>Présentation</code> figurant dans le <code>PDU</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ID"><code>id</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identification de façon unique du message <code>Présentation</code> figurant dans le <code>PDU</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#SpedsVersion">Version de SPEDS</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version du protocole SPEDS ayant servi à la transmission du message <code>Présentation</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Valeur booléenne fixée à <code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paramètres additionnels pouvant s&#8217;ajouter à des implémentations futures du message <code>Présentation</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_type_de_message">4.3. Type de message</h3>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="title">Schéma JSON</div>
+<div class="paragraph">
+<p>Il faut suivre le schéma JSON en lien avec les messages de la couche <code>Présentation</code></p>
+</div>
+<div class="paragraph">
+<p>(cf. annexe <a href="#ProtocolDataUnit2"><em>Protocol Data Unit</em> de la couche présentation (2)</a>).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_pre_msg_env">4.3.1. PRE.MSG.ENV</h4>
+<div class="paragraph">
+<p>Message contenant une demande de requête présentation.</p>
+</div>
+<div class="paragraph">
+<p>Le type du message (attribut <code>msgtype</code> dans l'<a href="#PPCI">Information de contrôle de protocole de la couche <code>Présentation</code> (<em>PPCI</em>)</a>) contient la valeur <code>PRE.MSG.ENV</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contrainte_du_module">5. Contrainte du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[CON-001]
+</td>
+<td class="hdlist2">
+<p>La Bibliothèque de fonctions de service de <em>SPEDS</em> doit être utilisée lorsque des fonctionnalités en lien avec les projets ou la sécurité sont requises.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-002]
+</td>
+<td class="hdlist2">
+<p>La suite cryptographique (spécifiquement la taille de la clé SDEK et l&#8217;algorithme de chiffrement symétrique utilisé) est celle définie par la Politique de chiffrement par défaut pour le GRIIS</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_processus_du_module">6. Processus du module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_processsus_pour_un_client">6.1. Processsus pour un client</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1] Demande d&#8217;échanger des données
+</td>
+<td class="hdlist2">
+<p>Initier une requête pour échanger des données par la couche <code>Présentation</code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2] Confirme l&#8217;échange de données
+</td>
+<td class="hdlist2">
+<p>Confirmer la prise en charge de la requête d&#8217;échange de données par la couche <code>Session</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_pro_1_processus_demande_déchanger_des_données">6.1.1. [PRO-1] Processus « Demande d&#8217;échanger des données »</h4>
+<div class="sect4">
+<h5 id="_comportement">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.1]
+</td>
+<td class="hdlist2">
+<p>Récupération de l'<a href="#AICI">Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</a> et de l'<a href="#SDU">Unité de données de services (SDU)</a> à partir de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> en provenance de la couche <code>Application</code>.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.2]
+</td>
+<td class="hdlist2">
+<p>Création de l'<a href="#PPDU">Unité de données de protocole de la couche <code>Présentation</code> (<em>PPDU</em>)</a>:</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.2.1]
+</td>
+<td class="hdlist2">
+<p>Création de l'<a href="#PPCI">Information de contrôle de protocole de la couche <code>Présentation</code> (<em>PPCI</em>)</a>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>En attribuant la valeur <code>PRE.MSG.ENV</code> à <code>msgtype</code>;</p>
+</li>
+<li>
+<p>En générant un nouvel identifiant de message pour <code>id</code>;</p>
+</li>
+<li>
+<p>En récupérant la version de SPEDS de la couche <code>Présentation</code> pour <code>version</code>;</p>
+</li>
+<li>
+<p>En fixant la valeur de <code>parameters</code> à <code>false</code>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.2.2]
+</td>
+<td class="hdlist2">
+<p>Création de la clé de chiffrement symétrique <code>SDEK</code> respectant la contrainte [CON-002] via la Bibliothèque de fonctions de service de <em>SPEDS</em>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.2.3]
+</td>
+<td class="hdlist2">
+<p>Chiffrement via la Bibliothèque de fonctions de service de <em>SPEDS</em> de l'<a href="#SDU">Unité de données de services (SDU)</a> récupérée à l&#8217;étape [PRO-1.1] avec l&#8217;algorithme de chiffrement [CON-002] et la clé <code>SDEK</code> créée à l&#8217;étape précédente.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.2.4]
+</td>
+<td class="hdlist2">
+<p>Création de l'<a href="#PPDU">Unité de données de protocole de la couche <code>Présentation</code> (<em>PPDU</em>)</a> formé de l'<a href="#PPCI">Information de contrôle de protocole de la couche <code>Présentation</code> (<em>PPCI</em>)</a> de l&#8217;étape [PRO-1.2.1] pour l&#8217;attribut <code>header</code> et de l'<a href="#SDU">Unité de données de services (SDU)</a> chiffré de l&#8217;étape [PRO-1.2.3] pour l&#8217;attribut <code>content</code>.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.3]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> à destination de la couche <code>Session</code>:</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.3.2]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a> pour l&#8217;attribut <code>context</code> de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Les attributs <code>source_code</code>, <code>destination_code</code> et <code>pga</code> récupérés dans le <code>ICI</code> de [PRO-1.1];</p>
+</li>
+<li>
+<p>La clé <code>SDEK</code> générée à l&#8217;étape [PRO-1.2.2];</p>
+</li>
+<li>
+<p>Les attributs <code>service</code> et <code>service_primitive</code> sont fixées à <code>DELEGATE</code> et <code>REQUEST</code>, respectivement;</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.3.3]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#SDU">Unité de données de services (SDU)</a> pour l&#8217;attribut <code>message</code> de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a>:</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.3.3.1]
+</td>
+<td class="hdlist2">
+<p>Sérialisation au format <code>JSON</code> de l'<a href="#PPDU">Unité de données de protocole de la couche <code>Présentation</code> (<em>PPDU</em>)</a> créé à l&#8217;étape [PRO-1.2.4].</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-1.4]
+</td>
+<td class="hdlist2">
+<p>Aiguillage en lien avec la réalisation des étapes précédentes :</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.4.1]
+</td>
+<td class="hdlist2">
+<p>Si toutes les étapes précédentes se conduisent sans erreur, transmission de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> construit à l&#8217;étape [PRO-1.3] à la couche <code>Session</code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-1.4.2]
+</td>
+<td class="hdlist2">
+<p>Sinon, transmission d&#8217;une <a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> à la couche <code>Application</code> avec les caractéristiques suivantes :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>L'<a href="#AICI">Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</a> est identique à celui reçue à l&#8217;étape [PRO-1.1], à l&#8217;exception de l&#8217;attribut <code>service_primitive</code> qui est fixée à <code>CONFIRM</code>;</p>
+</li>
+<li>
+<p>L'<a href="#SDU">unité de données de service</a> contient la chaîne de caractères "FAILED : &lt;information&gt;", où le marqueur de substitution &lt;information&gt; doit être remplacé par un texte informatif sur la cause de l&#8217;erreur.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 12. Interface</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Déclencheur</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Message reçu de la couche supérieure</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le service requis est <code>DELEGATE</code></p>
+</li>
+<li>
+<p>La primitive de service est <code>REQUEST</code></p>
+</li>
+</ol>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Flux d&#8217;entrée</div>
+<ul>
+<li>
+<p>Une <a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Flux de sortie</div>
+<ul>
+<li>
+<p>Une <a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> pour le parcours nominal;</p>
+</li>
+<li>
+<p>Une <a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> pour le parcours exceptionnel.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_erreur">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pro_2_processus_confirme_léchange_de_données">6.1.2. [PRO-2] Processus « Confirme l&#8217;échange de données »</h4>
+<div class="sect4">
+<h5 id="_comportement_2">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.1]
+</td>
+<td class="hdlist2">
+<p>Récupération de l'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a> et de l'<a href="#SDU">Unité de données de service (SDU)</a> de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> en provenance de la couche <code>Session</code>.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.2]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> à destination de la couche <code>Application</code>:</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.2.1]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#AICI">Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</a> pour l&#8217;attribut <code>context</code> de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Les attributs <code>source_code</code>, <code>destination_code</code>, <code>pga</code> et <code>service_primitive</code> récupérés dans l'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a> de [PRO-2.1];</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-2.2.2]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#SDU">Unité de données de service (SDU)</a> pour l&#8217;attribut <code>message</code> de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>L'<a href="#SDU">Unité de données de service (SDU)</a> est l'<a href="#SDU">Unité de données de service (SDU)</a> de [PRO-2.1].</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-2.3]
+</td>
+<td class="hdlist2">
+<p>Transmission de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> construit à l&#8217;étape [PRO-2.2] à la couche <code>Application</code>.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface_2">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 13. Interface</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Déclencheur</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Message reçu de la couche inférieure</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le service requis est <code>DELEGATE</code></p>
+</li>
+<li>
+<p>La primitive de service est <code>CONFIRM</code></p>
+</li>
+</ol>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Flux d&#8217;entrée</div>
+<ul>
+<li>
+<p>Une <a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Flux de sortie</div>
+<ul>
+<li>
+<p>Une <a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_erreur_2">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_processus_pour_un_serveur">6.2. Processus pour un serveur</h3>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3] Indique un échange de données
+</td>
+<td class="hdlist2">
+<p>Reçoit la demande d’une requête avec les données échangées par l’initiateur de requête.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-4] Répond à un échange de données
+</td>
+<td class="hdlist2">
+<p>Répond à un initiateur de requête sous une réponse avec des données à échanger.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_pro_3_processus_indique_un_échange_de_données">6.2.1. [PRO-3] Processus « Indique un échange de données »</h4>
+<div class="sect4">
+<h5 id="_comportement_3">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.1]
+</td>
+<td class="hdlist2">
+<p>Récupération de l'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a> et de l'<a href="#SDU">Unité de données de services (SDU)</a> de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> en provenance de la couche <code>Session</code>.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.2]
+</td>
+<td class="hdlist2">
+<p>Récupération de l'<a href="#PPDU">Unité de données de protocole de la couche <code>Présentation</code> (<em>PPDU</em>)</a> par la désérialisation de l'<a href="#SDU">Unité de données de services (SDU)</a>:</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3.2.1]
+</td>
+<td class="hdlist2">
+<p>Validation que l&#8217;attribut <code>msgtype</code> dans l'<a href="#PPCI">Information de contrôle de protocole de la couche <code>Présentation</code> (<em>PPCI</em>)</a> contient bien la valeur <code>PRE.MSG.ENV</code> (Voir [PRO-3.5.2] dans la négative).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3.2.2]
+</td>
+<td class="hdlist2">
+<p>Conservation en mémoire du numéro de suivi de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> et de la clé de chiffrement symétrique avec l&#8217;identifiant de message de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Le numéro de suivi de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> se trouvant dans l&#8217;attribut <code>TN</code> de l&#8217;attribut <code>options</code> de l'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a>;</p>
+</li>
+<li>
+<p>La clé de chiffrement symétrique se trouvant dans l&#8217;attribut <code>SDEK</code> de l'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a>.</p>
+</li>
+<li>
+<p>L&#8217;identifiant de message de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> à construire se trouvant dans l&#8217;attribut <code>id</code> de l'<a href="#PPCI">Information de contrôle de protocole de la couche <code>Présentation</code> (<em>PPCI</em>)</a>;</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.3]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> à destination de la couche <code>Application</code>:</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3.3.1]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#AICI">Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</a> pour l&#8217;attribut <code>context</code> de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Les attributs <code>source_code</code>, <code>destination_code</code> et <code>pga</code> récupérés dans l'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a> de [PRO-3.1];</p>
+</li>
+<li>
+<p>Les attributs <code>service</code> et <code>service_primitive</code> sont fixées à <code>TRANSFER</code> et <code>INDICATION</code>, respectivement;</p>
+</li>
+<li>
+<p>L&#8217;attribut <code>options</code> doit contenir un attribut <code>TN</code> dont la valeur est l&#8217;attribut <code>id</code> de l'<a href="#PPCI">Information de contrôle de protocole de la couche <code>Présentation</code> (<em>PPCI</em>)</a>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3.3.2]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#SDU">Unité de données de services (SDU)</a> pour l&#8217;attribut <code>message</code> de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a>:</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3.3.2.1]
+</td>
+<td class="hdlist2">
+<p>Déchiffrement via la Bibliothèque de fonctions de service de <em>SPEDS</em> du contenu de l'<a href="#PPDU">Unité de données de protocole de la couche <code>Présentation</code> (<em>PPDU</em>)</a> avec l&#8217;algorithme de chiffrement [CON-002] et la clé <code>SDEK</code> accessible via l'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a> de l&#8217;étape [PRO-3.1].</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3.3.2.2]
+</td>
+<td class="hdlist2">
+<p>L'<a href="#SDU">Unité de données de services (SDU)</a> est le contenu de l'<a href="#PPDU">Unité de données de protocole de la couche <code>Présentation</code> (<em>PPDU</em>)</a> déchiffré à l&#8217;étape précédente.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.4]
+</td>
+<td class="hdlist2">
+<p>Transmission de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> construit à l&#8217;étape [PRO-3.3] à la couche <code>Application</code>.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-3.5]
+</td>
+<td class="hdlist2">
+<p>Aiguillage en lien avec la réalisation des étapes précédentes :</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3.5.1]
+</td>
+<td class="hdlist2">
+<p>Si toutes les étapes précédentes se conduisent sans erreur, transmission de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> construit à l&#8217;étape [PRO-3.3] à la couche <code>Session</code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-3.5.2]
+</td>
+<td class="hdlist2">
+<p>Sinon, transmission d&#8217;une <a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> à la couche <code>Session</code> avec les caractéristiques suivantes :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>L'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a> est identique à celui reçue à l&#8217;étape [PRO-3.1], à l&#8217;exception de l&#8217;attribut <code>service_primitive</code> qui est fixée à <code>RESPONSE</code>;</p>
+</li>
+<li>
+<p>L'<a href="#SDU">[SDU]</a> contient la chaîne de caractères "FAILED : &lt;information&gt;", où le marqueur de substitution &lt;information&gt; doit être remplacé par un texte informatif sur la cause de l&#8217;erreur.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface_3">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 14. Interface</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Déclencheur</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Message reçu de la couche inférieure</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le service requis est <code>TRANSFER</code></p>
+</li>
+<li>
+<p>La primitive de service est <code>INDICATION</code></p>
+</li>
+</ol>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Flux d&#8217;entrée</div>
+<ul>
+<li>
+<p>Une <a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Flux de sortie</div>
+<ul>
+<li>
+<p>Une <a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> pour le parcours nominal;</p>
+</li>
+<li>
+<p>Une <a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> pour le parcours exceptionnel.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_erreur_3">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pro_4_processus_répond_à_un_échange_de_données">6.2.2. [PRO-4] Processus « Répond à un échange de données »</h4>
+<div class="sect4">
+<h5 id="_comportement_4">Comportement</h5>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-4.1]
+</td>
+<td class="hdlist2">
+<p>Récupération de l'<a href="#AICI">Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</a> et de l'<a href="#SDU">Unité de données de services (SDU)</a> à partir de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> en provenance de la couche <code>Application</code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-4.2]
+</td>
+<td class="hdlist2">
+<p>Récupération et suppression en mémoire de la clé <code>SDEK</code> et du numéro de suivi de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> avec le numéro de suivi de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Le numéro de suivi de l'<a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a> se trouve dans l&#8217;attribut <code>TN</code> de l&#8217;attribut <code>options</code> de l'<a href="#AICI">Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</a>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-4.3]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> à destination de la couche <code>Session</code>:</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-4.3.1]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#PICI">Information de contrôle d&#8217;interface de la couche <code>Présentation</code> (<em>PICI</em>)</a> pour l&#8217;attribut <code>context</code> de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Les attributs <code>source_code</code>, <code>destination_code</code> et <code>pga</code> récupérés dans l'<a href="#AICI">Information de contrôle d&#8217;interface de la couche <code>Application</code> (<em>AICI</em>)</a> de [PRO-4.1];</p>
+</li>
+<li>
+<p>Les attributs <code>service</code> et <code>service_primitive</code> sont fixées à <code>TRANSFER</code> et <code>RESPONSE</code>, respectivement;</p>
+</li>
+<li>
+<p>La clé <code>SDEK</code> récupérée à l&#8217;étape [PRO-4.2];</p>
+</li>
+<li>
+<p>L&#8217;attribut <code>options</code> doit contenir un attribut <code>TN</code> dont la valeur est le numéro de suivi de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> récupéré à l&#8217;étape [PRO-4.2].</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-4.3.2]
+</td>
+<td class="hdlist2">
+<p>Construction de l'<a href="#SDU">Unité de données de services (SDU)</a> pour l&#8217;attribut <code>message</code> de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>L'<a href="#SDU">Unité de données de services (SDU)</a> est l'<a href="#SDU">Unité de données de services (SDU)</a> de [PRO-4.1].</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-4.4]
+</td>
+<td class="hdlist2">
+<p>Transmission de l'<a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a> construit à l&#8217;étape [PRO-4.2] à la couche <code>Session</code>.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_interface_4">Interface</h5>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 15. Interface</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Déclencheur</th>
+<th class="tableblock halign-left valign-top">Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Message reçu de la couche supérieure</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le service requis est <code>TRANSFER</code></p>
+</li>
+<li>
+<p>La primitive de service est <code>RESPONSE</code></p>
+</li>
+</ol>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<div class="title">Flux d&#8217;entrée</div>
+<ul>
+<li>
+<p>Une <a href="#AIDU">Unité de données d&#8217;interface de la couche <code>Application</code> (<em>AIDU</em>)</a></p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Flux de sortie</div>
+<ul>
+<li>
+<p>Une <a href="#PIDU">Unité de données d&#8217;interface de la couche <code>Présentation</code> (<em>PIDU</em>)</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_erreur_4">Erreur</h5>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">7. Incongruités</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annexes">8. Annexes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="InterfaceDataUnit_1-2">8.1. <em>Interface Data Unit</em> entre la couche application (1) et la couche présentation (2)</h3>
+<div class="listingblock">
+<div class="title">Format d&#8217;interface d&#8217;unité de données entre la couche supérieure et la couche présentation</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://schema.openlhs.info/speds/json/v7.1.1/idu/InterfaceDataUnit-1_2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InterfaceDataUnit-1_2 (2026-01-20T10:20:00-0500)",
+  "description": "An agreed way of communication among SPEDS layers Application (1) and Presentation (2).",
+  "type": "object",
+  "properties": {
+    "context": {
+      "description": "The context shared between these two SPEDS layers. This is the ICI (Interface Control Information), i.e. an information passed across an interface to coordinate interactions between two adjacent layers.",
+      "type": "object",
+      "properties": {
+        "PGA": {
+          "description": "The PGA identifier (a Lodad GUID).",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "source_code": {
+          "description": "The source entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "destination_code": {
+          "description": "The destination entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "service" : {
+          "description": "The service call from the initiating layer",
+          "type": "string",
+          "enum": ["delegate","transfer"]
+        },
+        "service_primitive": {
+          "description": "The service primitive used to communicate among the layers.",
+          "type": "string",
+          "enum": ["request","confirm","response","indication"]
+        },
+        "options": {
+          "description": "The options shared between the layers.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "PGA",
+        "source_code",
+        "destination_code",
+        "service",
+        "service_primitive",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "message": {
+      "description": "The message shared between these two SPEDS layers. This is the APDU : the PDU (Protocol Data Unit) of the Application layer (1).",
+      "type": "string"
+    }
+  },
+  "required": [
+    "context",
+    "message"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="InterfaceDataUnit_2-3">8.2. <em>Interface Data Unit</em> entre la couche présentation (2) et la couche session (3)</h3>
+<div class="listingblock">
+<div class="title">Format d&#8217;interface d&#8217;unité de données entre la couche présentation et la couche inférieure</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://schema.openlhs.info/speds/json/v7.1.1/idu/InterfaceDataUnit-2_3.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InterfaceDataUnit-2_3 (2026-01-20T10:20:00-0500)",
+  "description": "An agreed way of communication among SPEDS layers Presentation (2) and Session (3).",
+  "type": "object",
+  "properties": {
+    "context": {
+      "description": "The context shared between these two SPEDS layers. This is the ICI (Interface Control Information), i.e. an information passed across an interface to coordinate interactions between two adjacent layers.",
+      "type": "object",
+      "properties": {
+        "PGA": {
+          "description": "The PGA identifier (a Lodad GUID).",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "source_code": {
+          "description": "The source entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "destination_code": {
+          "description": "The destination entity code (a Lodad GUID)",
+          "type": "string",
+          "format": "LodadGUID"
+        },
+        "SDEK": {
+          "description": "The symmetric data-encryption key.",
+          "type": "string"
+        },
+        "service" : {
+          "description": "The service call from the initiating layer",
+          "type": "string",
+          "enum": ["delegate","transfer"]
+        },
+        "service_primitive": {
+          "description": "The service primitive used to communicate among the layers.",
+          "type": "string",
+          "enum": ["request","confirm","response","indication"]
+        },
+        "options": {
+          "description": "The options shared between the layers.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "PGA",
+        "source_code",
+        "destination_code",
+        "SDEK",
+        "service",
+        "service_primitive",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "message": {
+      "description": "The message shared between these two SPEDS layers. This is the PPDU : the PDU (Protocol Data Unit) of the Presentation layer (2).",
+      "type": "string"
+    }
+  },
+  "required": [
+    "context",
+    "message"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ProtocolDataUnit2">8.3. <em>Protocol Data Unit</em> de la couche présentation (2)</h3>
+<div class="listingblock">
+<div class="title">Format du message de la couche présentation</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "$id": "https://schema.openlhs.info/speds/json/v7.1.1/pdu/ProtocolDataUnit-2-PRE.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProtocolDataUnit-2-PRE (2026-01-15T10:20:00-0500)",
+  "$defs": {
+    "iri": {
+      "description": "A valid IR according to RFC 3987",
+      "type": "string",
+      "format": "iri"
+    },
+    "uuid": {
+      "description": "A valid UUID according to RFC 4122",
+      "type": "string",
+      "format": "uuid"
+    },
+    "bytestring": {
+      "description": "A base-64 encoded bytestring",
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "versioning": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)(\\.[0-9]+[a-z]*)$"
+    }
+  },
+  "description": "For the Presentation Layer of SPEDS (Layer 2) : a unit of data which is transferred from one end of a connection to the other with no loss of identity or meaning.",
+  "type": "object",
+  "examples": [
+    {
+      "header": {
+        "msgtype": "PRE.MSG.ENV",
+        "id": "ba62cebf-e9fa-4472-b776-49cbf04ab32a",
+        "parameters": false,
+        "version": {
+          "number": "6.1.0",
+          "reference": "https://www.griis.ca/speds/layer/ses/v6.1.0/reference"
+        }
+      },
+      "content": "TUVnQ1FRQ285K0JwTVJZUS9kTDNEUzJDeUp4UkYrajZjdGJUMy9RcDg0K0tlRmhuaWk3TlQ3ZkVMaWxLVVNueApTMzBXQXZRQ0NvMnlVMW9yZmdxcjQxbU03ME1CQWdNQkFBRT0="
+    }
+  ],
+  "properties": {
+    "header": {
+      "description": "The header of a SPEDS message. Mandatory in all layers.",
+      "type": "object",
+      "properties": {
+        "msgtype": {
+          "description": "The type of a SPEDS message. Mandatory in all layers.",
+          "type": "string",
+          "enum": [
+            "PRE.MSG.ENV"
+          ]
+        },
+        "id": {
+          "description": "The identifier of a SPEDS message. Mandatory in all layers.",
+          "$ref": "#/$defs/uuid"
+        },
+        "parameters": {
+          "description": "The parameters of the Presentation layer.",
+          "oneOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "object",
+              "minProperties": 1
+            }
+          ]
+        },
+        "version": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "description": "The version of the current layer.",
+              "$ref": "#/$defs/versioning"
+            },
+            "reference": {
+              "description": "The reference of the present version of the layer.",
+              "type": "string",
+              "format": "iri"
+            }
+          },
+          "required": [
+            "number",
+            "reference"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "msgtype",
+        "id",
+        "parameters",
+        "version"
+      ]
+    },
+    "content": {
+      "description": "The content of a SPEDS message. Mandatory in all layers.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "header",
+    "content"
+  ],
+  "additionalProperties": false
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 10:47:29 -0400
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>

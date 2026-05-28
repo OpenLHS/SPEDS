@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpecGenConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-toolkit-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.toolkit.crypto.internal.converter.facade.spec</a> &gt; <span class="el_source">SpecGenConverter.java</span></div><h1>SpecGenConverter.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe SpecGenConverter.
+ * @brief @~english Contains description of SpecGenConverter class.
+ */
+
+package ca.griis.speds.toolkit.crypto.internal.converter.facade.spec;
+
+import ca.griis.security.api.domain.spec.SecuritySpec;
+import ca.griis.security.api.domain.spec.cipher.asym.StrongRsaCipherSpec;
+import ca.griis.security.api.domain.spec.csprng.StrongCsprngSpec;
+import ca.griis.security.api.domain.spec.generator.asym.Ed25519KeyPairGenSpec;
+import ca.griis.security.api.domain.spec.generator.asym.EfficientRsaKeyPairGenSpec;
+import ca.griis.security.api.domain.spec.generator.asym.X25519KeyPairGenSpec;
+import ca.griis.security.api.domain.spec.generator.symm.Aes128KeyGenSpec;
+import ca.griis.security.api.domain.spec.generator.symm.Aes256KeyGenSpec;
+import ca.griis.security.api.domain.spec.sign.EfficientRsaSignatureFnSpec;
+import ca.griis.security.api.domain.spec.sign.StrongRsaSignatureFnSpec;
+import java.util.Map;
+import java.util.function.Function;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Convertit une catégorie d'algorithme de SPEDS à une spécification à un générateur
+ *        cryptographique.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-12-19 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+<span class="fc" id="L57">public class SpecGenConverter implements Function&lt;String, SecuritySpec&gt; {</span>
+<span class="fc" id="L58">  private static final Map&lt;String, SecuritySpec&gt; mapping = Map.ofEntries(</span>
+<span class="fc" id="L59">      Map.entry(&quot;CSPRNG&quot;, new StrongCsprngSpec()),</span>
+<span class="fc" id="L60">      Map.entry(&quot;AES128-GCM&quot;, new Aes128KeyGenSpec()),</span>
+<span class="fc" id="L61">      Map.entry(&quot;AES256-GCM&quot;, new Aes256KeyGenSpec()),</span>
+<span class="fc" id="L62">      Map.entry(&quot;RSA4096-OAEP-MGF1-SHA256&quot;, new EfficientRsaKeyPairGenSpec()),</span>
+<span class="fc" id="L63">      Map.entry(&quot;RSA4096-OAEP-MGF1-SHA512&quot;, new StrongRsaCipherSpec()),</span>
+<span class="fc" id="L64">      Map.entry(&quot;RSA4096-PSS-MGF1-SHA256&quot;, new EfficientRsaSignatureFnSpec()),</span>
+<span class="fc" id="L65">      Map.entry(&quot;RSA4096-PSS-MGF1-SHA512&quot;, new StrongRsaSignatureFnSpec()),</span>
+<span class="fc" id="L66">      Map.entry(&quot;X25519&quot;, new X25519KeyPairGenSpec()),</span>
+<span class="fc" id="L67">      Map.entry(&quot;Ed25519&quot;, new Ed25519KeyPairGenSpec()));</span>
+
+  @Override
+  public SecuritySpec apply(String algo) {
+<span class="fc" id="L71">    return mapping.get(algo);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

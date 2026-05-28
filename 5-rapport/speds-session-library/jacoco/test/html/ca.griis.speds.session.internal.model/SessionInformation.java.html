@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SessionInformation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.model</a> &gt; <span class="el_source">SessionInformation.java</span></div><h1>SessionInformation.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SessionInformation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.model</a> &gt; <span class="el_source">SessionInformation.java</span></div><h1>SessionInformation.java</h1><pre class="source lang-java linenums">/**
  * @file
  *
  * @copyright @@GRIIS_COPYRIGHT@@
@@ -14,7 +14,9 @@
 package ca.griis.speds.session.internal.model;
 
 import ca.griis.speds.session.internal.domain.SessionId;
+import ca.griis.speds.session.internal.security.crypto.SessionKeyDestroyer;
 import java.security.KeyPair;
+import java.security.PublicKey;
 import java.util.UUID;
 import javax.crypto.SecretKey;
 
@@ -46,127 +48,189 @@ import javax.crypto.SecretKey;
  *      S.O.
  */
 public class SessionInformation {
-  public SessionId sessionId;
-  public String initiatorId;
-  public String initiatorPubKey;
-  public String initiatorIri;
+  private SessionId sessionId;
+  private String initiatorId;
+  private String initiatorIri;
+  private String peerId;
+  private String peerIri;
 
-  public String peerId;
-  public String peerIri;
+  private PublicKey initiatorPubKey;
+  private SecretKey skak;
+  private SecretKey sdek;
+<span class="fc" id="L60">  private Integer numberOfMessage = 0;</span>
 
-  public SecretKey skak;
-  public String pgaId;
-  public SecretKey sdek;
-  public UUID trackingNumber;
-<span class="fc" id="L61">  public Integer numberOfMessage = 0;</span>
+  private String pgaId;
+  private String piduMessage;
+  private KeyPair firstChoice;
 
-  public String piduMessage;
-  public KeyPair firstChoice;
-
-  public UUID token;
+  private UUID token;
 
 <span class="fc" id="L68">  public SessionInformation() {}</span>
 
-  public static Builder builder() {
-<span class="fc" id="L71">    return new Builder();</span>
+  public SessionId sessionId() {
+<span class="fc" id="L71">    return sessionId;</span>
   }
 
-<span class="fc" id="L74">  public static class Builder {</span>
-<span class="fc" id="L75">    private final SessionInformation instance = new SessionInformation();</span>
+  public String initiatorId() {
+<span class="fc" id="L75">    return initiatorId;</span>
+  }
+
+  public String initiatorIri() {
+<span class="fc" id="L79">    return initiatorIri;</span>
+  }
+
+  public String peerId() {
+<span class="fc" id="L83">    return peerId;</span>
+  }
+
+  public String peerIri() {
+<span class="fc" id="L87">    return peerIri;</span>
+  }
+
+  public PublicKey initiatorPubKey() {
+<span class="fc" id="L91">    return initiatorPubKey;</span>
+  }
+
+  public SecretKey skak() {
+<span class="fc" id="L95">    return skak;</span>
+  }
+
+  public SecretKey sdek() {
+<span class="fc" id="L99">    return sdek;</span>
+  }
+
+  public Integer numberOfMessage() {
+<span class="fc" id="L103">    return numberOfMessage;</span>
+  }
+
+  public String pgaId() {
+<span class="fc" id="L107">    return pgaId;</span>
+  }
+
+  public String piduMessage() {
+<span class="fc" id="L111">    return piduMessage;</span>
+  }
+
+  public KeyPair firstChoice() {
+<span class="fc" id="L115">    return firstChoice;</span>
+  }
+
+  public UUID token() {
+<span class="fc" id="L119">    return token;</span>
+  }
+
+  public void cleanUp() {
+<span class="fc bfc" id="L123" title="All 2 branches covered.">    if (skak != null) {</span>
+<span class="fc" id="L124">      SessionKeyDestroyer.destroy(skak);</span>
+<span class="fc" id="L125">      skak = null;</span>
+    }
+
+<span class="fc bfc" id="L128" title="All 2 branches covered.">    if (sdek != null) {</span>
+<span class="fc" id="L129">      SessionKeyDestroyer.destroy(sdek);</span>
+<span class="fc" id="L130">      sdek = null;</span>
+    }
+
+<span class="fc bfc" id="L133" title="All 2 branches covered.">    if (firstChoice != null) {</span>
+<span class="fc" id="L134">      SessionKeyDestroyer.destroy(firstChoice.getPrivate());</span>
+
+<span class="fc" id="L136">      firstChoice = null;</span>
+    }
+<span class="fc" id="L138">  }</span>
+
+  public static Builder builder() {
+<span class="fc" id="L141">    return new Builder();</span>
+  }
+
+<span class="fc" id="L144">  public static class Builder {</span>
+<span class="fc" id="L145">    private final SessionInformation instance = new SessionInformation();</span>
 
     public Builder sessionId(SessionId sessionId) {
-<span class="fc" id="L78">      instance.sessionId = sessionId;</span>
-<span class="fc" id="L79">      return this;</span>
+<span class="fc" id="L148">      instance.sessionId = sessionId;</span>
+<span class="fc" id="L149">      return this;</span>
     }
 
     public Builder initiatorId(String initiatorId) {
-<span class="fc" id="L83">      instance.initiatorId = initiatorId;</span>
-<span class="fc" id="L84">      return this;</span>
+<span class="fc" id="L153">      instance.initiatorId = initiatorId;</span>
+<span class="fc" id="L154">      return this;</span>
     }
 
-    public Builder initiatorPubKey(String initiatorPubKey) {
-<span class="fc" id="L88">      instance.initiatorPubKey = initiatorPubKey;</span>
-<span class="fc" id="L89">      return this;</span>
+    public Builder initiatorPubKey(PublicKey initiatorPubKey) {
+<span class="fc" id="L158">      instance.initiatorPubKey = initiatorPubKey;</span>
+<span class="fc" id="L159">      return this;</span>
     }
 
     public Builder initiatorIri(String initiatorIri) {
-<span class="fc" id="L93">      instance.initiatorIri = initiatorIri;</span>
-<span class="fc" id="L94">      return this;</span>
+<span class="fc" id="L163">      instance.initiatorIri = initiatorIri;</span>
+<span class="fc" id="L164">      return this;</span>
     }
 
     public Builder peerId(String peerId) {
-<span class="fc" id="L98">      instance.peerId = peerId;</span>
-<span class="fc" id="L99">      return this;</span>
+<span class="fc" id="L168">      instance.peerId = peerId;</span>
+<span class="fc" id="L169">      return this;</span>
     }
 
     public Builder peerIri(String peerIri) {
-<span class="fc" id="L103">      instance.peerIri = peerIri;</span>
-<span class="fc" id="L104">      return this;</span>
+<span class="fc" id="L173">      instance.peerIri = peerIri;</span>
+<span class="fc" id="L174">      return this;</span>
     }
 
     public Builder skak(SecretKey skak) {
-<span class="fc" id="L108">      instance.skak = skak;</span>
-<span class="fc" id="L109">      return this;</span>
+<span class="fc" id="L178">      instance.skak = skak;</span>
+<span class="fc" id="L179">      return this;</span>
     }
 
     public Builder pgaId(String pgaId) {
-<span class="fc" id="L113">      instance.pgaId = pgaId;</span>
-<span class="fc" id="L114">      return this;</span>
+<span class="fc" id="L183">      instance.pgaId = pgaId;</span>
+<span class="fc" id="L184">      return this;</span>
     }
 
     public Builder sdek(SecretKey sdek) {
-<span class="fc" id="L118">      instance.sdek = sdek;</span>
-<span class="fc" id="L119">      return this;</span>
-    }
-
-    public Builder trackingNumber(UUID trackingNumber) {
-<span class="fc" id="L123">      instance.trackingNumber = trackingNumber;</span>
-<span class="fc" id="L124">      return this;</span>
+<span class="fc" id="L188">      instance.sdek = sdek;</span>
+<span class="fc" id="L189">      return this;</span>
     }
 
     public Builder numberOfMessage(Integer numberOfMessage) {
-<span class="fc" id="L128">      instance.numberOfMessage = numberOfMessage;</span>
-<span class="fc" id="L129">      return this;</span>
+<span class="fc" id="L193">      instance.numberOfMessage = numberOfMessage;</span>
+<span class="fc" id="L194">      return this;</span>
     }
 
     public Builder piduMessage(String piduMessage) {
-<span class="fc" id="L133">      instance.piduMessage = piduMessage;</span>
-<span class="fc" id="L134">      return this;</span>
+<span class="fc" id="L198">      instance.piduMessage = piduMessage;</span>
+<span class="fc" id="L199">      return this;</span>
     }
 
     public Builder firstChoice(KeyPair firstChoice) {
-<span class="fc" id="L138">      instance.firstChoice = firstChoice;</span>
-<span class="fc" id="L139">      return this;</span>
+<span class="fc" id="L203">      instance.firstChoice = firstChoice;</span>
+<span class="fc" id="L204">      return this;</span>
     }
 
     public Builder token(UUID token) {
-<span class="fc" id="L143">      instance.token = token;</span>
-<span class="fc" id="L144">      return this;</span>
+<span class="fc" id="L208">      instance.token = token;</span>
+<span class="fc" id="L209">      return this;</span>
     }
 
     public SessionInformation build() {
-<span class="fc" id="L148">      return instance;</span>
+<span class="fc" id="L213">      return instance;</span>
     }
 
     public Builder of(SessionInformation sessionInformation) {
-<span class="fc" id="L152">      instance.sessionId = sessionInformation.sessionId;</span>
-<span class="fc" id="L153">      instance.initiatorId = sessionInformation.initiatorId;</span>
-<span class="fc" id="L154">      instance.initiatorPubKey = sessionInformation.initiatorPubKey;</span>
-<span class="fc" id="L155">      instance.initiatorIri = sessionInformation.initiatorIri;</span>
+<span class="fc" id="L217">      instance.sessionId = sessionInformation.sessionId;</span>
+<span class="fc" id="L218">      instance.initiatorId = sessionInformation.initiatorId;</span>
+<span class="fc" id="L219">      instance.initiatorPubKey = sessionInformation.initiatorPubKey;</span>
+<span class="fc" id="L220">      instance.initiatorIri = sessionInformation.initiatorIri;</span>
 
-<span class="fc" id="L157">      instance.peerId = sessionInformation.peerId;</span>
-<span class="fc" id="L158">      instance.peerIri = sessionInformation.peerIri;</span>
+<span class="fc" id="L222">      instance.peerId = sessionInformation.peerId;</span>
+<span class="fc" id="L223">      instance.peerIri = sessionInformation.peerIri;</span>
 
-<span class="fc" id="L160">      instance.skak = sessionInformation.skak;</span>
-<span class="fc" id="L161">      instance.pgaId = sessionInformation.pgaId;</span>
-<span class="fc" id="L162">      instance.sdek = sessionInformation.sdek;</span>
-<span class="fc" id="L163">      instance.trackingNumber = sessionInformation.trackingNumber;</span>
-<span class="fc" id="L164">      instance.numberOfMessage = sessionInformation.numberOfMessage;</span>
+<span class="fc" id="L225">      instance.skak = sessionInformation.skak;</span>
+<span class="fc" id="L226">      instance.pgaId = sessionInformation.pgaId;</span>
+<span class="fc" id="L227">      instance.sdek = sessionInformation.sdek;</span>
+<span class="fc" id="L228">      instance.numberOfMessage = sessionInformation.numberOfMessage;</span>
 
-<span class="fc" id="L166">      instance.piduMessage = sessionInformation.piduMessage;</span>
-<span class="fc" id="L167">      instance.firstChoice = sessionInformation.firstChoice;</span>
-<span class="fc" id="L168">      instance.token = sessionInformation.token;</span>
-<span class="fc" id="L169">      return this;</span>
+<span class="fc" id="L230">      instance.piduMessage = sessionInformation.piduMessage;</span>
+<span class="fc" id="L231">      instance.firstChoice = sessionInformation.firstChoice;</span>
+<span class="fc" id="L232">      instance.token = sessionInformation.token;</span>
+<span class="fc" id="L233">      return this;</span>
     }
   }
 }

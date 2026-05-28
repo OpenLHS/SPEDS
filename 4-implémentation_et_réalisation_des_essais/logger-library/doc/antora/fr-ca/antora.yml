@@ -1,0 +1,7 @@
+name: logger-griis
+title: Bibliothèque de journalisation
+version: 0.5.0
+start_page: ROOT:index.adoc
+nav:
+- modules/ROOT/nav.adoc
+#- modules/additionaldoc/nav.adoc

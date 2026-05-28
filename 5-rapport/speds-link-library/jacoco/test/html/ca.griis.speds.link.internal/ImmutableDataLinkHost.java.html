@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableDataLinkHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-link-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.link.internal</a> &gt; <span class="el_source">ImmutableDataLinkHost.java</span></div><h1>ImmutableDataLinkHost.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe ImmutableDataLinkHost.
+ * @brief @~english Implementation of the ImmutableDataLinkHost class.
+ */
+
+package ca.griis.speds.link.internal;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.communication.protocol.ProtocolHost;
+import ca.griis.speds.communication.protocol.ProtocolHostEvent;
+import ca.griis.speds.communication.protocol.unit.ProtocolIdu;
+import ca.griis.speds.link.api.Host;
+import ca.griis.speds.link.api.HostEvent;
+import ca.griis.speds.link.internal.dispatcher.NotifyDispatcher;
+import ca.griis.speds.link.internal.dispatcher.SubmitDispatcher;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Offre les services d'un hôte de la couche liaison.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-02-03 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class ImmutableDataLinkHost implements Host, ProtocolHostEvent {
+<span class="fc" id="L59">  private static final GriisLogger logger = getLogger(ImmutableDataLinkHost.class);</span>
+
+  private final ProtocolHost host;
+  private final HostEvent hostEvent;
+  private final SubmitDispatcher submitDispatcher;
+  private final NotifyDispatcher notifyDispatcher;
+
+<span class="fc" id="L66">  public ImmutableDataLinkHost(ObjectMapper objectMapper, ProtocolHost host, HostEvent hostEvent) {</span>
+<span class="fc" id="L67">    this.host = host;</span>
+<span class="fc" id="L68">    this.hostEvent = hostEvent;</span>
+<span class="fc" id="L69">    this.submitDispatcher = new SubmitDispatcher(objectMapper, host);</span>
+<span class="fc" id="L70">    this.notifyDispatcher = new NotifyDispatcher(objectMapper);</span>
+<span class="fc" id="L71">  }</span>
+
+  public ProtocolHost getHost() {
+<span class="nc" id="L74">    return host;</span>
+  }
+
+  @Override
+  public void close() {
+<span class="fc" id="L79">    host.close();</span>
+<span class="fc" id="L80">  }</span>
+
+  @Override
+  public CompletableFuture&lt;Optional&lt;String&gt;&gt; submitIdu(String idu) {
+<span class="fc" id="L84">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L86">    Optional&lt;String&gt; out = submitDispatcher.handle(idu);</span>
+<span class="fc" id="L87">    var future = CompletableFuture.completedFuture(out);</span>
+
+<span class="fc" id="L89">    logger.trace(Trace.EXIT_METHOD_1, &quot;future&quot;, future);</span>
+<span class="fc" id="L90">    return future;</span>
+  }
+
+  @Override
+  public void notifyIdu(ProtocolIdu event) {
+<span class="fc" id="L95">    logger.trace(Trace.ENTER_METHOD_1, &quot;event&quot;, event);</span>
+
+<span class="fc" id="L97">    final var idu = notifyDispatcher.handle(event);</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">    if (idu.isPresent()) {</span>
+<span class="fc" id="L99">      hostEvent.notifyIdu(idu.get());</span>
+    }
+
+<span class="fc" id="L102">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L103">  }</span>
+
+  @Override
+  public void notifyException(Exception exception) {
+<span class="fc" id="L107">    hostEvent.notifyException(exception);</span>
+<span class="fc" id="L108">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

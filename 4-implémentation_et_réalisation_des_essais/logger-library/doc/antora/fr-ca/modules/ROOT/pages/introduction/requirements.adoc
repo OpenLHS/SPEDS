@@ -1,0 +1,32 @@
+= Préalable
+// Paramètres
+:idprefix:
+:idseparator: -
+
+Avant de débuter, assurez-vous que l’ensemble des conditions suivantes soient remplies{nbsp}:
+
+== Logiciels prérequis
+
+Les logiciels suivants doivent être installés{nbsp}:
+
+include::ROOT:partial$requirements/req_software.adoc[]
+
+== Composants GRIIS prérequis
+
+Les dépôts des composants GRIIS suivants doivent être clonés{nbsp}:
+
+include::ROOT:partial$requirements/req_griiscomponent.adoc[]
+
+
+== Systèmes d’exploitation prérequis
+
+La *{page-component-title}* est prise en charge par les systèmes d’exploitation suivants{nbsp}:
+
+include::ROOT:partial$requirements/req_os.adoc[]
+
+== Matériels prérequis
+
+Les matériels prérequis recommandés pour le fonctionnement de la *{page-component-title}* sont les
+suivants{nbsp}:
+
+include::ROOT:partial$requirements/req_material.adoc[]

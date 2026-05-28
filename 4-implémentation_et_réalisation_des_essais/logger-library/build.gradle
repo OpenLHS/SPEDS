@@ -1,0 +1,40 @@
+plugins {
+  id 'maven-publish'
+  id 'java-library'
+}
+
+dependencyLocking {
+  lockAllConfigurations()
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+group = "ca.griis"
+version = "1.1.0"
+
+dependencies {
+  api "ca.griis:slf4j-ext-griis:1.0.4"
+  api "ch.qos.cal10n:cal10n-api:0.8.1"
+  api "org.slf4j:slf4j-api:2.0.16"
+  testImplementation "org.junit.jupiter:junit-jupiter-engine:5.10.3"
+  testImplementation "org.springframework.boot:spring-boot-starter-test:3.3.4"
+  testImplementation "net.jqwik:jqwik:1.7.0"
+  testImplementation "net.jqwik:jqwik-api:1.7.0"
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}

@@ -1,0 +1,25 @@
+About SLF4J
+The Simple Logging Facade for Java (SLF4J) serves as a simple facade or abstraction for various logging frameworks (e.g. java.util.logging, logback, log4j) allowing the end user to plug in the desired logging framework at deployment time. More information can be found on the SLF4J website.
+
+Build Status
+Build Status
+
+How to build SLF4J
+SLF4J uses Maven as its build tool.
+
+All versions upto and including 1.7.x require Java 5 or later to build. SLF4J version 2.0.x requires Java 9 or later.
+
+How to contribute pull requests
+If you are interested in improving SLF4J, that is great! The SLF4J community looks forward to your contribution. Please follow this process:
+
+Start a discussion on the slf4j-dev mailing list about your proposed change. Alternately, file a bug report to initiatite the discussion. Note that we usually ask most pull requests to be linked to a Jira ticket.
+
+Fork qos-ch/slf4j. Ideally, create a new branch from your fork for your contribution to make it easier to merge your changes back.
+
+Make your changes on the branch you hopefuly created in Step 2. Be sure that your code passes existing unit tests. Please add unit tests for your work if appropriate. It usually is.
+
+Push your changes to your fork/branch in github. Don't push it to your master! If you do it will make it harder to submit new changes later.
+
+Submit a pull request to SLF4J from from your commit page on github.
+
+Did we mention that you will be asked to link your pull request with a Jira ticket?

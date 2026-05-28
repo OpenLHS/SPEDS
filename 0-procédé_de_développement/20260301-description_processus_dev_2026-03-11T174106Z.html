@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="Description du procédé de développement du GRIIS">
+<meta name="keywords" content="SPEDS">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Description du procédé de développement</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Description du procédé de développement</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v1,</span>
+<span id="revdate">2026-03-01</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_points_généraux">1. Points généraux</a>
+<ul class="sectlevel2">
+<li><a href="#_principes_de_lapproche_du_griis">1.1. Principes de l&#8217;approche du GRIIS</a></li>
+<li><a href="#_qualité_du_procédé">1.2. Qualité du procédé</a></li>
+<li><a href="#_définitions">1.3. Définitions</a></li>
+</ul>
+</li>
+<li><a href="#_étapes">2. Étapes</a>
+<ul class="sectlevel2">
+<li><a href="#_exigences_et_analyse_de_risque">2.1. Exigences (et analyse de risque)</a></li>
+<li><a href="#_conception">2.2. Conception</a></li>
+<li><a href="#_spécification_des_essais">2.3. Spécification des essais</a></li>
+<li><a href="#_implémentation">2.4. Implémentation</a></li>
+<li><a href="#_réalisation_des_essais">2.5. Réalisation des essais</a></li>
+<li><a href="#_exécution_des_essais">2.6. Exécution des essais</a></li>
+<li><a href="#_postmortem">2.7. Postmortem</a></li>
+</ul>
+</li>
+<li><a href="#_cas_particulier">Appendix A: Cas particulier</a></li>
+<li><a href="#_schéma_du_processus">Appendix B: Schéma du processus</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_points_généraux">1. Points généraux</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>L&#8217;idée principale du développement est de décomposer un produit (p.ex. un service ou une application) en un ensemble de modules (de taille faible à modérée) et de développer ces modules dans des itérations séparées de façon incrémentale.  Le travail est mis en priorité sur des exigences solides qui ancre la vision des systèmes produits par le GRIIS et dans un travail architectural qui assure que chaque développement pourra être effectué au niveau de qualité exigée par les besoins.</p>
+</div>
+<div class="paragraph">
+<p>Ainsi, une application  peu complexe et de faible taille sera développée en un seul module, tandis qu&#8217;un système complexe ou de grande taille sera décomposé en une série de bibliothèques ou de service distinct qui pourront communiquer ensemble.</p>
+</div>
+<div class="paragraph">
+<p>Cette section expose les principes suivis durant une itération sur un module, que ce soit un module réalisant le système ou simplement une de ses bibliothèques.</p>
+</div>
+<div class="sect2">
+<h3 id="_principes_de_lapproche_du_griis">1.1. Principes de l&#8217;approche du GRIIS</h3>
+<div class="paragraph">
+<p>La philosophie utilisée pour le procédé de développement au GRIIS est celle d&#8217;une approche itérative basée sur le modèle en spirale (proposé initialement par Boehm). Notre modèle est une succession itérative de plusieurs cycles de développement utilisant le modèle classique en V. Cette approche impose plusieurs prérequis.</p>
+</div>
+<div class="paragraph">
+<p>En premier lieu, le modèle est prédictif et séquentiel, ce qui implique que les exigences du module en production sont décidées et rédigées en amont, et revues à chaque itération en fonction des besoins et du risque encourus. Il est donc possible que les spécifications logicielles évoluent, mais elles peuvent simplement être sélectionnées dans le but de produire un prototype d&#8217;une étape (l&#8217;itération) qui permettent de valider la bonne poursuite du développement.</p>
+</div>
+<div class="paragraph">
+<p>Deuxièmement, la gestion du risque est un élément primordial du procédé. Le « Mandataire du produit », le « Gestionnaire » et le « Spécificateur des exigences » (voir les <a href="#Roles">Rôles des membres de l&#8217;équipe</a>) évaluent l&#8217;impact de l&#8217;itération et des choix à chaque création d&#8217;un document des <a href="#Artefacts">artefacts documentaires</a>.</p>
+</div>
+<div class="paragraph">
+<p>Troisièmement, le procédé est basé sur le modèle par incrément afin de contrôler la qualité du produit. La <strong>SCS</strong> ne doit pas présager une implémentation trop conséquente. La limite actuelle a été placée à un effort inférieur à 100 <em>heures.personnes</em>. Si la <strong>SCS</strong> produite implique un développement évalué comme trop important pour assurer la qualité du produit, elle est recommencée avec un découpage modulaire plus fin. L&#8217;implémentation de cet incrément doit rester de taille faible à modérée, en reportant la complexité dans des modules qui auront leurs propres itérations. Ceci garantit que l&#8217;itération n&#8217;est pas surchargée et que la qualité n&#8217;est pas remise en cause.</p>
+</div>
+<div class="paragraph">
+<p>Le procédé s&#8217;appuie sur un binôme de professionnelles composant les rôles de « Concepteur » et « Implémenteur » des <a href="#Roles">Rôles des membres de l&#8217;équipe</a> (procédé s&#8217;apparentant au <em>pair programming</em>). Après la création de la spécification des exigences logicielles, ces deux membres s&#8217;occupent de prendre en charge tout le processus de mise en œuvre en alternant les rôles de production et de vérification, ce qui assure une meilleure cohérence et une meilleure qualité des documents (<strong>SCS</strong> et <strong>CXS</strong>). Ensuite, le binôme s&#8217;occupe de réaliser de façon parallèle l&#8217;implémentation et la réalisation des essais. Ceci permet de garantir qu&#8217;il n&#8217;y a pas de pollution du code source des essais par l&#8217;implémentation, ce qui assure une meilleure impartialité de la réalisation des essais.
+Finalement, les résultats sont évalués par un troisième membre (le rôle du « Testeur ») lors de l&#8217;exécution des essais, afin de garantir l&#8217;impartialité de la tâche.</p>
+</div>
+<div class="paragraph">
+<p>De plus, le procédé prévoit des boucles de rétroaction ponctuelles. Pendant l&#8217;écriture des <a href="#Artefacts">Artefacts documentaires</a>, les retours sont possibles pour corriger des erreurs sur ceux-ci. Cependant, une fois complété, les <a href="#Artefacts">Artefacts documentaires</a> ne peuvent plus être modifiés sans redémarrer une nouvelle itération. La deuxième possibilité de rétroaction est celle survenant durant le processus de réalisation du produit.</p>
+</div>
+<div class="paragraph">
+<p>Dans tous les cas, les itérations préservent les documents, le produit et les essais afin de pouvoir retrouver les éléments qui ont été générés dans le processus et, éventuellement, rejouer les essais de l&#8217;itération.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_qualité_du_procédé">1.2. Qualité du procédé</h3>
+<div class="paragraph">
+<p>La qualité du procédé réside en plusieurs points:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>L&#8217;aspect prédictif et séquentiel qui impose de solides bases à chaque étape ;</p>
+</li>
+<li>
+<p>L&#8217;analyse de risque à chaque étape ;</p>
+</li>
+<li>
+<p>Le fonctionnement en binôme afin de limiter les erreurs de biais isolées par des relectures et des choix conjoints constants ;</p>
+</li>
+<li>
+<p>La taille faible ou modérée visée par l&#8217;implémentation du module afin de limiter les risques.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_définitions">1.3. Définitions</h3>
+<div class="sect3">
+<h4 id="Artefacts">1.3.1. Artefacts documentaires</h4>
+<div class="sidebarblock">
+<div class="content">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 10%;">
+<col>
+</colgroup>
+<tr>
+<td class="hdlist1">
+<strong>SRS</strong>
+</td>
+<td class="hdlist2">
+<p>La spécification des exigences logicielles.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>SCS</strong>
+</td>
+<td class="hdlist2">
+<p>La spécification de la conception logicielle.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>CXS</strong>
+</td>
+<td class="hdlist2">
+<p>La spécification des essais de la conception.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Roles">1.3.2. Rôles des membres de l&#8217;équipe</h4>
+<div class="sidebarblock">
+<div class="content">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Le rôle de « Mandataire du produit » :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>définie les besoins,</p>
+</li>
+<li>
+<p>valide la <strong>SRS</strong>,</p>
+</li>
+<li>
+<p>participe à l&#8217;analyse de risque,</p>
+</li>
+<li>
+<p>attribut les exigences pour une itération,</p>
+</li>
+<li>
+<p>détermine la réussite ou l&#8217;échec d&#8217;une itération ;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Le rôle de « Spécificateur des exigences » :<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>est composé d&#8217;un ou plusieurs membres,</p>
+</li>
+<li>
+<p>crée la <strong>SRS</strong>,</p>
+</li>
+<li>
+<p>définie la portée du processus de vérification de la <strong>SRS</strong>,</p>
+</li>
+<li>
+<p>est responsable de la préservation de documentation ;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Le rôle de « Concepteur » :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>crée la <strong>SCS</strong>,</p>
+</li>
+<li>
+<p>vérifie la <strong>CXS</strong>,</p>
+</li>
+<li>
+<p>réalise les essais ;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Le rôle de « Implémenteur » :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>vérifie la <strong>SCS</strong>,</p>
+</li>
+<li>
+<p>crée la <strong>CXS</strong>,</p>
+</li>
+<li>
+<p>implémente et documente le module ;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Le rôle de « Testeur » :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>exécute les essais réalisant la <strong>CXS</strong>,</p>
+</li>
+<li>
+<p>consigne les anomalies détectées durant les essais ;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Le rôle de « Gestionnaire » :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>définie les tâches d&#8217;une itération,</p>
+</li>
+<li>
+<p>effectue l&#8217;analyse de risque en collaboration avec le mandataire du produit,</p>
+</li>
+<li>
+<p>attribue les tâches aux « Concepteur », « Implémenteur » et « Testeur »,</p>
+</li>
+<li>
+<p>est responsable de la préservation du code source.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_étapes">2. Étapes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_exigences_et_analyse_de_risque">2.1. Exigences (et analyse de risque)</h3>
+<div class="paragraph">
+<p>Dans cette étape, le « Spécificateur des exigences » procède à l&#8217;ingénierie des exigences avec le « Mandataire du produit ».</p>
+</div>
+<div class="paragraph">
+<p>Ceci produit la <strong>SRS</strong>.</p>
+</div>
+<div class="paragraph">
+<p>L&#8217;écriture de la <strong>SRS</strong> peut être faite bien avant le début effectif de l&#8217;itération. Dans le <a href="#_schéma_du_processus">Schéma du processus</a>, l&#8217;étape indique la nécessité d&#8217;avoir les <strong>SRS</strong> et surtout le choix des éléments à utiliser pour l&#8217;itération après l&#8217;analyse de risque. Cette dernière est effectuée par le « Gestionnaire » conjointement avec le « Mandataire du produit ».</p>
+</div>
+<div class="paragraph">
+<p>L&#8217;étape produit donc une <strong>SRS</strong> indiquant les exigences à traiter pour l&#8217;itération</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_conception">2.2. Conception</h3>
+<div class="paragraph">
+<p>Durant cette étape, le « Concepteur » procède à la rédaction de la <strong>SCS</strong>. Le « Concepteur » effectue le découpage architectural en processus pour un service, pour une bibliothèque de fonctions ou en modules qui donneront lieu à une itération propre d&#8217;une façon incrémentale avec un sous-ensemble des exigences de la <strong>SRS</strong>. Le « Concepteur » doit aussi raffiner les interfaces de la <strong>SRS</strong> qui ne sont pas assez précises.</p>
+</div>
+<div class="paragraph">
+<p>La <strong>SCS</strong> n&#8217;est pas une conception détaillée, mais une conception de l&#8217;architecture du module visé.</p>
+</div>
+<div class="paragraph">
+<p>Ceci produit la <strong>SCS</strong>. Celle-ci est immédiatement revue par le « Spécificateur des exigences » qui doit établir la non-contradiction de la <strong>SRS</strong>. Puis une autre revue est attribuée à l'« Implémenteur » dans le but de s&#8217;assurer que la <strong>SCS</strong> traite de chaque exigence de la <strong>SRS</strong>. Pendant cette revue, l'« Implémenteur » en profite pour étudier et comprendre la <strong>SCS</strong> qu&#8217;il devra implémenter.</p>
+</div>
+<div class="paragraph">
+<p>Le processus de création et de revue doit être finalisé par un entête collégial entre les deux membres du binôme. Si un compromis est impossible sur un choix, une demande d&#8217;arbitrage par un autre membre de l&#8217;équipe du GRIIS (désigné par le « Gestionnaire » est effectuée pour trancher.</p>
+</div>
+<div class="paragraph">
+<p>L&#8217;étape produit une <strong>SCS</strong> revue et approuvée par le binôme.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spécification_des_essais">2.3. Spécification des essais</h3>
+<div class="paragraph">
+<p>Durant cette étape, l'« Implémenteur » s&#8217;occupe de la rédaction de la <strong>CXS</strong>. L'« Implémenteur » construit des essais pour chaque fonction identifiée que la <strong>SCS</strong> prend en charge de la <strong>SRS</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Ceci produit la <strong>CXS</strong>. Celle-ci est immédiatement revue par le « Concepteur ». Le « Concepteur » doit s&#8217;assurer que la <strong>CXS</strong> a bien été comprise par les essais produits. Suite à cela, le « Concepteur » doit aussi s&#8217;assurer que la <strong>CXS</strong> atteint ces objectifs, c&#8217;est-à-dire la découverte de problème et leur diagnostic dans l&#8217;implémentation qui sera pris en charge par l'« Implémenteur ».</p>
+</div>
+<div class="paragraph">
+<p>De façon analogue à la portée de la <strong>SCS</strong>, il est important de considérer que les essais reliés aux tests unitaires et d&#8217;intégration de l&#8217;implémentation ne sont pas pris en charge ici. Une contrainte impose notamment qu&#8217;une couverture du code soit effectuée dans des essais unitaires et d&#8217;intégration de l&#8217;implémentation qui seront effectué dans la tâche d&#8217;implémentation.</p>
+</div>
+<div class="paragraph">
+<p>L&#8217;étape produit une <strong>CXS</strong> revue et approuvée par le binôme.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_implémentation">2.4. Implémentation</h3>
+<div class="paragraph">
+<p>Durant cette étape, l'« Implémenteur » s&#8217;occupe de concevoir et d&#8217;implémenter le produit à partir de la <strong>SCS</strong>. L'« Implémenteur » expose aussi dans un fichier <code>lisez-moi.adoc</code> les informations pertinentes sur l&#8217;interface du module (et son utilisation) ainsi que sur la représentation des états du module décrit dans la <strong>SCS</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Les étapes précédentes devraient avoir garanti que l&#8217;implémentation est de taille faible ou modérée et qu&#8217;une auto-documentation via le code et un découpage conceptuel local (p.ex. paquetage en Java) est suffisant pour assurer la compréhension des choix de conceptions détaillées. Si l'« Implémenteur » estime que ce n&#8217;est pas le cas en cours d&#8217;étape, une nouvelle itération devrait être mise en place pour recommencer la <strong>SCS</strong>.</p>
+</div>
+<div class="paragraph">
+<p>L&#8217;étape produit donc le code source, les essais unitaires et les essais d&#8217;intégrations de celui-ci.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_réalisation_des_essais">2.5. Réalisation des essais</h3>
+<div class="paragraph">
+<p>Durant cette étape, le « Concepteur » s&#8217;occupe de la réalisation des essais à partir de la <strong>CXS</strong>. Cette étape s&#8217;effectue de façon concurrente avec l&#8217;implémentation. Pour éviter que le « Concepteur » n&#8217;aie à parcourir l&#8217;implémentation (et possiblement introduire un biais dans sa réalisation des essais), un fichier exposant les informations dont il a besoin est écrit et maintenu par l'« Implémenteur » (fichier <code>lisez-moi.adoc</code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_exécution_des_essais">2.6. Exécution des essais</h3>
+<div class="paragraph">
+<p>Durant cette étape, le « Testeur » doit vérifier l&#8217;implémentation en utilisant les essais de la conception. Le « Testeur » commence par fusionner le code produit aux deux précédentes étapes dans la branche de l&#8217;itération (pour préparer la préservation de l&#8217;itération).
+Le « Testeur » exécute les essais sur l&#8217;implémentation. Le « Testeur » relève toutes les anomalies en les consignant dans des billets JIRA.</p>
+</div>
+<div class="paragraph">
+<p>Les anomalies soulevées sont étudiées par la suite par les membres de l&#8217;équipe impliquée pour déterminer leur nature.
+Si les anomalies se révèlent être des défauts de code lors de l&#8217;implémentation ou la réalisation des essais, le binôme corrige le problème directement.
+Si les anomalies se révèlent être des défauts de spécification (dans la <strong>SRS</strong>), de conception (dans la <strong>SCS</strong>) ou des essais (<strong>CXS</strong>), l&#8217;itération est brisée et une nouvelle est démarrée pour prendre en compte les points soulevés.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_postmortem">2.7. Postmortem</h3>
+<div class="paragraph">
+<p>Durant cette étape, le « Gestionnaire » commence par fusionner la branche de l&#8217;itération dans la branche de développement du dépôt de code source (la branche <code>dev</code>).
+Ensuite, les billets JIRA soulevés dans les étapes précédentes qui n&#8217;ont pas été traités et résolus sont étudiés pour déterminer les choix sur une prochaine itération avec le « Mandataire du produit ».</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cas_particulier">Appendix A: Cas particulier</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Il arrive que, pour des raisons de formation ou de vérification de la qualité, le processus soit légèrement modifié. Ainsi, un membre sénior pourrait être responsable de la supervision d’un processus ou d&#8217;une autre personne peut rédiger un document à des fins de qualité sans s&#8217;occuper de la partie réalisation qui est normalement impartie à ce membre. Ce sont des cas exceptionnels qui impose plus de relecture et de temps d&#8217;études de la part des deux membres du binôme, mais ne nuit pas à la qualité du module produit.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_schéma_du_processus">Appendix B: Schéma du processus</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="includes/schema-260301.svg" alt="schema 260301">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v1<br>
+Last updated 2026-03-11 11:19:22 -0400
+</div>
+</div>
+</body>
+</html>

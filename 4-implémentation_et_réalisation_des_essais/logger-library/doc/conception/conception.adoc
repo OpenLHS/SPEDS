@@ -1,0 +1,141 @@
+:toc:
+:toc-title: Table des matières
+:toclevels: 1
+:sectnums:
+
+= Conception
+
+[cols="2s,8"]
+|===
+| Date de création
+| 2020-01-20
+
+| Responsable
+| MD
+
+| Mise à jour
+| 2021-12-16
+
+| Mandat
+| https://gestion.griis.usherbrooke.ca:8443/browse/P3-36[P3-36]
+
+| Spécification
+| S.O.
+|===
+
+== Acteurs
+// Lister et décrire les composantes, personnes, application, matériel ou concept ayant un rôle
+// dans la conception
+
+S.O.
+
+== Lexique
+// Spécifier le lexique utilisé.
+
+S.O.
+
+== Mise en contexte
+
+Cette bibliothèque a été créée dans l’optique de{nbsp}:
+
+.. fournir une implémentation qui permet de rapidement changer le journaliseur à travers
+l’application sans pour autant avoir à appliquer des changements au sein de chacune des
+applications{nbsp};
+.. fournir une interface qui permet l’internationalisation de nos journaux.
+
+== Entrées
+// Spécifier les entrées.
+
+[options="header",cols="s,8a", title="Entrées"]
+|===
+| Nom
+| Description
+
+| [#E_01_classe]`E_01_classe`
+| Classe pour laquelle on désire journaliser les évènements.
+|===
+
+== Sorties
+// Spécifier les sorties.
+
+[options="header", cols="s,8a", title="Sorties"]
+|===
+| Nom
+| Description
+
+| [#S_01_journaliseur]`S_01_journaliseur`
+| Journaliseur des évènements d’une classe.
+|===
+
+== Fonctions
+// Décrire les fonctions à concevoir.
+
+[options="header", cols="s,s,s,6a", title="Fonctions"]
+|===
+| Nom
+| Entrée(s)
+| Sortie(s)
+| Description
+
+| [#F_01_obtenir_journaliseur]`F_01_obtenir_journaliseur`
+| `xref:#E_01_classe[E_01_classe]`
+| `xref:#S_01_journaliseur[S_01_journaliseur]`
+| Fonction qui permet de récupérer le journaliseur pour la classe donnée.
+|===
+
+== Scénarios
+
+*Récupération du journaliseur*
+
+. Dans un projet PARS3, on récupère le journaliseur dans l'entête de la classe avec la méthode qui
+correspond à `xref:#F_01_obtenir_journaliseur[F_01_obtenir_journaliseur]`.
+
+*Utilisation du journaliseur*
+
+. On utilise les niveaux de journalisation suivants, inscrits dans une énumération (`Enum`){nbsp}:
+.. niveau `info` (journalisation de l’information){nbsp};
+.. niveau `warn` (journalisation des avertissements){nbsp};
+.. niveau `error` (journalisation des erreurs){nbsp};
+.. niveau `debug` (journalisation du débogage){nbsp};
+.. niveau `trace` (journalisation des activités).
+
+== Hypothèses
+
+S.O.
+
+== Contraintes
+// Énumérer les contraintes à respecter (ex.: répondre à l’appel en moins de 5 sec.)
+
+S.O.
+
+== Correspondance avec l’implémentation
+
+[options="header", cols="s,s,s", title="Fonctions"]
+|===
+| Nom de la fonction de haut niveau
+| Nom de la fonction dans l’implémentation
+| Nom canonique de la classe dans l’implémentation
+
+| `xref:#F_01_obtenir_journaliseur[F_01_obtenir_journaliseur]`
+| `getLogger`
+| `ca.griis.common.logger`
+|===
+
+== Architecture
+// Diagramme montrant les interactions entre les acteurs.
+
+S.O.
+
+== Conception détaillée
+// Maquette, API et/ou Diagramme de séquence associé(s) à la conception 
+// Maquette: Diagramme de classes UML détaillant les objets qui seront implémentés 
+// API: Liste des points d’entrée d’une bibliothèque ou d’une interface ainsi que leurs comportements, entrées et sortie. 
+// Diagramme de séquence: Diagramme montrant la séquence d’événements des procédures impliquant les objets qui seront implémentés
+// Pseudo-code
+
+S.O.
+
+== Notes
+// Ajouter toute information complémentaire pouvant aider à motiver ou comprendre la conception.
+
+S.O.

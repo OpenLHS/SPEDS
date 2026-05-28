@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PendingConfirmationRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-session-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.session.internal.sync</a> &gt; <span class="el_source">PendingConfirmationRegistry.java</span></div><h1>PendingConfirmationRegistry.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Implémentation de la classe PendingConfirmationRegistry.
+ * @brief @~english Implementation of the PendingConfirmationRegistry class.
+ */
+
+package ca.griis.speds.session.internal.sync;
+
+import ca.griis.speds.session.internal.contract.MsgType;
+import ca.griis.speds.session.internal.domain.ExpandedSessionSidu;
+import ca.griis.speds.session.internal.domain.ExpandedSidu;
+import ca.griis.speds.session.internal.domain.PendingConfirmation;
+import ca.griis.speds.session.internal.domain.PendingMessage;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Permet de gérer la réception des messages de confirmation en attente.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-03-13 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class PendingConfirmationRegistry {
+  private final ConcurrentMap&lt;UUID, PendingMessage&gt; pendingResponse;
+
+  public PendingConfirmationRegistry(
+<span class="fc" id="L55">      ConcurrentMap&lt;UUID, PendingMessage&gt; pendingConfirmations) {</span>
+<span class="fc" id="L56">    this.pendingResponse = pendingConfirmations;</span>
+<span class="fc" id="L57">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Vérifie si un message est attendu.
+   * @param expendedSessionIdu Information d'un IDU qu'on vérifie si le mesage est attente.
+   * @param type Le type de message attendu.
+   * @exception PendingConfirmationException Erreur si le message n'est pas attendu.
+   * @return Information concernant le message attendu.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public PendingConfirmation checkMessage(ExpandedSidu expendedSessionIdu, MsgType type)
+      throws PendingConfirmationException {
+<span class="fc" id="L76">    final var match = pendingResponse.remove(expendedSessionIdu.spdu().getHeader().getId());</span>
+
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">    if (match == null) {</span>
+<span class="nc" id="L79">      throw new PendingConfirmationException(&quot;PendingResponses : Unique ID not found&quot;);</span>
+    }
+
+<span class="fc" id="L82">    final var confirmation = (PendingConfirmation) match;</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">    if (confirmation.msgType() != type) {</span>
+<span class="nc" id="L84">      throw new PendingConfirmationException(&quot;PendingResponses : MsgType is not equivalent&quot;);</span>
+    }
+
+<span class="fc" id="L87">    return confirmation;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Retire un message en attente.
+   * @param expendedSessionIdu Un IDU qu'on veut retirer l'attente.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public void removeMessage(ExpandedSidu expendedSessionIdu) {
+<span class="nc" id="L103">    pendingResponse.remove(expendedSessionIdu.spdu().getHeader().getId());</span>
+<span class="nc" id="L104">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Ajoute un message en attente.
+   * @param expendedSessionIdu Un IDU qu'on veut retirer l'attente.
+   * @par Tâches
+   *      S.O.
+   */
+  public void addMessage(ExpandedSessionSidu expendedSessionIdu) {
+<span class="fc" id="L118">    final var id = expendedSessionIdu.expandedSidu().spdu().getHeader().getId();</span>
+<span class="fc" id="L119">    final var confirm =</span>
+<span class="fc" id="L120">        new PendingConfirmation(id, expendedSessionIdu.sessionId(),</span>
+<span class="fc" id="L121">            expendedSessionIdu.expandedSidu().msgType());</span>
+<span class="fc" id="L122">    pendingResponse.put(id, confirm);</span>
+<span class="fc" id="L123">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="description" content="">
+<meta name="keywords" content="SI">
+<meta name="author" content="Équipe du GRIIS">
+<meta name="copyright" content="GRIIS">
+<title>Conception du module « Bibliothèque de fonctions de service de SPEDS »</title>
+<style>
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fira Go';
+    src: url('../fonts/FiraGO-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Styles de base */
+body {
+    font-family: 'Fira Go', Arial, sans-serif;
+    font-size: 12pt;
+    color: #000000;
+    line-height: 1.42;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1in;
+    background-color: white;
+}
+
+/* Page et conteneur principal */
+.document {
+    max-width: 8.5in; /* Letter width minus margins */
+    margin: 0 auto;
+}
+
+/* En-têtes */
+h2, h3, h4, h5, h6 {
+    color: #6ea1c5;
+    font-size: 17pt;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 10pt;
+    margin-top: 20pt;
+}
+
+/* Page de titre */
+.title-page {
+    text-align: center;
+    margin-top: 22%;
+}
+
+h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    color: black;
+    margin-top: 100pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.details {
+    font-size: 16pt;
+    margin-bottom: 100pt;
+    text-align: center;
+}
+
+.author {
+    margin-bottom: 100pt;
+}
+
+.email {
+    display: none;
+}
+
+#revnumber {
+    display: none;
+}
+
+.details #revdate {
+    margin-top: 100px;
+    display: inline-block;
+}
+
+/* Logo en en-tête */
+.title-logo {
+    height: auto;
+    width: auto;
+    max-width: 340px;
+}
+
+/* Table des matières */
+
+#toctitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 30pt;
+}
+
+.toc {
+    font-size: 14pt;
+    page-break-before: always;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 5pt;
+}
+
+.toc a {
+    text-decoration: none;
+    color: #1d4b8f;
+}
+
+.toc a:hover {
+    color: #002FA7;
+}
+
+/* Liens */
+a {
+    color: #002FA7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6ea1c5;
+}
+
+/* Listes */
+ul, ol {
+    margin-left: 18pt; /* $base-font-size * 1.5 = 12 * 1.5 */
+}
+
+li {
+    margin-bottom: 5pt;
+}
+
+/* Tableaux */
+table {
+    font-size: 10pt;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15pt 0;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 8pt;
+    text-align: left;
+}
+
+table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.table-caption {
+    text-align: center;
+    margin-bottom: 10pt;
+    font-style: italic;
+}
+
+/* Rôles personnalisés */
+.removed {
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: #6ea1c5;
+}
+
+/* Admonitions */
+.admonitionblock {
+    margin: 15pt 0;
+    margin-left: 10pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    background-color: #f9f9f9;
+}
+
+.admonitionblock .title {
+    font-weight: bold;
+    color: #6ea1c5;
+    margin-bottom: 5pt;
+}
+
+/* Blocs de code */
+pre, code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 10pt;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+code {
+    padding: 2pt 4pt;
+    font-size: 11pt;
+}
+
+/* Paragraphes */
+p {
+    margin-bottom: 12pt;
+    text-align: justify;
+}
+
+/* Citations */
+blockquote {
+    margin: 15pt 20pt;
+    padding: 10pt;
+    border-left: 4px solid #6ea1c5;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.imageblock {
+    text-align: center;
+    margin: 15pt 0;
+}
+
+.image-caption {
+    text-align: center;
+    font-style: italic;
+    margin-top: 5pt;
+    font-size: 11pt;
+}
+
+/* Impression */
+@media print {
+    body {
+        margin: 0.75in 1in;
+    }
+
+    .page-break {
+        page-break-before: always;
+    }
+
+    /* Numérotation des pages en pied de page */
+    @page {
+        margin: 0.75in 1in;
+        @bottom-right {
+            content: counter(page);
+            font-family: 'Fira Go', Arial, sans-serif;
+            font-size: 10pt;
+        }
+    }
+}
+</style>
+<div class="title-logo">
+    <img src="themes/logo-griis-texte.png" alt="Logo GRIIS" class="header-logo">
+</div>
+</head>
+<body class="book">
+<div id="header">
+<h1>Conception du module « <em>Bibliothèque de fonctions de service de SPEDS</em> »</h1>
+<div class="details">
+<span id="author" class="author">Équipe du GRIIS</span><br>
+<span id="email" class="email"><a href="mailto:info@griis.ca">info@griis.ca</a></span><br>
+<span id="revnumber">version v7.1.1,</span>
+<span id="revdate">2026-03-11</span>
+<br><span id="revremark"></span>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table des matières</div>
+<ul class="sectlevel1">
+<li><a href="#_rôle_du_module">1. Rôle du module</a></li>
+<li><a href="#_implémentation_du_module">2. Implémentation du module</a></li>
+<li><a href="#_modèle_propre_au_module">3. Modèle propre au module</a></li>
+<li><a href="#_définitions">4. Définitions</a></li>
+<li><a href="#_type_au_module">5. Type au module</a>
+<ul class="sectlevel2">
+<li><a href="#_type_simple_de_donnée">5.1. Type simple de donnée</a></li>
+<li><a href="#_type_complexe_de_donnée">5.2. Type complexe de donnée</a></li>
+</ul>
+</li>
+<li><a href="#_hypothèse_du_module">6. Hypothèse du module</a></li>
+<li><a href="#_contrainte_du_module">7. Contrainte du module</a></li>
+<li><a href="#_fonction_du_module">8. Fonction du module</a>
+<ul class="sectlevel2">
+<li><a href="#_fonction_récupérer_le_iri_dune_entité">8.1. Fonction « Récupérer le IRI d&#8217;une entité »</a></li>
+<li><a href="#_fonction_vérifier_la_légitimité_dune_entité">8.2. Fonction « Vérifier la légitimité d&#8217;une entité »</a></li>
+<li><a href="#_fonction_récupérer_la_clé_publique_dune_entité">8.3. Fonction « Récupérer la clé publique d&#8217;une entité »</a></li>
+<li><a href="#_fonction_vérification_de_lactivité_dun_projet">8.4. Fonction « Vérification de l&#8217;activité d&#8217;un projet »</a></li>
+<li><a href="#_fonction_vérification_de_lactivité_dun_plan_de_projet">8.5. Fonction « Vérification de l’activité d’un plan de projet »</a></li>
+<li><a href="#_fonction_vérifier_un_certificat">8.6. Fonction « Vérifier un certificat »</a></li>
+<li><a href="#_fonction_effectuer_un_chiffrement_symétrique">8.7. Fonction « Effectuer un chiffrement symétrique »</a></li>
+<li><a href="#_fonction_effectuer_un_déchiffrement_symétrique">8.8. Fonction « Effectuer un déchiffrement symétrique »</a></li>
+<li><a href="#_fonction_générer_une_clé_de_chiffrement_symétrique">8.9. Fonction « Générer une clé de chiffrement symétrique »</a></li>
+<li><a href="#_fonction_effectuer_un_chiffrement_asymétrique">8.10. Fonction « Effectuer un chiffrement asymétrique »</a></li>
+<li><a href="#_fonction_effectuer_un_déchiffrement_asymétrique">8.11. Fonction « Effectuer un déchiffrement asymétrique »</a></li>
+<li><a href="#_fonction_générer_une_empreinte_numérique">8.12. Fonction « Générer une empreinte numérique »</a></li>
+<li><a href="#_fonction_apposer_une_signature">8.13. Fonction « Apposer une signature »</a></li>
+<li><a href="#_fonction_vérifier_la_validité_dune_signature">8.14. Fonction « Vérifier la validité d&#8217;une signature »</a></li>
+<li><a href="#_fonction_choisir_une_valeur_pour_la_méthode_déchange_diffie_hellman">8.15. Fonction « Choisir une valeur pour la méthode d&#8217;échange Diffie-Hellman »</a></li>
+<li><a href="#_fonction_déterminer_la_clé_secrète_pour_la_méthode_déchange_diffie_hellman">8.16. Fonction « Déterminer la clé secrète pour la méthode d&#8217;échange Diffie-Hellman »</a></li>
+<li><a href="#_fonction_récupérer_lalgorithme_disponible_pour_une_catégorie">8.17. Fonction « Récupérer l&#8217;algorithme disponible pour une catégorie »</a></li>
+<li><a href="#_fonction_récupérer_les_paramètres_dalgorithme_disponible_pour_une_catégorie">8.18. Fonction « Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie »</a></li>
+</ul>
+</li>
+<li><a href="#_incongruités">9. Incongruités</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Statut</caption>
+<colgroup>
+<col style="width: 55.5555%;">
+<col style="width: 11.1111%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statut</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception prête à être révisé</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-10 10:37</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du spécificateur réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-10 13:45</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Révision du concepteur des tests réalisée</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-10 13:58</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Historique</caption>
+<colgroup>
+<col style="width: 55.5555%;">
+<col style="width: 11.1111%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Changement important</th>
+<th class="tableblock halign-center valign-top">Initiales</th>
+<th class="tableblock halign-right valign-top">Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conception initiale</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">FO</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-03-17</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 2<br>
+  Retirer les références à <code>cryptographie</code> et <code>lodad-client</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">MD</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-07-16</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 3</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-08-27</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 4</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-11-25</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 5</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">CB</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2025-12-09</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 6<br>
+  Ajout d&#8217;essai de fiabilité<br>
+  Pas de modifications de SRS ni de SCS</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">BF</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-01-07</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Itération 7</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">JM</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">2026-02-05</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Référence</caption>
+<colgroup>
+<col style="width: 66.6666%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-right valign-top">Version consultée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">speds_toolkit_library-srs.adoc</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">v4 (2026-01-28)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rôle_du_module">1. Rôle du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le module <code>Bibliothèque de fonctions de service de SPEDS</code> est responsable d&#8217;offrir des services qui peuvent être nécessaire à l&#8217;ensemble des couches du protocole de SPEDS.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implémentation_du_module">2. Implémentation du module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Le module <code>Bibliothèque de fonctions de service de SPEDS</code> est implementé par le produit <code>speds-toolkit-library</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_modèle_propre_au_module">3. Modèle propre au module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+<a id="DE-GE-01"></a>[DE-GE-01]
+</td>
+<td class="hdlist2">
+<p>Le module définit la liste de catégorie des algorithmes qui suit :</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Algorithme de hachage;</p>
+</li>
+<li>
+<p>Algorithme de chiffrement symétrique;</p>
+</li>
+<li>
+<p>Algorithme de chiffrement asymétrique;</p>
+</li>
+<li>
+<p>Algorithme d’échange de clé de Diffie-Hellman;</p>
+</li>
+<li>
+<p>Algorithme de signature.</p>
+</li>
+</ol>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_définitions">4. Définitions</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="ProjectLibrary"></a> Bibliothèque de projet </dt>
+<dd>
+<p>Bibliothèque permettant de récupérer des informations externes reliées à un projet, notamment les entités et leur clé publique associée.</p>
+</dd>
+<dt class="hdlist1"><a id="SecurityLibrary"></a> Bibliothèque de sécurité </dt>
+<dd>
+<p>Bibliothèque offrant des services de sécurité respectant les recommandations actuelles. Elle permet de remplir des objectifs de sécurité assurés par des moyens cryptographiques, tels la confidentialité, l&#8217;intégrité et l&#8217;authentification.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_type_au_module">5. Type au module</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_type_simple_de_donnée">5.1. Type simple de donnée</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Types simples généraux</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nom</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="SpedsLayer"></a> <code>SpedsLayer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Énumération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifie les couches de SPEDS selon le modèle <code>OSI</code> : <code>APPLICATION</code>, <code>PRESENTATION</code>, <code>SESSION</code>, <code>TRANSPORT</code>, <code>NETWORK</code> et <code>LINK</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="AlgorithmCategory"></a> <code>AlgorithmCategory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Énumération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifie les catégories d&#8217;algorithme disponibles au sein de la bibliothèque : <code>HASH</code>, <code>SYMM</code>, <code>ASYM</code>, <code>DH</code> et <code>SIGN</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="SecurityProfile"></a> <code>SecurityProfile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Énumération</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifie les profils de sécurité pouvant figurer dans le fichier de configuration : <code>STRONG</code> et <code>EFFICIENT</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_type_complexe_de_donnée">5.2. Type complexe de donnée</h3>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypothèse_du_module">6. Hypothèse du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[HYP-001]
+</td>
+<td class="hdlist2">
+<p>Le fichier de configuration contenant les primitives cryptographiques est bien formé et les primitives contenues sont valides.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contrainte_du_module">7. Contrainte du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[CON-001]
+</td>
+<td class="hdlist2">
+<p>Le module <code>Bibliothèque de fonctions de service de SPEDS</code> est fourni dans le langage de programmation Java.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-002]
+</td>
+<td class="hdlist2">
+<p>Le module <code>Bibliothèque de fonctions de service de SPEDS</code> doit être une façade à la <code><a href="#ProjectLibrary">Bibliothèque de projet</a></code> mais ne doit pas en dépendre directement. Toute interaction doit passer par une interface abstraite fournie à l&#8217;initialisation du module. La couche utilisatrice de SPEDS sera responsable d&#8217;en fournir une implémentation.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-003]
+</td>
+<td class="hdlist2">
+<p>Le module <code>Bibliothèque de fonctions de service de SPEDS</code> doit être une façade à la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>. Cette dernière doit être une dépendance au module lors de son initialisation.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[CON-004]
+</td>
+<td class="hdlist2">
+<p>La liste des choix des primitives cryptographiques pour chaque catégorie et chaque couche doit être paramétrable par le biais d’un fichier de configuration. Les catégories sont celles définies dans <a href="#DE-GE-01">[DE-GE-01]</a>.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fonction_du_module">8. Fonction du module</h2>
+<div class="sectionbody">
+<div class="hdlist">
+<div class="title">Général</div>
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-GE-01] Récupérer le IRI d&#8217;une entité
+</td>
+<td class="hdlist2">
+<p>Récupère le IRI d&#8217;une entité inscrite dans le projet.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-GE-02] Vérifier la légitimité d&#8217;une entité
+</td>
+<td class="hdlist2">
+<p>Vérifie la légitimité d’une entité définie par un couple (<em>code</em>, <em>puK</em>), où <em>code</em> est le code identifiant l’entité et <em>puK</em> est une clé de chiffrement asymétrique (considérée comme la clé publique de l’entité à légitimer).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-GE-03] Récupérer la clé publique d&#8217;une entité
+</td>
+<td class="hdlist2">
+<p>Récupère la clé publique utilisée par une entité du projet définie par son code identifiant.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-GE-04] Vérification de l&#8217;activité d&#8217;un projet
+</td>
+<td class="hdlist2">
+<p>Vérifie si un projet est actif.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-GE-05] Vérification de l’activité d’un plan de projet
+</td>
+<td class="hdlist2">
+<p>Vérifie si le plan d’un projet est en cours.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<div class="title">Sécurité</div>
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-SE-01] Vérifier la validité d&#8217;un certificat
+</td>
+<td class="hdlist2">
+<p>vérifie la validité d&#8217;un certificat pour une entité proprement identifiée par une IRI.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="hdlist">
+<div class="title">Cryptographie</div>
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-01] Effectuer un chiffrement symétrique
+</td>
+<td class="hdlist2">
+<p>Effectue un chiffrement symétrique des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-02] Effectuer un déchiffrement symétrique
+</td>
+<td class="hdlist2">
+<p>Effectue un déchiffrement symétrique des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-03] Générer une clé de chiffrement symétrique
+</td>
+<td class="hdlist2">
+<p>Génère une clé pour le chiffrement symétrique des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-04] Effectuer un chiffrement asymétrique
+</td>
+<td class="hdlist2">
+<p>Effectue un chiffrement asymétrique des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-05] Effectuer un déchiffrement asymétrique
+</td>
+<td class="hdlist2">
+<p>Effectue un déchiffrement asymétrique des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-06] Effectuer un hachage
+</td>
+<td class="hdlist2">
+<p>Effectue un hachage des données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-07] Apposer une signature
+</td>
+<td class="hdlist2">
+<p>Appose une signature sur les données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-08] Valider une signature
+</td>
+<td class="hdlist2">
+<p>Valide une signature sur les données en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-09] Choisir une valeur pour la méthode d&#8217;échange Diffie-Hellman
+</td>
+<td class="hdlist2">
+<p>Choisit une valeur dans un algorithme de poignée de main suivant la méthode Diffie-Hellman en fonction de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-10] Déterminer la clé secrète pour la méthode d&#8217;échange Diffie-Hellman
+</td>
+<td class="hdlist2">
+<p>Détermine la clé secrète dans un algorithme de poignée de main suivant la méthode Diffie-Hellman en fonction des choix effectué par les deux entités en communication et de la couche qui le demande.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-11] Récupérer l&#8217;algorithme disponible pour une catégorie
+</td>
+<td class="hdlist2">
+<p>Indique le nom de l’algorithme disponible (sous une version standardisée) pour une catégorie définie en [DE-GE-01].</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-12] Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie
+</td>
+<td class="hdlist2">
+<p>Indique les paramètres par défaut de l’algorithme disponible pour une catégorie définie en [DE-GE-01].</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_fonction_récupérer_le_iri_dune_entité">8.1. Fonction « Récupérer le IRI d&#8217;une entité »</h3>
+<div class="sect3">
+<h4 id="_interface">8.1.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>getEntityIri</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>String</code> <code>projectId</code> : L&#8217;identifiant du projet en cours</p>
+</li>
+<li>
+<p><code>String</code> <code>code</code> : Le code unique de l&#8217;entité spécifié dans le projet</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>IRI</code> <code>iri</code> : Le IRI de l&#8217;entité inscrite dans le projet</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur">8.1.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement">8.1.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-GE-01.1]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de récupération du IRI de l&#8217;interface abstraite de la <code><a href="#ProjectLibrary">Bibliothèque de projet</a></code>.
+.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_vérifier_la_légitimité_dune_entité">8.2. Fonction « Vérifier la légitimité d&#8217;une entité »</h3>
+<div class="sect3">
+<h4 id="_interface_2">8.2.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>verifyEntityLegitimacy</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>String</code> <code>projectId</code> : L&#8217;identifiant du projet en cours</p>
+</li>
+<li>
+<p><code>String</code> <code>code</code> : Le code unique de l&#8217;entité spécifié dans le projet</p>
+</li>
+<li>
+<p><code>PublicKey</code> <code>publicKey</code> : La clé publique fournie pour attester de la légitimité de l&#8217;entité</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> <code>isLegitimate</code> : Valeur booléenne confirmant la légitimité d&#8217;une entité</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_2">8.2.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_2">8.2.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-GE-02.1]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de vérification de la légitimité d&#8217;une entité de l&#8217;interface abstraite de la <code><a href="#ProjectLibrary">Bibliothèque de projet</a></code>.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_récupérer_la_clé_publique_dune_entité">8.3. Fonction « Récupérer la clé publique d&#8217;une entité »</h3>
+<div class="sect3">
+<h4 id="_interface_3">8.3.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>getEntityPublicKey</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>String</code> <code>projectId</code> : L&#8217;identifiant du projet en cours</p>
+</li>
+<li>
+<p><code>String</code> <code>code</code> : Le code unique de l&#8217;entité spécifié dans le projet</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>PublicKey</code> <code>publicKey</code> : La clé publique utilisée par l&#8217;entité pour le projet donné</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_3">8.3.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_3">8.3.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-GE-03.1]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de récupération de la clé publique d&#8217;une entité de l&#8217;interface abstraite de la <code><a href="#ProjectLibrary">Bibliothèque de projet</a></code>.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_vérification_de_lactivité_dun_projet">8.4. Fonction « Vérification de l&#8217;activité d&#8217;un projet »</h3>
+<div class="sect3">
+<h4 id="_interface_4">8.4.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>checkProjectActivity</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code> projectId : l&#8217;identifiant du projet en cours</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> isActive : Valeur booléenne confirmant le profil actif d&#8217;un projet</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_4">8.4.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_4">8.4.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-GE-04.1]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de validation de l&#8217;activité d&#8217;un projet de l&#8217;interface abstraite de la <code><a href="#ProjectLibrary">Bibliothèque de projet</a></code>.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_vérification_de_lactivité_dun_plan_de_projet">8.5. Fonction « Vérification de l’activité d’un plan de projet »</h3>
+<div class="sect3">
+<h4 id="_interface_5">8.5.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>checkPlanActivity</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code> projectId : l&#8217;identifiant du projet en cours</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> isActive : Valeur booléenne confirmant le profil actif d&#8217;un plan de projet</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_5">8.5.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_5">8.5.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-GE-05.1]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de validation de l&#8217;activité d&#8217;un plan de projet de l&#8217;interface abstraite de la <code><a href="#ProjectLibrary">Bibliothèque de projet</a></code>.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_vérifier_un_certificat">8.6. Fonction « Vérifier un certificat »</h3>
+<div class="sect3">
+<h4 id="_interface_6">8.6.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>checkCertificateValidity</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>X509Certificate</code> <code>certificate</code> : Le certificat au format X.509 à valider</p>
+</li>
+<li>
+<p><code>IRI</code> <code>iri</code> : Le IRI de l&#8217;entité visée par le certificat</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> <code>result</code> : Le résultat de la vérification sous forme de valeur booléenne</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_6">8.6.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_6">8.6.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-SE-01.1]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction vérifiant la validité temporelle d&#8217;un certificat de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-SE-01.2]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction vérifiant la validité de la signature numérique d&#8217;un certificat de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-SE-01.3]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction vérifiant la validité des extensions d&#8217;un certificat de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code></p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_effectuer_un_chiffrement_symétrique">8.7. Fonction « Effectuer un chiffrement symétrique »</h3>
+<div class="sect3">
+<h4 id="_interface_7">8.7.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>encryptSymmetric</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire chiffrer symétriquement des données</p>
+</li>
+<li>
+<p><code>SecretKey</code> <code>secretKey</code> : la clé secrète symétrique à utiliser pour le chiffrement</p>
+</li>
+<li>
+<p><code>byte[]</code> <code>data</code> : les données à chiffrer</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code> <code>result</code> : les données chiffrées à l&#8217;aide de la clé secrète fournie</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_7">8.7.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_7">8.7.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-01.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche fournie dans le fichier de configuration, sous la catégorie <code>SYMM</code>. Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-01.2]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de chiffrement symmétrique des données de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> avec la primitive cryptographique récupérée, la clé secrète et les données fournies.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_effectuer_un_déchiffrement_symétrique">8.8. Fonction « Effectuer un déchiffrement symétrique »</h3>
+<div class="sect3">
+<h4 id="_interface_8">8.8.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>decryptSymmetric</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire déchiffrer symétriquement des données</p>
+</li>
+<li>
+<p><code>SecretKey</code> <code>secretKey</code> : la clé secrète symétrique à utiliser pour le déchiffrement</p>
+</li>
+<li>
+<p><code>byte[]</code> <code>data</code> : les données à déchiffrer</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code> <code>result</code> : les données déchiffrées à l&#8217;aide de la clé secrète fournie</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_8">8.8.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_8">8.8.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-02.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche fournie dans le fichier de configuration, sous la catégorie <code>SYMM</code>. Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-02.2]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de déchiffrement symmétrique des données de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> avec la primitive cryptographique récupérée, la clé secrète et les données fournies.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_générer_une_clé_de_chiffrement_symétrique">8.9. Fonction « Générer une clé de chiffrement symétrique »</h3>
+<div class="sect3">
+<h4 id="_interface_9">8.9.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>generateSymmetricKey</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire générer une clé de chiffrement symétrique</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>SecretKey</code> <code>secretKey</code> : La clé de chiffrement symétrique générée</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_9">8.9.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_9">8.9.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-03.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche fournie dans le fichier de configuration, sous la catégorie <code>SYMM</code>. Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-03.2]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de génération d&#8217;une clé secrète de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> avec la primitive cryptographique récupérée.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_effectuer_un_chiffrement_asymétrique">8.10. Fonction « Effectuer un chiffrement asymétrique »</h3>
+<div class="sect3">
+<h4 id="_interface_10">8.10.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>encryptAsymmetric</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire chiffrer asymétriquement des données</p>
+</li>
+<li>
+<p><code>PublicKey</code> <code>publicKey</code> : la clé publique à utiliser pour le chiffrement</p>
+</li>
+<li>
+<p><code>byte[]</code> <code>data</code> : les données à chiffrer</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code> <code>result</code> : les données chiffrées à l&#8217;aide de la clé publique fournie</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_10">8.10.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_10">8.10.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-04.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche fournie dans le fichier de configuration, sous la catégorie <code>ASYM</code>. Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-04.2]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de chiffrement asymmétrique des données de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> avec la primitive cryptographique récupérée, la clé publique et les données fournies.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_effectuer_un_déchiffrement_asymétrique">8.11. Fonction « Effectuer un déchiffrement asymétrique »</h3>
+<div class="sect3">
+<h4 id="_interface_11">8.11.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>decryptAsymmetric</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire déchiffrer asymétriquement des données</p>
+</li>
+<li>
+<p><code>PrivateKey</code> privateKey : la clé privée à utiliser pour le déchiffrement</p>
+</li>
+<li>
+<p><code>byte[]</code> <code>data</code> : les données à déchiffrer</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code> <code>result</code> : les données déchiffrées à l&#8217;aide de la clé privée fournie</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_11">8.11.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_11">8.11.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-05.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche fournie dans le fichier de configuration, sous la catégorie <code>ASYM</code>. Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-05.2]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de déchiffrement asymmétrique des données de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> avec la primitive cryptographique récupérée, la clé privée et les données fournies.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_générer_une_empreinte_numérique">8.12. Fonction « Générer une empreinte numérique »</h3>
+<div class="sect3">
+<h4 id="_interface_12">8.12.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>hash</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire créer une empreinte numérique</p>
+</li>
+<li>
+<p><code>byte[]</code> <code>data</code> : les données qui serviront au calcul de l&#8217;empreinte numérique</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code> <code>result</code> : l&#8217;empreinte numérique générée à partir des données</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_12">8.12.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_12">8.12.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-06.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche fournie dans le fichier de configuration, sous la catégorie <code>HASH</code>. Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-06.2]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de génération d&#8217;une empreinte numérique de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> avec la primitive cryptographique récupérée et les données fournies.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_apposer_une_signature">8.13. Fonction « Apposer une signature »</h3>
+<div class="sect3">
+<h4 id="_interface_13">8.13.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>sign</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire signer numériquement des données</p>
+</li>
+<li>
+<p><code>PrivateKey</code> privateKey : la clé privée à utiliser pour la signature</p>
+</li>
+<li>
+<p><code>byte[]</code> <code>data</code> : les données à signer</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>byte[]</code> <code>result</code> : la signature numérique générée à partir des données et de la clé privée</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_13">8.13.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_13">8.13.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-07.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche fournie dans le fichier de configuration, sous la catégorie <code>SIGN</code>. Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-07.2]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de génération d&#8217;une signature numérique de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> avec la primitive cryptographique récupérée, la clé privée et les données fournies.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_vérifier_la_validité_dune_signature">8.14. Fonction « Vérifier la validité d&#8217;une signature »</h3>
+<div class="sect3">
+<h4 id="_interface_14">8.14.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>checkSignatureValidity</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire vérifier une signature numérique</p>
+</li>
+<li>
+<p><code>byte[]</code> digitalSignature : La signature à valider</p>
+</li>
+<li>
+<p><code>PublicKey</code> <code>publicKey</code> : la clé publique à utiliser pour la vérification de la signature</p>
+</li>
+<li>
+<p><code>byte[]</code> <code>data</code> : les données dont on veut vérifier la provenance</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code> <code>result</code> : le résultat de la vérification de la validité de la signature sous forme d&#8217;une valeur booléenne</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_14">8.14.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_14">8.14.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-08.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche fournie dans le fichier de configuration, sous la catégorie <code>SIGN</code>. Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-08.2]
+</td>
+<td class="hdlist2">
+<p>Appeler les fonctions de validation d&#8217;une signature numérique de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> avec la primitive cryptographique récupérée, la signature, la clé publique et les données fournies.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_choisir_une_valeur_pour_la_méthode_déchange_diffie_hellman">8.15. Fonction « Choisir une valeur pour la méthode d&#8217;échange Diffie-Hellman »</h3>
+<div class="sect3">
+<h4 id="_interface_15">8.15.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>chooseDiffieHellmanValue</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire choisir une valeur pour la méthode d&#8217;échange</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>KeyPair</code> <code>choiceX</code> : La valeur générée pour la méthode d&#8217;échange</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_15">8.15.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_15">8.15.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-09.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche fournie dans le fichier de configuration, sous la catégorie <code>DH</code>. Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-09.2]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de génération d&#8217;une paire de clés de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> avec la primitive cryptographique récupérée.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_déterminer_la_clé_secrète_pour_la_méthode_déchange_diffie_hellman">8.16. Fonction « Déterminer la clé secrète pour la méthode d&#8217;échange Diffie-Hellman »</h3>
+<div class="sect3">
+<h4 id="_interface_16">8.16.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>getDiffieHellmanSecretKey</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire récupérer la clé secrète en lien avec la méthode d&#8217;échange</p>
+</li>
+<li>
+<p><code>KeyPair</code> <code>choiceX</code> : La valeur choisie pour la méthode d&#8217;échange</p>
+</li>
+<li>
+<p><code>PublicKey</code> <code>choiceY</code> : La valeur reçue d&#8217;un tiers pour la méthode d&#8217;échange</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>SecretKey</code> <code>result</code> : La clé secrète résultante de la méthode d&#8217;échange</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_16">8.16.2. Erreur</h4>
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_16">8.16.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-10.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche fournie dans le fichier de configuration, sous la catégorie <code>DH</code>. Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-10.2]
+</td>
+<td class="hdlist2">
+<p>Appeler la fonction de génération d&#8217;une clé secrète via un échange de clé de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> avec la primitive cryptographique récupérée, la valeur choisie pour l&#8217;échange et la valeur reçue d&#8217;un tiers pour ce même échange.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_récupérer_lalgorithme_disponible_pour_une_catégorie">8.17. Fonction « Récupérer l&#8217;algorithme disponible pour une catégorie »</h3>
+<div class="sect3">
+<h4 id="_interface_17">8.17.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>getAlgorithm</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire connaître le nom de l&#8217;algorithme disponible pour une catégorie donnée</p>
+</li>
+<li>
+<p><a href="#AlgorithmCategory"><code>AlgorithmCategory</code></a> <code>category</code> : la catégorie d&#8217;algorithme dans laquelle figure le nom de l&#8217;algorithme disponible</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code> <code>algorithm</code> : le nom de l&#8217;algorithme disponible en version standardisée</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_17">8.17.2. Erreur</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">NoSuchCategoryException</dt>
+<dd>
+<p>Erreur soulevée lorsqu&#8217;il n&#8217;y a pas d&#8217;algorithme disponible pour la couche indiquée dans la catégorie d&#8217;algorithme en argument.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_17">8.17.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-11.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche et la catégorie fournie dans le fichier de configuration.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-11.2]
+</td>
+<td class="hdlist2">
+<p>Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code>, puis trouver la primitive cryptographique associée au profil pour la catégorie fournie dans le fichier de configuration.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fonction_récupérer_les_paramètres_dalgorithme_disponible_pour_une_catégorie">8.18. Fonction « Récupérer les paramètres d&#8217;algorithme disponible pour une catégorie »</h3>
+<div class="sect3">
+<h4 id="_interface_18">8.18.1. Interface</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Entrée</th>
+<th class="tableblock halign-left valign-top">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre>getAlgorithmParameters</pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#SpedsLayer"><code>SpedsLayer</code></a> <code>spedsLayer</code> : la couche qui désire connaître les paramètres disponibles pour un algorithme donné</p>
+</li>
+<li>
+<p><code>String</code> <code>algorithm</code> : le nom de l&#8217;algorithme dont on veut connaître les paramètres</p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Map&lt;String, String&gt;</code> <code>parameters</code> : Tableau de correspondance entre le nom des paramètres et leur valeur pour l&#8217;algorithme donné</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_erreur_18">8.18.2. Erreur</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">NoSuchAlgorithmException</dt>
+<dd>
+<p>Erreur soulevée lorsque l&#8217;algorithme indiqué n&#8217;est pas disponible dans l&#8217;environnement.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comportement_18">8.18.3. Comportement</h4>
+<div class="hdlist">
+<table>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tr>
+<td class="hdlist1">
+[PRO-CY-12.1]
+</td>
+<td class="hdlist2">
+<p>Récupérer la primitive cryptographique pour la couche et l&#8217;algorithme fourni dans le fichier de configuration. Appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> afin de récupérer les paramètres associés à la primitive cryptographique qui s&#8217;y trouve.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+[PRO-CY-12.2]
+</td>
+<td class="hdlist2">
+<p>Si un profil de sécurité (<code>SecurityProfile</code>) est fourni, appeler la fonction de récupération des spécifications de sécurité de la <code><a href="#SecurityLibrary">Bibliothèque de sécurité</a></code> afin de récupérer les paramètres associés à la primitive cryptographique qui s&#8217;y trouve.</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_incongruités">9. Incongruités</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>S.O.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version v7.1.1<br>
+Last updated 2026-03-11 11:10:50 -0400
+</div>
+</div>
+</body>
+</html>

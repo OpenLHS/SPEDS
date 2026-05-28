@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NetworkPduChecker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-network-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.network.internal.checker</a> &gt; <span class="el_source">NetworkPduChecker.java</span></div><h1>NetworkPduChecker.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe NetworkPduChecker.
+ * @brief @~english Contains description of NetworkPduChecker class.
+ */
+
+package ca.griis.speds.network.internal.checker;
+
+import ca.griis.js2p.gen.speds.network.api.dto.ProtocolDataUnit5NETDto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.GriisLoggerFactory;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Info;
+import ca.griis.speds.network.internal.security.CertificateChecker;
+import ca.griis.speds.network.internal.security.SealManager;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayInputStream;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Vérifie la validité d'un message réseau.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2026-02-18 [FO] - Première ébauche.
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public final class NetworkPduChecker {
+<span class="fc" id="L61">  private static final GriisLogger logger = GriisLoggerFactory.getLogger(NetworkPduChecker.class);</span>
+
+  private final SealManager sealManager;
+  private final ObjectMapper objectMapper;
+  private final CertificateChecker certificateChecker;
+
+<span class="fc" id="L67">  public NetworkPduChecker(CryptographyService service, ObjectMapper objectMapper) {</span>
+<span class="fc" id="L68">    this.sealManager = new SealManager(service);</span>
+<span class="fc" id="L69">    this.objectMapper = objectMapper;</span>
+<span class="fc" id="L70">    this.certificateChecker = new CertificateChecker();</span>
+<span class="fc" id="L71">  }</span>
+
+  public PduCheckerResult check(ProtocolDataUnit5NETDto pdu, String entityIri)
+      throws JsonProcessingException {
+<span class="fc" id="L75">    final var headerDto = pdu.getHeader();</span>
+<span class="fc" id="L76">    final var auth = String.valueOf(headerDto.getAuthentification());</span>
+<span class="fc" id="L77">    var result = new PduCheckerResult(false, &quot;FAILED: No certificate&quot;);</span>
+
+<span class="fc bfc" id="L79" title="All 2 branches covered.">    if (StringUtils.isNotEmpty(auth)) {</span>
+      try {
+<span class="fc" id="L81">        final var cf = CertificateFactory.getInstance(&quot;X.509&quot;);</span>
+<span class="fc" id="L82">        final var cert = (X509Certificate) cf</span>
+<span class="fc" id="L83">            .generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(auth)));</span>
+
+<span class="fc" id="L85">        result = new PduCheckerResult(false,</span>
+            &quot;FAILED: The speds-toolkit certificate verification returns false&quot;);
+
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (certificateChecker.checkCertificate(cert, headerDto.getSourceIri())) {</span>
+<span class="fc" id="L89">          final var key = cert.getPublicKey();</span>
+<span class="fc" id="L90">          final var header = objectMapper.writeValueAsString(pdu.getHeader());</span>
+
+<span class="fc bfc" id="L92" title="All 2 branches covered.">          if (!sealManager.checkSeal(header, key, pdu.getStamp().getHeaderSeal())) {</span>
+<span class="fc" id="L93">            result = new PduCheckerResult(false, &quot;FAILED: Invalid Header Seal&quot;);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">          } else if (!sealManager.checkSeal(pdu.getContent(), key,</span>
+<span class="fc" id="L95">              pdu.getStamp().getContentSeal())) {</span>
+<span class="fc" id="L96">            result = new PduCheckerResult(false, &quot;FAILED: Invalid Content Seal&quot;);</span>
+          } else {
+<span class="fc" id="L98">            result = new PduCheckerResult(true,</span>
+                &quot;The header and content seal have been successfully validated and are correct&quot;);
+          }
+        }
+<span class="fc" id="L102">      } catch (CertificateException e) {</span>
+<span class="fc" id="L103">        logger.error(Error.IGNORED_ERROR, e);</span>
+
+<span class="fc" id="L105">        result = new PduCheckerResult(false, &quot;FAILED: Certificate error&quot;);</span>
+<span class="fc" id="L106">      }</span>
+    }
+
+<span class="fc" id="L109">    logger.info(Info.VARIABLE_LOGGING_5,</span>
+        &quot;entityIri&quot;, entityIri,
+<span class="fc" id="L111">        &quot;msgId&quot;, pdu.getHeader().getId(),</span>
+<span class="fc" id="L112">        &quot;msgType&quot;, pdu.getHeader().getMsgtype(),</span>
+<span class="fc" id="L113">        &quot;check&quot;, result.isValid(),</span>
+<span class="fc" id="L114">        &quot;message&quot;, result.message());</span>
+
+<span class="fc" id="L116">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

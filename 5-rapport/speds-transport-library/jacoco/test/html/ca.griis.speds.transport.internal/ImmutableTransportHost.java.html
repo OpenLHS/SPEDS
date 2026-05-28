@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImmutableTransportHost.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-transport-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.transport.internal</a> &gt; <span class="el_source">ImmutableTransportHost.java</span></div><h1>ImmutableTransportHost.java</h1><pre class="source lang-java linenums">package ca.griis.speds.transport.internal;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.transport.api.dto.InterfaceDataUnit45Dto;
+import ca.griis.js2p.gen.speds.transport.api.dto.Speds45Dto;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.network.api.NetworkHost;
+import ca.griis.speds.network.api.NetworkHostEvent;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import ca.griis.speds.transport.api.TransportHost;
+import ca.griis.speds.transport.api.TransportHostEvent;
+import ca.griis.speds.transport.internal.dispatcher.NotifyDispatcher;
+import ca.griis.speds.transport.internal.dispatcher.SubmitDispatcher;
+import ca.griis.speds.transport.internal.identification.IdentifierGenerator;
+import ca.griis.speds.transport.internal.sync.ConfirmationRegistry;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.benmanes.caffeine.cache.Cache;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+/**
+ * &quot;Description brève du composant (classe, interface, ...)&quot;
+ *
+ * &lt;h3&gt;Historique&lt;/h3&gt;
+ * &lt;p&gt;
+ * XXXX-XX-XX [AS] - Implémentation initiale&lt;br&gt;
+ * &lt;/p&gt;
+ *
+ * &lt;h3&gt;Tâches&lt;/h3&gt;
+ * S.O.
+ *
+ * @author [AS] ameni.souid@usherbrooke.ca
+ * @since
+ */
+public final class ImmutableTransportHost implements TransportHost, NetworkHostEvent {
+<span class="fc" id="L41">  private static final GriisLogger logger = getLogger(ImmutableTransportHost.class);</span>
+
+  private final NetworkHost networkHost;
+  private final TransportHostEvent transportEventComsumer;
+  private final SubmitDispatcher submitDispatcher;
+  private final NotifyDispatcher notifyDispatcher;
+  private final ObjectMapper mapper;
+  private final Cache&lt;UUID, Boolean&gt; confirmedPendingMessagesId;
+  private final Cache&lt;UUID, Boolean&gt; indicatedPendingMessagesId;
+  private final ConfirmationRegistry confirmationRegistry;
+
+  public ImmutableTransportHost(NetworkHost networkHost, Speds45Dto version,
+      Cache&lt;UUID, Boolean&gt; confirmedPendingMessagesId,
+      Cache&lt;UUID, Boolean&gt; indicatedPendingMessagesId,
+      IdentifierGenerator identifierGenerator, CryptographyService service, ObjectMapper mapper,
+<span class="fc" id="L56">      TransportHostEvent transportEventComsumer) {</span>
+<span class="fc" id="L57">    this.networkHost = networkHost;</span>
+<span class="fc" id="L58">    this.transportEventComsumer = transportEventComsumer;</span>
+<span class="fc" id="L59">    this.confirmedPendingMessagesId = confirmedPendingMessagesId;</span>
+<span class="fc" id="L60">    this.indicatedPendingMessagesId = indicatedPendingMessagesId;</span>
+<span class="fc" id="L61">    this.confirmationRegistry = new ConfirmationRegistry();</span>
+<span class="fc" id="L62">    this.mapper = mapper;</span>
+
+<span class="fc" id="L64">    this.submitDispatcher =</span>
+        new SubmitDispatcher(identifierGenerator, version, service, mapper, networkHost,
+<span class="fc" id="L66">            confirmationRegistry, confirmedPendingMessagesId.asMap(),</span>
+<span class="fc" id="L67">            indicatedPendingMessagesId.asMap());</span>
+<span class="fc" id="L68">    this.notifyDispatcher = new NotifyDispatcher(service, mapper, networkHost, confirmationRegistry,</span>
+<span class="fc" id="L69">        confirmedPendingMessagesId.asMap(), indicatedPendingMessagesId.asMap());</span>
+<span class="fc" id="L70">  }</span>
+
+  @Override
+  public CompletableFuture&lt;Optional&lt;String&gt;&gt; submitIdu(String idu) {
+<span class="fc" id="L74">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L76">    var future = submitDispatcher.handle(idu);</span>
+
+<span class="fc" id="L78">    logger.trace(Trace.EXIT_METHOD_1, &quot;future&quot;, future);</span>
+<span class="fc" id="L79">    return future;</span>
+  }
+
+  @Override
+  public void close() {
+<span class="fc" id="L84">    logger.trace(Trace.ENTER_METHOD_0);</span>
+
+<span class="fc" id="L86">    networkHost.close();</span>
+
+<span class="fc" id="L88">    confirmedPendingMessagesId.invalidateAll();</span>
+<span class="fc" id="L89">    indicatedPendingMessagesId.invalidateAll();</span>
+
+<span class="fc" id="L91">    confirmedPendingMessagesId.cleanUp();</span>
+<span class="fc" id="L92">    indicatedPendingMessagesId.cleanUp();</span>
+<span class="fc" id="L93">    confirmationRegistry.cleanUp();</span>
+
+<span class="fc" id="L95">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L96">  }</span>
+
+  @Override
+  public void notifyIdu(String idu) {
+<span class="fc" id="L100">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+    try {
+<span class="fc" id="L103">      final var nidu = mapper.readValue(idu, InterfaceDataUnit45Dto.class);</span>
+<span class="fc" id="L104">      var result = notifyDispatcher.handle(nidu);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">      if (result.isPresent()) {</span>
+<span class="fc" id="L106">        transportEventComsumer.notifyIdu(result.get());</span>
+      }
+<span class="nc" id="L108">    } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L109">      logger.error(Error.IGNORED_ERROR, e);</span>
+<span class="fc" id="L110">    }</span>
+
+<span class="fc" id="L112">    logger.trace(Trace.EXIT_METHOD_0);</span>
+<span class="fc" id="L113">  }</span>
+
+  @Override
+  public void notifyException(Exception exception) {
+<span class="nc" id="L117">    transportEventComsumer.notifyException(exception);</span>
+<span class="nc" id="L118">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

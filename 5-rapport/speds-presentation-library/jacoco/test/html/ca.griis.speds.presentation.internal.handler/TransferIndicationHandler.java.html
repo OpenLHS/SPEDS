@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransferIndicationHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-presentation-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.presentation.internal.handler</a> &gt; <span class="el_source">TransferIndicationHandler.java</span></div><h1>TransferIndicationHandler.java</h1><pre class="source lang-java linenums">package ca.griis.speds.presentation.internal.handler;
+
+import static ca.griis.logger.GriisLoggerFactory.getLogger;
+
+import ca.griis.js2p.gen.speds.presentation.api.dto.Context12Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.Context23Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.HeaderDto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.InterfaceDataUnit12Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.InterfaceDataUnit23Dto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.ProtocolDataUnit2PreDto;
+import ca.griis.js2p.gen.speds.presentation.api.dto.ServicePrimitive;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.AlgorithmCategory;
+import ca.griis.logger.GriisLogger;
+import ca.griis.logger.statuscode.Error;
+import ca.griis.logger.statuscode.Info;
+import ca.griis.logger.statuscode.Trace;
+import ca.griis.speds.presentation.entity.PresentationTracking;
+import ca.griis.speds.presentation.entity.TrackingInformation;
+import ca.griis.speds.presentation.internal.security.SecretKeyDestroyer;
+import ca.griis.speds.presentation.internal.serialization.SharedObjectMapper;
+import ca.griis.speds.session.api.SessionHost;
+import ca.griis.speds.toolkit.crypto.api.CryptographyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+public final class TransferIndicationHandler {
+<span class="fc" id="L36">  private static final GriisLogger logger = getLogger(TransferRequestHandler.class);</span>
+  private final SessionHost host;
+  private final CryptographyService service;
+  private final ConcurrentMap&lt;PresentationTracking, TrackingInformation&gt; serverTracking;
+
+  public TransferIndicationHandler(CryptographyService service, SessionHost host,
+<span class="fc" id="L42">      ConcurrentMap&lt;PresentationTracking, TrackingInformation&gt; serverTracking) {</span>
+<span class="fc" id="L43">    this.service = service;</span>
+<span class="fc" id="L44">    this.host = host;</span>
+<span class="fc" id="L45">    this.serverTracking = serverTracking;</span>
+<span class="fc" id="L46">  }</span>
+
+  public Optional&lt;String&gt; handle(InterfaceDataUnit23Dto idu) throws JsonProcessingException {
+<span class="fc" id="L49">    logger.trace(Trace.ENTER_METHOD_1, &quot;idu&quot;, idu);</span>
+
+<span class="fc" id="L51">    Optional&lt;String&gt; result = Optional.empty();</span>
+
+<span class="fc" id="L53">    final Context23Dto preIci = idu.getContext();</span>
+<span class="fc" id="L54">    final String preSdu = idu.getMessage();</span>
+
+<span class="fc" id="L56">    SecretKey key = null;</span>
+<span class="fc" id="L57">    UUID msgId = null;</span>
+<span class="fc" id="L58">    HeaderDto.Msgtype msgType = null;</span>
+
+    try {
+<span class="fc" id="L61">      ProtocolDataUnit2PreDto pdu = SharedObjectMapper.getInstance().getMapper().readValue(preSdu,</span>
+          ProtocolDataUnit2PreDto.class);
+
+<span class="fc" id="L64">      msgId = pdu.getHeader().getId();</span>
+<span class="fc" id="L65">      msgType = pdu.getHeader().getMsgtype();</span>
+<span class="fc" id="L66">      Map&lt;String, Object&gt; upperOptions = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L67">      upperOptions.put(&quot;TN&quot;, pdu.getHeader().getId());</span>
+
+<span class="fc" id="L69">      final Context12Dto upperContext = new Context12Dto(</span>
+<span class="fc" id="L70">          preIci.getPga(),</span>
+<span class="fc" id="L71">          preIci.getSourceCode(),</span>
+<span class="fc" id="L72">          preIci.getDestinationCode(),</span>
+          &quot;transfer&quot;,
+          ServicePrimitive.INDICATION,
+          upperOptions);
+
+<span class="fc" id="L77">      String sdekSerial = idu.getContext().getSdek();</span>
+<span class="fc" id="L78">      byte[] keyBytes = Base64.getDecoder().decode(sdekSerial);</span>
+<span class="fc" id="L79">      String algo =</span>
+<span class="fc" id="L80">          service.getAlgorithm(SpedsConfigItemDto.SpedsLayer.PRESENTATION, AlgorithmCategory.SYMM);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">      if (algo.contains(&quot;AES&quot;)) {</span>
+<span class="fc" id="L82">        algo = &quot;AES&quot;;</span>
+      } else {
+<span class="nc" id="L84">        SecretKeyDestroyer.destroy(keyBytes);</span>
+
+<span class="nc" id="L86">        throw new RuntimeException(&quot;Unsupported algo for secret key creation&quot;);</span>
+      }
+
+<span class="fc" id="L89">      key = new SecretKeySpec(keyBytes, 0, keyBytes.length, algo);</span>
+<span class="fc" id="L90">      SecretKeyDestroyer.destroy(keyBytes);</span>
+
+<span class="fc" id="L92">      final byte[] decryptedBytes =</span>
+<span class="fc" id="L93">          service.decryptSymmetric(SpedsConfigItemDto.SpedsLayer.PRESENTATION, key,</span>
+<span class="fc" id="L94">              Base64.getDecoder().decode(pdu.getContent()));</span>
+
+<span class="fc" id="L96">      logger.info(Info.VARIABLE_LOGGING_5,</span>
+<span class="fc" id="L97">          &quot;entityCode&quot;, preIci.getDestinationCode(),</span>
+          &quot;msgId&quot;, msgId,
+          &quot;msgType&quot;, msgType,
+<span class="fc" id="L100">          &quot;dataDecrypted&quot;, true,</span>
+          &quot;message&quot;, &quot;Successful data decryption&quot;);
+
+      /**
+       * @note [JM] -L'utilisation des option pour avoir un numéro de suivi est utilisé afin de
+       *       gérer les messages et le SDEK
+       */
+<span class="fc" id="L107">      Object options = preIci.getOptions();</span>
+<span class="fc" id="L108">      String tn = &quot;&quot;;</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">      if (options instanceof Map&lt;?, ?&gt; map) {</span>
+<span class="fc" id="L110">        tn = map.get(&quot;TN&quot;).toString();</span>
+      }
+
+<span class="fc" id="L113">      UUID sessionTrackingNumber = UUID.fromString(tn);</span>
+<span class="fc" id="L114">      serverTracking.put(</span>
+<span class="fc" id="L115">          new PresentationTracking(pdu.getHeader().getId()),</span>
+          new TrackingInformation(sessionTrackingNumber, key));
+
+<span class="fc" id="L118">      String decipheredSdu = new String(decryptedBytes, StandardCharsets.UTF_8);</span>
+<span class="fc" id="L119">      InterfaceDataUnit12Dto aidu = new InterfaceDataUnit12Dto(upperContext, decipheredSdu);</span>
+<span class="fc" id="L120">      String indication = SharedObjectMapper.getInstance().getMapper().writeValueAsString(aidu);</span>
+<span class="fc" id="L121">      result = Optional.of(indication);</span>
+<span class="fc" id="L122">    } catch (RuntimeException | JsonProcessingException e) {</span>
+<span class="fc" id="L123">      logger.error(Error.IGNORED_ERROR, e);</span>
+
+<span class="fc" id="L125">      SecretKeyDestroyer.destroy(key);</span>
+
+<span class="fc" id="L127">      logger.info(Info.VARIABLE_LOGGING_5,</span>
+<span class="fc" id="L128">          &quot;entityCode&quot;, preIci.getDestinationCode(),</span>
+          &quot;msgId&quot;, msgId,
+          &quot;msgType&quot;, msgType,
+<span class="fc" id="L131">          &quot;dataDecrypted&quot;, true,</span>
+          &quot;message&quot;, &quot;Data decryption failed&quot;);
+
+<span class="fc" id="L134">      String failed = &quot;FAILED: Error during transmission&quot;;</span>
+<span class="fc" id="L135">      Context23Dto context = new Context23Dto(</span>
+<span class="fc" id="L136">          preIci.getPga(),</span>
+<span class="fc" id="L137">          preIci.getSourceCode(),</span>
+<span class="fc" id="L138">          preIci.getDestinationCode(),</span>
+          &quot;transfer&quot;,
+          ServicePrimitive.RESPONSE,
+<span class="fc" id="L141">          preIci.getOptions());</span>
+
+<span class="fc" id="L143">      InterfaceDataUnit23Dto siduDto = new InterfaceDataUnit23Dto(context, failed);</span>
+<span class="fc" id="L144">      String sidu = SharedObjectMapper.getInstance().getMapper().writeValueAsString(siduDto);</span>
+<span class="fc" id="L145">      host.submitIdu(sidu);</span>
+<span class="fc" id="L146">    }</span>
+
+<span class="fc" id="L148">    logger.trace(Trace.EXIT_METHOD_1, &quot;result&quot;, result);</span>
+<span class="fc" id="L149">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

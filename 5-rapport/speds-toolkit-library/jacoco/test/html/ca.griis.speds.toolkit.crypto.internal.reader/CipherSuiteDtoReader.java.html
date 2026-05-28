@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CipherSuiteDtoReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">speds-toolkit-library</a> &gt; <a href="index.source.html" class="el_package">ca.griis.speds.toolkit.crypto.internal.reader</a> &gt; <span class="el_source">CipherSuiteDtoReader.java</span></div><h1>CipherSuiteDtoReader.java</h1><pre class="source lang-java linenums">/**
+ * @file
+ *
+ * @copyright @@GRIIS_COPYRIGHT@@
+ *
+ * @licence @@GRIIS_LICENCE@@
+ *
+ * @version @@GRIIS_VERSION@@
+ *
+ * @brief @~french Contient la description de la classe CipherSuiteDtoReader.
+ * @brief @~english Contains description of CipherSuiteDtoReader class.
+ */
+
+package ca.griis.speds.toolkit.crypto.internal.reader;
+
+import ca.griis.js2p.gen.speds.toolkit.api.dto.CiphersuiteDto;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.AlgorithmCategory;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SecurityProfile;
+import ca.griis.js2p.gen.speds.toolkit.api.dto.SpedsConfigItemDto.SpedsLayer;
+import java.util.Optional;
+
+/**
+ * @brief @~english «Brief component description (class, interface, ...)»
+ * @par Details
+ *      «Detailed description of the component (optional)»
+ * @par Model
+ *      «Model (Abstract, automation, etc.) (optional)»
+ * @par Conception
+ *      «Conception description (criteria and constraints) (optional)»
+ * @par Limits
+ *      «Limits description (optional)»
+ *
+ * @brief @~french Lecture d'un fichier de configuration d'une suite cryptographique de SPEDS.
+ * @par Details
+ *      S.O.
+ * @par Modèle
+ *      S.O.
+ * @par Conception
+ *      S.O.
+ * @par Limites
+ *      S.O.
+ *
+ * @par Historique
+ *      2025-12-03 [FO] - Implémentation initiale&lt;br&gt;
+ *
+ * @par Tâches
+ *      S.O.
+ */
+public class CipherSuiteDtoReader {
+  private final CiphersuiteDto cipherSuite;
+  private final SpedsConfigItemDtoReader reader;
+
+<span class="fc" id="L54">  public CipherSuiteDtoReader(CiphersuiteDto cipherSuite) {</span>
+<span class="fc" id="L55">    this.cipherSuite = cipherSuite;</span>
+<span class="fc" id="L56">    this.reader = new SpedsConfigItemDtoReader();</span>
+<span class="fc" id="L57">  }</span>
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère le profil de sécurité.
+   * @param layer Couche de protocole.
+   * @param category Catégorie de l'algorithme.
+   * @return Si disponible, le profil de sécurité.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public Optional&lt;SecurityProfile&gt; getSecurityProfile(SpedsLayer layer,
+      AlgorithmCategory category) {
+<span class="fc" id="L75">    Optional&lt;SecurityProfile&gt; result = Optional.empty();</span>
+<span class="fc" id="L76">    Optional&lt;SpedsConfigItemDto&gt; config =</span>
+<span class="fc" id="L77">        reader.getSpedsConfigItemDto(layer, category, cipherSuite);</span>
+
+<span class="fc bfc" id="L79" title="All 4 branches covered.">    if (config.isPresent() &amp;&amp; config.get().getSecurityProfile() != null) {</span>
+<span class="fc" id="L80">      result = Optional.of(config.get().getSecurityProfile());</span>
+    }
+
+<span class="fc" id="L83">    return result;</span>
+  }
+
+  /**
+   * @brief @~english «Description of the function»
+   * @param «parameter name» «Parameter description»
+   * @exception «exception name» «Exception description»
+   * @return «Return description»
+   *
+   * @brief @~french Récupère l'algorithme de sécurité.
+   * @param layer Couche de protocole.
+   * @param category Catégorie de l'algorithme.
+   * @return Si disponible, l'algorithme de sécurité.
+   *
+   * @par Tâches
+   *      S.O.
+   */
+  public Optional&lt;String&gt; getSecurityAlgo(SpedsLayer layer, AlgorithmCategory category) {
+<span class="fc" id="L101">    Optional&lt;String&gt; result = Optional.empty();</span>
+<span class="fc" id="L102">    Optional&lt;SpedsConfigItemDto&gt; config =</span>
+<span class="fc" id="L103">        reader.getSpedsConfigItemDto(layer, category, cipherSuite);</span>
+
+<span class="pc bpc" id="L105" title="1 of 4 branches missed.">    if (config.isPresent() &amp;&amp; config.get().getSecurityAlgorithm() != null) {</span>
+<span class="fc" id="L106">      result = Optional.of(config.get().getSecurityAlgorithm());</span>
+    }
+
+<span class="fc" id="L109">    return result;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

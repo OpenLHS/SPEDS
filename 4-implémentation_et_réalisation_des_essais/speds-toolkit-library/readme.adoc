@@ -1,0 +1,365 @@
+// Settings
+:idprefix:
+:idseparator: -
+:page-component-title: Bibliothèque de fonctions de service de SPEDS
+
+= {page-component-title}
+
+[#summary]
+== Sommaire
+
+La *{page-component-title}* implémente fonctions et services utilisés par les couches du protocole SPEDS.
+
+[#overview]
+== Présentation
+
+Le rôle de la {page-component-title} consiste à définir les services et les fonctions utilisé dans à travers le protocole SPEDS.
+
+[#techno]
+== Technologies utilisées
+
+* Language(s) utilisé(s) :
+** Java
+
+* API utilisé(s) :
+** S.O.
+
+* Bibliothèque(s) tierce(s) :
+** S.O.
+
+[#prerequisite]
+== Préalable
+
+Avant de débuter, il est important de s'assurer que l’ensemble des conditions suivantes soient remplies :
+
+* Logiciels prérequis :
+** S.O.
+
+* Composants GRIIS prérequis
+** logger-library
+** security-library
+
+* Systèmes
+** Multiplateforme
+
+* Matériels prérequis :
+** S.O.
+
+[#config]
+== Configuration
+
+=== Schéma JSON définissant les suites cryptographiques à utilsier sur chacune des couches du protocole SPEDS
+
+[%collapsible]
+.Schéma JSON de configuration de sécurité comportant la suite cryptographique
+====
+[source,json]
+----
+include::./src/json/schema/ciphersuite.schema.json[]
+----
+====
+
+[%collapsible]
+.Exemple d'une configuration de sécurité avec le type de profil de sécurité
+====
+[source,json]
+----
+include::./doc/json/example_speds_ciphersuite_profile.json[]
+----
+====
+
+[%collapsible]
+.Exemple d'une configuration de sécurité avec les noms d'algorithmes
+====
+[source,json]
+----
+include::./doc/json/example_speds_ciphersuite_algo.json[]
+----
+====
+
+[#api]
+== Interface (API)
+
+=== Interface de fabrique du service cryptographique
+
+[,options="header,unbreakable",cols="2a,5a,5a"]
+|===
+| Fonction de la conception | Signature impl. | Comportement
+
+| S.O.
+|
+[source,java]
+----
+CryptographyService initCipherSuite(String configJson) throws JsonProcessingException;
+----
+| Construit une instance de service de cryptographie à partir de la configuration de sécurité sous le format JSON et respectant le schéma JSON précédemment mentionné.
+
+|===
+
+=== Interface du service de projet
+
+[,options="header,unbreakable",cols="2a,5a"]
+|===
+| Fonction de la conception | Signature impl.
+
+| getEntityIri
+|
+[source,java]
+----
+IRI getEntityIri(String projectId, String code);
+----
+
+| verifyEntityLegitimacy
+|
+[source,java]
+----
+Boolean verifyEntityLegitimacy(String projectId, String code, PublicKey publicKey);
+----
+
+| getEntityPublicKey
+| 
+[source,java]
+----
+PublicKey getEntityPublicKey(String projectId, String code);
+----
+
+| checkProjectActivity
+| 
+[source,java]
+----
+Boolean checkProjectActivity(String projectId);
+----
+
+| checkPlanActivity
+| 
+[source,java]
+----
+Boolean checkPlanActivity(String projectId);
+----
+
+|===
+
+==== Comportement
+
+Cette biliothèque ne définit pas de comportement à cette interface, car ce comportement est défini par l'entité qui utilisera SPEDS. 
+Cette approche respecte le mécanisme d’injection de dépendances pour découpler toute dépendance extérieure du protocole de SPEDS.
+
+Plus précisément,
+
+* La *{page-component-title}* définit l'interface du service de projet.
+* L'entité qui utilise SPEDS connaît une implémentation du service de projet et injecte son comportement au protocole SPEDS.
+* À propos des couches du protocole de SPEDS :
+** l'implémentation (comportement) de l'interface est injectée par un type d'injection - par exemple, une injection par constructeur.
+** les couches qui en ont besoin du comportement de l'interface de projet appelle la fonction désirée.
+
+=== Interface du service sécurité
+
+[,options="header,unbreakable",cols="2a,5a"]
+|===
+| Fonction de la conception | Signature impl.
+
+| checkCertificateValidity
+|
+[source,java]
+----
+Boolean checkCertificateValidity(X509Certificate certificate, IRI iri);
+----
+
+|===
+
+==== Comportement
+
+Le comportement tel que défini dans la conception.
+
+=== Interface pour le service cryptographique
+
+[,options="header,unbreakable",cols="2a,5a"]
+|===
+| Fonction de la conception | Signature impl.
+
+| encryptSymmetric
+|
+[source,java]
+----
+byte[] encryptSymmetric(SpedsLayer spedsLayer, SecretKey secretKey, byte[] data);
+----
+
+| decryptSymmetric
+|
+[source,java]
+----
+byte[] decryptSymmetric(SpedsLayer spedsLayer, SecretKey secretKey, byte[] data);
+----
+
+| generateSymmetricKey
+|
+[source,java]
+----
+SecretKey generateSymmetricKey(SpedsLayer spedsLayer);
+----
+
+| encryptAsymmetric
+|
+[source,java]
+----
+byte[] encryptAsymmetric(SpedsLayer spedsLayer, PublicKey publicKey, byte[] data);
+----
+
+| decryptAsymmetric
+|
+[source,java]
+----
+byte[] decryptAsymmetric(SpedsLayer spedsLayer, PrivateKey privateKey, byte[] data);
+----
+
+| hash
+|
+[source,java]
+----
+byte[] hash(SpedsLayer spedsLayer, byte[] data);
+----
+
+| sign
+|
+[source,java]
+----
+byte[] sign(SpedsLayer spedsLayer, PrivateKey privateKey, byte[] data);
+----
+
+| checkSignatureValidity
+|
+[source,java]
+----
+Boolean checkSignatureValidity(SpedsLayer spedsLayer, byte[] digitalSignature, PublicKey publicKey, byte[] data);
+----
+
+| chooseDiffieHellmanValue
+|
+[source,java]
+----
+KeyPair chooseDiffieHellmanValue(SpedsLayer spedsLayer);
+----
+
+| getDiffieHellmanSecretKey
+|
+[source,java]
+----
+SecretKey getDiffieHellmanSecretKey(SpedsLayer spedsLayer, KeyPair choiceX, PublicKey choiceY);
+----
+
+| getAlgorithm
+|
+[source,java]
+----
+String getAlgorithm(SpedsLayer spedsLayer, AlgorithmCategory category);
+----
+
+| getAlgorithmParameters
+|
+[source,java]
+----
+Map<String, String> getAlgorithmParameters(SpedsLayer spedsLayer, String algorithm);
+----
+
+|===
+
+==== Comportement
+
+Le comportement tel que défini dans la conception.
+
+[#build]
+== Construction
+
+Pour construire la *{page-component-title}*, taper la commande suivante dans un
+terminal :
+
+[source, bash]
+----
+$ ./gradlew construction -Pflow=dev
+----
+
+=== Compilation
+
+Pour produire uniquement l'artéfact, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew assemble
+----
+
+[#tests]
+=== Exécution des tests et des différentes vérifications de conformités
+
+Pour exécuter les vérification, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew verification -Pflow=dev
+----
+
+=== Installation
+
+Pour installer l'artéfact préalablement compilé dans le dépôt local Maven, taper la commande
+suivante dans un terminal :
+
+[source, bash]
+----
+$ ./gradlew publishToMavenLocal
+----
+
+== Utilisation
+
+Pour inclure la *{page-component-title}* dans un autre projet, il faut ajouter la
+dépendance dans le fichier build.gradle de ce projet, puis rafraîchir le projet Gradle. Pour plus
+de renseignements, consulter la section « <<Installation>> ».
+
+[source, gradle]
+----
+dependencies {
+  compile "ca.griis:speds-toolkit-library:${version}"
+}
+----
+
+La *{page-component-title}* peut être déclarée en utilisant `ca.griis:speds-toolkit-library`.
+
+Pour développer directement sur la *{page-component-title}*, il faut importer le
+projet Gradle dans un environnement de développement intégré Java tel qu'Eclipse ou IntelliJ IDEA.
+ Pour plus de renseignements, consulter la section « <<Construction>> ».
+
+[#launch]
+== Démarrage
+
+S.O.
+
+== Documentation du code
+
+Pour générer localement la version *française* de la documentation du code accompagnant
+*{page-component-title}*, taper la commande suivante dans un terminal :
+
+[source, bash]
+----
+./gradlew doxygenFr
+----
+
+Pour afficher la documentation du code générée, cliquer sur le fichier index.html situé dans le
+dossier `build\doc-fr-doxygen\html`.
+
+[#licence]
+== Copyright et licences
+
+=== Copyright
+
+Copyright 2016-{localyear}, https://griis.ca/[GRIIS]
+
+GRIIS (Groupe de recherche interdisciplinaire en informatique de la santé) +
+Faculté des sciences et Faculté de médecine et sciences de la santé +
+Université de Sherbrooke (Québec) J1K 2R1 +
+
+CANADA
+
+=== Licences
+
+Le code de ce projet est sous licence link:liliqr-licence.adoc[LILIQ-R]. Click here for the
+link:liliqr-licence-english.adoc[English version].
+
+La documentation de ce projet est sous licence https://creativecommons.org/licenses/by/4.0/[CC BY 4.0].
